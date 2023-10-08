@@ -1,0 +1,80 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+    <div class="center">
+      <mat-spinner class="center"></mat-spinner>
+    </div>
+  </div>
+  
+  
+  <div class="edit-dialog">
+    <div class="edit-section-header">
+      <div class="edit-heading">
+        <h3>{{ "round.round_details" | translate }}</h3>
+      </div>
+      <div class="cross-icon">
+        <mat-icon mat-dialog-close>clear</mat-icon>
+      </div>
+    </div>
+    <!-- Vaccination Content Starts -->
+    <div class="edit-container">
+      <div class="row mt-4 section-title">
+         <div class="col-md-12">
+          <p class="">{{ "round.round_number" | translate }}:
+            {{ prescriptionRes }} </p>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-4">
+          <h4 class="font-weight-bold label-header">{{ "round.round_start_date" | translate }} : </h4>
+          <p>{{ fromDate }} </p>
+        </div>
+        <div class="col-md-4">
+          <h4 class="font-weight-bold label-header">{{ "round.round_end_date" | translate }} : </h4>
+          <p>{{ toDate}}</p>
+        </div>
+        <div class="col-md-4">
+          <h4 class="font-weight-bold label-header">{{ "round.round_entryEnd_date" | translate }} : </h4>
+          <p>{{ dataEntryEndDate}} </p>
+        </div>
+      </div> 
+    
+  
+
+      <div class="row mt-4">
+        <div class="col-md-4">
+          <h4 class="font-weight-bold label-header">{{"registration.state" | translate}} </h4>
+          <p> {{ newStringstateName }}</p>
+        </div>
+        <div class="col-md-4">
+          <h4 class="font-weight-bold label-header">{{"round.disease" | translate}}</h4>
+          <p> {{ newStringDiseaseName}} </p>
+        </div>
+      </div>
+     
+  
+      <div class="h-divider">
+        <div class="shadow"></div>
+      </div>
+   
+      <div class="row mt-4">
+        <div class="col-md-4">
+           <h4 class="font-weight-bold label-header">{{"firstAid.Remarks_fid" | translate}}:
+            {{ newStringRemarks || "null"}}
+          </h4> 
+          <p> </p>
+        </div>
+      </div>
+  
+    </div>
+  
+
+  
+  
+    <div class="edit-footer">
+      <button type="button" class="btn btn-outline-primary mr-2" mat-dialog-close>
+        {{ "animalDetails.cancel" | translate }}
+      </button>
+      <button type="submit" class="btn btn-primary" mat-dialog-close>
+        {{ "common.ok_string" | translate }}
+      </button>
+    </div>
+  </div>

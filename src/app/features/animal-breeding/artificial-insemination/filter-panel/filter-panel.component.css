@@ -1,0 +1,24 @@
+a {
+    cursor: pointer !important;
+    text-decoration: underline !important;
+  }
+  .filter-mgmt{
+    padding: 0px;
+    float:right;
+  }
+  .filter-background{
+    background: #eaf0f2;
+    height: 400px
+  }
+  .filter-container{
+    height: 625px
+  }
+  .pointer{
+    cursor: pointer !important;
+  }
+  .filter-margin{
+    margin-top: 50px;
+  }
+  .mat-list-item.active{
+   background: #bbc0c1;
+  }

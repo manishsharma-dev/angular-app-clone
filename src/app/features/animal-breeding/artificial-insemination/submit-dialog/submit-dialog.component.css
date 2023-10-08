@@ -1,0 +1,65 @@
+.mat-form-field {
+    display: block;
+  
+  }
+  
+  .campaign-dialog {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    flex-direction: column;
+  }
+  
+  .campaign-dialog .campaign-msg {
+    text-align: center;
+  }
+  
+  .campaign-dialog .campaign-msg .succes-msg {
+    font-size: 17px;
+    font-weight: bold;
+    letter-spacing: 0px;
+    color: #333333;
+    opacity: 1;
+    margin-bottom: 6px !important;
+  }
+  
+  .campaign-dialog .campaign-msg .succes-msg-desc {
+    font-size: 14px;
+    font-weight: normal;
+    letter-spacing: 0px;
+    color: #333333;
+    opacity: 0.8;
+    line-height: 1.25;
+    margin-bottom: 6px !important;
+  }
+  
+  .campaign-dialog .campaign-id {
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 0px;
+    color: #333333;
+  }
+  
+  .campaign-dialog .close-button .close-btn {
+    color: #333333;
+    opacity: 0.8;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  .follow-up {
+    font-weight: normal;
+  }
+  
+  .succes-msg-follow{
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 0px;
+    color: #333333;
+    opacity: 1;
+    margin-bottom: 20px !important;
+  }
+  
+
+  

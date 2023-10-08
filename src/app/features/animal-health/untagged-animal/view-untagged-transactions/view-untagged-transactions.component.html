@@ -1,0 +1,146 @@
+<div class="overlay" *ngIf="isLoading">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<!-- section breadcum -->
+<div class="container p-0">
+  <div class="row breadcum align-items-center py-2">
+    <div class="col-12">
+      <div class="breadcrumb-list">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item active" routerLink="/dashboard">
+              <a>{{ "vaccination.breadcrumb_vaccinationFirst" | translate }}</a>
+            </li>
+            <li class="breadcrumb-item active">
+              <label>{{ "vaccination.breadcrumb_vaccinationSecond" | translate }} </label>
+            </li>
+            <li class="breadcrumb-item current">
+              <label>{{ "untagged.untagged_animal_transactions" | translate }} </label>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- section breadcum -->
+
+<section class="untagged-reportList">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card border-0">
+        <div class="card-body">
+          <div class="row untagged-header">
+            <div class="col-md-12">
+              <span class="reportList-heading">
+                {{ "untagged.untagged_animal_transactions" | translate }}
+              </span>
+            </div>
+          </div>
+
+          <div class="row align-items-center mt-3 filter-section">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+              <div class="form-row">
+                <div class="filter-by">
+                  <img src="/assets/images/search.svg" alt="icon-search" class="input-icon-left" />
+                  <input type="text" id="filter-by" placeholder="{{'common.Search_by_keywords' | translate}}"
+                    class="form-control input input-search-section" (keyup)="searchInTable($event)" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="report-table table-view mt-3">
+            <div class="table-responsive">
+              <table matSort mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                <ng-container matColumnDef="sno">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{"common.sno" | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ listPaginator.pageIndex * listPaginator.pageSize + (i + 1)}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="requestorName">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{"untagged.requestor_name" | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.requestorName }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="diseaseDesc">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{"untagged.disease" | translate }}/{{ 'firstAid.Minor_Ailment' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.diseaseDesc ?? element.minorAilment }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="speciesName">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{"untagged.species" | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="mat-custom-column">
+                      {{ element.speciesName }}
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sex">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{"common.sex" | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="mat-custom-column">
+                      {{ element.sex }}
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="villageName">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{"common.village_name" | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="mat-custom-column">
+                      {{ element.villageName }}
+                    </div>
+                  </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="prescription">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{"animalTreatmentSurgery.prescription" | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="mat-custom-column">
+                      <a href="javascript:void(0)" (click)="viewReport(element.transactionId)">
+                        {{'common.view' | translate}}</a>
+                    </div>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+                <tr mat-row *matRowDef="let element; columns: columnsToDisplay"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell text-center" [attr.colspan]="columnsToDisplay.length">
+                    {{"intimation.no_data_found" | translate}}
+                  </td>
+                </tr>
+              </table>
+              <mat-paginator #listPaginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of reports">
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

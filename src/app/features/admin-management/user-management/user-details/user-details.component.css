@@ -1,0 +1,275 @@
+/* img {
+  border: 1px solid #707070;
+  padding: 5px;
+} */
+
+.user-img {
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.view-animal-info {
+  background-color: #e4eaef;
+  border-top: 2px solid #185b85;
+}
+
+#animal-detail ul li,
+#animal-unique-detail ul li {
+  list-style-type: none;
+  display: inline;
+}
+
+#animal-detail ul li {
+  font-weight: bold;
+  font-family: Noto Sans;
+  font-size: 12px;
+  letter-spacing: 0px;
+  color: #3c3c3c;
+}
+
+#animal-unique-detail ul li .tag-bold {
+  font-weight: bold;
+  font-family: Noto Sans;
+  font-size: 16px;
+  letter-spacing: 0px;
+  color: #3c3c3c;
+  margin-right: 8px;
+}
+
+#animal-unique-detail ul li .ticket-no {
+  font-weight: normal;
+  font-family: Noto Sans;
+  font-size: 12px;
+  letter-spacing: 0px;
+  color: #3c3c3c;
+}
+
+.view-animal-detail .view-animal-info .info-details {
+  display: flex;
+  flex-direction: column;
+}
+
+#animal-detail li:not(:first-child):before {
+  content: " | ";
+  margin: 0px 2px;
+}
+
+.icon-edit {
+  height: 26px;
+  width: 26px;
+  align-self: center;
+  cursor: pointer;
+}
+
+/* copy css project management */
+
+#animal-detail ul li {
+  font-weight: bold;
+  font-family: Noto Sans;
+  font-size: 16px;
+  letter-spacing: 0px;
+  color: #3c3c3c;
+}
+
+#animal-unique-detail ul li .tag-bold {
+  font-weight: bold;
+  font-family: Noto Sans;
+  font-size: 16px;
+  letter-spacing: 0px;
+  color: #3c3c3c;
+  margin-right: 8px;
+}
+
+#animal-unique-detail ul li .ticket-no {
+  font-weight: normal;
+  font-family: Noto Sans;
+  font-size: 12px;
+  letter-spacing: 0px;
+  color: #3c3c3c;
+}
+
+.view-animal-detail .view-animal-info .info-details {
+  display: flex;
+  flex-direction: column;
+}
+
+#animal-detail li:not(:first-child):before {
+  content: " | ";
+  margin: 0px 2px;
+}
+
+.animal-bio-info .flex-custom-left {
+  flex: 0 0 40% !important;
+  flex-wrap: wrap;
+  word-break: break-word;
+}
+
+.animal-bio-info .flex-custom-right {
+  flex: 0 0 60% !important;
+  flex-wrap: wrap;
+  word-break: break-word;
+}
+
+.basic-details .details-heading,
+.family-details .details-heading {
+  font-weight: bold;
+  font-family: Noto Sans;
+  font-size: 14px;
+  letter-spacing: 0px;
+  margin-bottom: 10px !important;
+  color: #3c3c3c;
+  background-color: #eaf0f2;
+  padding: 3px 8px;
+}
+
+.animal-bio-info .info-label {
+  font-weight: normal;
+  font-family: Noto Sans;
+  font-size: 12px;
+  color: #3c3c3c;
+}
+
+.animal-bio-info .info-data {
+  font-weight: bold;
+  font-family: Noto Sans;
+  font-size: 12px;
+  color: #3c3c3c;
+}
+
+.h-space {
+  margin-top: 20px;
+  float: left;
+  width: 100%;
+}
+
+/* end project management css */
+
+/*start custom  mat css */
+
+.mat-chip-list-wrapper {
+  background: none !important;
+  border: none !important;
+}
+
+table {
+  width: 100%;
+  /* border: 1px solid #dee2e6 !important; */
+}
+
+thead,
+tbody,
+tr,
+td,
+th {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+tr:after {
+  content: " ";
+  display: block;
+  visibility: hidden;
+  clear: both;
+}
+
+tbody {
+  max-height: 130px;
+  overflow-y: auto;
+}
+
+tbody td,
+thead th {
+  width: calc(100% / 3);
+  float: left;
+}
+
+tbody.rolebody td,
+thead.rolebody th {
+  width: calc(100% / 3);
+  float: left;
+}
+
+/* ---------------start-scroll -------------------- */
+/* width */
+::-webkit-scrollbar {
+  position: relative;
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(204, 196, 196);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(116, 110, 110);
+}
+
+/* ---------------end-scroll -------------------- */
+
+/*start custom  mat css */
+
+/* accordian user personal details */
+.accordion {
+  width: 100%;
+  margin: 2rem auto 0;
+}
+
+/* hide the default arrow */
+details > summary {
+  list-style: none;
+}
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+/* general styles */
+details {
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
+
+summary {
+  background-color: #eaf0f2;
+  padding: 3px 8px;
+  font-weight: bold;
+  font-family: Noto Sans;
+  font-size: 14px;
+  letter-spacing: 0px;
+  color: #3c3c3c;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.icon svg {
+  transition: all 0.35s ease-out;
+}
+
+details > div {
+  padding: 0.6rem 0px;
+}
+
+/* open state */
+details[open] summary {
+  border-bottom-right-radius: unset;
+}
+
+details[open] > div {
+  border-bottom-right-radius: 24px;
+}
+
+details[open] .icon svg {
+  transform: rotateX(180deg);
+}

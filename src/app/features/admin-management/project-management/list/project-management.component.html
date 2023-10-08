@@ -1,0 +1,285 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            {{ "animalDetails.home" | translate }}
+          </li>
+          <li class="breadcrumb-item active">
+            {{ "organization.Admin_Management" | translate }}
+          </li>
+          <li class="breadcrumb-item current">
+            {{ "project.Project_Management" | translate }}
+          </li>
+          <li class="breadcrumb-item current">
+            {{ "project.Project_setup" | translate }}
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+<div class="container-white-bg-with-border mb-3">
+  <span class="floating-filedset fildset-bg-green">
+    <span class="float-label">{{"common.search" | translate }}</span>
+  </span>
+  <div class="row search-org">
+
+
+    <div class="col-md-6">
+
+      <form [formGroup]="searchForm">
+        <div class="form-row">
+          <div class="form-group col-md-8">
+            <input type="text" class="form-control" id="search" autocomplete="off"
+              placeholder="{{ 'common.placeholder' | translate }}" formControlName="searchByVal" />
+          </div>
+          <div class="form-group col-auto align-self-end">
+            <button type="button" class="btn btn-primary" (click)="onGetProjectList()">
+              {{ "animalDetails.search" | translate }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-6">
+      <ul class="project-mgmt">
+        <!-- <li>
+          <button type="submit" class="btn btn-primary" routerLink="/dashboard/organization-management/add-new-org">
+            ADD SUB ORGANIZATION
+          </button>
+        </li> -->
+        <li>
+          <button type="submit" class="btn btn-primary" appPermission [permissionType]="masterConfig.isAdd"
+            [disabled]="!ischeck" (click)="addNewProject()">
+            {{ "project.Create_New_Project" | translate }}
+          </button>
+        </li>
+        <li>
+          <button type="submit" class="btn btn-primary" [disabled]="ischeck"
+            routerLink="/dashboard/project-management/userallocationdeallocation">
+            {{ "project.User_Allocation" | translate }}
+          </button>
+        </li>
+        <li>
+          <button type="button" class="btn btn-primary" [disabled]="ischeck" (click)="openDialog()">
+            {{ "project.Project_Extension" | translate }}
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="container-white-bg-with-border">
+  <div class="row">
+
+    <div class="col-lg-12 col-md-12">
+      <div class="list-of-org">
+        <!-- <div class="title-heading">
+      <h3 class="muted-label-heading">List of Organizations</h3>
+    </div> -->
+        <!-- <div *ngIf="dataSource.length == 0">
+      <div class="alert alert-dark" role="alert">
+        No data Found
+      </div>
+    </div> -->
+        <span class="floating-filedset fildset-bg-blue">
+          <span class="float-label">{{"common.list" | translate }}</span>
+        </span>
+        <div class="row">
+
+          <div class="col-md-6">
+
+            <form>
+              <div class="form-row">
+                <div class="form-group col-md-8">
+                  <input type="text" autocomplete="off" (keyup)="applyFilter($event)" matInput
+                    class="form-control input-custom-border" id="search"
+                    placeholder="{{ 'common.placeholder' | translate }}" #input />
+                </div>
+                <!-- <div class="form-group col-auto align-self-end">
+                  <button type="button" class="btn btn-primary">Search</button>
+                </div> -->
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+
+        <div class="table-responsive table-view">
+
+          <table mat-table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef=" ">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let project; let i = index">
+                <!-- <mat-radio-group aria-label="Select an option">
+              <mat-radio-button [value]="project.projectId" [color]="'primary'" (change)="onSetCheck($event)"></mat-radio-button>
+            
+            </mat-radio-group> -->
+                <div class="form-check form-check-inline">
+                  <input type="radio" class="form-check-input" id="radio1" name="optradio"
+                    value="{{ project.projectId }}" (change)="onSetCheck($event, project)" />
+                  <!-- {{ project.projectId }} -->
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="projectId">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "project.Project_ID" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let project">
+                <!-- <mat-radio-group aria-label="Select an option">
+              <mat-radio-button value="{{project.projectId}}" [color]="'primary'" (change)="onSetCheck($event)">{{ project.projectId }}</mat-radio-button>
+            
+            </mat-radio-group> -->
+                <!-- <input type="radio" class="form-check-input" id="radio1" name="optradio" value="{{project.projectId}}">
+            {{ project.projectId }} -->
+
+                {{ project.projectId }}
+              </td>
+              <td mat-cell *matCellDef="let project; let i = index">
+                {{ paginatorRef.pageIndex * paginatorRef.pageSize + (i + 1) }}
+              </td>
+            </ng-container>
+
+            <!-- projectName Name Column -->
+            <ng-container matColumnDef="projectName">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "project.Project_Name" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let project">
+                {{ project.projectName }}
+              </td>
+            </ng-container>
+
+            <!-- parentOrgName Type Column -->
+            <ng-container matColumnDef="parentOrgName">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "project.Parent_Org_Name" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let project">
+                {{ project.orgName == null ? "-" : project.orgName }}
+              </td>
+            </ng-container>
+
+            <!-- userAllocation Name Column -->
+            <!-- <ng-container matColumnDef="userAllocation">
+              <th mat-header-cell *matHeaderCellDef>{{"project.User_Allocation" |translate}}</th>
+              <td mat-cell *matCellDef="let project">
+                {{ project.userAllocationprocessFlag == 'M' ? 'Manual' : project.userAllocationprocessFlag == 'A'?
+                'Automatic' : '--' }}
+              </td>
+            </ng-container> -->
+
+            <!-- startDate Name  Column -->
+            <ng-container matColumnDef="startDate">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "project.Start_Date" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let project">
+                {{ project.projectStartDate | customDateFormatter }}
+              </td>
+            </ng-container>
+
+            <!-- endDate Name  Column -->
+            <ng-container matColumnDef="endDate">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "project.End_Date" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let project">
+                {{ project.projectEndDate | customDateFormatter }}
+              </td>
+            </ng-container>
+            <!-- status Name  Column -->
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "common.status" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let project">
+                {{ project.statusDesc == null ? "-" : project.statusDesc }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "common.action" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let project">
+                <a href="javascript:void(0)" (click)="onGetProjectDetail(project.projectId)"><svg id="Component_58_16"
+                    data-namdeleteRowe="Component 58 – 16" xmlns="http://www.w3.role/2000/svg" width="20.037"
+                    height="20.037" viewBox="0 0 20.037 20.037">
+                    <path id="Path_5226" data-name="Path 5226" d="M0,0H20.037V20.037H0Z" fill="none" />
+                    <path id="Path_5227" data-name="Path 5227"
+                      d="M1.181,10.514a9.186,9.186,0,0,1,18.065,0,9.186,9.186,0,0,1-18.065,0Zm9.032,4.174a4.174,4.174,0,1,0-4.174-4.174A4.174,4.174,0,0,0,10.213,14.688Zm0-1.67a2.5,2.5,0,1,1,2.5-2.5A2.5,2.5,0,0,1,10.213,13.018Z"
+                      transform="translate(-0.195 -0.495)" fill="#185b85" />
+                  </svg></a>
+                &nbsp;&nbsp;
+                <a class="clone" *ngIf="
+                isLivestackAdmin ||
+                (!isLivestackAdmin && userOrgId == project?.orgId)
+              " href="javascript:void(0)" appPermission [permissionType]="masterConfig.isAdd"
+                  (click)="onCloneProject(project.projectId,'clone')"><svg id="Component_60_16"
+                    data-name="Component 60 – 16" xmlns="http://www.w3.role/2000/svg" width="20" height="20"
+                    viewBox="0 0 20 20">
+                    <path id="Path_5228" data-name="Path 5228" d="M0,0H20V20H0Z" fill="none" />
+                    <path id="Path_5229" data-name="Path 5229"
+                      d="M6.111,5.2V2.8A.789.789,0,0,1,6.889,2h9.333A.789.789,0,0,1,17,2.8V14a.789.789,0,0,1-.778.8H13.889v2.4a.791.791,0,0,1-.783.8H3.783a.768.768,0,0,1-.553-.233A.812.812,0,0,1,3,17.2L3,6a.791.791,0,0,1,.783-.8Zm1.556,0h6.222v8h1.556V3.6H7.667Zm-1.556,4v1.6h4.667V9.2Zm0,3.2V14h4.667V12.4Z"
+                      fill="#185b85" />
+                  </svg>
+                </a>&nbsp;&nbsp;
+                <a *ngIf="
+                    isLivestackAdmin ||
+                    (!isLivestackAdmin && userOrgId == project?.orgId)
+                  " href="javascript:void(0)" appPermission [permissionType]="masterConfig.isModify"
+                  (click)="onEditProject(project.projectId,'edit')"><svg xmlns="http://www.w3.role/2000/svg" width="16"
+                    height="16" viewBox="0 0 16 16">
+                    <path id="pencil-alt"
+                      d="M15.583,4.513,14.142,5.954a.375.375,0,0,1-.531,0L10.142,2.485a.375.375,0,0,1,0-.531L11.583.513a1.5,1.5,0,0,1,2.122,0l1.878,1.878A1.5,1.5,0,0,1,15.583,4.513ZM8.9,3.192.7,11.4.035,15.2a.751.751,0,0,0,.869.869L4.7,15.4l8.207-8.207a.375.375,0,0,0,0-.531L9.439,3.192a.379.379,0,0,0-.534,0Zm-5,7.5a.436.436,0,0,1,0-.619L8.714,5.263a.438.438,0,0,1,.619.619L4.52,10.695a.436.436,0,0,1-.619,0ZM2.773,13.323h1.5v1.134l-2.016.353-.972-.972.353-2.016H2.773Z"
+                      transform="translate(-0.024 -0.075)" fill="#185b85" />
+                  </svg></a>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="loading">
+              <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+                Loading, please wait...
+              </mat-footer-cell>
+            </ng-container>
+            <ng-container matColumnDef="noData">
+              <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+                {{ "common.No_records_found" | translate }}
+              </mat-footer-cell>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <!-- <div *ngIf="dataSource.data.length > 0">
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+          </tr>
+        </div> -->
+
+            <mat-footer-row *matFooterRowDef="['noData']" [hidden]="data && data.length > 0">
+            </mat-footer-row>
+            <mat-footer-row *matFooterRowDef="['loading']" [hidden]="data !== undefined"></mat-footer-row>
+          </table>
+          <div [hidden]="data.length == 0">
+            <mat-paginator [pageSizeOptions]="[20, 40,60, 80, 100]" aria-label="Select page of users"
+              #paginatorRef></mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

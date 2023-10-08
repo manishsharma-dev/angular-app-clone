@@ -1,0 +1,322 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<section class="dashboard-detail">
+  <div class="custom-row no-gutters mt-2">
+    <div class="col-xl-6">
+      <div class="custom-row no-gutters h-100">
+        <div class="col-md-12 mb-3">
+          <app-common-search-box
+            [searchOnlyTagId]="true"
+            [inDashboard]="true"
+            (search)="onAnimalSearch($event)"
+          ></app-common-search-box>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-6">
+      <div class="custom-row no-gutters h-100">
+        <div class="col-md-12 mb-3">
+          <div class="card h-100">
+            <div class="custom-card--body">
+              <h5 class="mb-2">{{ "dashboard.role" | translate }}</h5>
+              <select
+                id="role"
+                class="form-control custom-select"
+                (change)="getRole($event)"
+                *ngIf="selected"
+                [(ngModel)]="selectedDefaultRole"
+              >
+                <option
+                  [value]="
+                    selected.defaultRoleCd + '-' + selected.defaultRoleDesc
+                  "
+                >
+                  {{ selected.defaultRoleDesc }}
+                </option>
+                <option
+                  [value]="selectedRole.roleCd + '-' + selectedRole.roleDesc"
+                  *ngFor="let selectedRole of selected['additionalRoleAccess']"
+                >
+                  {{ selectedRole.roleDesc }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="custom-row no-gutters">
+    <div class="col-xl-6 col-md-6 mb-3">
+      <div class="card list-tile h-100">
+        <div class="card-header d-flex justify-content-between">
+          <div class="label-heading col-md-6 p-0">
+            {{ "notification.worklist_lbl" | translate }}
+          </div>
+          <div class="label-view col-md-6 p-0 text-right">
+            <a
+              href="javascript:void(0)"
+              routerLink="/dashboard/notification/work-list"
+              (click)="setTabs(isUserWorklistTabSelected)"
+              >{{ "notification.view_all" | translate }}</a
+            >
+          </div>
+        </div>
+        <div class="custom-card--body">
+          <mat-tab-group
+            mat-align-tabs=""
+            [selectedIndex]="0"
+            (selectedTabChange)="changeWorlistTab($event)"
+          >
+            <mat-tab>
+              <ng-template mat-tab-label>
+                {{ "common.supervisor_label" | translate }}
+              </ng-template>
+
+              <div
+                class="img mr-3 ml-2"
+                *ngIf="recentWorkListData?.length == 0"
+              >
+                <p class="mb-1">
+                  {{ "notification.no_pending_item" | translate }}
+                </p>
+              </div>
+              <ng-container *ngFor="let worklist of recentWorkListData">
+                <div class="worklist-block">
+                  <div class="d-flex flex-wrap align-items-center mb-1 mt-3">
+                    <div class="col-md-12 col-sm-12">
+                      <div class="d-flex justify-content-between">
+                        <div class="label-heading col-md-6 p-0">
+                          <span class="notification-label d-flex">
+                            <p
+                              class="ellips-text mr-1"
+                              data-toggle="tooltip"
+                              data-placement="top"
+                            >
+                              {{ "notification.req_id" | translate }}:
+                              {{ worklist.requestId }}
+                            </p></span
+                          >
+                        </div>
+                        <div class="label-view col-md-6 p-0 text-right">
+                          <div class="img mr-3 text-right">
+                            <a
+                              _ngcontent-yjs-c217=""
+                              _ngcontent-iaq-c376=""
+                              href="javascript:void(0)"
+                              (click)="viewWorkListDialog(worklist)"
+                              ><svg
+                                id="Component_58_16"
+                                data-namdeleteRowe="Component 58 – 16"
+                                xmlns="http://www.w3.role/2000/svg"
+                                width="20.037"
+                                height="20.037"
+                                viewBox="0 0 20.037 20.037"
+                              >
+                                <path
+                                  id="Path_5226"
+                                  data-name="Path 5226"
+                                  d="M0,0H20.037V20.037H0Z"
+                                  fill="none"
+                                ></path>
+                                <path
+                                  id="Path_5227"
+                                  data-name="Path 5227"
+                                  d="M1.181,10.514a9.186,9.186,0,0,1,18.065,0,9.186,9.186,0,0,1-18.065,0Zm9.032,4.174a4.174,4.174,0,1,0-4.174-4.174A4.174,4.174,0,0,0,10.213,14.688Zm0-1.67a2.5,2.5,0,1,1,2.5-2.5A2.5,2.5,0,0,1,10.213,13.018Z"
+                                  transform="translate(-0.195 -0.495)"
+                                  fill="#185b85"
+                                ></path>
+                              </svg>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="d-flex flex-wrap">
+                    <div
+                      id="notification-detail"
+                      class="notification col-md-12"
+                    >
+                      <ul class="notification-label d-flex">
+                        <li>
+                          {{ "notification.module" | translate }} :
+                          {{ worklist.moduleName }}
+                        </li>
+                        <li class="ml-3">
+                          {{ "common.status" | translate }} :
+                          {{ worklist.transactionApprovalStatus }}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="h-divider"></div>
+              </ng-container>
+            </mat-tab>
+
+            <mat-tab style="justify-content: center">
+              <ng-template mat-tab-label>
+                {{ "common.user_worklist" | translate }}
+              </ng-template>
+              <div
+                class="img mr-3 ml-2"
+                *ngIf="recentWorkListData?.length == 0"
+              >
+                <p class="mb-1">
+                  {{ "notification.no_pending_item" | translate }}
+                </p>
+              </div>
+              <ng-container *ngFor="let worklist of recentWorkListData">
+                <div>
+                  <div class="d-flex flex-wrap align-items-center mb-1 mt-3">
+                    <div class="col-md-12 col-sm-12">
+                      <div class="d-flex justify-content-between">
+                        <div class="label-heading col-md-6 p-0">
+                          <span class="notification-label d-flex">
+                            <p
+                              class="ellips-text mr-1"
+                              data-toggle="tooltip"
+                              data-placement="top"
+                            >
+                              {{ "notification.req_id" | translate }}:
+                              {{ worklist.requestId }}
+                            </p></span
+                          >
+                        </div>
+                        <div class="label-view col-md-6 p-0 text-right">
+                          <div class="img mr-3 text-right">
+                            <a
+                              _ngcontent-yjs-c217=""
+                              _ngcontent-iaq-c376=""
+                              href="javascript:void(0)"
+                              (click)="viewWorkListDialog(worklist)"
+                              ><svg
+                                id="Component_58_16"
+                                data-namdeleteRowe="Component 58 – 16"
+                                xmlns="http://www.w3.role/2000/svg"
+                                width="20.037"
+                                height="20.037"
+                                viewBox="0 0 20.037 20.037"
+                              >
+                                <path
+                                  id="Path_5226"
+                                  data-name="Path 5226"
+                                  d="M0,0H20.037V20.037H0Z"
+                                  fill="none"
+                                ></path>
+                                <path
+                                  id="Path_5227"
+                                  data-name="Path 5227"
+                                  d="M1.181,10.514a9.186,9.186,0,0,1,18.065,0,9.186,9.186,0,0,1-18.065,0Zm9.032,4.174a4.174,4.174,0,1,0-4.174-4.174A4.174,4.174,0,0,0,10.213,14.688Zm0-1.67a2.5,2.5,0,1,1,2.5-2.5A2.5,2.5,0,0,1,10.213,13.018Z"
+                                  transform="translate(-0.195 -0.495)"
+                                  fill="#185b85"
+                                ></path>
+                              </svg>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="d-flex flex-wrap">
+                    <div
+                      id="notification-detail"
+                      class="notification col-md-12"
+                    >
+                      <ul class="notification-label d-flex">
+                        <li>
+                          {{ "notification.module" | translate }} :
+                          {{ worklist.moduleName }}
+                        </li>
+                        <li class="ml-3">
+                          {{ "common.status" | translate }} :
+                          {{ worklist.transactionApprovalStatus }}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="h-divider"></div>
+              </ng-container>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+
+        <!-- <div class="custom-card--body activity-list list-gap">
+          <div
+            class="outer-box d-flex align-items-center justify-content-between mb-2"
+          >
+            class="outer-box d-flex align-items-center justify-content-between mb-2"
+          >
+            <div class="ms-3">
+              <h3 class="fs-5 mb-1 label-heading">
+                Req ID: 32001236
+              </h3>
+              <p class="label-desc">Module : Animal Breeding</p>
+              <p class="label-desc">Status : Pending</p>
+            </div>
+          </div>
+          <div
+            class="outer-box d-flex align-items-center justify-content-between"
+          >
+            <div class="ms-3">
+              <h3 class="fs-5 mb-1 label-heading">
+                Req ID: 32001237
+              </h3>
+              <p class="label-desc">Module : Animal Breeding</p>
+              <p class="label-desc">Status : Pending</p>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+
+    <div class="col-xl-6 col-md-6 mb-3">
+      <div class="card latest-news list-tile h-100">
+        <div class="card-header d-flex justify-content-between">
+          <div class="label-heading col-md-6 p-0">
+            {{ "notification.notification_lbl" | translate }}
+          </div>
+          <div class="label-view col-md-6 p-0 text-right">
+            <a href="javascript:void(0)" routerLink="/dashboard/notification">{{
+              "notification.view_all" | translate
+            }}</a>
+          </div>
+        </div>
+        <div class="custom-card--body latest-news list-gap">
+          <div class="img mr-3" *ngIf="recentDashboardListData?.length == 0">
+            <p class="mb-1 label-desc">
+              {{ "notification.no_notification" | translate }}
+            </p>
+          </div>
+          <div
+            class="d-flex mb-2"
+            *ngFor="let dashboardlist of recentDashboardListData"
+          >
+            <div class="img mr-3" *ngIf="recentDashboardListData?.length > 0">
+              <img
+                class="rounded-pill"
+                src="../../../assets/images/info.svg"
+                alt="admin"
+              />
+            </div>
+            <div
+              class="ms-3 mt-1 notifications-text-style"
+              *ngIf="recentDashboardListData?.length > 0"
+            >
+              <p class="mb-1">
+                {{ dashboardlist.message }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

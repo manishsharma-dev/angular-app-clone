@@ -1,0 +1,272 @@
+.search-input {
+    background: #fff;
+    border-radius: 16px;
+    font-size: 14px;
+    border: 1px solid #dcdcdc;
+    padding-right: 2.735em;
+
+}
+
+.search-icon .fa-search:hover {
+    background: beige;
+    border-radius: 50%;
+    display: flex;
+    height: 30px;
+    width: 30px;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-icon {
+    position: absolute;
+    right: 20px;
+    top: 2px;
+    display: flex;
+    height: 30px;
+    width: 30px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+
+.search-input:focus {
+    border-color: #dcdcdc !important;
+}
+
+@media only screen and (max-width: 767px) {
+    .search-input {
+        margin-bottom: 10px;
+    }
+}
+
+/*ng select  */
+
+.custom.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
+    background-color: #dcdcdc !important;
+}
+
+/* table design */
+
+
+
+.custom-view-table {
+    box-shadow: none !important;
+    border: 1px solid #929292;
+    border-collapse: inherit;
+}
+
+.custom-view-table .checkbox-input {
+    accent-color: #757575;
+}
+
+.custom-view-table td.mat-cell,
+.custom-view-table th.mat-header-cell {
+    padding: 5px 6px 5px 14px !important;
+}
+
+
+.custom-view-table tr.mat-row,
+.custom-view-table tr.mat-header-row {
+    height: 40px;
+}
+
+.custom-view-table tr.mat-header-row {
+    background: #f8f7fa;
+    height: 42px;
+}
+
+.custom-view-table ::ng-deep.mat-sort-header-arrow {
+    position: absolute;
+    left: -20px !important;
+}
+
+.custom-view-table .status-highlight {
+    padding: 4px 10px;
+    border-radius: 16px;
+    background: #929292;
+    font-weight: bold;
+    opacity: 0.5;
+}
+
+.custom-view-table .cell-width {
+    width: 15%;
+}
+.picker{
+    position: relative;
+    float: right;
+    top: -36%;
+  }
+
+
+
+
+
+  
+  .separator {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .separator .line {
+    height: 1px;
+    flex: 1;
+    background-color: #dcdcdc;
+  }
+  
+  .separator div {
+    padding: 0 8px !important;
+    font-weight: bold;
+    color: black;
+  }
+  
+  .symt-details .symt-details-left {
+    border-right: 1px solid #dee2e6;
+  }
+  
+ 
+  
+  /* table */
+  
+  .symt-details-table {
+    box-shadow: none !important;
+    border-collapse: collapse;
+  }
+  
+
+  .symt-details-table th.mat-header-cell {
+    padding: 0px 10px !important;
+    white-space: nowrap;
+    font-weight: bold;
+    color: black;
+  }
+
+  .symt-details-table td.mat-cell{
+    padding: 0px 10px !important;
+    white-space: nowrap;
+  }
+  
+  .symt-details-table tr.mat-header-row th,
+  .symt-details-table td.mat-cell {
+    border: 1px solid #dcdcdc;
+  }
+  
+  .symt-details-table .table-input {
+    border: transparent;
+    background-color: #fff;
+    padding: 0px;
+  }
+  
+  .symt-details-table tr.mat-row,
+  .symt-details-table tr.mat-header-row {
+    height: 40px;
+  }
+  
+  .symt-details-table tr.mat-header-row th {
+    background: #f8f7fa;
+    height: 38px;
+  }
+  
+  .symt-details-table ::ng-deep.mat-sort-header-arrow {
+    position: absolute;
+    left: -20px !important;
+  }
+  
+  .symt-details-table .status-highlight {
+    padding: 4px 10px;
+    border-radius: 16px;
+    background: #929292;
+    font-weight: bold;
+    opacity: 0.5;
+  }
+  
+  /* .symt-details-table tr.mat-header-row th:last-child,
+  .symt-details-table th:last-child,
+  .symt-details-table td:last-child {
+    border: none !important;
+    background: none;
+  } */
+  
+  
+  .add-row .add-row--btn {
+    cursor: pointer;
+  }
+  
+  .add-row .add-row--icon {
+    font-size: 12px;
+    padding: 6px 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    background: #dcdcdc;
+  }
+  
+ 
+.report-table {
+  box-shadow: none !important;
+  /* border: 1px solid #929292; */
+  border-collapse: inherit;
+}
+
+.report-table td.mat-cell,
+.report-table th.mat-header-cell {
+  padding: 5px 10px !important;
+  white-space: nowrap;
+}
+
+.report-table td.mat-cell {
+  border: none;
+}
+
+.report-table input.check-input {
+  vertical-align: inherit;
+}
+
+.report-table tr.mat-row,
+.report-table tr.mat-header-row {
+  height: 40px;
+}
+
+.report-table tr.mat-header-row th {
+  background: transparent;
+  color: #3c3c3c;
+  font-weight: bold;
+  height: 38px;
+}
+
+.report-table .status-highlight {
+  padding: 4px 10px;
+  border-radius: 16px;
+  background: #929292;
+  font-weight: bold;
+  opacity: 0.5;
+}
+.report-table td.mat-cell .mat-custom-column {
+  display: inline-block;
+  width: 170px;
+  white-space: break-spaces;
+  word-wrap: break-word;
+}
+
+
+td , th {
+
+  white-space: normal;
+
+  word-wrap: break-word;
+
+  max-width: 200px;
+
+}
+
+
+
+
+
+  
+
+
+
+
+
+  

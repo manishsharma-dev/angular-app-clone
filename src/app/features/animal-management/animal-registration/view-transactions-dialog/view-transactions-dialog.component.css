@@ -1,0 +1,189 @@
+.campaign-edit-dialog {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.campaign-edit-header {
+  flex-grow: 0;
+  flex-shrink: 0;
+  background: #124c60;
+  padding: 15px;
+  color: #fff;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.edit-heading .edit-heading-label{
+  font-size: 18px;
+  font-family: Noto Sans;
+  font-weight: bold;
+  letter-spacing: .5px;
+  color: #fff;
+}
+.edit-heading .edit-heading-desc{
+  font-size: 14px;
+  font-family: Noto Sans;
+  font-weight: normal;
+  letter-spacing: 0px;
+  color: #fff;
+}
+
+
+.dialog-accordion-content-content {
+  flex-grow: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 20px 20px;
+}
+
+.campaign-edit-footer {
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border: 1px solid #beccd1;
+  background: #eaf0f2;
+  padding: 15px;
+}
+
+.accordion.transaction-accordion .card {
+  border: none;
+  overflow: hidden !important;
+  border-radius: 4px;
+}
+
+.accordion.transaction-accordion .card .card-header {
+  overflow: hidden !important;
+  padding: 0.6rem 0.9rem;
+  background-color: #edf3f5;
+  border: 1px solid #d7e8ee;
+}
+
+.accordion.transaction-accordion .card .acc-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accordion.transaction-accordion .card .card-body.transaction-detail {
+  background-color: #edf3f5;
+  padding: 0.6rem 0.9rem;
+  margin-top: 5px;
+  border: 1px solid #d7e8ee;
+}
+
+.acc-heading .fa-angle-down {
+  font-size: 20px;
+}
+
+.transaction-information .tabs-nav-list {
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.transaction-information .nav-pills {
+  background-color: #092934;
+}
+
+.transaction-information .tabs-nav-list .nav-pills .nav-link {
+  color: #bcbcbc;
+  font-weight: bold;
+}
+
+.transaction-information .tabs-nav-list .nav-pills .nav-link.active {
+  background-color: #092934 !important;
+  color: #fff;
+}
+
+/* .accordion.transaction-accordion .card .card-header a:not(.collapsed) .rotate-icon {
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
+  font-size: 20px;
+} */
+
+.card-header h5 {
+  color: #3c3c3c;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.accordion.transaction-accordion .card .card-header a:not(.collapsed) h5 {
+  font-weight: bold;
+  color: #185b85;
+  font-size: 14px;
+  font-family: Noto Sans;
+}
+
+.owner-transfer-section .current-trans > p,
+.owner-transfer-section .prev-trans > p {
+  color: #6c747b;
+  font-weight: normal;
+  font-size: 14px;
+  font-family: Noto Sans;
+}
+
+.transaction-detail .transaction-list .transaction-item .transaction-title,
+.transaction-detail .transaction-list .transaction-item .transaction-desc {
+  font-weight: normal;
+  font-size: 14px;
+  font-family: Noto Sans;
+  color: #333333;
+}
+
+.transaction-detail .transaction-list .transaction-item .transaction-desc {
+  font-weight: bold;
+}
+
+.transaction-detail .transaction-list {
+  list-style: none;
+}
+
+.transaction-detail .transaction-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.dialog-main-content {
+  flex-grow: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 20px 15px;
+}
+
+.dialog-main-content::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #fff;
+}
+
+.dialog-main-content::-webkit-scrollbar {
+  width: 5px;
+  background-color: #fff;
+  opacity: 0.8;
+}
+
+.dialog-main-content::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #5f6160;
+  opacity: 0.8;
+}
+
+a[aria-expanded="true"] .rotate-icon {
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+
+.transaction-accordion .card-header a:hover {
+  text-decoration: none;
+}
+
+.info-data .custom-breed-display{
+  list-style-type: none;
+  display: grid;
+  text-align: right;
+}

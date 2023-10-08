@@ -1,0 +1,179 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="report-edit-dialog">
+  <!-- header -->
+  <div class="report-edit-header">
+    <div class="headeing">
+      <h2 class="edit-heading-label">{{ this.data.subModuleName }}</h2>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+
+  <!-- contant -->
+  <div class="dialog-main-content">
+    <div class="select-date">
+      <div class="row date-label mb-2">
+        <div class="col-md-12">
+          <span>{{
+            "userReport.select_date_filter" | translate }}</span>
+        </div>
+      </div>
+      <div class="form-row mb-3" [formGroup]="userReportForm">
+        <div class="form-group col-4 form-to-date">
+          <label for="formReport" class="form-label">{{
+            "userReport.from_Report_Date" | translate }}<span class="mandatory-field">*</span></label>
+          <input class="form-control " [matDatepicker]="fromReportDate" formControlName="fromDate" [min]="fromMinDate"
+            [max]="fromMaxDate" placeholder="dd/mm/yyyy" />
+          <mat-datepicker-toggle matSuffix [for]="fromReportDate" class="filter-picker"></mat-datepicker-toggle>
+          <mat-datepicker #fromReportDate></mat-datepicker>
+          <span class="alert-message" *ngIf="
+                (f.fromDate.dirty &&
+                f.fromDate
+                    .invalid) ||
+                    f.fromDate.touched
+              ">
+            <span *ngIf="
+              f.fromDate.hasError(
+                    'required'
+                  )
+                ">
+              {{ validationMsg.required | translate }}
+            </span>
+            <span *ngIf="
+              f.fromDate.hasError(
+                    'matDatepickerMin'
+                  ) || f.fromDate.hasError(
+                    'matDatepickerMax'
+                  )
+                ">
+              {{ "animalTreatmentSurgery.please_enter_valid_date" | translate }}
+            </span>
+          </span>
+        </div>
+        <div class="form-group col-4 form-to-date">
+          <label for="toReport" class="form-label">{{
+            "userReport.to_Report_Date" | translate }}<span class="mandatory-field">*</span></label>
+          <input class="form-control " [matDatepicker]="toDate" formControlName="toDate" [min]="toMinDate"
+            [max]="toMaxDate" placeholder="dd/mm/yyyy" />
+          <mat-datepicker-toggle matSuffix [for]="toDate" class="filter-picker"></mat-datepicker-toggle>
+          <mat-datepicker #toDate></mat-datepicker>
+          <span class="alert-message" *ngIf="
+                (f.toDate.dirty &&
+                f.toDate
+                    .invalid) ||
+                    f.toDate.touched
+              ">
+            <span *ngIf="
+              f.toDate.hasError(
+                    'required'
+                  )
+                ">
+              {{ validationMsg.required | translate }}
+            </span>
+            <span *ngIf="
+              f.toDate.hasError(
+                    'matDatepickerMin'
+                  ) || f.toDate.hasError(
+                    'matDatepickerMax'
+                  )
+                ">
+              {{ "animalTreatmentSurgery.please_enter_valid_date" | translate }}
+            </span>
+          </span>
+        </div>
+
+        <div class="form-group col-4" style="padding-top:34px">
+          <button type="submit" class="btn btn-primary" (click)="userReportSubmit()"> {{ "common.submit" |
+            translate }}</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- activity-table  -->
+    <div class="row activityServiceTable table-view">
+      <div class="col-md-12">
+        <div class="table-responsive mb-3">
+          <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <ng-container matColumnDef="sr_no">
+              <th mat-header-cell *matHeaderCellDef>{{ "common.sno" | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i = index" class="cell-width">
+                {{ paginator.pageIndex * paginator.pageSize + (i + 1) }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="subModuleName">
+              <th mat-header-cell mat-sort-header *matHeaderCellDef> {{ "notification.sub_module" |
+                translate }}
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.subModuleName }}
+              </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="ownerId">
+              <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "userReport.ownerId" |
+                translate }}
+              </th>
+              <td mat-cell *matCellDef="let element" class="cell-width">
+                {{ element.ownerId ?? '-' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="animalId">
+              <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "userReport.animalId" |
+                translate }}
+              </th>
+              <td mat-cell *matCellDef="let element" class="cell-width">
+                {{ element.animalId ?? '-' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="tagId">
+              <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "userReport.tagId" |
+                translate }}
+              </th>
+              <td mat-cell *matCellDef="let element" class="cell-width">
+                {{ element.tagId ?? '-' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="creationDate">
+              <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "userReport.transactionDate" |
+                translate }}
+              </th>
+              <td mat-cell *matCellDef="let element" class="cell-width">
+                {{ element.creationDate | customDateFormatter }}
+              </td>
+            </ng-container>
+
+            <tr class="action-link table-head" mat-header-row *matHeaderRowDef="activityDisplayedColumns">
+            </tr>
+            <tr class="action-link table-head" mat-row *matRowDef="let row; columns: activityDisplayedColumns"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell text-center" [attr.colspan]="activityDisplayedColumns.length">
+                {{"diseaseTesting.no_data_available" | translate}}
+              </td>
+            </tr>
+          </table>
+        </div>
+        <mat-paginator #paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="itemsPerPage" [length]="totalData"
+          showFirstLastButtons aria-label="Select page of periodic elements">
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <div class="report-edit-footer">
+    <button type="submit" class="btn btn-primary" (click)="downloadMyFile()" cdkFocusInitial>{{"userReport.download" |
+      translate}}</button>
+  </div>
+
+</div>

@@ -1,0 +1,237 @@
+.edit-dialog {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-section-header {
+  flex-grow: 0;
+  flex-shrink: 0;
+  background: #124c60;
+  padding: 15px;
+  color: #fff;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.edit-section-header mat-icon {
+  float: right;
+}
+
+
+.edit-container .section-title {
+  width: 100%;
+  font-size: 14px;
+  padding: 6px 14px;
+  font-weight: bold;
+  background: #f8f7fa;
+  letter-spacing: 0px;
+  color: #8a8a8a;
+}
+
+.edit-container .section-title .reported-id {
+  color: #000;
+}
+
+.edit-container .label-header {
+  letter-spacing: 0px;
+  color: #000;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+
+.edit-container {
+  flex-grow: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 15px 15px;
+}
+
+.edit-footer {
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border: 1px solid #beccd1;
+  background: #eaf0f2;
+  padding: 15px;
+}
+
+.edit-container::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #fff;
+}
+
+.edit-dialog .edit-container::-webkit-scrollbar {
+  width: 5px;
+  background-color: #fff;
+  opacity: 0.8;
+}
+
+.edit-dialog .edit-container::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #5f6160;
+  opacity: 0.8;
+}
+
+.picker {
+  float: right;
+  margin-top: -39px;
+}
+
+.table-view table tr th {
+  background-color: #edf3f5;
+}
+
+/*Expansion Panel*/
+.paragraph {
+  overflow-wrap: break-word;
+}
+
+.custom-dialog-container .mat-dialog-container {
+  border-radius: 0px !important;
+  padding: 9px !important;
+  overflow-y: hidden;
+}
+
+
+/* table */
+
+.symt-details-table {
+  box-shadow: none !important;
+  border-collapse: collapse;
+}
+
+
+.symt-details-table th.mat-header-cell {
+  padding: 0px 10px !important;
+  white-space: nowrap;
+  font-weight: bold;
+  color: black;
+}
+
+.symt-details-table td.mat-cell {
+  padding: 0px 10px !important;
+  white-space: nowrap;
+}
+
+.symt-details-table tr.mat-header-row th,
+.symt-details-table td.mat-cell {
+  border: 1px solid #dcdcdc;
+}
+
+.symt-details-table .table-input {
+  border: transparent;
+  background-color: #fff;
+  padding: 0px;
+}
+
+.symt-details-table tr.mat-row,
+.symt-details-table tr.mat-header-row {
+  height: 40px;
+}
+
+.symt-details-table tr.mat-header-row th {
+  background: #f8f7fa;
+  height: 38px;
+}
+
+.symt-details-table ::ng-deep.mat-sort-header-arrow {
+  position: absolute;
+  left: -20px !important;
+}
+
+.symt-details-table .status-highlight {
+  padding: 4px 10px;
+  border-radius: 16px;
+  background: #929292;
+  font-weight: bold;
+  opacity: 0.5;
+}
+
+/* .symt-details-table tr.mat-header-row th:last-child,
+.symt-details-table th:last-child,
+.symt-details-table td:last-child {
+  border: none !important;
+  background: none;
+} */
+
+
+.add-row .add-row--btn {
+  cursor: pointer;
+}
+
+.add-row .add-row--icon {
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background: #dcdcdc;
+}
+
+
+.report-table {
+  box-shadow: none !important;
+  /* border: 1px solid #929292; */
+  border-collapse: inherit;
+}
+
+.report-table td.mat-cell,
+.report-table th.mat-header-cell {
+  padding: 5px 10px !important;
+  white-space: nowrap;
+}
+
+.report-table td.mat-cell {
+  border: none;
+}
+
+.report-table input.check-input {
+  vertical-align: inherit;
+}
+
+.report-table tr.mat-row,
+.report-table tr.mat-header-row {
+  height: 40px;
+}
+
+.report-table tr.mat-header-row th {
+  background: transparent;
+  color: #3c3c3c;
+  font-weight: bold;
+  height: 38px;
+}
+
+.report-table .status-highlight {
+  padding: 4px 10px;
+  border-radius: 16px;
+  background: #929292;
+  font-weight: bold;
+  opacity: 0.5;
+}
+
+.report-table td.mat-cell .mat-custom-column {
+  display: inline-block;
+  width: 170px;
+  white-space: break-spaces;
+  word-wrap: break-word;
+}
+
+
+td,
+th {
+
+  white-space: normal;
+
+  word-wrap: break-word;
+
+  max-width: 200px;
+
+}

@@ -1,0 +1,247 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+    <div class="center">
+        <mat-spinner class="center"></mat-spinner>
+    </div>
+</div>
+
+<div class="add-diagnostics-dialog">
+    <div class="add-diagnostics-header">
+      <div class="headeing">
+        <h3>{{'animalDetails.add_additional_information'|translate}}</h3>
+      </div>
+      <div class="cross-icon">
+        <mat-icon mat-dialog-close>clear</mat-icon>
+      </div>
+    </div>
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+    <div class="main-section">
+       <form [formGroup]="additionalAnimalForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+            <label for="Breed and Exotic Blood Level">{{'animalDetails.blood_level'|translate}}<span
+                class="mandatory-field">*</span></label>
+        </div>
+        <div formArrayName="breedAndExoticLevels">
+            <div class="form-row" *ngFor="let level of levels.controls; let i=index" [formGroupName]="i">
+          
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <select class="form-control" name="selectbreedCd"
+                            formControlName="breedCd" 
+                            >
+                            <option [value]="null">{{'animalDetails.select'|translate}} {{'animalDetails.breed'|translate}}</option>
+                            <option [value]="breed?.breedCd"
+                            *ngFor="let breed of breedDetails">
+                                {{breed?.breedName}} </option>
+
+                        </select>
+                       
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                       
+                        <select class="form-control" name="selectExoticLevelCd"
+                            formControlName="bloodExoticLevelCd"
+                            >
+                            <option [value]="null">{{'animalDetails.select'|translate}} {{'common.level'|translate}}</option>
+                            <option [value]="exotic_type?.cd"
+                            *ngFor="let exotic_type of exoticLevel">
+                                {{exotic_type?.value}} %</option>
+
+                        </select>
+                       
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="align-self-stretch mr-10" (click)="removeBreedExoticLevel(i)">
+                        <i aria-hidden="true" class="fa fa-trash-o icon-pointer icon-section delete-icon-position"></i>
+                      </div>
+                </div>
+        </div>
+        </div>
+     
+        <div class="form-row">
+            <a href="javascript:void(0)" (click)="addMoreExoticLevel(1)">{{'animalDetails.editAnimalDetails.add_more' | translate}}</a>
+        </div>
+        <div class="h-divider">
+            <div class="shadow"></div>
+          </div>
+          <div class="form-row mb-2">
+            <div class="col-md-6">
+              <h3><strong>{{'animalDetails.family_details' | translate}}</strong></h3>
+            </div>
+          </div>
+  
+          <div
+          class="form-row"
+          *ngIf="
+            animalData.sireId == undefined && animalData.sireIdText == undefined
+          "
+        >
+          <div class="form-group col-md-6">
+            <label for="typeOfSireID">Type Of Sire ID<span
+                class="mandatory-field">*</span></label>
+            <select
+              class="form-control"
+              name="typeOfSireID"
+              formControlName="sireIdType"
+              (change)="onSelectingSireIDType($event)"
+            >
+              <option value="" selected disabled>Select Sire Id type</option>
+              <option *ngFor="let crrType of sireIdTypes" [value]="crrType.cd">
+                {{ crrType.value }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row" *ngIf="isSireIdTypeSelected">
+          <div class="form-group col-md-6">
+            <label for="sireId" class="form-label">{{
+              "animalDetails.sire_Id" | translate
+            }}<span
+            class="mandatory-field">*</span></label>
+            <input
+              type="email"
+              class="form-control"
+              id="sireId"
+              formControlName="sireId"
+              placeholder="{{ 'animalDetails.enter_sireId' | translate }}"
+              [maxLength]="20"
+              (blur)="getSireSireId()"
+            />
+            <div
+              *ngIf="
+                !formControls.sireId.pristine &&
+                formControls.sireId.invalid
+              "
+              class="alert-message"
+            >
+              <p>{{ "errorMsg.no_sire_id" | translate }}</p>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="altid" class="form-label">{{
+              "animalDetails.sire_sire_id" | translate
+            }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="altid"
+              formControlName="sireSireId"
+              placeholder="{{ 'animalDetails.enter_siresireId' | translate }}"
+              [maxLength]="20"
+              [value]="sireSireIdValue"
+            />
+            <div
+              *ngIf="
+                !formControls.sireSireId.pristine &&
+                formControls.sireSireId.invalid
+              "
+              class="alert-message"
+            >
+              <p>{{ "errorMsg.no_sire2_id" | translate }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div
+        class="form-row"
+        *ngIf="
+          animalData.damId == undefined && animalData.damIdText == undefined
+        "
+      >
+        <div class="form-group col-md-6">
+          <label for="typeOfSireID">Type Of Dam ID<span
+            class="mandatory-field">*</span></label>
+          <select
+            class="form-control"
+            name="typeOfSireID"
+            (change)="onSelectingDamIDType($event)"
+            formControlName="damIdType"
+          >
+            <option value="" selected disabled>Select Dam Id type</option>
+            <option *ngFor="let crrType of damIdTypes" [value]="crrType.cd">
+              {{ crrType.value }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row" *ngIf="isDamIdTypeSelected">
+        <div class="form-group col-md-6">
+          <label for="damid" class="form-label">{{
+            "animalDetails.dam_Id" | translate
+          }}<span
+          class="mandatory-field">*</span></label>
+          <input
+            type="text"
+            value=""
+            class="form-control"
+            id="damId"
+            formControlName="damId"
+            placeholder="{{ 'animalDetails.enter_damId' | translate }}"
+            [maxLength]="20"
+            (blur)="getDamSireId()"
+          />
+          <div
+            *ngIf="
+              !formControls.damId.pristine &&
+              formControls.damId.invalid
+            "
+            class="alert-message"
+          >
+            <p>{{ "errorMsg.no_dam_id" | translate }}</p>
+          </div>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="dsid" class="form-label">{{
+            "animalDetails.dam_Sire_Id" | translate
+          }}</label>
+          <input
+            type="text"
+            class="form-control"
+            id="dsid"
+            formControlName="damSireId"
+            placeholder="{{ 'animalDetails.enter_damsireId' | translate }}"
+            [maxLength]="20"
+          />
+          <div
+            *ngIf="
+              !formControls.damSireId.pristine &&
+              formControls.damSireId.invalid
+            "
+            class="alert-message"
+          >
+            <p>{{ "errorMsg.no_damSire_id" | translate }}</p>
+          </div>
+        </div>
+      </div>
+
+          <div class="form-row">
+            <div class="col-md-6" *ngIf="isSireIdTypeSelected">
+                <div class="form-group">
+                    <label for="Case Status">{{'animalBreeding.sire_dam_id'|translate}}</label>
+                    <input class="form-control" type="text"  formControlName="sireDamId"/>
+                </div>
+            </div>
+            <div class="col-md-6" *ngIf="isDamIdTypeSelected">
+                <div class="form-group">
+                    <label for="Case Status">{{'animalBreeding.dam_dam_id'|translate}}</label>
+                    <input class="form-control" type="text"  formControlName="damDamId"/>
+                </div>
+            </div>
+        </div>
+        <div class="h-divider additional-info mr-top-10">
+            <div class="shadow"></div>
+        </div>
+        <div class="footer d-flex">
+            <button type="button" class="btn btn-light mr-2 ml-auto" mat-dialog-close>
+                {{'animalDetails.cancel'|translate}}
+            </button>
+            <button type="submit" class="btn btn-primary">{{'common.submit'|translate}}</button>
+        </div>
+       </form>
+        
+    </div>

@@ -1,0 +1,242 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<app-common-breadcrumb
+  [breadcrumbKeys]="[
+    'performanceRecording.pr',
+    'performanceRecording.generate_sample_ids'
+  ]"
+>
+</app-common-breadcrumb>
+
+<section class="owner-reg">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-2">
+            <div class="back-arrow">
+              <i
+                class="fa fa-chevron-left mr-2 back-section"
+                routerLink=".."
+              ></i>
+            </div>
+            <div class="title-section">
+              <div class="title-heading">
+                <span class="muted-label-heading">
+                  {{
+                    "performanceRecording.previously_generated_sampleids"
+                      | translate
+                  }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label for="projectId" class="form-label">{{
+                  "performanceRecording.project" | translate
+                }}</label>
+                <ng-select
+                  [items]="userProjects"
+                  bindLabel="projectName"
+                  bindValue="projectId"
+                  id="projectId"
+                  formControlName="projectId"
+                  placeholder="Select Project"
+                >
+                </ng-select>
+                <div
+                  class="alert-message"
+                  *ngIf="
+                    searchForm.get('projectId').invalid &&
+                    (searchForm.get('projectId').touched ||
+                      searchForm.get('projectId').dirty)
+                  "
+                >
+                  <span
+                    *ngIf="searchForm.get('projectId').hasError('required')"
+                  >
+                    {{ cmnValidations.required | translate }}
+                  </span>
+                </div>
+              </div>
+              <div class="form-group col-md-4 input-icon">
+                <label for="Treatment Date"
+                  >{{ "performanceRecording.from_date" | translate
+                  }}<span class="mandatory-field">*</span></label
+                >
+                <input
+                  class="form-control"
+                  type="text"
+                  [max]="today"
+                  [matDatepicker]="fromDatePicker"
+                  formControlName="fromDate"
+                  placeholder="dd/mm/yyyy"
+                  (dateChange)="searchForm.get('toDate').reset()"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="fromDatePicker"
+                  class="calender-icon"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #fromDatePicker></mat-datepicker>
+
+                <span
+                  class="alert-message"
+                  *ngIf="
+                    (searchForm.get('fromDate').dirty &&
+                      searchForm.get('fromDate').invalid) ||
+                    searchForm.get('fromDate').touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      searchForm.get('fromDate').hasError('matDatepickerMin')
+                    "
+                  >
+                    {{ "common.please_enter_valid_date" | translate }}
+                  </span>
+                  <span
+                    *ngIf="
+                      searchForm.get('fromDate').hasError('matDatepickerMax')
+                    "
+                  >
+                    {{ "common.please_enter_valid_date" | translate }}
+                  </span>
+                  <span
+                    *ngIf="
+                      searchForm.get('fromDate').hasError('matDatepickerParse')
+                    "
+                  >
+                    {{ "common.please_enter_valid_date" | translate }}
+                  </span>
+                  <span
+                    *ngIf="
+                      searchForm.get('fromDate').hasError('required') &&
+                      !searchForm.get('fromDate').hasError('matDatepickerParse')
+                    "
+                  >
+                    {{ cmnValidations.required | translate }}
+                  </span>
+                </span>
+              </div>
+
+              <div class="form-group col-md-4 input-icon">
+                <label for="Treatment Date"
+                  >{{ "performanceRecording.to_date" | translate
+                  }}<span class="mandatory-field">*</span></label
+                >
+                <input
+                  class="form-control"
+                  type="text"
+                  [min]="searchForm.get('fromDate').value"
+                  [max]="today"
+                  [matDatepicker]="toDatePicker"
+                  formControlName="toDate"
+                  placeholder="dd/mm/yyyy"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="toDatePicker"
+                  class="calender-icon"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #toDatePicker></mat-datepicker>
+
+                <span
+                  class="alert-message"
+                  *ngIf="
+                    (searchForm.get('toDate').dirty &&
+                      searchForm.get('toDate').invalid) ||
+                    searchForm.get('toDate').touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      searchForm.get('toDate').hasError('matDatepickerMin')
+                    "
+                  >
+                    {{ "common.please_enter_valid_date" | translate }}
+                  </span>
+                  <span
+                    *ngIf="
+                      searchForm.get('toDate').hasError('matDatepickerMax')
+                    "
+                  >
+                    {{ "common.please_enter_valid_date" | translate }}
+                  </span>
+                  <span
+                    *ngIf="
+                      searchForm.get('toDate').hasError('matDatepickerParse')
+                    "
+                  >
+                    {{ "common.please_enter_valid_date" | translate }}
+                  </span>
+                  <span
+                    *ngIf="
+                      searchForm.get('toDate').hasError('required') &&
+                      !searchForm.get('toDate').hasError('matDatepickerParse')
+                    "
+                  >
+                    {{ cmnValidations.required | translate }}
+                  </span>
+                </span>
+              </div>
+
+              <div class="form-group col-md-4">
+                <label for="Status" class="form-label"
+                  >{{ "common.status" | translate
+                  }}<span class="mandatory-field">*</span></label
+                >
+                <ng-select
+                  formControlName="sampleIdStatus"
+                  class="custom"
+                  [multiple]="true"
+                  [closeOnSelect]="false"
+                >
+                  <ng-option
+                    *ngFor="let status of sampleIdStatus"
+                    [value]="status.cd"
+                    >{{ status.value }}</ng-option
+                  >
+                </ng-select>
+                <div
+                  class="alert-message"
+                  *ngIf="
+                    searchForm.get('sampleIdStatus').invalid &&
+                    (searchForm.get('sampleIdStatus').touched ||
+                      searchForm.get('sampleIdStatus').dirty)
+                  "
+                >
+                  <span
+                    *ngIf="
+                      searchForm.get('sampleIdStatus').hasError('required')
+                    "
+                  >
+                    {{ cmnValidations.required | translate }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="col-md-auto submit-btn mb-3">
+                <button type="submit" class="btn btn-primary">
+                  {{ "performanceRecording.search_btn" | translate }}
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-available-ids-list
+  [sampleIDs]="sampleIDs"
+  [viewMode]="true"
+  (export)="onExport($event)"
+  *ngIf="isTableVisible"
+></app-available-ids-list>

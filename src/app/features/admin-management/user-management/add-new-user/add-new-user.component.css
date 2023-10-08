@@ -1,0 +1,103 @@
+/* img {
+  border: 1px solid black;
+  padding: 5px;
+} */
+
+.gender-radio-group {
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.image-upload {
+  /* UI Properties */
+  text-align: left;
+  text-decoration: underline;
+  font: normal normal normal 14px/24px Noto Sans;
+  letter-spacing: 0px;
+  color: #212529;
+  opacity: 1;
+}
+
+.date-picker {
+  float: right;
+  margin-top: -39px;
+}
+
+.dot {
+  height: 25px;
+  width: 25px;
+  background-color: #185b85;
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: top;
+  text-align: center;
+  color: #fff;
+  border: 2px solid #185b85;
+}
+
+.dot::after {
+  border-spacing: 15px 50px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.input-custom-border {
+  border: 1px solid #ced4da !important;
+  padding: 0px 5px !important;
+}
+
+/*  ----------------------Global css ------------------------------------------ */
+.mat-stepper-vertical,
+.mat-stepper-horizontal {
+  font-family: Noto Sans, Regular !important;
+}
+
+/* .form-check-input{
+  margin-left: 0px;
+} */
+.form-check {
+  /* font: normal normal bold 18px/24px Noto Sans; */
+  font-weight: bold;
+  /* padding-left: 1.54em; */
+}
+
+::ng-deep .custom-dropdown .ng-dropdown-panel .scroll-host {
+  position: initial !important;
+}
+
+/* input[type="file"].form-control{
+  padding: 0.375rem 0.75rem  0.375rem 6rem;
+  position: relative;
+} */
+
+/* input[type="file"]::file-selector-button {
+  background: #F8F7FA;
+  position: relative;
+  color: #0000;
+  left: 0px;
+  top: 0px;
+  padding: 8px 12px; 
+  font-size: 12px;
+  font-family: Noto Sans;
+  cursor: pointer;
+  border: 1px solid #AAAAAA;
+}  */
+
+/* input[type="file"]::file-selector-button:hover {
+  background: #185B85;
+  border: 1px solid #185B85;
+} */
+
+.fw-normal {
+  font-weight: normal;
+}
+
+@media (min-width: 992px) {
+  .wf-20 {
+    flex: 0 0 20%;
+    max-width: 20%;
+  }
+}

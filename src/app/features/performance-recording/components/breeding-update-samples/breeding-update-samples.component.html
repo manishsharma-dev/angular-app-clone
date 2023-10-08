@@ -1,0 +1,193 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="add-diagnostics-dialog">
+  <div class="add-diagnostics-header">
+    <div class="headeing">
+      <p class="diagnostics-heading-label">{{'performanceRecording.update_samples' | translate}}</p>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+  <div class="dialog-main-content">
+    <form [formGroup]="addSampleForm">
+      <ng-container *ngFor="let control of (sampleArrayControls | async); let i = index">
+        <h3>{{'performanceRecording.sample_id' | translate}}: {{data[i]?.sampleId}}</h3>
+
+        <div class="row">
+          <div class="align-items-center treatment-information col-md-12">
+            <div class="col-12 mt-3 px-0">
+              <ng-container formArrayName="milkSamples">
+                <div class="form-row" *ngIf="data[i]?.breedingExaminationType === 1" [formGroupName]="i">
+                  <div class="form-group col-md-4">
+                    <label for="fat" class="form-label">{{ "performanceRecording.fat" | translate }} %
+                      <span class="mandatory-field">*</span>
+                    </label>
+                    <input type="text" class="form-control" formControlName="fatPercentage">
+                    <div class="alert-message"
+                      *ngIf="(control.get('fatPercentage').invalid && control.get('fatPercentage').dirty )|| control.get('fatPercentage').touched">
+                      <span *ngIf="control.get('fatPercentage').hasError('required')">
+                        {{cmnValidation.required | translate}}
+                      </span>
+                      <span *ngIf="control.get('fatPercentage').hasError('pattern')">
+                        {{cmnValidation.decimalValidation | translate}}
+                      </span>
+                      <span
+                        *ngIf="control.get('fatPercentage').hasError('max')||control.get('fatPercentage').hasError('min')">
+                        {{cmnValidation.minMax | translate}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="protein" class="form-label">{{ "performanceRecording.protein" | translate }} %
+                      <!-- <span
+                        class="mandatory-field">*</span> -->
+                    </label>
+                    <input type="text" class="form-control" formControlName="proteinPercentage">
+                    <div class="alert-message"
+                      *ngIf="(control.get('proteinPercentage').invalid && control.get('proteinPercentage').dirty )|| control.get('proteinPercentage').touched">
+                      <span *ngIf="control.get('proteinPercentage').hasError('required')">
+                        {{cmnValidation.required | translate}}
+                      </span>
+                      <span *ngIf="control.get('proteinPercentage').hasError('pattern')">
+                        {{cmnValidation.decimalValidation | translate}}
+                      </span>
+                      <span
+                        *ngIf="control.get('proteinPercentage').hasError('max')||control.get('proteinPercentage').hasError('min')">
+                        {{cmnValidation.minMax | translate}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="snf" class="form-label">{{ "performanceRecording.snf" | translate }} %
+                      <!-- <span
+                        class="mandatory-field">*</span> -->
+                    </label>
+                    <input type="text" class="form-control" formControlName="snfPercentage">
+                    <div class="alert-message"
+                      *ngIf="(control.get('snfPercentage').invalid && control.get('snfPercentage').dirty )|| control.get('snfPercentage').touched">
+                      <span *ngIf="control.get('snfPercentage').hasError('required')">
+                        {{cmnValidation.required | translate}}
+                      </span>
+                      <span *ngIf="control.get('snfPercentage').hasError('pattern')">
+                        {{cmnValidation.decimalValidation | translate}}
+                      </span>
+                      <span
+                        *ngIf="control.get('snfPercentage').hasError('max')||control.get('snfPercentage').hasError('min')">
+                        {{cmnValidation.minMax | translate}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="lactose" class="form-label">{{ "performanceRecording.lactose" | translate }} %
+                      <!-- <span
+                        class="mandatory-field">*</span> -->
+                    </label>
+                    <input type="text" class="form-control" formControlName="lactosePercentage">
+                    <div class="alert-message"
+                      *ngIf="(control.get('lactosePercentage').invalid && control.get('lactosePercentage').dirty )|| control.get('lactosePercentage').touched">
+                      <span *ngIf="control.get('lactosePercentage').hasError('required')">
+                        {{cmnValidation.required | translate}}
+                      </span>
+                      <span *ngIf="control.get('lactosePercentage').hasError('pattern')">
+                        {{cmnValidation.decimalValidation | translate}}
+                      </span>
+                      <span
+                        *ngIf="control.get('lactosePercentage').hasError('max')||control.get('lactosePercentage').hasError('min')">
+                        {{cmnValidation.minMax | translate}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="somaticCellCount" class="form-label">{{
+                      "performanceRecording.somatic_cell_count" | translate
+                      }}
+                      <!-- <span class="mandatory-field">*</span> -->
+                    </label>
+                    <input type="text" class="form-control" formControlName="somaticCellCount">
+                    <div class="alert-message"
+                      *ngIf="(control.get('somaticCellCount').invalid && control.get('somaticCellCount').dirty )|| control.get('somaticCellCount').touched">
+                      <span *ngIf="control.get('somaticCellCount').hasError('required')">
+                        {{cmnValidation.required | translate}}
+                      </span>
+                      <span *ngIf="control.get('somaticCellCount').hasError('invalidDecimalNo')">
+                        {{'Invalid value'}}
+                      </span>
+                      <span
+                        *ngIf="control.get('somaticCellCount').hasError('max')||control.get('somaticCellCount').hasError('min')">
+                        {{cmnValidation.minMax | translate}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-4 position-relative">
+                    <label for="milkUreaNitrogen" class="form-label">{{
+                      "performanceRecording.milk_urea_nitrogen" | translate
+                      }} (mg/100gm)
+                      <!-- <span class="mandatory-field">*</span> -->
+                    </label>
+                    <input type="text" class="form-control mun-input" formControlName="milkUreaNitrogen">
+                    <!-- <span class="mun-unit">mg/100gm</span> -->
+                    <div class="alert-message"
+                      *ngIf="(control.get('milkUreaNitrogen').invalid && control.get('milkUreaNitrogen').dirty )|| control.get('milkUreaNitrogen').touched">
+                      <span *ngIf="control.get('milkUreaNitrogen').hasError('required')">
+                        {{cmnValidation.required | translate}}
+                      </span>
+                      <span *ngIf="control.get('milkUreaNitrogen').hasError('invalidDecimalNo')">
+                        {{'performanceRecording.invalid_value' | translate}}
+                      </span>
+                      <span
+                        *ngIf="control.get('milkUreaNitrogen').hasError('max')||control.get('milkUreaNitrogen').hasError('min')">
+                        {{cmnValidation.minMax | translate}}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <div class="form-row" *ngIf="data[i]?.breedingExaminationType === 2">
+                <div class="form-group col-md-4">
+                  <label for="sample" class="form-label">
+                    {{ "performanceRecording.sample_result" | translate }}
+                    <span class="mandatory-field">*</span>
+                  </label>
+                  <select type="text" class="form-control" formControlName="sampleResult">
+                    <option [value]="null" disabled>Select Result</option>
+                    <option *ngFor="let result of sampleResults" [value]="result.cd">{{result.value}}</option>
+                  </select>
+                  <div class="alert-message"
+                    *ngIf="(addSampleForm.get('sampleResult').invalid && addSampleForm.get('sampleResult').dirty )|| addSampleForm.get('sampleResult').touched">
+                    <span *ngIf="addSampleForm.get('sampleResult').hasError('required')">
+                      {{cmnValidation.required | translate}}
+                    </span>
+                    <span *ngIf="addSampleForm.get('sampleResult').hasError('pattern')">
+                      {{cmnValidation.decimalValidation | translate}}
+                    </span>
+                    <span
+                      *ngIf="addSampleForm.get('sampleResult').hasError('max')||addSampleForm.get('sampleResult').hasError('min')">
+                      {{cmnValidation.minMax | translate}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </form>
+  </div>
+
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+  <div class="add-diagnostics-footer">
+    <button type="reset" class="btn btn-light mr-2" (click)="onCancel()">
+      {{'animalDetails.cancel'| translate}}
+    </button>
+    <button type="submit" class="btn btn-primary" (click)="onSubmit()">{{'common.submit'| translate}}</button>
+  </div>
+</div>

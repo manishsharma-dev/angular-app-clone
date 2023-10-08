@@ -1,0 +1,31 @@
+<div class="campaign-edit-dialog">
+  <!-- header -->
+  <div class="campaign-edit-header">
+    <div class="headeing">
+      <h2 class="edit-heading-label">{{ "diseaseTesting.selected_tag_id" | translate }}: [
+        {{data.selectedTagIds.length}} ]</h2>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+
+  <!-- contant -->
+  <div class="dialog-main-content">
+    <ul class="selected-animal-list">
+      <li class="selected-animal-listitem outline ng-star-inserted" *ngFor="let animal of data.selectedTagIds">
+        {{ animal.tagId }}
+        <img src="/assets/images/cross-icon.svg" alt="icon-cross" (click)="onClickingRemove(animal)"
+          class="animal-listitem-cross" />
+      </li>
+    </ul>
+
+  </div>
+
+  <!-- footer -->
+  <div class="campaign-edit-footer">
+    <button mat-dialog-close type="submit" class="btn btn-primary" cdkFocusInitial>{{ "animalDetails.close" | translate
+      }}</button>
+  </div>
+
+</div>

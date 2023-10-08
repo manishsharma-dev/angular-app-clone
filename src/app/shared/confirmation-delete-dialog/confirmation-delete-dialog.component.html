@@ -1,0 +1,27 @@
+<div class="common-alert">
+  <div class="common-alert-header">
+
+    <img [src]="data.icon" class="custom-icon" alt="icon-verified"/>
+    <p class="header-desc">{{data.title | translate}}</p>
+
+  </div>
+
+  <div class="common-alert-body">
+    <p>{{ data.message | translate}}</p>
+  </div>
+
+  <div class="common-alert-footer">
+    <button
+    mat-dialog-close
+    class="btn btn-outline-primary mr-2"
+    *ngIf="data.secondaryBtnText"
+    [mat-dialog-close]="false"
+  >
+    {{ data.secondaryBtnText  | translate }}
+  </button>
+  <button mat-dialog-close class="btn btn-primary" [mat-dialog-close]="true">
+  {{ data.primaryBtnText | translate}}
+  </button>
+  </div>
+
+</div>

@@ -1,0 +1,442 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<!-- section breadcum -->
+<div class="container p-0">
+  <div class="row breadcum align-items-center py-2">
+    <div class="col-12">
+      <div class="breadcrumb-list">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item active" routerLink="/dashboard">
+              <a>{{ "vaccination.breadcrumb_vaccinationFirst" | translate }}</a>
+            </li>
+            <li class="breadcrumb-item active">
+              <label>{{ "vaccination.breadcrumb_vaccinationSecond" | translate }} </label>
+            </li>
+            <li class="breadcrumb-item current">
+              <label>{{ "round.breadcrumb_roundthird" | translate }} </label>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- section outer start -->
+<section class="campaign-creation">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card border-0">
+        <div class="card-body">
+          <div class="row align-items-center mb-3" *ngIf="tabDetails">
+            <div class="col-md-6">
+              <div class="search-item">
+                <form>
+                  <div class="row">
+                    <div class="col-sm-7 col-md-4">
+                      <div>
+                        <label for="colFormLabelSm" class="col-form-label col-form-label-sm">{{
+                          "round.campaignSearch" | translate }}</label>
+                      </div>
+                    </div>
+                    <div class="col-md-5 col-md-8">
+                      <input type="text" class="form-control search-input" id="colFormLabelSm"
+                        placeholder="{{'round.campaignSearch' | translate}}" autocomplete="off"
+                        (keyup)="filterData($event)" />
+                      <span class="search-icon"><i class="fa fa-search" aria-hidden="true"></i></span>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary" (click)="addCampaign()">
+                  <i class="fa fa-plus mr-2" aria-hidden="true"></i>
+                  {{ "round.new_round" | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- hr-divider -->
+
+          <div class="h-divider" *ngIf="tabDetails">
+            <div class="shadow"></div>
+          </div>
+
+          <div class="row align-items-center" *ngIf="tabDetails">
+            <div class="col-md-6">
+              <div class="title-heading">
+                <h3 class="muted-label-heading">{{ dataSource.data?.length}} {{ "round.round_available" |
+                  translate }}</h3>
+              </div>
+            </div>
+            <div class="col-md-6 tabs-nav-list d-flex justify-content-md-end">
+              <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab"
+                    aria-controls="pills-home" aria-selected="true"> {{ "round.all_rounds" | translate
+                    }}</a>
+                </li>
+              </ul>
+
+            </div>
+
+            <div class="col-12 mt-3">
+              <div class="tab-content" id="pills-tabContent">
+
+                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                  <div class="report-table table-view mt-3">
+                    <div class="table-responsive">
+                      <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
+
+                        <ng-container matColumnDef="sr_no">
+                          <th mat-header-cell *matHeaderCellDef>{{ "common.sno" | translate }}</th>
+                          <td mat-cell *matCellDef="let element; let i = index" class="cell-width">
+                            {{ withpaginatorRef.pageIndex * withpaginatorRef.pageSize + (i + 1) }}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="round_no">
+                          <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "round.round_no" |
+                            translate }} </th>
+                          <td mat-cell *matCellDef="let element"> {{element.roundNo}} </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="stateNames">
+                          <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "round.stateNames" | translate }}
+                          </th>
+                          <td mat-cell *matCellDef="let element">
+                            {{element.stateName}}
+                            <!-- <div class="mat-custom-column">
+                            
+                            </div> -->
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="diseaseName">
+                          <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "round.diseaseName" |
+                            translate }}</th>
+                          <td mat-cell *matCellDef="let element"> {{element.diseaseDesc}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="roundStartDate">
+                          <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "campaignCreation.From_Date" |
+                            translate }}</th>
+                          <td mat-cell *matCellDef="let element">
+                            {{ element?.formattedFromDate }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="roundEndDate">
+                          <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "campaignCreation.To_Date" |
+                            translate }}</th>
+                          <td mat-cell *matCellDef="let element"> {{ element?.formattedEndDate }} </td>
+                        </ng-container>
+
+
+
+                        <ng-container matColumnDef="action">
+                          <th mat-header-cell *matHeaderCellDef>{{ "common.action" | translate }}</th>
+                          <td mat-cell *matCellDef="let element">
+                            <a href="javascript:void(0)"
+                              (click)="openRoundViewDialog(element.roundNo,element.stateCd,element.diseaseCd)"><svg
+                                id="Component_58_16" data-namdeleteRowe="Component 58 – 16"
+                                xmlns="http://www.w3.role/2000/svg" width="20.037" height="20.037"
+                                viewBox="0 0 20.037 20.037">
+                                <path id="Path_5226" data-name="Path 5226" d="M0,0H20.037V20.037H0Z" fill="none" />
+                                <path id="Path_5227" data-name="Path 5227"
+                                  d="M1.181,10.514a9.186,9.186,0,0,1,18.065,0,9.186,9.186,0,0,1-18.065,0Zm9.032,4.174a4.174,4.174,0,1,0-4.174-4.174A4.174,4.174,0,0,0,10.213,14.688Zm0-1.67a2.5,2.5,0,1,1,2.5-2.5A2.5,2.5,0,0,1,10.213,13.018Z"
+                                  transform="translate(-0.195 -0.495)" fill="#185b85" />
+                              </svg></a>
+                            &nbsp;&nbsp;
+                            <a href="javascript:void(0)" (click)="editRoundMasterDialog(element)"><svg
+                                xmlns="http://www.w3.role/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                                <path id="pencil-alt"
+                                  d="M15.583,4.513,14.142,5.954a.375.375,0,0,1-.531,0L10.142,2.485a.375.375,0,0,1,0-.531L11.583.513a1.5,1.5,0,0,1,2.122,0l1.878,1.878A1.5,1.5,0,0,1,15.583,4.513ZM8.9,3.192.7,11.4.035,15.2a.751.751,0,0,0,.869.869L4.7,15.4l8.207-8.207a.375.375,0,0,0,0-.531L9.439,3.192a.379.379,0,0,0-.534,0Zm-5,7.5a.436.436,0,0,1,0-.619L8.714,5.263a.438.438,0,0,1,.619.619L4.52,10.695a.436.436,0,0,1-.619,0ZM2.773,13.323h1.5v1.134l-2.016.353-.972-.972.353-2.016H2.773Z"
+                                  transform="translate(-0.024 -0.075)" fill="#185b85" />
+                              </svg></a>
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        <tr class="mat-row" *matNoDataRow>
+                          <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                            {{ "campaignCreation.no_data_matching_the_filter" | translate }}
+                          </td>
+                        </tr>
+
+                      </table>
+                      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                        aria-label="Select page of periodic elements" #withpaginatorRef>
+                      </mat-paginator>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">Open</div>
+            <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">Closed</div> -->
+              </div>
+            </div>
+          </div>
+
+          <!-- screen 5 -->
+          <div class="campaign-form" *ngIf="compaignForm">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <div class="title-heading">
+                  <i class="fa fa-chevron-left mr-2 back-section" (click)="showTabsContent()"></i>
+                  <span class="muted-label-heading"> {{ "animalDetails.back" | translate }} </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="h-divider">
+              <div class="shadow"></div>
+            </div>
+
+            <form class="mb-3" [formGroup]="itemForm">
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label for="selectVillage" class="form-label"> {{ "round.campaign_select_state" |
+                    translate }}<span class="mandatory-field">*</span></label>
+                  <ng-select class="custom" [items]="state" [multiple]="true" bindLabel="stateName"
+                    groupBy="selectedAllGroup" [selectableGroup]="true" [selectableGroupAsModel]="false"
+                    [closeOnSelect]="false" formControlName="selectedstate"
+                    placeholder="{{ 'round.campaign_select_state' | translate }}">
+                    <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+                      {{"campaignCreation.select_all" | translate}}
+                    </ng-template>
+
+                    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input class="mr-2" id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"
+                        [ngModelOptions]="{standalone: true}" />{{item.stateName}}
+                    </ng-template>
+
+                  </ng-select>
+                  <span class="alert-message" *ngIf="
+                (f.selectedstate.dirty &&
+                f.selectedstate
+                    .invalid) ||
+                    f.selectedstate.touched
+              ">
+                    <span *ngIf="
+              f.selectedstate.hasError(
+                    'required'
+                  )
+                ">
+                      {{ validationMsg.required | translate }}
+                    </span>
+                  </span>
+                </div>
+
+
+                <div class="form-group col-md-4">
+                  <label for="diseaseCd" class="form-label">{{'round.disease' | translate}}<span
+                      class="mandatory-field">*</span></label>
+                  <ng-select class="custom" bindLabel="name" [searchable]="true" [clearable]="true" id="diseaseCd"
+                    formControlName="diseaseCd" [ngClass]="{
+                  'is-invalid':
+                    (f.diseaseCd.touched ||
+                    roundSubmitted) &&
+                    f.diseaseCd.errors
+                }">
+                    <ng-option value="">
+                      {{ 'round.select_disease' | translate }}
+                    </ng-option>
+                    <ng-option *ngFor="let data of getVaccinationFor" [value]="data.diseaseCd">
+                      {{ data.diseaseDesc }}
+                    </ng-option>
+                  </ng-select>
+
+                  <span class="alert-message" *ngIf="
+                (f.diseaseCd.dirty &&
+                  f.diseaseCd.invalid) ||
+                f.diseaseCd.touched
+              ">
+                    <span *ngIf="f.diseaseCd.hasError('required')">
+                      {{ validationMsg.required | translate}}
+                    </span>
+                  </span>
+                </div>
+
+                <div class="form-group col-md-4">
+                  <label for="roundNumber"> {{ "round.round_number" | translate }}<span
+                      class="mandatory-field">*</span></label>
+                  <div class="d-flex justify-content-between">
+                    <div class="w-100">
+                      <input type="text" class="form-control" id="roundNumber"
+                        placeholder="{{ 'round.round_number'  | translate}}" formControlName="roundNumber" />
+
+                      <span class="alert-message" *ngIf="
+                    f.roundNumber.dirty &&
+                    f.roundNumber.invalid ||
+                    f.roundNumber.touched
+                  ">
+                        <span *ngIf="f.roundNumber.hasError('required')">
+                          {{ validationMsg.required | translate}}
+                        </span>
+                        <span *ngIf="f.roundNumber.hasError('pattern')">
+                          {{ validationMsg.roundNumbercharacter | translate}}
+                        </span>
+                        <span *ngIf="
+                      !f.roundNumber.hasError('pattern') &&
+                      f.roundNumber.hasError('maxlength')
+                    ">
+                          {{ validationMsg.roundNumberPattern | translate}}
+                        </span>
+                      </span>
+
+
+                    </div>
+
+                  </div>
+                </div>
+
+                <!-- <div class="form-group col-md-4">
+                  <label for="projectId" class="form-label">{{"campaignCreation.campaign_select_project" | translate
+                      }}<span class="mandatory-field">*</span></label>
+                  <select id="projectId" class="form-control" formControlName="projectId">
+                    <option value="">{{"campaignCreation.select_project_name" | translate }}</option>
+                    <option *ngFor="let data of projectTypeData" [value]="data.projectId">
+                      {{ data.projectName }}
+                    </option>
+                  </select>
+                  <span class="alert-message" *ngIf="
+                (f.projectId.dirty &&
+                  f.projectId.invalid) ||
+                f.projectId.touched
+              ">
+                    <span *ngIf="f.projectId.hasError('required')">
+                      {{ validationMsg.required | translate}}
+                    </span>
+                  </span>
+
+                </div> -->
+              </div>
+
+              <div class="form-row">
+
+
+
+                <div class="form-group col-md-4">
+                  <label for="roundStartDate" class="form-label"> {{ "round.round_start_date" |
+                    translate }}<span class="mandatory-field">*</span></label>
+                  <input class="form-control vaccDate" id="roundStartDate" [max]="campMaxStartDate"
+                    (dateInput)="fromDateChange($event.value)" [matDatepicker]="roundStartDate"
+                    formControlName="roundStartDate" placeholder="{{ 'common.select_date' | translate }}" />
+                  <mat-datepicker-toggle matSuffix [for]="roundStartDate" class="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #roundStartDate></mat-datepicker>
+                  <span class="alert-message" *ngIf="
+              (f.roundStartDate.dirty &&
+                f.roundStartDate.invalid) ||
+              f.roundStartDate.touched
+            ">
+                    <span *ngIf="
+                f.roundStartDate.hasError('required')
+              ">
+                      {{ validationMsg.required | translate }}
+                    </span>
+                  </span>
+
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="roundEndDate" class="form-label">{{'round.round_end_date' | translate}}<span
+                      class="mandatory-field">*</span></label>
+                  <input class="form-control vaccDate" id="roundEndDate" (dateInput)="roundEndDateChange($event.value)"
+                    [min]="campMinEndDate" [max]="campMaxEndDate" [matDatepicker]="roundEndDate"
+                    formControlName="roundEndDate" placeholder="{{ 'common.select_date' | translate }}" />
+                  <mat-datepicker-toggle matSuffix [for]="roundEndDate " class="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #roundEndDate></mat-datepicker>
+                  <span class="alert-message" *ngIf="
+              (f.roundEndDate.dirty &&
+                f.roundEndDate.invalid) ||
+              f.roundEndDate.touched
+            ">
+                    <span *ngIf="
+                f.roundEndDate.hasError('required')
+              ">
+                      {{ validationMsg.required | translate}}
+                    </span>
+                  </span>
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="roundEntryEndDate" class="form-label">{{'round.round_entryEnd_date'
+                    | translate}}<span class="mandatory-field">*</span></label>
+                  <input class="form-control vaccDate" id="roundEntryEndDate" [matDatepicker]="roundEntryEndDate"
+                    [min]="campMinEntryEndDate" formControlName="roundEntryEndDate"
+                    placeholder="{{ 'common.select_date' | translate }}" />
+                  <mat-datepicker-toggle matSuffix [for]="roundEntryEndDate" class="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #roundEntryEndDate></mat-datepicker>
+                  <span class="alert-message" *ngIf="
+              (f.roundEntryEndDate.dirty &&
+                f.roundEntryEndDate.invalid) ||
+              f.roundEntryEndDate.touched
+            ">
+                    <span *ngIf="
+                f.roundEntryEndDate.hasError('required')
+              ">
+                      {{ validationMsg.required | translate}}
+                    </span>
+                  </span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label for="treatmentRemarks" class="form-label">{{ "firstAid.Remarks_fid" | translate }}<span
+                      class="mandatory-field">*</span></label>
+                  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                    formControlName="treatmentRemarks"
+                    placeholder="{{ 'firstAid.enter_remarks_details' | translate }}"></textarea>
+
+
+                  <span class="alert-message"
+                    *ngIf="f.treatmentRemarks.dirty && f.treatmentRemarks.invalid  || f.treatmentRemarks.touched">
+                    <span *ngIf="f.treatmentRemarks.hasError('pattern')">
+                      {{ validationMsgRe.firstAidRemarksPattern | translate}}
+                    </span>
+                    <span *ngIf="!f.treatmentRemarks.hasError('pattern') && f.treatmentRemarks.hasError('maxlength')">
+                      {{ validationMsgRe.firstAidRemarks | translate}}
+                    </span>
+
+                    <span *ngIf="f.treatmentRemarks.hasError('required')">
+                      {{ validationMsgRe.required | translate}}
+                    </span>
+                  </span>
+
+
+                </div>
+              </div>
+
+
+              <div class="h-divider">
+                <div class="shadow"></div>
+              </div>
+
+
+
+              <div class="d-flex justify-content-end">
+                <button type="reset" class="btn btn-outline-primary mr-2" (click)="campaignCancel()">
+                  {{ "animalDetails.cancel" | translate }}
+                </button>
+                <button type="submit" class="btn btn-primary" (click)="roundSubmit()"> {{ "common.submit" |
+                  translate }}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- section outer end -->

@@ -1,0 +1,1585 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            {{ "animalDetails.home" | translate }}
+          </li>
+          <li class="breadcrumb-item active">
+            {{ "organization.Admin_Management" | translate }}
+          </li>
+          <li class="breadcrumb-item current">
+            {{ "project.Project_Management" | translate }}
+          </li>
+          <li class="breadcrumb-item current">
+            {{ "project.Project_setup" | translate }}
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="container-white-bg">
+  <form class="basic-information" [formGroup]="projectInfoForm">
+    <mat-stepper
+      class="user-regform-detail"
+      #stepper
+      linear
+      [orientation]="(stepperOrientation | async)!"
+    >
+      <mat-step [stepControl]="firstFormGroup">
+        <ng-template matStepLabel
+          ><span class="dot">1</span
+          >{{ "project.Project_Info" | translate }}</ng-template
+        >
+        <form [formGroup]="firstFormGroup">
+          <div class="form-row" *ngIf="projectId">
+            <div class="form-group col-lg-6 col-md-6">
+              <label class="form-label"
+                >{{ "project.Project_ID" | translate }}: {{ projectId }}</label
+              >
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="orgName" class="form-label"
+                >{{ "organization.Organization_Name" | translate
+                }}<span class="mandatory-field">*</span></label
+              >
+              <select
+                id="orgName"
+                class="form-control"
+                formControlName="orgName"
+                (change)="onChgOrgName($event)"
+                required
+              >
+                <option value="" selected default>Select Organization</option>
+                <option *ngFor="let data of orglist" [value]="data.orgId">
+                  {{ data.orgName }}
+                </option>
+              </select>
+              <mat-error>
+                <span
+                  *ngIf="
+                    !firstFormInfo.orgName.valid &&
+                    firstFormInfo.orgName.touched
+                  "
+                  class="help=block"
+                >
+                  {{ "validationMessage.org_select_required" | translate }}
+                </span>
+              </mat-error>
+            </div>
+            <div class="form-group col-md-4" *ngIf="projectId">
+              <label for="orgName" class="form-label"
+                >{{ "common.status" | translate
+                }}<span class="mandatory-field">*</span></label
+              >
+              <select
+                type="text"
+                class="form-control"
+                id="status"
+                formControlName="projectStatus"
+              >
+                <option *ngFor="let data of projectStatus" [value]="data.cd">
+                  {{ data.value }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md">
+              <label for="mis" class="form-label"
+                >{{ "project.mission" | translate
+                }}<span class="mandatory-field">*</span></label
+              >
+              <select
+                id="mis"
+                class="form-control defaultselect"
+                formControlName="mission"
+              >
+                <option value="" disabled selected>Select Mission</option>
+                <option *ngFor="let data of mission" [value]="data.cd">
+                  {{ data.value }}
+                </option>
+              </select>
+              <mat-error>
+                <span
+                  *ngIf="
+                    !firstFormInfo.mission.valid &&
+                    firstFormInfo.mission.touched
+                  "
+                  class="help=block"
+                >
+                  {{ "validationMessage.Mission_required" | translate }}
+                </span>
+              </mat-error>
+            </div>
+            <div class="form-group col-md">
+              <label for="Program" class="form-label">{{
+                "project.Program" | translate
+              }}</label>
+              <ng-select
+                [items]="programlist"
+                [multiple]="true"
+                bindLabel="value"
+                groupBy="selectedAllGroup"
+                [selectableGroup]="true"
+                [selectableGroupAsModel]="false"
+                [closeOnSelect]="false"
+                bindValue="cd"
+                placeholder="Select Program"
+                formControlName="program"
+              >
+                <ng-template
+                  class="form-control"
+                  ng-optgroup-tmp
+                  let-item="item"
+                  let-item$="item$"
+                  let-index="index"
+                >
+                  <input
+                    id="item-{{ index }}"
+                    type="checkbox"
+                    [(ngModel)]="item$.selected"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                  Select All
+                </ng-template>
+
+                <ng-template
+                  class="form-control"
+                  ng-option-tmp
+                  let-item="item"
+                  let-item$="item$"
+                >
+                  <input
+                    id="item-{{ item.cd }}"
+                    type="checkbox"
+                    [(ngModel)]="item$.selected"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                  {{ item.value }}
+                </ng-template>
+              </ng-select>
+              <mat-error>
+                <span
+                  *ngIf="
+                    !firstFormInfo.program.valid &&
+                    firstFormInfo.program.touched
+                  "
+                  class="help=block"
+                >
+                  {{ "validationMessage.program_required" | translate }}
+                </span>
+              </mat-error>
+            </div>
+
+            <div class="form-group col-md">
+              <label for="scheme" class="form-label">{{
+                "project.Scheme" | translate
+              }}</label>
+              <ng-select
+                [items]="scheme"
+                [multiple]="true"
+                bindLabel="value"
+                groupBy="selectedAllGroup"
+                [selectableGroup]="true"
+                [selectableGroupAsModel]="false"
+                [closeOnSelect]="false"
+                bindValue="cd"
+                placeholder="Select Scheme"
+                formControlName="scheme"
+              >
+                <ng-template
+                  class="form-control"
+                  ng-optgroup-tmp
+                  let-item="item"
+                  let-item$="item$"
+                  let-index="index"
+                >
+                  <input
+                    id="item-{{ index }}"
+                    type="checkbox"
+                    [(ngModel)]="item$.selected"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                  Select All
+                </ng-template>
+
+                <ng-template
+                  class="form-control"
+                  ng-option-tmp
+                  let-item="item"
+                  let-item$="item$"
+                >
+                  <input
+                    id="item-{{ item.cd }}"
+                    type="checkbox"
+                    [(ngModel)]="item$.selected"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                  {{ item.value }}
+                </ng-template>
+              </ng-select>
+
+              <mat-error>
+                <span
+                  *ngIf="
+                    !firstFormInfo.scheme.valid && firstFormInfo.scheme.touched
+                  "
+                  class="help=block"
+                >
+                  {{ "validationMessage.scheme_required" | translate }}
+                </span>
+              </mat-error>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="projectName" class="form-label"
+                >{{ "project.Project_Name" | translate
+                }}<span class="mandatory-field">*</span></label
+              >
+              <input
+                type="text"
+                minlength="3"
+                maxlength="90"
+                class="form-control"
+                id="projectName"
+                placeholder=""
+                formControlName="projectName"
+              />
+              <mat-error>
+                <span
+                  *ngIf="
+                    firstFormInfo.projectName.errors &&
+                    firstFormInfo.projectName.touched
+                  "
+                  class="help=block"
+                >
+                  <span
+                    *ngIf="firstFormInfo.projectName.errors?.['required']"
+                    class="help=block"
+                  >
+                    {{ "validationMessage.project_required" | translate }}
+                  </span>
+                  <span
+                    *ngIf="firstFormInfo.projectName.errors?.['minlength']"
+                    class="help=block"
+                  >
+                    {{ "validationMessage.project_minlength" | translate }}
+                  </span>
+                  <span
+                    *ngIf="firstFormInfo.projectName.errors?.['pattern']"
+                    class="help=block"
+                  >
+                    {{ "validationMessage.project_pattern" | translate }}
+                  </span>
+                </span>
+              </mat-error>
+            </div>
+            <div class="form-group col-md">
+              <label for="Description" class="form-label"
+                >{{ "project.Project_Description" | translate
+                }}<span class="mandatory-field">*</span></label
+              >
+
+              <textarea
+                class="form-control"
+                id="Description"
+                minlength="3"
+                maxlength="250"
+                placeholder=""
+                formControlName="discription"
+              >
+              </textarea>
+              <mat-error>
+                <span
+                  *ngIf="
+                    (firstFormInfo.discription.errors &&
+                      !firstFormInfo.discription.pristine) ||
+                    firstFormInfo.discription.touched
+                  "
+                  class="help=block"
+                >
+                  <span *ngIf="firstFormInfo.discription.errors?.['required']">
+                    {{ "validationMessage.project_desc_required" | translate }}
+                  </span>
+                  <span *ngIf="firstFormInfo.discription.hasError('pattern')">
+                    {{ "errorMsg.special_character_error" | translate }}
+                  </span>
+                  <span *ngIf="firstFormInfo.discription.hasError('minlength')">
+                    {{ "validationMessage.project_desc_minlength" | translate }}
+                  </span>
+                </span>
+              </mat-error>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md">
+              <label for="startDate" class="form-label"
+                >{{ "project.Start_Date" | translate
+                }}<span class="mandatory-field">*</span></label
+              >
+              <input
+                matInput
+                [matDatepicker]="startpicker"
+                [min]="projectStartDate"
+                [max]="projectEndDate"
+                class="form-control input-custom-border"
+                formControlName="startDate"
+                (dateChange)="dateChange($event)"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="startpicker"
+                class="date-picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #startpicker></mat-datepicker>
+              <mat-error>
+                <span
+                  class="help=block"
+                  *ngIf="
+                    (firstFormInfo.startDate.dirty &&
+                      firstFormInfo.startDate.invalid) ||
+                    firstFormInfo.startDate.touched
+                  "
+                >
+                  <span
+                    class="help=block"
+                    *ngIf="firstFormInfo.startDate.hasError('matDatepickerMin')"
+                  >
+                    {{ "common.please_enter_valid_date" | translate }}
+                  </span>
+                  <span
+                    class="help=block"
+                    *ngIf="firstFormInfo.startDate.hasError('matDatepickerMax')"
+                  >
+                    {{ "common.please_enter_valid_date" | translate }}
+                  </span>
+                  <span
+                    class="help=block"
+                    *ngIf="
+                      firstFormInfo.startDate.hasError('matDatepickerParse')
+                    "
+                  >
+                    {{ "validationMessage.please_choose_date" | translate }}
+                  </span>
+                  <span
+                    class="help=block"
+                    *ngIf="
+                      firstFormInfo.startDate.hasError('required') &&
+                      !firstFormInfo.startDate.hasError('matDatepickerParse')
+                    "
+                  >
+                    {{ "common.please_enter_valid_date" | translate }}
+                  </span>
+                </span>
+                <!-- <span
+                  *ngIf="firstFormInfo.startDate.invalid && !firstFormInfo.startDate.pristine|| firstFormInfo.startDate.touched"
+                  class="help=block">
+                  <span *ngIf="firstFormInfo.startDate.errors?.['required']">
+                    
+                    {{"validationMessage.Start_Date_required" | translate}}
+                  </span>
+                </span> -->
+              </mat-error>
+            </div>
+            <div class="form-group col-md">
+              <label for="endDate" class="form-label"
+                >{{ "project.End_Date" | translate
+                }}<span class="mandatory-field">*</span></label
+              >
+              <input
+                matInput
+                [matDatepicker]="endpicker"
+                [min]="minDate"
+                [max]="projectEndDate"
+                class="form-control input-custom-border"
+                formControlName="endDate"
+                (dateChange)="endDateChange($event)"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="endpicker"
+                class="date-picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #endpicker></mat-datepicker>
+              <mat-error>
+                <span
+                  *ngIf="
+                    (firstFormInfo.endDate.invalid &&
+                      !firstFormInfo.endDate.pristine) ||
+                    firstFormInfo.endDate.touched
+                  "
+                  class="help=block"
+                >
+                  <span *ngIf="firstFormInfo.endDate.errors?.['required']">
+                    {{ "validationMessage.end_Date_required" | translate }}
+                  </span>
+                </span>
+              </mat-error>
+            </div>
+            <!-- <div class="form-group col-md">
+              <label for="entryDate" class="form-label">{{"project.Data_Entry_End_Date" | translate}}<span
+                  class="mandatory-field">*</span></label>
+              <input matInput [matDatepicker]="dateEndpicker" class="form-control" formControlName="dataEndDate"
+                [min]="endDate" [max]="projectEndDate">
+              <mat-datepicker-toggle matSuffix [for]="dateEndpicker" class="date-picker"></mat-datepicker-toggle>
+              <mat-datepicker #dateEndpicker></mat-datepicker>
+              <mat-error>
+                <span
+                  *ngIf="firstFormInfo.dataEndDate.invalid && !firstFormInfo.dataEndDate.pristine|| firstFormInfo.dataEndDate.touched"
+                  class="help=block">
+                  <span *ngIf="firstFormInfo.dataEndDate.errors?.['required']">
+                    {{"validationMessage.Data_Entry_End_Date_required" | translate}}
+                  </span>
+                </span>
+              </mat-error>
+            </div> -->
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4" *ngIf="projectActivity.length">
+              <label for="projectAct" class="form-label"
+                >{{ "project.Project_Activities" | translate
+                }}<span class="mandatory-field">*</span></label
+              >
+              <ng-select
+                [items]="projectActivity"
+                [multiple]="true"
+                bindLabel="subModuleDesc"
+                groupBy="selectedAllGroup"
+                [selectableGroup]="true"
+                [selectableGroupAsModel]="false"
+                [closeOnSelect]="false"
+                bindValue="subModuleCd"
+                placeholder="Select Activities"
+                formControlName="projectAct"
+                (add)="onProjectActivity($event, true)"
+                (remove)="onProjectActivity($event, false)"
+                (clear)="removeAllControls()"
+              >
+                <ng-template
+                  class="form-control"
+                  ng-optgroup-tmp
+                  let-item="item"
+                  let-item$="item$"
+                  let-index="index"
+                >
+                  <input
+                    id="item-{{ index }}"
+                    type="checkbox"
+                    [(ngModel)]="item$.selected"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                  Select All
+                </ng-template>
+
+                <ng-template
+                  class="form-control"
+                  ng-option-tmp
+                  let-item="item"
+                  let-item$="item$"
+                >
+                  <input
+                    id="item-{{ item.subModuleCd }}"
+                    type="checkbox"
+                    [(ngModel)]="item$.selected"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                  {{ item.subModuleDesc }}
+                </ng-template>
+              </ng-select>
+              <mat-error>
+                <span
+                  *ngIf="
+                    !firstFormInfo.projectAct.valid &&
+                    firstFormInfo.projectAct.touched
+                  "
+                  class="help=block"
+                >
+                  {{
+                    "validationMessage.Project_Activities_required" | translate
+                  }}
+                </span>
+              </mat-error>
+            </div>
+            <div class="col-md-8" *ngIf="activityList">
+              <label class="form-label">{{
+                "project.Parameter_List" | translate
+              }}</label>
+              <div class="tableFixHead">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>{{ "project.Project_Activities" | translate }}</th>
+                      <th>{{ "project.Parameter_Name" | translate }}</th>
+                      <th>{{ "project.Parameter_Value" | translate }}</th>
+                    </tr>
+                  </thead>
+                  <tbody formArrayName="projectActivity">
+                    <ng-container
+                      *ngFor="let data of activityListControls; let i = index"
+                      [formGroupName]="i"
+                    >
+                      <ng-container formArrayName="activityParameterList">
+                        <tr
+                          *ngFor="
+                            let item of parameterListControls(i);
+                            let j = index
+                          "
+                          [formGroupName]="j"
+                        >
+                          <td>{{ data?.get("activityName")?.value }}</td>
+                          <td>
+                            {{ item?.get("parameterName")?.value }}
+                          </td>
+                          <td>
+                            <input
+                              *ngIf="item?.get('parameterCd')?.value == 2"
+                              type="text"
+                              maxlength="10"
+                              class="form-control"
+                              id="parameterValue"
+                              placeholder="parameter value"
+                              formControlName="parameterValue"
+                              (input)="
+                                enteredParamValue(
+                                  activityListControls,
+                                  data,
+                                  $event
+                                )
+                              "
+                            />
+                            <select
+                              *ngIf="
+                                item?.get('parameterCd')?.value == 4 ||
+                                item?.get('parameterCd')?.value == 1 ||
+                                item?.get('parameterCd')?.value == 9
+                              "
+                              class="form-control"
+                              (change)="
+                                enteredParamValue(
+                                  activityListControls,
+                                  data,
+                                  $event
+                                )
+                              "
+                              placeholder="ParameterValue"
+                              formControlName="parameterValue"
+                            >
+                              <option value="" selected disabled>
+                                Parameter Value
+                              </option>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                            </select>
+                            <select
+                              *ngIf="item?.get('parameterCd')?.value == 5"
+                              class="form-control"
+                              (change)="
+                                enteredParamValue(
+                                  activityListControls,
+                                  data,
+                                  $event
+                                )
+                              "
+                              placeholder="ParameterValue"
+                              formControlName="parameterValue"
+                            >
+                              <option value="" selected disabled>
+                                Parameter Value
+                              </option>
+                              <option value="Daily">Daily</option>
+                              <option value="Weekly">Weekly</option>
+                              <option value="Monthly">Monthly</option>
+                              <option value="Fortnightly">Fortnightly</option>
+                            </select>
+                            <select
+                              *ngIf="item?.get('parameterCd')?.value == 10"
+                              class="form-control"
+                              (change)="
+                                enteredParamValue(
+                                  activityListControls,
+                                  data,
+                                  $event
+                                )
+                              "
+                              placeholder="ParameterValue"
+                              formControlName="parameterValue"
+                            >
+                              <option value="" selected disabled>
+                                Parameter Value
+                              </option>
+                              <option value="S">S</option>
+                              <option value="C">C</option>
+                              <option value="B">B</option>
+                            </select>
+                            <input
+                              *ngIf="item?.get('parameterCd')?.value == 7"
+                              class="form-control"
+                              (keypress)="avoidSpecialChar($event)"
+                              [maxlength]="4"
+                              (change)="
+                                enteredParamValue(
+                                  activityListControls,
+                                  data,
+                                  $event
+                                )
+                              "
+                              placeholder="ParameterValue"
+                              formControlName="parameterValue"
+                            />
+                            <input
+                              *ngIf="
+                                item?.get('parameterCd')?.value != 7 &&
+                                item?.get('parameterCd')?.value != 5 &&
+                                item?.get('parameterCd')?.value != 9 &&
+                                item?.get('parameterCd')?.value != 4 &&
+                                item?.get('parameterCd')?.value != 1 &&
+                                item?.get('parameterCd')?.value != 2 &&
+                                item?.get('parameterCd')?.value != 10
+                              "
+                              class="form-control"
+                              (change)="
+                                enteredParamValue(
+                                  activityListControls,
+                                  data,
+                                  $event
+                                )
+                              "
+                              placeholder="ParameterValue"
+                              formControlName="parameterValue"
+                            />
+                            <span
+                              class="help-block"
+                              *ngIf="
+                                !item.get('parameterValue').valid &&
+                                item.get('parameterValue').touched
+                              "
+                              >{{
+                                "validationMessage.parameter_value" | translate
+                              }}</span
+                            >
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </ng-container>
+                    <!-- <tr>
+                      <td>
+                        Backdateuptilndays
+                      </td>
+                      <td>
+                        <input type="text" minlength="3" maxlength="90" class="form-control" id="projectName"
+                          placeholder="parameter value">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        Backdateuptilndays
+                      </td>
+                      <td>
+                        <input type="text" minlength="3" maxlength="90" class="form-control" id="projectName"
+                          placeholder="parameter value">
+                      </td>
+                    </tr> -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="h-divider"></div>
+          <div class="d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-outline-primary mr-2"
+              matStepperPrevious
+              (click)="backListpage()"
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              matStepperNext
+              (click)="next()"
+            >
+              {{ "animalDetails.next" | translate }}
+            </button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="secondFormGroup">
+        <ng-template matStepLabel
+          ><span class="dot">2</span
+          >{{ "project.Project_Info_cnt" | translate }}</ng-template
+        >
+        <form [formGroup]="secondFormGroup">
+          <!-- <div class="project-title">User Allocation Process<span class="mandatory-field">*</span></div>
+
+          <label class="radio-inline mr-3">
+            <input type="radio" name="userAllocation" value="A" formControlName="userAllocation" />
+           
+            {{"project.Automatic" | translate}}
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="userAllocation" value="M" formControlName="userAllocation" />
+            
+            {{"project.Manual" | translate}}
+          </label> -->
+          <div class="project-title mt-2">
+            {{ "project.Restricted & Default value" | translate }}
+          </div>
+
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-2 form-control font-weight-bold">
+                <p>{{ "project.Restricted" | translate }}</p>
+              </div>
+              <div class="col-2">
+                <select
+                  id="sex"
+                  class="form-control"
+                  formControlName="r_Sex"
+                  [attr.disabled]="
+                    this.secondFormGroup.get('d_Sex').value != null
+                      ? 'disabled'
+                      : null
+                  "
+                  (change)="onChgSex($event)"
+                >
+                  <option value="null" selected>Sex</option>
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
+                </select>
+              </div>
+              <div class="col-2">
+                <select
+                  id="species"
+                  class="form-control"
+                  formControlName="r_Species"
+                  [attr.disabled]="
+                    this.secondFormGroup.get('d_Species').value != null
+                      ? 'disabled'
+                      : null
+                  "
+                  (change)="onChgSpecies($event)"
+                >
+                  <option value="null" selected>Species</option>
+                  <option *ngFor="let data of species" [value]="data.cd">
+                    {{ data.value }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-2">
+                <!-- <select id="breed" class="form-control" formControlName="r_Breed" [attr.disabled]="this.secondFormGroup.get('d_Breed').value 
+                !='' ? 'disabled' : null">
+                  <option value="" selected>Breed</option>
+                  <option *ngFor="let data of rBreed" [value]="data.breedCd">{{data.breedName}}</option>
+                </select> -->
+                <!-- <label for="scheme" class="form-label">Scheme</label> -->
+                <ng-select
+                  [items]="rBreed"
+                  [multiple]="true"
+                  [maxSelectedItems]="4"
+                  bindLabel="breedName"
+                  groupBy="selectedAllGroup"
+                  [selectableGroup]="true"
+                  [selectableGroupAsModel]="false"
+                  [closeOnSelect]="false"
+                  bindValue="breedCd"
+                  placeholder="Select Breed"
+                  formControlName="r_Breed"
+                  [attr.disabled]="
+                    this.secondFormGroup.get('d_Species').value != null
+                      ? 'disabled'
+                      : null
+                  "
+                >
+                  <ng-template
+                    class="form-control"
+                    ng-optgroup-tmp
+                    let-item="item"
+                    let-item$="item$"
+                    let-index="index"
+                  >
+                    <input
+                      id="item-{{ index }}"
+                      type="checkbox"
+                      [(ngModel)]="item$.selected"
+                      [ngModelOptions]="{ standalone: true }"
+                    />
+                    Select All
+                  </ng-template>
+
+                  <ng-template
+                    class="form-control"
+                    ng-option-tmp
+                    let-item="item"
+                    let-item$="item$"
+                  >
+                    <input
+                      id="item-{{ item.breedCd }}"
+                      type="checkbox"
+                      [(ngModel)]="item$.selected"
+                      [ngModelOptions]="{ standalone: true }"
+                    />
+                    {{ item.breedName }}
+                  </ng-template>
+                </ng-select>
+              </div>
+              <div class="col-2">
+                <select
+                  id="Age"
+                  class="form-control"
+                  formControlName="r_minAge"
+                  (change)="onchgrMinAge($event)"
+                >
+                  <option value="null" selected>Min Age</option>
+                  <option [value]="data" *ngFor="let data of ageArray">
+                    {{ data }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-2">
+                <select
+                  id="Age"
+                  class="form-control"
+                  formControlName="r_maxAge"
+                >
+                  <option value="null" selected>Max Age</option>
+                  <option [value]="data" *ngFor="let data of ageMax">
+                    {{ data }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-2 form-control font-weight-bold">
+                <p>{{ "project.Default" | translate }}</p>
+              </div>
+              <div class="col-2">
+                <select
+                  id="sex"
+                  class="form-control"
+                  formControlName="d_Sex"
+                  [attr.disabled]="
+                    this.secondFormGroup.get('r_Sex').value != null
+                      ? 'disabled'
+                      : null
+                  "
+                  (change)="onChgDSex($event)"
+                >
+                  <option value="null" selected>Sex</option>
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
+                </select>
+              </div>
+              <div class="col-2">
+                <select
+                  id="species"
+                  class="form-control"
+                  formControlName="d_Species"
+                  (change)="onChgDSpecies($event)"
+                  [attr.disabled]="
+                    this.secondFormGroup.get('r_Species').value != null
+                      ? 'disabled'
+                      : null
+                  "
+                >
+                  <option value="null" selected>Species</option>
+                  <option *ngFor="let data of species" [value]="data.cd">
+                    {{ data.value }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-2">
+                <!-- <select id="breed" class="form-control" formControlName="d_Breed" [attr.disabled]="this.secondFormGroup.get('r_Species').value 
+                !='' ? 'disabled' : null">
+                  <option value="" selected>Breed</option>
+                  <option *ngFor="let data of dBreed" [value]="data.breedCd">{{data.breedName}}</option>
+                </select> -->
+                <ng-select
+                  [items]="dBreed"
+                  [multiple]="true"
+                  [maxSelectedItems]="4"
+                  bindLabel="breedName"
+                  groupBy="selectedAllGroup"
+                  [selectableGroup]="true"
+                  [selectableGroupAsModel]="false"
+                  [closeOnSelect]="false"
+                  bindValue="breedCd"
+                  placeholder="Select Breed"
+                  formControlName="d_Breed"
+                >
+                  <ng-template
+                    class="form-control"
+                    ng-optgroup-tmp
+                    let-item="item"
+                    let-item$="item$"
+                    let-index="index"
+                  >
+                    <input
+                      id="item-{{ index }}"
+                      type="checkbox"
+                      [(ngModel)]="item$.selected"
+                      [ngModelOptions]="{ standalone: true }"
+                    />
+                    Select All
+                  </ng-template>
+
+                  <ng-template
+                    class="form-control"
+                    ng-option-tmp
+                    let-item="item"
+                    let-item$="item$"
+                  >
+                    <input
+                      id="item-{{ item.breedCd }}"
+                      type="checkbox"
+                      [(ngModel)]="item$.selected"
+                      [ngModelOptions]="{ standalone: true }"
+                    />
+                    {{ item.breedName }}
+                  </ng-template>
+                </ng-select>
+              </div>
+              <div class="col-2">
+                <select
+                  id="Age"
+                  class="form-control"
+                  formControlName="d_minAge"
+                  [attr.disabled]="
+                    this.secondFormGroup.get('r_minAge').value != null
+                      ? 'disabled'
+                      : null
+                  "
+                  (change)="onchgdMinAge($event)"
+                >
+                  <option value="null" selected>Min Age</option>
+                  <option [value]="data" *ngFor="let data of ageArray">
+                    {{ data }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-2">
+                <select
+                  id="Age"
+                  class="form-control"
+                  formControlName="d_maxAge"
+                  [attr.disabled]="
+                    this.secondFormGroup.get('r_maxAge').value != null
+                      ? 'disabled'
+                      : null
+                  "
+                >
+                  <option value="null" selected>Max Age</option>
+                  <option [value]="data" *ngFor="let data of ageMax">
+                    {{ data }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="project-title mt-4">
+            {{ "organization.contactInformation" | translate }}
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="contactPerson" class="form-label"
+                >{{ "organization.contactPersonName" | translate
+                }}<span class="mandatory-field">*</span></label
+              >
+              <input
+                class="form-control"
+                minlength="1"
+                maxlength="50"
+                id="contactPerson"
+                formControlName="contact_Person"
+              />
+              <mat-error>
+                <span
+                  *ngIf="
+                    secondFormInfo.contact_Person.errors &&
+                    secondFormInfo.contact_Person.touched
+                  "
+                  class="help=block"
+                >
+                  <span
+                    *ngIf="secondFormInfo.contact_Person.errors?.['required']"
+                    class="help=block"
+                  >
+                    {{
+                      "validationMessage.contact_PersonName_required"
+                        | translate
+                    }}
+                  </span>
+                  <span
+                    *ngIf="secondFormInfo.contact_Person.errors?.['minlength']"
+                    class="help=block"
+                  >
+                    {{
+                      "validationMessage.contact_PersonName_minlength"
+                        | translate
+                    }}
+                  </span>
+                  <span
+                    *ngIf="secondFormInfo.contact_Person.errors?.['pattern']"
+                    class="help=block"
+                  >
+                    {{
+                      "validationMessage.contact_PersonName_pattern" | translate
+                    }}
+                  </span>
+                </span>
+              </mat-error>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="contactPerson" class="form-label">
+                {{ "organization.contactPersonDesignation" | translate }}</label
+              >
+              <input
+                class="form-control"
+                id="contactPerson'sDesignation"
+                formControlName="contact_Disc"
+              />
+              <mat-error>
+                <span
+                  *ngIf="
+                    secondFormInfo.contact_Disc.errors &&
+                    secondFormInfo.contact_Disc.touched
+                  "
+                  class="help=block"
+                >
+                  <span
+                    *ngIf="secondFormInfo.contact_Disc.hasError('pattern')"
+                    class="help=block"
+                  >
+                    {{
+                      "validationMessage.contact_PersonDis_pattern" | translate
+                    }}
+                  </span>
+                </span>
+              </mat-error>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="Email" class="form-label"
+                >{{ "animalDetails.email" | translate
+                }}<span class="mandatory-field">*</span></label
+              >
+              <input
+                type="email"
+                class="form-control"
+                id="Email"
+                placeholder=""
+                formControlName="email"
+              />
+              <mat-error>
+                <span
+                  *ngIf="
+                    !secondFormInfo.email.valid && secondFormInfo.email.touched
+                  "
+                  class="help=block"
+                >
+                  {{ "validationMessage.email_required" | translate }}
+                </span>
+                <span
+                  *ngIf="secondFormInfo.email.errors?.['pattern']"
+                  class="help=block"
+                >
+                  Invalid Email
+                  {{ "validationMessage.email_pattern" | translate }}
+                </span>
+              </mat-error>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="mobileNumber" class="form-label"
+                >{{ "common.mobile" | translate
+                }}<span class="mandatory-field">*</span></label
+              >
+              <input
+                type="tel"
+                class="form-control"
+                id="mobileNumber"
+                minlength="10"
+                maxlength="10"
+                placeholder=""
+                formControlName="mobile"
+              />
+              <mat-error>
+                <span
+                  *ngIf="
+                    (secondFormInfo.mobile.errors &&
+                      !secondFormInfo.mobile.pristine) ||
+                    secondFormInfo.mobile.touched
+                  "
+                  class="help=block"
+                >
+                  <span
+                    *ngIf="secondFormInfo.mobile.errors?.['required']"
+                    class="help=block"
+                  >
+                    {{ "validationMessage.Mobile_Number_required" | translate }}
+                  </span>
+                  <span
+                    *ngIf="secondFormInfo.mobile.errors?.['minlength']"
+                    class="help=block"
+                  >
+                    {{
+                      "validationMessage.Mobile_Number_minlength" | translate
+                    }}
+                  </span>
+                  <span
+                    *ngIf="secondFormInfo.mobile.errors?.['pattern']"
+                    class="help=block"
+                  >
+                    {{ "validationMessage.Mobile_Number_pattern" | translate }}
+                  </span>
+                </span>
+              </mat-error>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="alternateNumber" class="form-label">{{
+                "common.Alternate_Number" | translate
+              }}</label>
+              <input
+                type="tel"
+                class="form-control"
+                minlength="10"
+                maxlength="10"
+                id="alternateNumber"
+                placeholder=""
+                formControlName="alt_Mobile"
+              />
+              <mat-error>
+                <span
+                  *ngIf="secondFormInfo.alt_Mobile.errors?.['minlength']"
+                  class="help=block"
+                >
+                  {{ "validationMessage.Mobile_Number_minlength" | translate }}
+                </span>
+                <span
+                  *ngIf="secondFormInfo.alt_Mobile.errors?.['pattern']"
+                  class="help=block"
+                >
+                  {{ "validationMessage.Mobile_Number_pattern" | translate }}
+                </span>
+              </mat-error>
+            </div>
+          </div>
+
+          <div class="h-divider"></div>
+          <div class="d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-outline-primary mr-2"
+              matStepperPrevious
+            >
+              {{ "animalDetails.back" | translate }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              matStepperNext
+              (click)="nextSecond()"
+            >
+              {{ "animalDetails.next" | translate }}
+            </button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="thirdFormGroup">
+        <ng-template matStepLabel
+          ><span class="dot">3</span>
+          {{ "project.Project_Mapping" | translate }}</ng-template
+        >
+        <form [formGroup]="thirdFormGroup">
+          <div formArrayName="participateMore">
+            <div
+              *ngFor="let level of participates.controls; let i = index"
+              [formGroupName]="i"
+            >
+              <div
+                class="form-row"
+                [ngStyle]="{ display: i == 0 ? 'none' : 'block' }"
+              >
+                <div class="form-group col-md-12">
+                  <label class="form-label h-divider px-0"></label>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="orgName" class="form-label"
+                    >{{ "organization.organizationType" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+                  <select
+                    type="text"
+                    class="form-control"
+                    id="orgName"
+                    (change)="onchgOrgType($event, i)"
+                    formControlName="orgType"
+                  >
+                    <option value="" disabled selected disabled>
+                      Select Organization Type
+                    </option>
+                    <option *ngFor="let data of org_type" [value]="data.cd">
+                      {{ data.value }}
+                    </option>
+                  </select>
+                  <mat-error>
+                    <span
+                      *ngIf="
+                        !level.get('orgType').valid &&
+                        level.get('orgType').touched
+                      "
+                      class="help=block"
+                    >
+                      {{ "validationMessage.org_type_required" | translate }}
+                    </span>
+                  </mat-error>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label for="org" class="form-label"
+                    >{{ "project.Project_Organization" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+                  <select
+                    id="org"
+                    class="form-control"
+                    formControlName="orgSuborgId"
+                    (change)="onChgOrg($event, i)"
+                  >
+                    <option value="" disabled selected>
+                      Select Project Organization
+                    </option>
+                    <option
+                      *ngFor="let data of projectOrg[i]"
+                      [value]="data.orgId"
+                    >
+                      {{ data.orgName }}
+                    </option>
+                  </select>
+                  <mat-error>
+                    <span
+                      *ngIf="
+                        !level.get('orgSuborgId').valid &&
+                        level.get('orgSuborgId').touched
+                      "
+                      class="help=block"
+                    >
+                      {{ "validationMessage.org_select_required" | translate }}
+                    </span>
+                  </mat-error>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label class="form-label"
+                    >{{ "project.Participating" | translate }}
+                    {{ "animalDetails.state" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+                  <select
+                    type="text"
+                    class="form-control"
+                    id="state"
+                    formControlName="stateCd"
+                    (change)="onChgState($event, i)"
+                  >
+                    <option value="" selected disabled>
+                      Select Participating State
+                    </option>
+                    <option
+                      *ngFor="let data of stateDetails[i]"
+                      [value]="data.statecd"
+                    >
+                      {{ data.stateName }}
+                    </option>
+                  </select>
+                  <mat-error>
+                    <span
+                      *ngIf="
+                        !level.get('stateCd').valid &&
+                        level.get('stateCd').touched
+                      "
+                      class="help=block"
+                    >
+                      {{ "validationMessage.state_required" | translate }}
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-md-6">
+                  <label class="form-label"
+                    >{{ "project.Participating" | translate }}
+                    {{ "animalDetails.district" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+                  <ng-select
+                    [items]="districtDetails[i]"
+                    [multiple]="true"
+                    bindLabel="districtName"
+                    groupBy="selectedAllGroup"
+                    [selectableGroup]="true"
+                    [selectableGroupAsModel]="false"
+                    [closeOnSelect]="false"
+                    bindValue="districtcd"
+                    placeholder="Participating District"
+                    formControlName="districtsCd"
+                  >
+                    <ng-template
+                      class="form-control"
+                      ng-optgroup-tmp
+                      let-item="item"
+                      let-item$="item$"
+                      let-index="index"
+                    >
+                      <input
+                        id="item-{{ index }}"
+                        type="checkbox"
+                        [(ngModel)]="item$.selected"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                      Select All
+                    </ng-template>
+
+                    <ng-template
+                      class="form-control"
+                      ng-option-tmp
+                      let-item="item"
+                      let-item$="item$"
+                    >
+                      <input
+                        id="item-{{ item.cd }}"
+                        type="checkbox"
+                        [(ngModel)]="item$.selected"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                      {{ item.districtName }}
+                    </ng-template>
+                  </ng-select>
+                  <mat-error>
+                    <span
+                      *ngIf="
+                        !level.get('districtsCd').valid &&
+                        level.get('districtsCd').touched
+                      "
+                      class="help=block"
+                    >
+                      {{ "validationMessage.districts_required" | translate }}
+                    </span>
+                  </mat-error>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label class="form-label"
+                    >{{ "project.Mapping" | translate }}
+                    {{ "project.Start_Date" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+                  <input
+                    matInput
+                    [matDatepicker]="picker"
+                    [min]="onTenureDate[i]"
+                    [max]="onCompletionDate[i]"
+                    class="form-control input-custom-border"
+                    (dateChange)="mappingdateChange($event, i)"
+                    formControlName="orgMappingStartDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker"
+                    class="date-picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                  <mat-error>
+                    <span
+                      *ngIf="
+                        (level.get('orgMappingStartDate').invalid &&
+                          !level.get('orgMappingStartDate').pristine) ||
+                        level.get('orgMappingStartDate').touched
+                      "
+                      class="help=block"
+                    >
+                      <span
+                        *ngIf="level.get('orgMappingStartDate').errors?.['required']"
+                      >
+                        {{
+                          "validationMessage.Start_Date_required" | translate
+                        }}
+                      </span>
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-md-4">
+                  <label class="form-label"
+                    >{{ "project.Mapping" | translate }}
+                    {{ "project.End_Date" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+                  <input
+                    matInput
+                    [matDatepicker]="Epicker"
+                    [min]="mappingstartDate[i]"
+                    [max]="onCompletionDate[i]"
+                    (dateChange)="mappingdataEntryChange($event, i)"
+                    class="form-control input-custom-border"
+                    formControlName="orgMappingEndDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="Epicker"
+                    class="date-picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #Epicker></mat-datepicker>
+                  <mat-error>
+                    <span
+                      *ngIf="
+                        (level.get('orgMappingEndDate').invalid &&
+                          !level.get('orgMappingEndDate').pristine) ||
+                        level.get('orgMappingEndDate').touched
+                      "
+                      class="help=block"
+                    >
+                      <span
+                        *ngIf="level.get('orgMappingEndDate').errors?.['required']"
+                      >
+                        {{ "validationMessage.end_Date_required" | translate }}
+                      </span>
+                      <span
+                        *ngIf="
+                          level.get('orgMappingEndDate').errors
+                            ?.matDatepickerMin
+                        "
+                      >
+                        {{ "validationMessage.end_Date_required" | translate }}
+                      </span>
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-md-4">
+                  <label class="form-label"
+                    >{{ "project.Mapping" | translate }}
+                    {{ "project.Data_Entry_End_Date" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+                  <input
+                    matInput
+                    [matDatepicker]="DataEpicker"
+                    [min]="mappingendDate[i]"
+                    [max]="onCompletionDate[i]"
+                    class="form-control input-custom-border"
+                    formControlName="deEndDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="DataEpicker"
+                    class="date-picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #DataEpicker></mat-datepicker>
+                  <mat-error>
+                    <span
+                      *ngIf="
+                        (level.get('deEndDate').invalid &&
+                          !level.get('deEndDate').pristine) ||
+                        level.get('deEndDate').touched
+                      "
+                      class="help=block"
+                    >
+                      <span *ngIf="level.get('deEndDate').errors?.['required']">
+                        {{
+                          "validationMessage.Data_Entry_End_Date_required"
+                            | translate
+                        }}
+                      </span>
+                      <span
+                        *ngIf="level.get('deEndDate').errors?.matDatepickerMin"
+                      >
+                        {{
+                          "validationMessage.Data_Entry_End_Date_required"
+                            | translate
+                        }}
+                      </span>
+                      <span *ngIf="level.get('deEndDate').invalid">
+                        {{
+                          "validationMessage.Data_Entry_End_Date_required"
+                            | translate
+                        }}
+                      </span>
+                    </span>
+                  </mat-error>
+                </div>
+                <div
+                  *ngIf="i > 0"
+                  class="col-lg-12 col-md-12 d-flex justify-content-lg-end"
+                >
+                  <svg
+                    id="Group_4529"
+                    class="cursor-pointer"
+                    data-name="Group 4529"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
+                    (click)="removeLevelAt(i)"
+                  >
+                    <path
+                      id="Path_5203"
+                      data-name="Path 5203"
+                      d="M0,0H18V18H0Z"
+                      fill="none"
+                    />
+                    <path
+                      id="Path_5204"
+                      data-name="Path 5204"
+                      d="M3.609,6.827H16.48V17.285a.8.8,0,0,1-.8.8H4.413a.8.8,0,0,1-.8-.8ZM6.022,4.413V2.8a.8.8,0,0,1,.8-.8h6.436a.8.8,0,0,1,.8.8V4.413h4.022V6.022H2V4.413Zm1.609-.8v.8h4.827v-.8Zm0,6.436v4.827H9.24V10.044Zm3.218,0v4.827h1.609V10.044Z"
+                      transform="translate(-1.044 -1.044)"
+                      fill="#545454"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!isAddLevel">
+            <button
+              href="javascript:void(0)"
+              class="btn btn-primary"
+              (click)="addLevel()"
+            >
+              {{ "common.add" | translate }}
+            </button>
+          </div>
+
+          <div class="h-divider"></div>
+          <div class="d-flex justify-content-end mt-2">
+            <button
+              type="button"
+              class="btn btn-outline-primary mr-2"
+              matStepperPrevious
+            >
+              {{ "animalDetails.back" | translate }}
+            </button>
+            <button type="button" class="btn btn-primary" (click)="onSubmit()">
+              {{ btnTextDynamic }}
+            </button>
+          </div>
+        </form>
+      </mat-step>
+    </mat-stepper>
+  </form>
+</div>

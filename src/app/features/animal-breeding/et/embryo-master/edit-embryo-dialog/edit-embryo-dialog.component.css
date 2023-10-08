@@ -1,0 +1,117 @@
+.add-diagnostics-dialog {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .add-diagnostics-header {
+    flex-grow: 0;
+    flex-shrink: 0;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .dialog-main-content {
+    flex-grow: 1;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 0 5px 0 0;
+  }
+
+  .mr-top-10 {
+  margin-top: 20em;
+  }
+  .mr-10{
+    margin-top: 10px;
+  }
+  .mat-row{
+    background-color: #eaf0f2;
+    }
+
+.headeing h5 {
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+}
+.custom-viewexpandable-table {
+    background-color: #eeecec;
+  }
+  
+  /* table design */
+  
+  .custom-view-table {
+    box-shadow: none !important;
+    /* border: 1px solid #929292; */
+    border-collapse: inherit;
+  }
+  
+  .custom-view-table td.mat-cell,
+  .custom-view-table th.mat-header-cell {
+    padding: 0px 5px !important;
+    white-space: nowrap;
+    text-align: center;
+  }
+  
+  /* .custom-view-table td.mat-cell {
+    border: 1px solid #dcdcdc;
+  } */
+  
+  .custom-view-table .table-input {
+    border: transparent;
+    background-color: #fff;
+    padding: 0px;
+  }
+  
+  .custom-view-table tr.mat-row,
+  .custom-view-table tr.mat-header-row {
+    height: 40px;
+  }
+  
+  .custom-view-table tr.mat-header-row th {
+    background: #f8f7fa;
+    height: 38px;
+  }
+  
+  .custom-view-table ::ng-deep.mat-sort-header-arrow {
+    position: absolute;
+    left: -20px !important;
+  }
+  
+  .custom-view-table .status-highlight {
+    padding: 4px 10px;
+    border-radius: 16px;
+    background: #757575;
+    font-weight: bold;
+    opacity: 0.5;
+    color: #fff;
+    
+  }
+ .wd-4{
+ width: 4em;
+ }
+ .wd-7{
+    width: 7em;
+    }
+  /* /.custom-view-table .cell-width {
+    width: 15%;
+  } */
+  .wd-10{
+    width: 10em;
+  }
+  .custom-view-table tr.mat-header-row th {
+    min-width: auto;
+    text-align: center;
+  }
+  .custom-view-table tr.mat-header-row td{
+    min-width: auto;
+    text-align: center;
+  }
+  table {
+    width: 100%;
+    border-spacing: 0 8px !important;
+    border-collapse: unset;
+  }
+  /*Expansion Panel*/
+  

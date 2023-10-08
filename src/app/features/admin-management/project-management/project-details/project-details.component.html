@@ -1,0 +1,495 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            {{ "animalDetails.home" | translate }}
+          </li>
+          <li class="breadcrumb-item active">
+            {{ "organization.Admin_Management" | translate }}
+          </li>
+          <li class="breadcrumb-item current">
+            {{ "project.Project_Management" | translate }}
+          </li>
+          <li class="breadcrumb-item current">
+            {{ "project.Project_setup" | translate }}
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="row p-0 view-animal-detail mb-3">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="card mb-4">
+          <div class="card-header view-animal-info">
+            <div class="row">
+              <div class="col-md-10 d-flex align-items-center">
+                <div class="info-details">
+                  <div id="animal-detail">
+                    <ul>
+                      <h4>{{ data.projectName }}</h4>
+                    </ul>
+                  </div>
+                  <div id="animal-unique-detail" class="d-flex mb-1">
+                    <ul>
+                      <li>
+                        <span>{{ "project.Project_ID" | translate }} :
+                          {{ projectId }}</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="
+                  isLivestackAdmin ||
+                  (!isLivestackAdmin && userOrgId == data?.orgId)
+                " class="col-md-2 d-flex justify-content-end" appPermission [permissionType]="masterConfig.isModify">
+                <img src="/assets/images/edit.svg" class="icon-edit" alt="icon-edit"
+                  (click)="onEditProject(projectId,'edit')" />
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row animal-bio-info">
+              <div class="col-sm-6">
+                <div class="row">
+                  <div class="col-md-12 basic-details">
+                    <h5 class="mb-2">
+                      {{ "project.Project_Info" | translate }}
+                    </h5>
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "user.organizationName" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ data.orgDesc }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "project.mission" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ data.projectMissionDesc }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "project.Program" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        <span *ngFor="
+                            let program of data.programCd;
+                            let i = index;
+                            let l = last
+                          " class="">
+                          <ng-container *ngIf="!l">{{ program.programName }},</ng-container>
+                          <ng-container *ngIf="l">{{
+                            program.programName
+                            }}</ng-container>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "project.Scheme" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        <span *ngFor="
+                            let program of data.schemeCd;
+                            let i = index;
+                            let l = last
+                          " class="">
+                          <ng-container *ngIf="!l">
+                            {{ program.schemeName }},
+                          </ng-container>
+                          <ng-container *ngIf="l">
+                            {{ program.schemeName }}
+                          </ng-container>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "project.Project_Description" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ data.projectDesc }}
+                      </div>
+                    </div>
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "project.Start_Date" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ data.projectStartDate | customDateFormatter }}
+                      </div>
+                    </div>
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "project.End_Date" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ data.projectEndDate | customDateFormatter }}
+                      </div>
+                    </div>
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "project.Data_Entry_End_Date" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ data.projectDeEndDate | customDateFormatter }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="h-space"></div>
+                  <div class="col-md-12 basic-details">
+                    <h5 class="mb-2">
+                      {{ "organization.contactInformation" | translate }}
+                    </h5>
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "project.ProjectContactPerson" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ data.contactPersonName }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{
+                        "organization.contactPersonDesignation" | translate
+                        }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ data.designation }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "common.mobile" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ data.mobileNo }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "user.alternateNumber" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ data.alternateNo }}
+                      </div>
+                    </div>
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "animalDetails.email" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ data.emailId }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="h-space"></div>
+                  <div class="col-md-12 family-details">
+                    <h5 class="mb-2">
+                      {{ "project.ProjectActivityList" | translate }}
+                    </h5>
+                    <div class="d-flex">
+                      <!-- <div class="flex-custom-left detail-page-text">Project Activities</div> -->
+                      <!-- <div class="flex-custom-right detail-page-text-bold scrollHeight">
+                      <span *ngFor="let program of data.activityCd" class="font-weight-bold">
+                        <p class="text-center mt-2">{{program.activityName.split(' ').join(',')}}</p>
+                       <span *ngFor="let data of program.activityParameterList">
+                        Parameter Name: {{data.parameterName}}, Parameter Value: {{data.parameterValue}}
+                       </span> 
+                      </span><br><br> -->
+                      <div class="table-responsive" *ngIf="data?.activityCd?.length > 0">
+                        <table class="table table-bordered">
+                          <thead class="rolebody">
+                            <tr>
+                              <th>
+                                {{ "project.Project_Activities" | translate }}
+                              </th>
+                              <th>
+                                {{ "project.Parameter_Name" | translate }}
+                              </th>
+                              <th>
+                                {{ "project.Parameter_Value" | translate }}
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody class="rolebody">
+                            <div *ngFor="let val of data?.activityCd">
+                              <tr *ngFor="let data of val?.activityParameterList">
+                                <td>{{ val?.activityName }}</td>
+                                <!-- <span *ngFor="let data of val.activityParameterList"> -->
+                                <td>{{ data?.parameterName }}</td>
+                                <td>{{ data?.parameterValue }}</td>
+                                <!-- </span> -->
+                              </tr>
+                              <!-- <tr *ngFor="let data of val?.activityParameterList">
+                            <td></td>
+                            <td>{{data?.parameterName}}</td>
+                            <td>{{data?.parameterValue}}</td>
+                          </tr> -->
+                            </div>
+                          </tbody>
+                        </table>
+                      </div>
+                      <!-- <div *ngFor="let program of data.activityCd" class="">
+                        <h5 class="">Project Activities : {{program.activityName.split(' ').join(',')}}</h5>
+                        <div *ngFor="let data of program.activityParameterList">
+                           <span><b>Parameter Name:</b> {{data.parameterCd}} -- <b>Parameter Value:</b> {{data.parameterValue}}</span> 
+                        </div>
+                      </div> -->
+                      <!-- </div> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="row" *ngIf="data.projectValuesDetails">
+                  <div class="col-md-12 family-details">
+                    <h5 class="mb-2">
+                      {{ "project.DefaultValue" | translate }}
+                    </h5>
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "common.sex" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{
+                        data.projectValuesDetails.defaultSex == "M"
+                        ? "Male"
+                        : data.projectValuesDetails.defaultSex == "F"
+                        ? "Female"
+                        : "--"
+                        }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "common.species" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ data.projectValuesDetails.defaultSpeciesCd }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "project.AgeMax" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ data.projectValuesDetails.defaultAgeMax }}
+                      </div>
+                    </div>
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "project.AgeMin" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ data.projectValuesDetails.defaultAgeMin }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "animalTreatmentSurgery.breed" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        <span *ngFor="
+                            let item of data.projectValuesDetails
+                              .defaultBreedCdNames
+                          ">{{ item + "," }}</span>
+                        <!-- {{data.projectValuesDetails.defaultBreedCd1}}, {{data.projectValuesDetails.defaultBreedCd2}}, {{data.projectValuesDetails.defaultBreedCd3}}, {{data.projectValuesDetails.defaultBreedCd4}} -->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="h-space"></div>
+                  <div class="col-md-12 family-details">
+                    <h5 class="mb-2">
+                      {{ "project.RestrictedValue" | translate }}
+                    </h5>
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "common.sex" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{
+                        data.projectValuesDetails.restrictedSex == "M"
+                        ? "Male"
+                        : data.projectValuesDetails.restrictedSex == "F"
+                        ? "Female"
+                        : "--"
+                        }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "common.species" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ data.projectValuesDetails.restrictedSpeciesCd }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "project.AgeMax" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ data.projectValuesDetails.restrictedAgeMax }}
+                      </div>
+                    </div>
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "project.AgeMin" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ data.projectValuesDetails.restrictedAgeMin }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "animalTreatmentSurgery.breed" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        <p *ngFor="
+                            let item of data.projectValuesDetails
+                              .restrictedBreedCdNames
+                          ">
+                          {{ item + " , " }}
+                        </p>
+                        <!-- {{data.projectValuesDetails.restrictedBreedCd1}}, {{data.projectValuesDetails.restrictedBreedCd2}}, {{data.projectValuesDetails.restrictedBreedCd3}}, {{data.projectValuesDetails.restrictedBreedCd4}} -->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="h-space"></div>
+                  <div class="col-md-12 family-details">
+                    <h5 class="mb-2">
+                      {{ "project.ProjectOrganisationAreaMapping" | translate }}
+                    </h5>
+
+                    <!-- <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">Organization Type</div>
+                      <div class="flex-custom-right detail-page-text-bold">--</div>
+                    </div> -->
+
+                    <!-- <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "project.Project_Organization" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        <span
+                          *ngFor="let program of data.projectLocationMap"
+                          class=""
+                        >
+                          {{ program.orgSuborgName }}
+                        </span>
+                      </div>
+                    </div> -->
+
+                    <div class="table-responsive">
+                      <table class="table table-bordered">
+                        <thead class="rolebody">
+                          <tr>
+                            <th>
+                              {{ "postMortem.organization" | translate }}
+                            </th>
+                            <th>
+                              {{ "animalDetails.state" | translate }}
+                            </th>
+                            <th>
+                              {{ "common.action" | translate }}
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody class="rolebody">
+                          <div>
+                            <tr *ngFor="let val of data.projectLocationMap">
+                              <td>{{ val?.orgSuborgName }}</td>
+                              <td>
+                                <a href="javascript:void(0)" placement="right"
+                                  ngbPopover="{{ val.districtsCdWithNames }}" popoverTitle="Districts">
+                                  {{ val.stateName }}
+                                </a>
+                              </td>
+                              <td>
+                                <a href="javascript:void(0)" (click)="viewOrgDetailsDialog(val)">{{ "View More" }}</a>
+                              </td>
+                            </tr>
+                          </div>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <!-- <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "animalDetails.state" | translate }}
+                      </div>
+                      <div class="flex-custom-left detail-page-text-bold">
+                        <ul class="project-detail">
+                          <li
+                            *ngFor="
+                              let projectParticipatingAreae of data.projectLocationMap
+                            "
+                          >
+                            <a
+                              href="javascript:void(0)"
+                              placement="right"
+                              ngbPopover="{{
+                                projectParticipatingAreae.districtsCdWithNames
+                              }}"
+                              popoverTitle="Districts"
+                            >
+                              {{ projectParticipatingAreae.stateName }}
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div> -->
+
+                    <!-- <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">Participating District</div>
+                      <div class="flex-custom-right detail-page-text-bold"> --</div>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12 text-right">
+            <button class="btn btn-primary" [routerLink]="['..', 'list']">
+              {{ "animalDetails.back" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

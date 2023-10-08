@@ -1,0 +1,36 @@
+.text-link a {
+  text-decoration: underline;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.card .card-title {
+  font-size: 16px;
+  font-weight: bold;
+  font-family: Noto Sans;
+  letter-spacing: 0px;
+  color: #333333;
+}
+
+.floating-filedset {
+  padding: 4px 15px;
+  border-radius: 0px 0px 8px 8px;
+  position: absolute;
+  top: 0;
+}
+
+.floating-filedset.fildset-bg-green {
+  background-color: #01c5d3;
+}
+
+.floating-filedset.fildset-bg-blue {
+  background-color: #3ba2e2;
+}
+
+.floating-filedset .float-label {
+  font-size: 12px;
+  font-weight: bold;
+  font-family: Noto Sans;
+  letter-spacing: 0px;
+  color: #ffffff;
+}

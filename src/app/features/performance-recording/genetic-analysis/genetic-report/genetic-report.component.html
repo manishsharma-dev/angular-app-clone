@@ -1,0 +1,92 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="add-diagnostics-dialog">
+  <div class="add-diagnostics-header">
+    <div class="headeing">
+      <h2 class="edit-heading-label">Results</h2>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+  <div class="dialog-main-content">
+    <div class="w-100 prescription-details">
+      <h3 class="font-weight-bold">
+        {{ data.tagId }} ({{
+        "F" === "F" ? "Female" : "Male"
+        }}
+        - {{ getAnimalAge('2022-02-12') }})
+      </h3>
+      <span>
+        <!-- <button type="button" class="btn btn-primary" (click)="downloadReport(data?.prescriptionDetails)">
+          Download Report
+        </button> -->
+      </span>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-3">
+        <p class="label-header">Sample ID:</p>
+        <p>{{ data.sampleId }}</p>
+      </div>
+      <div class="col-md-3">
+        <p class="label-header">Test Date:</p>
+        <p>{{ data.sampleCollectionDate | date: 'dd/MM/YYYY' }}</p>
+      </div>
+      <div class="col-md-3">
+        <ng-container>
+          <p class="label-header">Sample Type:</p>
+          <p>{{ 'Blood' }}</p>
+        </ng-container>
+
+      </div>
+      <div class="col-md-3">
+        <p class="label-header">Examination Sub Type:</p>
+        <p>{{ 'Parentage Verification, Breed Purity' }}</p>
+      </div>
+
+    </div>
+
+    <ng-container *ngFor="let result of results">
+      <div class="row mt-4">
+        <div class="col-md-12">
+          <p class="section-title">Results For {{result.resultsFor}}</p>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-12 table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Result</th>
+                <th>Lab Name</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{ 'Positive' }}</td>
+                <td>{{ 'Lab One' }}</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+
+
+
+
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noData> NA </ng-template>

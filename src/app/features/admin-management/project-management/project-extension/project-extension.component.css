@@ -1,0 +1,138 @@
+
+
+.edit-dialog {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    
+}
+.edit-section-header {
+    flex-grow: 0;
+    flex-shrink: 0;
+    background: #124C60;
+    padding: 15px;
+    color: #fff;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit-section-header mat-icon {
+    float: right;
+}
+
+.edit-section-header .edit-heading .edit-heading-label {
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 0px;
+    opacity: 1;
+}
+
+.edit-section-header .edit-heading .edit-heading-desc {
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0px;
+    opacity: 1;
+}
+
+.user-infoedit {
+    padding: 15px;
+    background-color: #F0F5F8;
+}
+
+
+
+.user-infoedit .user-infoedit-details .info-muted {
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 0px;
+    color: #757575;
+    opacity: 0.8;
+}
+
+.user-infoedit .user-img {
+    height: 45px;
+    width: 45px;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    margin-left: 24px;
+}
+
+.user-infoedit .custmer-label{
+    font-weight: bold;
+    font-size: 18px;
+    color: #185B85;
+    font-family: Noto Sans;
+    letter-spacing: 0px;
+}
+
+
+#owner-detail ul li {
+    list-style-type: none;
+    display: inline;
+    font-weight: normal;
+    font-family: Noto Sans;
+    font-size: 14px;
+    letter-spacing: 0px;
+    color: #3C3C3C;
+}
+
+#owner-detail li:not(:first-child):before {
+    content: " | ";
+}
+
+.icon-verified{
+    height: 24px;
+    width: 24px;
+    padding-bottom: 5px;
+}
+
+
+.edit-container{
+    flex-grow: 1;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 25px 20px;
+}
+
+.edit-footer {
+    flex-grow: 0;
+    flex-shrink: 0;
+    height: auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border: 1px solid #BECCD1;
+    background: #EAF0F2;
+    padding: 15px;
+}
+
+.edit-container::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px #fff;
+    background-color: #fff;
+}
+
+.edit-container::-webkit-scrollbar {
+    width: 5px;
+    background-color: #fff;
+    opacity: 0.8;
+}
+
+.edit-container::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px #5f6160;
+    background-color: #5f6160;
+    opacity: 0.8;
+}
+.date-picker{
+    float: right;
+    margin-top: -39px;
+}
+.input-custom-border{
+    border: 1px solid #ced4da;
+    padding: 0px 5px;
+  }

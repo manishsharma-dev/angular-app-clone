@@ -1,0 +1,177 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            <a routerLink="/dashboard">{{'common.breadcrumb_home' | translate}}</a>
+          </li>
+          <li class="breadcrumb-item active">
+            <a href="javascript:void(0)">{{'vaccination.breadcrumb_vaccinationSecond' | translate}} </a>
+          </li>
+          <li class="breadcrumb-item current">
+            <a href="javascript:void(0)">{{'diseaseTesting.disease_testing' | translate}} </a>
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="row no-gutters col-container">
+    <div class="col-md-12 col-h left-section">
+      <!-- owner Details section-->
+      <div class="owner-details-section">
+        <div class="row owner-detail-table mb-4 mx-0 py-3 align-items-center user-detail">
+          <div class="back-arrow">
+            <i class="fa fa-chevron-left mr-2 back-section" (click)="goBack()"></i>
+          </div>
+          <div class="table-responsive">
+            <table class="table animal-table m-0" *ngIf="animal">
+              <thead>
+                <tr>
+                  <th>{{'diseaseTesting.animal_tag_id' | translate}}</th>
+                  <th>{{'animalDetails.fillAnimalDetails.category_species' | translate}}</th>
+                  <th>{{'animalDetails.breed' | translate}}</th>
+                  <th>{{'common.sex' | translate}}</th>
+                  <th>{{'common.age' | translate}}</th>
+                  <th>{{'animalDetails.fillAnimalDetails.pregnancy_status' | translate}}</th>
+                  <th>{{'animalDetails.milking_status' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ animal.tagId }}</td>
+                  <td>{{ animal.species }}</td>
+                  <td>{{ "NA" }}</td>
+                  <td>{{ animal.sex }}</td>
+                  <td>
+                    {{ getAnimalAge(animal.ageInMonths) }}
+                  </td>
+                  <td class="col-auto">
+                    {{ animal.pregnancyStatus === "Y" ? "Yes" : "No" }}
+                  </td>
+                  <td class="col-auto">{{ "NA" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="title-heading mb-3">
+        <h3 class="muted-label-heading">{{'diseaseTesting.previous_disease_testing_results' | translate}}</h3>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="report-table table-view mt-3">
+            <div class="table-responsive">
+              <table mat-table [dataSource]="dataSourceFIR" class="mat-elevation-z8" matSort
+                (matSortChange)="announceSortChange($event)">
+                <!-- Position Column -->
+                <ng-container matColumnDef="srNo">
+                  <th mat-header-cell *matHeaderCellDef> {{'common.sno' | translate}} </th>
+                  <td mat-cell *matCellDef="let element; let i = index">{{i + 1}}</td>
+                </ng-container>
+
+                <!-- FIR ID Column -->
+                <ng-container matColumnDef="sampleID">
+                  <th mat-header-cell *matHeaderCellDef>{{'diseaseTesting.sampleID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.sampleId }}
+                  </td>
+                </ng-container>
+
+                <!--  Date of First Incidence Column -->
+                <ng-container matColumnDef="dateOfTesting">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'diseaseTesting.date_of_testing' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.sampleCollectionDate | customDateFormatter }}
+                  </td>
+                </ng-container>
+
+                <!-- Symptoms Column -->
+                <ng-container matColumnDef="onSpotTestDesc">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Testing Type">
+                    {{'diseaseTesting.testing_type' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.testingLocationDesc ? element.testingLocationDesc :
+                    element.sampleExaminationDetails[0].testingLocationDesc }}
+                  </td>
+                </ng-container>
+
+                <!-- Disease Column -->
+                <ng-container matColumnDef="sampleTypeDesc">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Sample Type">
+                    {{'diseaseTesting.sample_type' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.sampleTypeDesc }}
+                  </td>
+                </ng-container>
+
+                <!-- Village Column -->
+                <ng-container matColumnDef="diseaseCdDesc">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Disease">
+                    {{'diseaseTesting.disease_suspected' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.diseaseCdDesc }}
+                  </td>
+                </ng-container>
+
+                <!-- Status Column -->
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Status">
+                    {{'diseaseTesting.test_result' | translate}}
+
+                  <td mat-cell *matCellDef="let element" class="action-link">
+                    <ng-container *ngIf="element.sampleExaminationDetails;else onSpotSection">
+                      <a (click)="updateLab(element,1);" *ngIf="isLabPending(element);else resultSection">
+                        {{'common.update' | translate}}
+                      </a>
+                      <ng-template #resultSection>
+                        <a (click)="updateLab(element,2);">
+                          {{'common.view_details' | translate}}
+                        </a>
+                      </ng-template>
+                    </ng-container>
+                    <ng-template #onSpotSection>
+                      <a (click)="manageDiagnostics(element);" *ngIf="element.samplingStatus == 1;else resultSection">
+                        {{'common.update' | translate}}
+                      </a>
+                      <ng-template #resultSection>
+                        <span>{{element.sampleResultDesc}}</span>
+                      </ng-template>
+                    </ng-template>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="columnsToDisplayFIR"></tr>
+                <tr mat-row *matRowDef="let element; columns: columnsToDisplayFIR"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell text-center" [attr.colspan]="columnsToDisplayFIR.length">
+                    {{'diseaseTesting.no_data_matching_the_filter' | translate}}
+                  </td>
+                </tr>
+              </table>
+              <mat-paginator #listPaginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of disease">
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

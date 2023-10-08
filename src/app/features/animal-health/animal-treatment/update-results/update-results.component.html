@@ -1,0 +1,300 @@
+<div class="add-diagnostics-dialog">
+  <div class="add-diagnostics-header">
+    <div class="headeing">
+      <p class="diagnostics-heading-label">{{"animalTreatmentSurgery.update_results"| translate}}</p>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+  <div class="dialog-main-content">
+    <div class="row">
+      <div class="align-items-center treatment-information col-md-12">
+        <div class="tabs-nav-list d-flex justify-content-md-start">
+          <ul class="nav nav-pills" id="pills-tab" role="tablist">
+            <li class="nav-item" *ngIf="isSpotTestingShow(spotData)">
+              <a class="nav-link" [ngClass]="{ active: activeTab == 'on_spot' }" id="pills-allCampaigns-tab"
+                data-bs-toggle="pill" [attr.data-bs-target]="'#pills-allCampaigns'" role="tab"
+                aria-controls="pills-allCampaigns" (click)="activeTab = 'on_spot'"
+                aria-selected="true">{{"animalTreatmentSurgery.on_spot_testing"| translate}}</a>
+            </li>
+            <!-- <li class="nav-item" *ngIf="sampleData.length">
+              <a class="nav-link" id="pills-open-tab" [ngClass]="{ active: activeTab == 'lab' }" data-bs-toggle="pill"
+                [attr.data-bs-target]="'#pills-open'" (click)="activeTab = 'lab'" role="tab" aria-controls="pills-open"
+                aria-selected="false">Lab Testing</a>
+            </li> -->
+            <li class="nav-item" *ngIf="isRadiologyShow(data.data.radiologyDetails)">
+              <a class="nav-link" id="pills-open-tab" [ngClass]="{ active: activeTab == 'diagnostics' }"
+                data-bs-toggle="pill" [attr.data-bs-target]="'#pills-open'" (click)="activeTab = 'diagnostics'"
+                role="tab" aria-controls="pills-open" aria-selected="false">{{"animalTreatmentSurgery.diagnostics"
+                |translate}}</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-12 mt-3 px-0">
+          <form [formGroup]="diagnosticsForm">
+            <div class="tab-content" id="pills-tabContent">
+              <div class="tab-pane fade" formArrayName="spotTestingRows"
+                *ngFor="let item of getSpotTestingFormArray['controls']; let i = index;" [ngClass]="{
+                active: activeTab == 'on_spot',
+                show: activeTab == 'on_spot'
+              }" [id]="'pills-onspot'" role="tabpanel" aria-labelledby="pills-allCampaigns-tab">
+
+                <ng-container [formGroupName]="i">
+                  <div class="table-outebox my-3"
+                    *ngIf="getSpotTestingFormArray['controls'][i]['value']['samplingStatus'] == 1">
+                    <span class="font-weight-bold">{{"animalTreatmentSurgery.sample_details"| translate}}
+                      :</span>
+                    {{getSpotTestingFormArray['controls'][i]['value']['sampleId']}}
+                    <div class="w-100 border p-3 mt-2">
+                      <div class="row ">
+                        <div class="col-md-4">
+                          <h4 class="font-weight-bold label-header">
+                            {{"animalTreatmentSurgery.date_of_testing"| translate}}
+                          </h4>
+                        </div>
+                        <div class="col-md-4">
+                          <h4 class="font-weight-bold label-header">
+                            {{"animalTreatmentSurgery.disease_suspected"| translate}}
+                          </h4>
+                        </div>
+                        <div class="col-md-4">
+                          <h4 class="font-weight-bold label-header">{{"animalTreatmentSurgery.remarks"|
+                            translate}} {{"animalTreatmentSurgery.test_type"| translate}}</h4>
+                        </div>
+                      </div>
+                      <div class="row pb-3">
+                        <div class="col-md-4">
+                          <p *ngIf="getSpotTestingFormArray['controls'][i]['value']['sampleCollectionDate']">
+                            {{formatDate(getSpotTestingFormArray['controls'][i]['value']['sampleCollectionDate'])}}
+                          </p>
+                        </div>
+                        <div class="col-md-4">
+                          <p>
+                            {{getSpotTestingFormArray['controls'][i]['value']['diseaseCdName']}}
+                          </p>
+                        </div>
+                        <div class="col-md-4">
+                          <p>
+                            {{getSpotTestingFormArray['controls'][i]['value']['onSpotTestDesc']}}
+                          </p>
+                        </div>
+                      </div>
+                      <div class="row pb-3">
+                        <div class="col-md-12">
+                          <h4 class="font-weight-bold label-header">{{"animalTreatmentSurgery.sample_type" |
+                            translate}}</h4>
+                        </div>
+                        <div class="col-md-12">
+                          <p>
+                            {{getSpotTestingFormArray['controls'][i]['value']['sampleTypeDesc']}}
+                          </p>
+                        </div>
+                      </div>
+                      <div class="h-divider">
+                        <div class="shadow"></div>
+                      </div>
+                      <div class="form-row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label for="initial">{{"animalTreatmentSurgery.initial_reading"| translate}}</label>
+                            <input type="text" class="form-control" name="initial" id="initial"
+                              [placeholder]='"animalTreatmentSurgery.enter_the_initial_reading" | translate'
+                              formControlName="initialSampleResultValue" />
+
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label for="final">{{"animalTreatmentSurgery.final_reading"| translate}}</label>
+                            <input type="text" id="final" class="form-control" name="final"
+                              [placeholder]='"animalTreatmentSurgery.enter_the_final_reading" | translate'
+                              formControlName="finalSampleResultValue" (change)="updateDifference(i, $event)" />
+
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label for="difference">{{"animalTreatmentSurgery.difference"| translate}}</label>
+                            <input type="text" id="difference" class="form-control" name="difference"
+                              formControlName="difference" (change)="updateDifference(i, $event)" />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label for="result">{{"animalTreatmentSurgery.results"| translate}}</label>
+
+                            <mat-select formControlName="sampleResult">
+                              <mat-option value="1">{{"animalTreatmentSurgery.positive"| translate}}</mat-option>
+                              <mat-option value="2">{{"animalTreatmentSurgery.negative"| translate}}</mat-option>
+                            </mat-select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+
+              </div>
+              <!-- <div class="tab-pane fade" [id]="'pills-lab'" formArrayName="labTestingRows"
+                *ngFor="let item of getLabTestingFormArray['controls']; let i = index;" [ngClass]="{
+                active: activeTab == 'lab',
+                show: activeTab == 'lab'
+              }" role="tabpanel" aria-labelledby="pills-open-tab">
+                <div class="table-outebox my-3" [formGroupName]="i">
+                  <span class="font-weight-bold">Sample Details :</span>
+                  {{getLabTestingFormArray['controls'][i]['value']['sampleId']}}
+                  <div class="w-100 border p-3 mt-2">
+                    <div class="row ">
+                      <div class="col-md-4 ">
+                        <h4 class="font-weight-bold label-header">
+                          Sample Collection Date
+                        </h4>
+                      </div>
+                      <div class="col-md-4 ">
+                        <h4 class="font-weight-bold label-header">Sample Type</h4>
+                      </div>
+                      <div class="col-md-4 ">
+                        <h4 class="font-weight-bold label-header">
+                          Examination Type
+                        </h4>
+                      </div>
+                    </div>
+                    <div class="row pb-3">
+                      <div class="col-md-4">
+                        <p>
+                          {{formatDate(getLabTestingFormArray['controls'][i]['value']['sampleCollectionDate'])}}
+                        </p>
+                      </div>
+                      <div class="col-md-4">
+                        <p>
+                          {{getLabTestingFormArray['controls'][i]['value']['sampleTypeName']}}
+                        </p>
+                      </div>
+                      <div class="col-md-4">
+                        <p>
+                          {{getLabTestingFormArray['controls'][i]['value']['typeOfExamName']}}
+                        </p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4 ">
+                        <h4 class="font-weight-bold label-header">
+                          Examination Sub-type
+                        </h4>
+                      </div>
+                      <div class="col-md-4 ">
+                        <h4 class="font-weight-bold label-header">Lab</h4>
+                      </div>
+                    </div>
+                    <div class="row pb-3">
+                      <div class="col-md-4">
+                        <p>
+                          {{getLabTestingFormArray['controls'][i]['value']['examsubTypeName']}}
+                        </p>
+                      </div>
+                      <div class="col-md-4">
+                        <p>{{getLabTestingFormArray['controls'][i]['value']['labName']}}</p>
+                      </div>
+                    </div>
+                    <div class="h-divider">
+                      <div class="shadow"></div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="col-md-12 form-group">
+                        <label for="remarks">Remarks</label>
+                        <textarea id="remarks" class="form-control" placeholder="Enter remarks here"
+                          formControlName="testRemarks"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+              <div class="tab-pane fade" [id]="'pills-diagnostics'" [ngClass]="{
+                active: activeTab == 'diagnostics',
+                show: activeTab == 'diagnostics'
+              }" role="tabpanel" formArrayName="diagnosticsData"
+                *ngFor="let item of getDiagnosticsFormArray['controls']; let i = index;"
+                aria-labelledby="pills-open-tab">
+                <div class="my-3" [formGroupName]="i" *ngIf="item.dirty || !item.get('testImageUrl1')?.value">
+                  <div class="w-100 border mt-2">
+                    <div class="table-outebox">
+                      <div class="form-check">
+                        <input class="form-check-input" id="Radiography" type="checkbox" [value]=""
+                          formControlName="radiologyReportTypeFlag" />
+                        <label class="form-check-label" for="Radiography">
+                          {{item.get('radiologyReportTypeName')?.value}}
+                        </label>
+                      </div>
+                      <div class="w-100 border mt-2" *ngIf="item.get('radiologyReportTypeFlag')?.value">
+                        <div class="table-outebox my-2">
+                          <div class="form-row">
+                            <div class="col-md-5">
+                              <div class="form-group input-icon">
+                                <label for="diagnosisDateRadiography">{{"animalTreatmentSurgery.date_of_diagnosis"|
+                                  translate}}</label>
+                                <input class="form-control" type="text" matInput id="diagnosisDateRadiography"
+                                  formControlName="radiologyReportDate" [max]="today"
+                                  [matDatepicker]="diagnosisDateRadiography" placeholder="dd-mm-yyyy" />
+                                <mat-datepicker-toggle matSuffix [for]="diagnosisDateRadiography" class="calender-icon">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #diagnosisDateRadiography></mat-datepicker>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <div class="form-group">
+                                <label for="diagnosisResultFileRadiography">{{"animalTreatmentSurgery.Upload_result"|
+                                  translate}}</label>
+                                <input type="file" class="form-control"
+                                  id="diagnosisResultFileRadiography" name="diagnosisResultFileRadiography"
+                                  (change)="onFileUpload($event, 'radiography',item.get('radiologyReportType')?.value, item)" />
+                                <!-- <span class="alert-message" *ngIf="
+                                    diagnosticForm
+                                      .get('radiographyGroup.resultFile')?.hasError('invalidPdfFile')
+                                  ">
+                                  {{ validationMsg.invalidFileType }}
+                                </span> -->
+                              </div>
+                            </div>
+
+                          </div>
+                          <div class="form-row">
+                            <div class="col-md-12">
+                              <div class="form-group">
+                                <label for="diagnosisRemarksRadiography">{{"animalTreatmentSurgery.remarks"|
+                                  translate}}</label>
+                                <textarea id="diagnosisRemarksRadiography" class="form-control"
+                                  formControlName="reportObservationsRemarks"></textarea>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+  <div class="add-diagnostics-footer">
+    <button type="reset" class="btn btn-light mr-2" (click)="onCancel()">
+      {{"animalTreatmentSurgery.cancel"| translate}}
+    </button>
+    <button type="submit" class="btn btn-primary" (click)="saveTab()" >{{"animalDetails.save"| translate}}</button>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+<form>
+  <!-- <div class="verified_icon">
+    <i class="fa fa-exclamation-triangle warning_icon"></i>
+  </div> -->
+  <h3 class="">Remarks</h3>
+  <hr />
+  
+  <mat-dialog-content>
+    <label for="remark">Enter Remarks here</label>
+    <textarea
+      class="form-control"
+      placeholder="Enter remarks details"
+    ></textarea>
+  </mat-dialog-content>
+
+  <hr />
+
+  <mat-dialog-actions align="center">
+    <button
+      mat-dialog-close
+      class="btn btn-outline-primary mr-2 px-4"
+      *ngIf="data.secondaryBtnText"
+    >
+      Cancel
+    </button>
+
+    <button mat-dialog-close class="btn btn-primary">
+      <!-- {{ data.primaryBtnText }} -->
+      Submit
+    </button>
+  </mat-dialog-actions>
+</form>

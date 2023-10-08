@@ -1,0 +1,11 @@
+.bg-hirarchy{
+    border: 1px solid #DCDCDC;
+}
+
+.v-line-dotted{
+    border-top: 2px dotted #DCDCDC;
+    transform: rotate(90deg);
+    margin: 10px 18px;
+  }
+
+

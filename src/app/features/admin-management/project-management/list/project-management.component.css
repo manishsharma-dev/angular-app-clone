@@ -1,0 +1,46 @@
+.project-mgmt{
+  padding: 0px;
+  float:right;
+}
+.project-mgmt li{
+  display: inline;
+  list-style-type: none;
+  margin: 0px 0px 0px 8px;
+}
+td , th {
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 200px;
+}
+.input-custom-border{
+  border: 1px solid #ced4da;
+  padding: 0px 5px;
+}
+.floating-filedset {
+  padding: 8px 15px;
+  border-radius: 0px 0px 8px 8px;
+  position: relative;
+  top: -9px;
+
+}
+.floating-filedset.fildset-bg-green {
+  background-color: #01c5d3;
+}
+
+.floating-filedset.fildset-bg-blue {
+  background-color: #3ba2e2;
+ 
+}
+
+.floating-filedset .float-label {
+  font-size: 12px;
+  font-weight: bold;
+  font-family: Noto Sans;
+  letter-spacing: 0px;
+  color: #ffffff;
+}
+
+.filter-set {
+  margin-top: 9px;
+  margin-bottom: 3px;
+}

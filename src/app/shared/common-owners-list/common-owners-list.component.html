@@ -1,0 +1,119 @@
+<div class="row p-0 mb-3">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <span class="floating-filedset fildset-bg-green">
+          <span class="float-label">
+            {{ "animalTreatmentSurgery.search_result" | translate }}</span>
+        </span>
+        <div class="row align-items-center mt-4">
+          <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="title-heading">
+              <form>
+                <div class="form-row">
+                  <div class="filter-by">
+                    <img src="/assets/images/search.svg" class="input-icon-left" alt="icon-search" />
+                    <input type="text" class="form-control input input-search-section" id="filter-by" [placeholder]="
+                        'animalTreatmentSurgery.search_by_keywords'
+                          | translate
+                      " (keyup)="searchInTable($event)" />
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="table-view table-responsive mb-3">
+          <table mat-table matSort [dataSource]="ownerDataSource" class="mat-elevation-z8 mt-4"
+            *ngIf="ownerDataSource.data.length != 0">
+            <ng-container matColumnDef="sNo">
+              <th mat-header-cell *matHeaderCellDef>{{"common.sno" | translate}}</th>
+              <td mat-cell *matCellDef="let element; let i = index">
+                {{ paginatorRef.pageIndex * paginatorRef.pageSize + (i + 1) }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ownerId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{"common.owner_id" | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <a href="javascript:void(0)" (click)="showOwnerDetails(element)">{{ element.ownerId }}</a>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ownerName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{"common.owner_name_lbl" | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <div class="ellips-text" data-toggle="tooltip" data-placement="top" title="{{ element.ownerName }}">
+                  {{ element.ownerName }}
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ownerMobileNo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{"common.mobile" | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.ownerMobileNo }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ownerDateOfBirth">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{(ownersType === ownerType.individual ?
+                "common.dob": "common.doi") | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element?.ownerDateOfBirth | date: 'dd/MM/YYYY' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ownerGender">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{"common.gender" | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.ownerGender }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ownerTypeCategory">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{"animalDetails.nonIndividualType" | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.ownerTypeCategory }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="villageName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{"common.village" | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.villageName}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="arrow">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element">
+                <img src="/assets/images/right_arrow.svg" class="icon-right-arrow" alt="icon-right-arrow"
+                  (click)="showOwnerDetails(element)" />
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="ownerColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: ownerColumns"></tr>
+          </table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users" #paginatorRef>
+          </mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

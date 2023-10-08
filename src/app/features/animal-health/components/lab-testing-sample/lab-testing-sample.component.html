@@ -1,0 +1,211 @@
+<div class="overlay" *ngIf="isLoading">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<ng-container [formGroup]="diagnosticsForm">
+  <ng-container formArrayName="samples" *ngFor="let sampleControl of sampleControls?.controls; let sampleIndex = index">
+    <div [formGroupName]="sampleIndex">
+      <div class="separator">
+        <h4>{{"animalTreatmentSurgery.sample" |translate }} {{sampleIndex+1}}</h4>
+        <div class="line"></div>
+      </div>
+
+      <!-- First Row start -->
+      <div class="form-row">
+        <div class="form-group col-md-3" *ngIf="diseaseRequiredFlag">
+          <label for="Disease Suspected" class="form-label">{{"animalTreatmentSurgery.disease_suspected" |
+            translate}}</label>
+          <ng-select class="custom" formControlName="diseaseCd"
+            [placeholder]='"animalTreatmentSurgery.select_disease" | translate'>
+            <ng-option [value]="disease.diseaseCd" *ngFor="let disease of diseasesSuspected">{{disease.diseaseDesc}}
+            </ng-option>
+
+          </ng-select>
+
+        </div>
+
+        <div class="form-group col-md-3">
+          <label for="Sample Type" class="form-label">{{"animalTreatmentSurgery.sample_type" | translate}}<span
+              class="mandatory-field">*</span></label>
+          <ng-select class="custom" formControlName="sampleType"
+            [placeholder]='"animalTreatmentSurgery.select_sample" | translate'
+            (change)="getSampleExamType($event, sampleIndex)">
+            <ng-option [value]="sample.sampleTypeCd" *ngFor="let sample of sampleTypeMaster">{{sample.sampleTypeDesc}}
+            </ng-option>
+
+          </ng-select>
+          <div class="alert-message" *ngIf="
+          (sampleControl.get('sampleType')?.touched ||
+          sampleControl.get('sampleType')?.dirty) &&
+          sampleControl.get('sampleType')?.hasError('required')
+              ">
+            {{"animalTreatmentSurgery.please_enter_required_value" | translate}}.
+          </div>
+        </div>
+
+        <div class="ml-auto col-md-2 d-flex justify-content-end" *ngIf="!sampleControl?.disabled">
+          <div class="add-row">
+            <span class="add-row--btn" (click)="deleteSample(sampleIndex)"><i class="fa fa-trash-o add-row--icon"
+                aria-hidden="true"></i>
+              <b>{{"animalTreatmentSurgery.remove" | translate}}</b>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- First Row end -->
+
+      <!-- table row start -->
+      <div class="table-responsive mb-3">
+        <table mat-table [dataSource]="dataSources[sampleIndex]" formArrayName="sampleExaminationDetails"
+          class="custom-view-table mat-elevation-z8">
+
+
+          <ng-container matColumnDef="sampleExaminationTypeCd">
+            <th mat-header-cell *matHeaderCellDef>{{"animalTreatmentSurgery.examination_type" | translate}}<span
+                class="mandatory-field">*</span></th>
+            <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+              <mat-select formControlName="sampleExaminationTypeCd"
+                (selectionChange)="onSelectionChange($event, 'sampleExaminationTypeCd', sampleIndex, index)"
+                (selectionChange)="getSubType($event,sampleIndex, index)"
+                (selectionChange)="subscribeToSampleRowsChange('sampleExaminationTypeCd',sampleIndex,index)">
+                <mat-option *ngFor="let exam of sampleExamTypeMaster[sampleIndex]"
+                  [value]="exam.sampleExaminationTypeCd">
+                  {{ exam.sampleExaminationTypeDesc }}</mat-option>
+              </mat-select>
+              <div class="alert-message" *ngIf="
+              (element.get('sampleExaminationTypeCd')?.touched ||
+              element.get('sampleExaminationTypeCd')?.dirty) &&
+              element.get('sampleExaminationTypeCd')?.hasError('required')
+            ">
+                {{"animalTreatmentSurgery.please_enter_required_value" | translate}}.
+              </div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="sampleExaminationSubtypeCd">
+            <th mat-header-cell *matHeaderCellDef>
+              {{"animalTreatmentSurgery.examination_sub_type" | translate}}
+            </th>
+            <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+              <mat-select formControlName="sampleExaminationSubtypeCd"
+                (selectionChange)="subscribeToSampleRowsChange('sampleExaminationSubtypeCd',sampleIndex,index)">
+                <mat-option *ngFor="let sub of sampleSubExamTypeMaster[sampleIndex][index]"
+                  [value]="sub.sampleExaminationSubtypeCd">
+                  {{ sub.sampleExaminationSubtypeDesc }}</mat-option>
+              </mat-select>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="labCd">
+            <th mat-header-cell *matHeaderCellDef>{{"animalTreatmentSurgery.lab" | translate}}</th>
+            <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+              <mat-select formControlName="labCd"
+                (selectionChange)="subscribeToSampleRowsChange('labCd',sampleIndex,index,$event)">
+                <mat-option *ngFor="let lab of labMaster" [value]="lab.subOrgId">{{ lab.subOrgName }}</mat-option>
+                <mat-option [value]="0" *ngIf="!showAllLabs"><a href="javascript:void(0)">Show All Labs</a></mat-option>
+              </mat-select>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="labCharges">
+            <th mat-header-cell *matHeaderCellDef>{{"animalTreatmentSurgery.lab_charges" | translate}}</th>
+            <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+              <input type="text" class="form-control table-input" id="labCharges" placeholder=""
+                formControlName="labCharges" />
+              <div class="alert-message" *ngIf="
+              element.get('labCharges')?.dirty &&
+              element.get('labCharges')?.hasError('invalidDecimalNo')
+            ">
+                {{"performanceRecording.invalid_value" | translate}}
+
+              </div>
+
+
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="receiptNo">
+            <th mat-header-cell *matHeaderCellDef>{{"animalTreatmentSurgery.receipt_no" | translate}}</th>
+            <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+              <input type="text" class="form-control table-input" id="receiptNo" placeholder=""
+                formControlName="receiptNo" />
+              <div class="alert-message" *ngIf="
+              element.get('receiptNo')?.dirty &&
+              element.get('receiptNo')?.hasError('maxlength')
+            ">
+                {{"diseaseTesting.receipt_no_cannot_be_more_than_10_characters" | translate}}
+              </div>
+              <div class="alert-message" *ngIf="
+                element.get('receiptNo')?.dirty &&
+                element.get('receiptNo')?.hasError('pattern')
+              ">
+                {{"performanceRecording.invalid_value" | translate}}
+              </div>
+            </td>
+          </ng-container>
+          <!-- testRemarks -->
+          <ng-container matColumnDef="testRemarks">
+            <th mat-header-cell *matHeaderCellDef>{{"animalTreatmentSurgery.remarks" | translate}}</th>
+            <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+              <input type="text" class="form-control table-input" id="testRemarks" placeholder=""
+                formControlName="testRemarks" />
+              <div class="alert-message" *ngIf="
+              element.get('testRemarks')?.dirty &&
+              element.get('testRemarks')?.hasError('maxlength')
+            ">
+                {{"animalTreatmentSurgery.remarks_cannot_be_more_than_80_characters" | translate}}
+
+              </div>
+              <div class="alert-message" *ngIf="
+                element.get('testRemarks')?.dirty &&
+                element.get('testRemarks')?.hasError('pattern')
+              ">
+                {{"diseaseTesting.invalid_characters_present" | translate}}
+              </div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="modeOfTransport">
+            <th mat-header-cell *matHeaderCellDef>{{"animalTreatmentSurgery.mode_of_transport" | translate}}</th>
+            <td mat-cell *matCellDef="let element; let i = index" [formGroupName]="i">
+              <mat-select formControlName="modeOfTransport">
+                <mat-option [value]="mode.cd" *ngFor="let mode of modeOfTransports">
+                  {{mode.value}}
+                </mat-option>
+
+              </mat-select>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element; let index = index">
+              <i class="fa fa-trash-o" *ngIf="!sampleControl?.disabled"
+                (click)="removeLabTestingElement(sampleIndex,index)"></i>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="add">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element; let index = index; let last = last">
+              <i class="fa fa-plus-circle" *ngIf="last && !sampleControl?.disabled"
+                (click)="addLabTestingRow(sampleIndex)"></i>
+            </td>
+          </ng-container>
+
+          <tr class="action-link table-head" mat-header-row *matHeaderRowDef="labTestingDisplayedColumns"></tr>
+          <tr class="action-link table-head" mat-row *matRowDef="let row; columns: labTestingDisplayedColumns">
+          </tr>
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="labTestingDisplayedColumns.length">
+              {{"animalTreatmentSurgery. no_data_matching_the_filter"| translate}}
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!-- table row end -->
+    </div>
+  </ng-container>
+  <div class="add-row" *ngIf="diagnosticsForm.enabled">
+    <span class="add-row--btn" (click)="addSample()"><i class="fa fa-plus add-row--icon" aria-hidden="true"></i>
+      <b>{{"animalTreatmentSurgery.add_sample"| translate}}</b>
+    </span>
+  </div>
+</ng-container>

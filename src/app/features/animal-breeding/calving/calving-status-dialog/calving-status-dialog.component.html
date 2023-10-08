@@ -1,0 +1,71 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+    <div class="center">
+      <mat-spinner class="center"></mat-spinner>
+    </div>
+  </div>
+  
+  <div class="ear-tag-detail">
+      <div class="tag-detail-header">
+        <div class="heading-section">
+          <h2 class="tag-detail-heading" >{{data?.title | translate}}</h2>
+          <p class="edit-heading-desc">{{'animalBreeding.commonLabel.change_milking_status' | translate}}</p>
+        </div>
+      </div>
+    
+    
+    
+      <div class="tag-detail-form" >
+        <form [formGroup]="animalForm" (ngSubmit)="submitStatus()">
+         <div class="row">
+            <div class="col-12">
+              <div class="form-row">
+                <div class="col-md-6">
+                 
+                    <div class="form-group input-icon">
+                        <label for="Treatment Date">{{'animalBreeding.dry_off' | translate}} {{'common.date' | translate}}<span class="mandatory-field">*</span></label>
+                        <input class="form-control" type="text" [max]="today"
+                            [matDatepicker]="pickerDate"  placeholder="dd-mm-yyyy"
+                            (click)="pickerDate.open()" />
+                        <mat-datepicker-toggle matSuffix [for]="pickerDate" class="calender-icon">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #pickerDate></mat-datepicker>
+                    </div>
+                
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group ">
+                    <label for="tagId" class="label-value"
+                      >{{'animalBreeding.miliking_status'| translate}}<span class="mandatory-field"
+                        >*</span
+                      ></label
+                    >
+                    <div class="d-flex justify-content-between">
+                      <div class="field-width">
+                          <select class="form-control" name="milkingStatus" formControlName="milkingStatus" >
+                            <option [value]="null" >{{'animalDetails.select'| translate}}</option>
+                              <option [value]="reason?.cd" *ngFor="let reason of milkingStatus">{{reason?.value}}</option>
+                          </select>
+                      </div>
+                     
+                    </div>
+                  </div>
+                </div>
+               
+              </div>
+            </div>
+       
+          </div>
+
+          <div class="d-flex justify-content-left mt-3">
+            <button type="submit" class="btn btn-light mr-2 ml-auto" mat-dialog-close>
+              {{'animalDetails.cancel'|translate}}
+            </button>
+            <button type="submit" class="btn btn-primary" >
+              {{'common.submit'|translate}}
+            </button>
+          </div>
+        </form>
+      </div>
+  
+    </div>
+    

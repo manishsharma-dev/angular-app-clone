@@ -1,0 +1,329 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="worklist-edit-dialog">
+  <!-- header -->
+  <div class="worklist-edit-header">
+    <div class="headeing">
+      <h2 class="edit-heading-label"> {{'fir.first_incidence_reports_list_details' | translate}}</h2>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+
+  <!-- contant -->
+  <div class="dialog-main-content">
+    <!-- worklist-firid-section -->
+    <div class="worklist">
+      <p class="worklist-title">{{'fir.fir_id' | translate}} :</p>
+      <ul class="worklist-id">
+        <li class="worklist-id--item list-inline">{{ totalFirId }}</li>
+      </ul>
+    </div>
+    <!-- worklist-item-firid -->
+    <div class="worklist-item mb-4">
+      <div class="col-lg-6 col-md-6 mb-md-3">
+        <p class="label-text">{{'fir.data_entry_date_of_first_incidence' | translate}}</p>
+        <p class="muted-text">{{ firstIncidenceReportingDisplay }}</p>
+      </div>
+      <div class="col-lg-6 col-md-6  mb-md-3">
+        <p class="label-text">{{'fir.date_of_first_incidence' | translate}}</p>
+        <p class="muted-text">{{ firstIncidenceDateDisplay }}</p>
+      </div>
+      <div class="col-lg-6 col-md-6  mb-md-3">
+        <p class="label-text">{{'common.village_name' | translate}}</p>
+        <p class="muted-text">{{ villageDetails}}</p>
+      </div>
+    </div>
+
+
+    <!-- worklist-Symptoms & Disease-section -->
+    <div class="worklist">
+      <p class="worklist-title w-100">{{'fir.symptoms_disease' | translate}}</p>
+    </div>
+    <!-- worklist-Symptoms & Disease -->
+    <div class="worklist-item mb-4">
+      <div class="col-lg-6 col-md-6  mb-md-3">
+        <p class="label-text">{{'fir.notable_clinical_signs' | translate}}</p>
+        <p class="muted-text">{{ symtomsDetails}}</p>
+      </div>
+      <div class="col-lg-6 col-md-6  mb-md-3">
+        <p class="label-text">{{'animalTreatmentSurgery.disease_suspected' | translate}}</p>
+        <p class="muted-text">{{ diseaseDetails ? diseaseDetails : '--' }}</p>
+      </div>
+    </div>
+
+    <!-- worklist-Affected Animals Details-section -->
+    <div class="worklist">
+      <p class="worklist-title w-100">{{'intimation.affected_animals_details' | translate}}</p>
+
+    </div>
+    <!-- worklist-Affected Animals Details -->
+    <div class="worklist-item mb-4">
+      <div class="col-lg-12 col-md-12  mb-md-3">
+        <div class="fir-table table-view">
+          <div class="table-responsive">
+            <table mat-table [dataSource]="affectedCollectionTable" class="report-details-table mat-elevation-z8"
+              matSort>
+              <!-- Position Column -->
+              <ng-container matColumnDef="affected_species">
+                <th mat-header-cell *matHeaderCellDef>{{'fir.affected_species' | translate}} </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.speciesName ?? '--' }}
+                </td>
+              </ng-container>
+
+              <!-- FIR ID Column -->
+              <ng-container matColumnDef="animals_affected">
+                <th mat-header-cell *matHeaderCellDef>{{'fir.no_of_animals_affected' | translate}}</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.noOfAnimals ?? '--' }}
+                </td>
+              </ng-container>
+
+              <!--  Date of First Incidence Column -->
+              <ng-container matColumnDef="animals_died">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{'fir.no_of_animals_died' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.noOfAnimalsDied ?? '--' }}
+                </td>
+              </ng-container>
+
+
+
+              <tr mat-header-row *matHeaderRowDef="displayAffectedColumns"></tr>
+              <tr mat-row *matRowDef="let element; columns: displayAffectedColumns"></tr>
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center" [attr.colspan]="displayAffectedColumns.length">
+                  {{'animalTreatmentSurgery.no_data_matching_the_filter' | translate}}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- worklist-Affected Animals Animal's Images-section -->
+    <div class="worklist" *ngIf="imageFlag">
+      <p class="worklist-title w-100">{{'fir.affected_animal_images' | translate}}</p>
+
+    </div>
+    <div class="col-lg-12 col-md-12" *ngIf="imageFlag">
+      <ul class="animalsImages">
+        <li class="animalsImages-item list-inline  mb-md-3">
+          <div class="file-icon">
+            <i class="fa fa-image"></i>
+          </div>
+          <p class="image-caption">photo1.jpg</p>
+
+        </li>
+        <li class="animalsImages-item list-inline  mb-md-3">
+          <div class="file-icon">
+            <i class="fa fa-image"></i>
+          </div>
+          <p class="image-caption">photo1.jpg</p>
+        </li>
+        <li class="animalsImages-item list-inline  mb-md-3">
+          <div class="file-icon">
+            <i class="fa fa-image"></i>
+          </div>
+          <p class="image-caption">photo1.jpg</p>
+        </li>
+      </ul>
+
+    </div>
+
+
+
+    <!-- worklist-Other Details-section -->
+    <div class="worklist">
+      <p class="worklist-title w-100">{{'animalDetails.other_details' | translate}}</p>
+    </div>
+    <!-- worklist-Other Details -->
+
+    <div class="worklist-item mb-3">
+      <div class="col-lg-6 col-md-6  mb-md-3">
+        <p class="label-text">{{'diseaseTesting.disease_suspected' | translate}}</p>
+        <p class="muted-text">{{ diseaseSuspected ?? "--"}}</p>
+      </div>
+      <!-- <div class="col-lg-6 col-md-6  mb-md-3">
+        <div class="form-check form-check-inline">
+          <input type="radio" id="diseaseSuspected" value="diseaseSuspected" class="form-check-input" checked>
+          <label for="diseaseSuspected" class="form-check-label">Disease Suspected</label>
+        </div>
+      </div> -->
+      <div class="col-lg-6 col-md-6  mb-md-3">
+        <p class="label-text">{{'fir.lab_confirmed' | translate}}</p>
+        <p class="muted-text">{{ labConfirmed ?? "--"}}</p>
+      </div>
+      <!-- <div class="col-lg-6 col-md-6 mb-md-3">
+        <div class="form-check form-check-inline">
+          <input type="checkbox" id="diseaseSuspected" value="diseaseSuspected" class="form-check-input" checked>
+          <label for="diseaseSuspected" class="form-check-label">Disease Suspected</label>
+        </div>
+      </div> -->
+      <div class="col-lg-6 col-md-6  mb-md-3">
+        <p class="label-text">{{'fir.disease_of_public_health_importance' | translate}}</p>
+        <p class="muted-text">{{ publicHealthDisease ?? "--"}}</p>
+      </div>
+      <!-- <div class="col-lg-6 col-md-6  mb-md-3">
+        <div class="form-check form-check-inline">
+          <input type="checkbox" id="diseaseSuspected" value="diseaseSuspected" class="form-check-input" checked>
+          <label for="diseaseSuspected" class="form-check-label">Disease of Public Health Importance</label>
+        </div>
+      </div> -->
+      <div class="col-lg-6 col-md-6  mb-md-3">
+        <p class="label-text">{{'fir.vaccination_done' | translate}}</p>
+        <p class="muted-text">{{ vaccinationDone ?? "--"}}</p>
+      </div>
+    </div>
+    <div class="worklist-item mb-4">
+      <div class="col-lg-6 col-md-6">
+        <p class="label-text">{{'fir.probable_source_of_infection' | translate}}</p>
+        <p class="muted-text">{{ sourceofInfection ?? "--" }}</p>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <p class="label-text">{{'fir.controls_action_taken' | translate}}</p>
+        <p class="muted-text">{{ actionTakenDesc ?? "--" }}</p>
+      </div>
+    </div>
+
+
+    <!-- worklist-Sample collection Details-section -->
+    <div class="worklist">
+      <p class="worklist-title w-100">{{'diseaseTesting.sample_collection_details' | translate}}</p>
+    </div>
+    <!-- worklist-Sample collection Details -->
+
+    <div class="sample-collected-result mb-3">
+      <div class="col-lg-12 col-12">
+
+        <div class="table-responsive table-scroll">
+          <table mat-table [dataSource]="sampleCollectionTable" class="mat-elevation-z8" matSort>
+            <!-- tag_id Column -->
+            <ng-container matColumnDef="tag_id">
+              <th mat-header-cell *matHeaderCellDef>
+                {{'animalDetails.tag_id' | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.tagId }}
+              </td>
+            </ng-container>
+            <!-- sample_id Column -->
+            <ng-container matColumnDef="sample_id">
+              <th mat-header-cell *matHeaderCellDef>{{'animalTreatmentSurgery.sample_id' | translate}} </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.sampleId }}
+              </td>
+            </ng-container>
+
+            <!-- sample_type Column -->
+            <ng-container matColumnDef="sample_type">
+              <th mat-header-cell *matHeaderCellDef>{{'animalTreatmentSurgery.sample_type' | translate}}</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.sampleTypeDesc }}
+              </td>
+            </ng-container>
+            <!-- examination_type Column -->
+            <ng-container matColumnDef="examination_type">
+              <th mat-header-cell *matHeaderCellDef> {{'animalTreatmentSurgery.examination_type' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{ element.sampleExaminationTypeCdDesc?? '--' }}
+                <!-- <div class="cell">{{ element.sampleExaminationTypeCdDesc?? '--' }}</div> -->
+                <!-- <div class="cell last-cell">{{ element.sampleExaminationSubtypeCdDesc?? '--' }}</div> -->
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="subExamination_type">
+              <th mat-header-cell *matHeaderCellDef> {{'animalTreatmentSurgery.examination_sub_type' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{ element.sampleExaminationSubtypeCdDesc?? '--' }}
+                <!-- <div class="cell">{{ element.sampleExaminationTypeCdDesc?? '--' }}</div> -->
+                <!-- <div class="cell last-cell">{{ element.sampleExaminationSubtypeCdDesc?? '--' }}</div> -->
+              </td>
+            </ng-container>
+
+            <!--  result Column -->
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Status">
+                {{'diseaseTesting.test_result' | translate}}</th>
+
+              <td mat-cell *matCellDef="let element" class="action-link">
+                <ng-container *ngIf="element.sampleExaminationDetails;else onSpotSection">
+                  <a (click)="updateLab(element,1);" *ngIf="isLabPending(element);else resultSection">
+                    {{'common.update' | translate}}
+                  </a>
+                  <ng-template #resultSection>
+                    <a (click)="updateLab(element,2);">
+                      {{'diseaseTesting.view' | translate}}
+                    </a>
+                  </ng-template>
+                </ng-container>
+                <ng-template #onSpotSection>
+                  <a (click)="manageDiagnostics(element.sampleExaminationDetails);"
+                    *ngIf="element.samplingStatus == 1;else resultSection">
+                    {{'common.update' | translate}}
+                  </a>
+                  <ng-template #resultSection>
+                    <span>{{element.sampleResultDesc}}</span>
+                  </ng-template>
+                </ng-template>
+              </td>
+            </ng-container>
+
+
+
+            <tr mat-header-row *matHeaderRowDef="displaySampleColumns"></tr>
+            <tr mat-row *matRowDef="let element; columns: displaySampleColumns"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell text-center" [attr.colspan]="displaySampleColumns.length">
+                {{'diseaseTesting.no_data_matching_the_filter' | translate}}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- worklist-Remarks-section -->
+    <div class="worklist">
+      <p class="worklist-title w-100">{{'diseaseTesting.remarks' | translate}}</p>
+      <p class="muted-text">{{ remarks ? remarks : '--'}}</p>
+
+    </div>
+    <!-- worklist-Remarks -->
+    <!-- <div class="worklist-item mb-4">
+      <div class="col-lg-12 col-md-12">
+        <textarea id="remark" rows="2" placeholder="Enter remarks details" formcontrolname="remarks"
+          class="form-control"></textarea>
+      </div>
+    </div> -->
+
+    <!-- footer -->
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+
+  </div>
+
+  <!-- footer -->
+  <div class="worklist-edit-footer">
+    <button type="button" class="btn btn-outline-primary mr-2" mat-dialog-close>
+      {{'diseaseTesting.cancel' | translate}}
+    </button>
+    <!-- <button type="button" class="btn btn-outline-primary mr-2">
+      Seek Clarification
+    </button> -->
+    <!-- <button type="button" class="btn btn-dark mr-2" (click)="rejectSubmit()" *ngIf="approveFlag">
+      {{'fir.reject' | translate}}
+    </button>
+    <button type="button" class="btn btn-primary" (click)="approveSubmit()" *ngIf="approveFlag">
+      {{'fir.approve' | translate}}
+    </button> -->
+  </div>
+
+</div>

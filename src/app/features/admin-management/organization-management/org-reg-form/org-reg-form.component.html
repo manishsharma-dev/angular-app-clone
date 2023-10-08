@@ -1,0 +1,580 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            {{ "common.breadcrumb_home" | translate }}
+          </li>
+          <li class="breadcrumb-item active">
+            {{ "organization.Admin_Management" | translate }}
+          </li>
+          <li class="breadcrumb-item current">
+            {{ "organization.Organization_Management" | translate }}
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="container-white-bg">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="title-heading">
+        <!-- <i class="fa fa-chevron-left mr-2 back-section" [routerLink]="['..', 'list']"></i> -->
+        <h4 class="mb-3">
+          {{ "organization.organizationRegistrationForm" | translate }}
+        </h4>
+      </div>
+    </div>
+  </div>
+
+  <!-- row 1 -->
+  <form [formGroup]="orgRegForm" (ngSubmit)="onCreateOrg()">
+    <div class="row">
+      <div class="col-sm-12">
+        <h5 class="mb-3">{{ "organization.basicInformation" | translate }}</h5>
+
+        <div class="row">
+          <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 form-group" *ngIf="orgId">
+            <label>{{ "organization.Org. ID" | translate }}: {{ orgId }}</label>
+          </div>
+        </div>
+        <div *ngIf="orgId" class="mb-3">
+          <label>{{ "common.status" | translate }}</label>
+          <select id="orgstatus" class="form-control col-lg-3 col-md-3 col-sm-12 col-xs-12" formControlName="orgstatus">
+            <option *ngFor="let orgstatus of status" [value]="orgstatus.cd" selected="orgstatus.value">
+              {{ orgstatus.value }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 form-group">
+        <label for="orgName" class="form-label">{{ "organization.organizationName" | translate
+          }}<span class="mandatory-field">*</span></label>
+        <input type="text" class="form-control" id="orgName" placeholder="" formControlName="orgName" minlength="5"
+          maxlength="100" />
+        <mat-error>
+          <span *ngIf="
+              (orgRegForm.get('orgName').invalid &&
+                !orgRegForm.get('orgName').pristine) ||
+              orgRegForm.get('orgName').touched
+            " class="validation-error-message">
+            <span *ngIf="orgRegForm.get('orgName').errors?.['required']" class="validation-error-message">
+              {{ "validationMessage.org_name_required" | translate }}
+            </span>
+            <span *ngIf="orgRegForm.get('orgName').errors?.['pattern']" class="validation-error-message">
+              {{ "validationMessage.Invalid_Message" | translate }}
+            </span>
+            <span *ngIf="orgRegForm.get('orgName').errors?.['minlength']" class="validation-error-message">
+              {{ "validationMessage.Organization_min" | translate }}
+            </span>
+
+            <!-- <span *ngIf="orgRegForm.get('orgName').errors?.['whitespacevalidator']" class="validation-error-message">
+              {{"validationMessage.whitespacevalidator" | translate }} .
+            </span> -->
+
+            <span *ngIf="orgRegForm.get('orgName').value?.length >= 100" class="validation-error-message">
+              {{ "validationMessage.Organization_max" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 form-group">
+        <label for="orgType" class="form-label">{{ "organization.organizationType" | translate
+          }}<span class="mandatory-field">*</span></label>
+        <select id="orgType" class="form-control" formControlName="orgType">
+          <!-- <option value="">{{ "organization.organizationType" | translate }}</option> -->
+          <option [value]="getOrgList.cd" *ngFor="let getOrgList of getOrgLists">
+            {{ getOrgList.value }}
+          </option>
+        </select>
+        <mat-error>
+          <span *ngIf="
+              (orgRegForm.get('orgType').invalid &&
+                !orgRegForm.get('orgType').pristine) ||
+              orgRegForm.get('orgType').touched
+            " class="validation-error-message">
+            <span *ngIf="orgRegForm.get('orgType').errors?.['required']">
+              {{ "validationMessage.org_type_required" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 from-group">
+        <label for="orgOnboardDate" class="form-label">{{ "organization.onBoardingDate" | translate
+          }}<span class="mandatory-field">*</span></label>
+        <input matInput [matDatepicker]="picker" class="form-control input-custom-border" placeholder="dd/mm/yyyy"
+          [max]="OnBoardingMinDate" formControlName="orgOnboardDate" (dateChange)="setDateChanged($event)" />
+        <mat-datepicker-toggle matSuffix [for]="picker" class="date-picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error>
+          <span *ngIf="
+              (orgRegForm.get('orgOnboardDate').invalid &&
+                !orgRegForm.get('orgOnboardDate').pristine) ||
+              orgRegForm.get('orgOnboardDate').touched
+            " class="validation-error-message">
+            <span *ngIf="orgRegForm.get('orgOnboardDate').errors?.['required']">
+              {{ "validationMessage.On-Boarding_Date_required" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 form-group">
+        <label for="orgTenureCompleteDate" class="form-label">{{ "organization.tenureCompletionDate" | translate
+          }}<span class="mandatory-field">*</span></label>
+        <input matInput [matDatepicker]="orgTenureCompleteDate" class="form-control input-custom-border"
+          formControlName="orgTenureCompleteDate" placeholder="dd/mm/yyyy" [min]="minDate"
+          (dateChange)="setDateTenure($event)" />
+        <mat-datepicker-toggle matSuffix [for]="orgTenureCompleteDate" class="date-picker"></mat-datepicker-toggle>
+        <mat-datepicker #orgTenureCompleteDate></mat-datepicker>
+        <mat-error>
+          <span *ngIf="
+              (orgRegForm.get('orgTenureCompleteDate').invalid &&
+                !orgRegForm.get('orgTenureCompleteDate').pristine) ||
+              orgRegForm.get('orgTenureCompleteDate').touched
+            " class="validation-error-message">
+            <span *ngIf="orgRegForm.get('orgTenureCompleteDate').errors?.['required']">
+              {{
+              "validationMessage.Tenure_Completion_Date_required" | translate
+              }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 form-group">
+        <label for="regNo" class="form-label">{{ "organization.registrationNo." | translate }}
+          <span class="mandatory-field">*</span></label>
+        <input type="text" class="form-control" id="regNo" placeholder="" formControlName="orgRegistrationNo"
+          minlength="5" maxlength="50" />
+
+        <mat-error>
+          <span *ngIf="
+              (orgRegForm.get('orgRegistrationNo').invalid &&
+                !orgRegForm.get('orgRegistrationNo').pristine) ||
+              orgRegForm.get('orgRegistrationNo').touched
+            " class="validation-error-message">
+            <span *ngIf="orgRegForm.get('orgRegistrationNo').errors?.['required']">
+              {{ "validationMessage.registration_No_required" | translate }}
+            </span>
+            <span *ngIf="orgRegForm.get('orgRegistrationNo').errors?.['pattern']" class="validation-error-message">
+              {{ "validationMessage.registration_No_pattern" | translate }}
+            </span>
+            <span *ngIf="orgRegForm.get('orgRegistrationNo').errors?.['minlength']" class="validation-error-message">
+              {{ "validationMessage.registration_No_minlength" | translate }}
+            </span>
+            <span *ngIf="orgRegForm.get('orgRegistrationNo').value?.length >= 50" class="validation-error-message">
+              {{ "validationMessage.registration_No_maxlength" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 form-group">
+        <label>{{ "organization.registrationNo.supportingDocument" | translate }}
+          <span class="mandatory-field" *ngIf="!orgId">*</span> (Upload
+          (JPG/JPEG/PNG/PDF))</label>
+        <input type="file" class="form-control" id="registrationDocs" name="registrationDocs" placeholder=""
+          (change)="onFileUpload($event)" />
+        <a class="info-link" *ngIf="orgRegistrationProofUrl" [href]="orgRegistrationProofUrl" target="_blank">
+          {{ "validationMessage.Preview_Uploaded_Document" | translate }}
+        </a>
+        <mat-error>
+          <span *ngIf="
+              (orgRegForm.get('registrationDocs').invalid &&
+                !orgRegForm.get('registrationDocs').pristine) ||
+              orgRegForm.get('registrationDocs').touched
+            " class="validation-error-message">
+            <span *ngIf="orgRegForm.get('registrationDocs').errors?.['required']">
+              {{ "validationMessage.registration_document" | translate }}
+            </span>
+          </span>
+          <span class="validation-error-message" *ngIf="isValidFileTypeOrSize">
+            {{ isValidFileTypeOrSize }}
+          </span>
+        </mat-error>
+      </div>
+    </div>
+    <div class="h-divider"></div>
+    <div class="row">
+      <div class="col-sm-12">
+        <h5 class="mb-3">{{ "organization.participatingArea" | translate }}</h5>
+      </div>
+      <div class="col-lg-12 col-md-12 p-3 bg-hirarchy" formArrayName="organizationParticipatingArea">
+        <div class="row">
+          <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+            <label for="state" class="form-label">{{ "animalDetails.state" | translate
+              }}<span class="mandatory-field">*</span></label>
+          </div>
+          <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+            <label for="District" class="form-label">{{ "animalDetails.district" | translate
+              }}<span class="mandatory-field">*</span></label>
+          </div>
+        </div>
+        <div class="dynamicAdd" *ngFor="let row of rows.controls; let empIndex = index" [formGroupName]="empIndex">
+          <div class="row mb-3">
+            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+              <select id="stateCd" class="form-control" formControlName="state"
+                (ngModelChange)="getDistrictsMulti($event, empIndex)">
+                <option *ngFor="let state of states" [value]="state.stateCode">
+                  {{ state.stateName }}
+                </option>
+              </select>
+
+              <mat-error>
+                <span *ngIf="
+                    (row.get('state').invalid && !row.get('state').pristine) ||
+                    row.get('state').touched
+                  " class="validation-error-message">
+                  <span *ngIf="row.get('state').errors?.['required']" class="validation-error-message">
+                    {{ "validationMessage.state_required" | translate }}
+                  </span>
+                </span>
+              </mat-error>
+            </div>
+
+            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+              <ng-select [items]="districtListMulti[empIndex]" [multiple]="true" bindLabel="districtName"
+                groupBy="selectedAllGroup" [selectableGroup]="true" [selectableGroupAsModel]="false"
+                [closeOnSelect]="false" bindValue="districtCd" [clearable]="false" formControlName="districts">
+                <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                  <input id="item-{{ index }}" type="checkbox" [(ngModel)]="item$.selected"
+                    [ngModelOptions]="{ standalone: true }" />
+                  Select All
+                </ng-template>
+
+                <ng-template ng-option-tmp let-item="item" let-item$="item$">
+                  <input id="item-{{ item['districtCd'] }}" type="checkbox" [(ngModel)]="item$.selected"
+                    [ngModelOptions]="{ standalone: true }" />
+                  {{ item.districtName }}
+                </ng-template>
+              </ng-select>
+
+              <mat-error>
+                <span *ngIf="
+                    (row.get('districts').invalid &&
+                      !row.get('districts').pristine) ||
+                    row.get('districts').touched
+                  " class="validation-error-message">
+                  <span *ngIf="row.get('districts').errors?.['required']" class="validation-error-message">
+                    {{ "validationMessage.districts_required" | translate }}
+                  </span>
+                </span>
+              </mat-error>
+            </div>
+
+            <div *ngIf="empIndex > 0" class="col-auto d-flex align-items-center cursor-pointer"
+              (click)="onRemoveRow(empIndex)">
+              <svg id="Group_4529" data-name="Group 4529" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                viewBox="0 0 18 18">
+                <path id="Path_5203" data-name="Path 5203" d="M0,0H18V18H0Z" fill="none" />
+                <path id="Path_5204" data-name="Path 5204"
+                  d="M3.609,6.827H16.48V17.285a.8.8,0,0,1-.8.8H4.413a.8.8,0,0,1-.8-.8ZM6.022,4.413V2.8a.8.8,0,0,1,.8-.8h6.436a.8.8,0,0,1,.8.8V4.413h4.022V6.022H2V4.413Zm1.609-.8v.8h4.827v-.8Zm0,6.436v4.827H9.24V10.044Zm3.218,0v4.827h1.609V10.044Z"
+                  transform="translate(-1.044 -1.044)" fill="#545454" />
+              </svg>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-auto v-line-dotted"></div>
+          </div>
+        </div>
+
+        <span class="validation-error-message" *ngIf="isShowError">
+          {{ isShowError }}
+        </span>
+
+        <div class="row mt-2">
+          <div class="col-auto">
+            <button type="button" class="btn btn-outline-primary" (click)="addRow()">
+              {{ "common.add" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="h-divider"></div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <h5 class="mb-3">
+          {{ "organization.contactInformation" | translate }}
+        </h5>
+      </div>
+
+      <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+        <label for="orgAddress" class="form-label">{{ "animalDetails.address" | translate
+          }}<span class="mandatory-field">*</span></label>
+        <textarea class="form-control" id="orgAddress" rows="3" formControlName="orgAddress" minlength="3"
+          maxlength="250"></textarea>
+        <mat-error>
+          <span *ngIf="
+              (orgRegForm.get('orgAddress').invalid &&
+                !orgRegForm.get('orgAddress').pristine) ||
+              orgRegForm.get('orgAddress').touched
+            " class="validation-error-message">
+            <span *ngIf="orgRegForm.get('orgAddress').errors?.['required']">
+              {{ "validationMessage.address_No_required" | translate }}
+            </span>
+
+            <span *ngIf="orgRegForm.get('orgAddress').errors?.['pattern']">
+              {{ "validationMessage.address_invalid" | translate }}
+            </span>
+
+            <span *ngIf="orgRegForm.get('orgAddress').errors?.['minlength']" class="validation-error-message">
+              {{ "validationMessage.address_No_minlength" | translate }}
+            </span>
+
+            <span *ngIf="orgRegForm.get('orgAddress').value?.length >= 250" class="validation-error-message">
+              {{ "validationMessage.address_No_maxlength" | translate }}
+            </span>
+            <span *ngIf="orgRegForm.get('orgAddress').hasError('pattern')">
+              {{ "errorMsg.special_character_error" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+        <label for="state" class="form-label">{{ "animalDetails.state" | translate
+          }}<span class="mandatory-field">*</span></label>
+
+        <select id="state" class="form-control" formControlName="stateCd" (ngModelChange)="getDistricts($event)">
+          <option value="">Please Select state</option>
+          <option *ngFor="let state of states" [value]="state.stateCode">
+            {{ state.stateName }}
+          </option>
+        </select>
+        <mat-error>
+          <span *ngIf="
+              (orgRegForm.get('stateCd').invalid &&
+                !orgRegForm.get('stateCd').pristine) ||
+              orgRegForm.get('stateCd').touched
+            " class="validation-error-message">
+            <span *ngIf="orgRegForm.get('stateCd').errors?.['required']">
+              {{ "validationMessage.state_required" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+        <label for="state" class="form-label">{{ "animalDetails.district" | translate
+          }}<span class="mandatory-field">*</span></label>
+        <select id="district" class="form-control" formControlName="districtCd">
+          <option value="">Please Select District</option>
+          <option *ngFor="let district of districtListCnt" [value]="district['districtCd']"
+            selected="district.districtName">
+            {{ district["districtName"] }}
+          </option>
+        </select>
+        <mat-error>
+          <span *ngIf="
+              (orgRegForm.get('districtCd').invalid &&
+                !orgRegForm.get('districtCd').pristine) ||
+              orgRegForm.get('districtCd').touched
+            " class="validation-error-message">
+            <span *ngIf="orgRegForm.get('districtCd').errors?.['required']">
+              {{ "validationMessage.districts_required" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+      <div class="hr-space"></div>
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 form-group">
+        <label for="orgPin" class="form-label">{{ "animalDetails.pincode" | translate
+          }}<span class="mandatory-field">*</span></label>
+        <input type="text" class="form-control" id="orgPin" minlength="6" maxlength="6" placeholder=""
+          formControlName="orgPin" />
+        <mat-error>
+          <span *ngIf="
+              (orgRegForm.get('orgPin').invalid &&
+                !orgRegForm.get('orgPin').pristine) ||
+              orgRegForm.get('orgPin').touched
+            " class="validation-error-message">
+            <span *ngIf="orgRegForm.get('orgPin').errors?.['required']" class="validation-error-message">
+              {{ "validationMessage.Pincode_required" | translate }}
+            </span>
+            <span *ngIf="orgRegForm.get('orgPin').errors?.['pattern']" class="validation-error-message">
+              {{ "validationMessage.Invalid_Pincode_pattern" | translate }}
+            </span>
+            <span *ngIf="orgRegForm.get('orgPin').errors?.['minlength']" class="validation-error-message">
+              {{ "validationMessage.Invalid_Pincode_minlength" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 form-group">
+        <label for="contactPersonName" class="form-label">{{ "organization.contactPersonName" | translate
+          }}<span class="mandatory-field">*</span></label>
+        <input type="text" class="form-control" id="name" placeholder="" minlength="1"
+          formControlName="contactPersonName" maxlength="100" />
+        <mat-error>
+          <span *ngIf="
+              (orgRegForm.get('contactPersonName').invalid &&
+                !orgRegForm.get('contactPersonName').pristine) ||
+              orgRegForm.get('contactPersonName').touched
+            " class="validation-error-message">
+            <span *ngIf="orgRegForm.get('contactPersonName').errors?.['required']" class="validation-error-message">
+              {{ "validationMessage.contact_PersonName_required" | translate }}
+            </span>
+            <span *ngIf="orgRegForm.get('contactPersonName').errors?.['pattern']" class="validation-error-message">
+              {{ "validationMessage.contact_PersonName_pattern" | translate }}
+            </span>
+            <span *ngIf="orgRegForm.get('contactPersonName').errors?.['minlength']" class="validation-error-message">
+              {{ "validationMessage.contact_PersonName_minlength" | translate }}
+            </span>
+
+            <span *ngIf="orgRegForm.get('orgName').value?.length >= 100" class="validation-error-message">
+              {{ "validationMessage.contact_PersonName_maxlength" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 form-group">
+        <label for="contactPersonDesignation" class="form-label">{{ "organization.contactPersonDesignation" | translate
+          }}<span class="mandatory-field">*</span></label>
+
+        <input type="text" class="form-control" id="name" minlength="6" placeholder=""
+          formControlName="contactPersonDesignation" maxlength="50" />
+        <mat-error>
+          <span *ngIf="
+              (orgRegForm.get('contactPersonDesignation').invalid &&
+                !orgRegForm.get('contactPersonDesignation').pristine) ||
+              orgRegForm.get('contactPersonDesignation').touched
+            " class="validation-error-message">
+            <span *ngIf="orgRegForm.get('contactPersonDesignation').errors?.['required']"
+              class="validation-error-message">
+              {{ "validationMessage.contact_PersonName_required" | translate }}
+            </span>
+            <span *ngIf="orgRegForm.get('contactPersonDesignation').errors?.['pattern']"
+              class="validation-error-message">
+              {{
+              "validationMessage.Designation_PersonName_pattern" | translate
+              }}
+            </span>
+            <span *ngIf="orgRegForm.get('contactPersonDesignation').errors?.['minlength']"
+              class="validation-error-message">
+              {{
+              "validationMessage.Designation_PersonName_minlength" | translate
+              }}
+            </span>
+
+            <span *ngIf="
+                orgRegForm.get('contactPersonDesignation').value?.length >= 50
+              " class="validation-error-message">
+              {{
+              "validationMessage.Designation_PersonName_maxlength" | translate
+              }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 form-group">
+        <label for="mobileNo" class="form-label">{{ "common.mobile" | translate
+          }}<span class="mandatory-field">*</span></label>
+        <input type="tel" class="form-control" id="mobileNo" minlength="10" maxlength="10" placeholder=""
+          formControlName="mobileNo" />
+        <mat-error>
+          <span *ngIf="
+              (orgRegForm.get('mobileNo').invalid &&
+                !orgRegForm.get('mobileNo').pristine) ||
+              orgRegForm.get('mobileNo').touched
+            " class="validation-error-message">
+            <span *ngIf="orgRegForm.get('mobileNo').errors?.['required']" class="validation-error-message">
+              {{ "validationMessage.Mobile_Number_required" | translate }}
+            </span>
+            <span *ngIf="orgRegForm.get('mobileNo').errors?.['pattern']" class="validation-error-message">
+              {{ "validationMessage.Mobile_Number_pattern" | translate }}
+            </span>
+            <span *ngIf="orgRegForm.get('mobileNo').errors?.['minlength']" class="validation-error-message">
+              {{ "validationMessage.Mobile_Number_minlength" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+        <label for="emailId" class="form-label">{{ "animalDetails.email" | translate }}
+          <span class="mandatory-field">*</span></label>
+        <input type="text" class="form-control" id="emailId" placeholder="" formControlName="emailId" maxlength="100" />
+        <mat-error>
+          <span *ngIf="
+              (orgRegForm.get('emailId').invalid &&
+                !orgRegForm.get('emailId').pristine) ||
+              orgRegForm.get('emailId').touched
+            " class="validation-error-message">
+            <span *ngIf="orgRegForm.get('emailId').errors?.['required']" class="validation-error-message">
+              {{ "validationMessage.email_required" | translate }}
+            </span>
+
+            <span *ngIf="orgRegForm.get('emailId').errors?.['pattern']" class="validation-error-message">
+              {{ "validationMessage.email_pattern" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+        <label for="landlineNo" class="form-label">{{
+          "organization.LandLine_Number" | translate
+          }}</label>
+        <input type="text" class="form-control" id="landlineNo" placeholder="" formControlName="landlineNo"
+          minlength="10" maxlength="10" />
+        <mat-error>
+          <span *ngIf="
+              (orgRegForm.get('landlineNo').invalid &&
+                !orgRegForm.get('landlineNo').pristine) ||
+              orgRegForm.get('landlineNo').touched
+            " class="validation-error-message">
+            <span *ngIf="orgRegForm.get('landlineNo').errors?.['pattern']" class="validation-error-message">
+              {{ "validationMessage.landline_pattern" | translate }}
+            </span>
+            <span *ngIf="orgRegForm.get('landlineNo').errors?.['minlength']" class="validation-error-message">
+              {{ "validationMessage.landline_minlength" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+        <label for="faxNo" class="form-label">{{
+          "organization.Fax_Number" | translate
+          }}</label>
+        <input type="text" class="form-control" id="faxNo" placeholder="" formControlName="faxNo" minlength="10"
+          maxlength="10" />
+        <span *ngIf="
+            (orgRegForm.get('faxNo').invalid &&
+              !orgRegForm.get('faxNo').pristine) ||
+            orgRegForm.get('faxNo').touched
+          " class="validation-error-message">
+          <span *ngIf="orgRegForm.get('faxNo').errors?.['pattern']" class="validation-error-message">
+            {{ "validationMessage.fax_pattern" | translate }}
+          </span>
+          <span *ngIf="orgRegForm.get('faxNo').errors?.['minlength']" class="validation-error-message">
+            {{ "validationMessage.fax_minlength" | translate }}
+          </span>
+        </span>
+      </div>
+    </div>
+    <div class="h-divider"></div>
+    <div class="row">
+      <div class="col-sm-12 py-3 text-right">
+        <!-- <button type="reset" class="btn btn-outline-primary mr-2" *ngIf="!orgId">Clear</button> -->
+        <button type="button" class="btn btn-outline-primary mr-2" [routerLink]="['..', 'list']">
+          {{ "animalDetails.back" | translate }}
+        </button>
+        <button type="submit" class="btn btn-primary" *ngIf="!orgId">
+          {{ "common.submit" | translate }}
+        </button>
+        <button type="submit" class="btn btn-primary" *ngIf="orgId">
+          {{ "common.update" | translate }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

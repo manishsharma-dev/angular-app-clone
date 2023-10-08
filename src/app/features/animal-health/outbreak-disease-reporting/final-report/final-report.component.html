@@ -1,0 +1,287 @@
+<div class="interim-edit-dialog">
+  <!-- header -->
+  <div class="interim-edit-header">
+    <div class="headeing">
+      <h2 class="edit-heading-label">
+        {{ "outBreak.final_report" | translate }}</h2>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+
+  <!-- contant -->
+  <div class="dialog-main-content">
+    <!-- worklist-firid-section -->
+    <div class="worklist justify-content-md-between">
+      <div class="worklist-title">
+        {{ "outBreak.outbreak_ID" | translate }}: <span class="worklist-id ml-2">{{finalReportData.outbreak_id}}</span>
+      </div>
+      <div class="worklist-title">
+        {{ "animalTreatmentSurgery.case_status" | translate }}: <span
+          class="worklist-status ml-2">{{finalReportData.case_status}}</span>
+      </div>
+    </div>
+    <!-- worklist-item-firid -->
+    <div class="worklist-item mb-4">
+      <div class="col-lg-4 col-md-6">
+        <p class="label-text">
+          {{ "fir.date_of_first_incidence" | translate }}</p>
+        <p class="muted-text"> {{finalReportData.date_of_first_incidence}}</p>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <p class="label-text">{{ "fir.probable_source_of_infection" | translate }}</p>
+        <p class="muted-text">{{finalReportData.probable_source_of_infection}}</p>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <p class="label-text">{{ "outBreak.disease_confirmed" | translate }}</p>
+        <p class="muted-text">{{finalReportData.disease_confirmed}}</p>
+      </div>
+
+    </div>
+
+    <!-- worklist-firid-section -->
+    <div class="worklist">
+      <p class="worklist-title">{{ "outBreak.outbreak_locations" | translate }}</p>
+    </div>
+    <!-- worklist-item-firid -->
+    <div class="worklist-item mb-4">
+      <div class="col-lg-4 col-md-6">
+        <p class="label-text">{{ "common.village" | translate }}</p>
+        <p class="muted-text">{{finalReportData.village}}</p>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <p class="label-text">{{ "outBreak.tehsil" | translate }}</p>
+        <p class="muted-text">{{finalReportData.tehsil}}</p>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <p class="label-text">{{ "animalTreatmentSurgery.district" | translate }}</p>
+        <p class="muted-text">{{finalReportData.district}}</p>
+      </div>
+    </div>
+
+    <div class="h-divider">
+      <div class="dotted"></div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <mat-accordion class="examination-expansion-panel">
+          <mat-expansion-panel *ngFor="let report of finalReportData.interim_report;let i = index"
+            [expanded]="step === i" (opened)="setStep(i)" multi class="mb-1">
+            <mat-expansion-panel-header class="p-0">
+              <mat-panel-title class="mobile-title-heading">
+                <div class="separator">
+                  <div>{{ "outBreak.interim_report" | translate }}I
+                    [{{finalReportData.interim_report.length -i}}]</div>
+                </div>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="details-list">
+              <!-- worklist-item-firid -->
+              <div class="worklist-item mb-4">
+                <div class="col-lg-4 col-md-6">
+                  <p class="label-text">{{ "outBreak.severity_of_outbreak" | translate }}</p>
+                  <p class="muted-text">{{report.severity_of_outbreak}}</p>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                  <p class="label-text">{{ "outBreak.date_of_interim_report" | translate }}</p>
+                  <p class="muted-text">{{report.date_of_interim_report}}</p>
+                </div>
+              </div>
+
+              <!-- worklist-firid-section -->
+              <div class="worklist">
+                <p class="worklist-title">{{ "outBreak.action_taken_controls" | translate }}</p>
+              </div>
+              <!-- worklist-item-firid -->
+              <div class="worklist-item mb-4">
+                <div class="col-lg-12 col-md-6">
+                  <p class="muted-text">{{report.action_taken | stringConcat : ', ' }}</p>
+                </div>
+              </div>
+
+              <!-- worklist-firid-section -->
+              <div class="worklist">
+                <p class="worklist-title">{{ "fir.affected_animals_details" | translate }}
+                </p>
+              </div>
+              <div class="worklist-item mb-4">
+                <div class="col-md-12 ">
+                  <div class="table-view table-responsive affected-animal-table">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>{{ "fir.affected_species" | translate }}</th>
+                          <th>{{ "fir.no_of_animals_affected" | translate }}</th>
+                          <th>{{ "fir.no_of_animals_died" | translate }}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let animal of report.affected_animal_detail">
+                          <td>{{animal.affected_species}}</td>
+                          <td>{{animal.no_of_animals_affected}}</td>
+                          <td>{{animal.no_of_animals_died}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- worklist-firid-section -->
+              <div class="worklist">
+                <p class="worklist-title">{{ "animalTreatmentSurgery.remarks" | translate }}</p>
+              </div>
+              <!-- worklist-item-firid -->
+              <div class="worklist-item">
+                <div class="col-lg-12 col-md-6">
+                  <p class="muted-text">{{ "outBreak.breadcrumb_outBreakthird" | translate }}NA</p>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- footer -->
+  <div class="interim-edit-footer">
+    <button mat-dialog-close type="submit" class="btn btn-primary">{{
+      "outBreak.download_final_report" | translate }}</button>
+  </div>
+
+</div>
+
+
+<!-- <div class="add-diagnostics-dialog">
+  <div class="add-diagnostics-header">
+    <div class="headeing">
+      <h2>Final Report</h2>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+  <div class="dialog-main-content" *ngIf="finalReportData">
+    <div class="row mt-4 section-title">
+      <div class="col-md-6">
+        <p class="">Outbreak ID : <b>{{finalReportData.outbreak_id}}</b></p>
+      </div>
+      <div class="col-md-6 d-flex justify-content-end">
+        <span class="">Case Status : <b>{{finalReportData.case_status}}</b></span>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">Date of First Incidence </h4>
+        <p> {{finalReportData.date_of_first_incidence}} </p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">Disease Confirmed </h4>
+        <p> {{finalReportData.disease_confirmed}} </p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">Probable Source of Infection </h4>
+        <p> {{finalReportData.probable_source_of_infection}} </p>
+      </div>
+    </div>
+    <div class="row mt-4 section-title">
+      <div class="col-md-12">
+        <p class="">Outbreak Locations</p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">Village </h4>
+        <p> {{finalReportData.village}} </p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">Tehsil </h4>
+        <p> {{finalReportData.tehsil}} </p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">District </h4>
+        <p> {{finalReportData.district}} </p>
+      </div>
+    </div>
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <mat-accordion class="examination-expansion-panel">
+          <mat-expansion-panel *ngFor="let report of finalReportData.interim_report;let i = index"
+            [expanded]="step === i" (opened)="setStep(i)" multi class="mb-3">
+            <mat-expansion-panel-header class="p-0">
+              <mat-panel-title class="mobile-title-heading">
+                <div class="separator">
+                  <div>Interim Report [{{finalReportData.interim_report.length -i}}]</div>
+                </div>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="details-list">
+              <div class="row">
+                <div class="col-md-4">
+                  <h4 class="font-weight-bold label-header">Severity of Outbreak </h4>
+                  <p> {{report.severity_of_outbreak}} </p>
+                </div>
+                <div class="col-md-4">
+                  <h4 class="font-weight-bold label-header">Date of Interim Report </h4>
+                  <p> {{report.date_of_interim_report}} </p>
+                </div>
+              </div>
+              <div class="row mt-4 section-title">
+                <div class="col-md-12">
+                  <p class="">Actions Taken/ Controls</p>
+                </div>
+              </div>
+              <div class="row mt-4">
+                <div class="col-md-12">
+                  <p> {{report.action_taken | stringConcat : ', ' }} </p>
+                </div>
+              </div>
+              <div class="row mt-4 section-title">
+                <div class="col-md-12">
+                  <p class="">Affected Animals Details</p>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-12 affected-animal-table">
+                  <table class="table table-bordered w-80">
+                    <thead>
+                      <tr>
+                        <th>Affected Species</th>
+                        <th>No. of Animals Affected</th>
+                        <th>No. of Animals Died</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let animal of report.affected_animal_detail">
+                        <td>{{animal.affected_species}}</td>
+                        <td>{{animal.no_of_animals_affected}}</td>
+                        <td>{{animal.no_of_animals_died}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+  </div>
+
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+  <div class="add-diagnostics-footer">
+    <button type="submit" class="btn btn-dark" (click)="downloadFinalReport()">Download Final Report</button>
+  </div>
+</div> -->

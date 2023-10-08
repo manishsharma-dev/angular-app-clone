@@ -1,0 +1,77 @@
+<!-- <p routerLink="/dashboard/orgmgnt/orgregform">organization-management works!</p> -->
+<div class="container">
+    <div class="row breadcum align-items-center py-2">
+        <div class="col-lg-5 col-md-5 col-sm-12">
+            <div class="breadcum-heading">
+                <h3 class="heading">
+                    Organization Management
+                </h3>
+            </div>
+        </div>
+        <div class="col-lg-7 col-md-7 col-sm-12">
+            <div class="breadcrumb-list text-md-right">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item active">
+                            Home
+                        </li>
+                        <li class="breadcrumb-item active">
+                            Admin Management
+                        </li>
+                        <li class="breadcrumb-item current">
+                            Organization Management
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div class="row no-gutters col-container">
+        <div class="col-md-12 col-h left-section">
+
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <div class="title-heading">
+                        <h3 class="muted-label-heading">
+                            Filter By
+                        </h3>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-right">
+                    <button type="submit" class="btn btn-dark" routerLink="/dashboard/adminmgnt/orgregform">+ ADD NEW
+                        ORGANIZATION</button>
+                </div>
+            </div>
+
+
+            <form>
+                <div class="form-row">
+                    <div class=" form-group col-md-5">
+                        <label for="search" class="form-label">Name, Type, State</label>
+                        <input type="text" class="form-control" id="search" placeholder="E.g. Amul">
+                    </div>
+                    <div class=" form-group col-auto align-self-end">
+                        <button type="submit" class="btn btn-dark">Search</button>
+                    </div>
+                </div>
+            </form>
+
+
+            <div class="h-divider">
+                <div class="shadow"></div>
+            </div>
+
+            <div class="list-of-org">
+                <div class="title-heading">
+                    <h3 class="muted-label-heading">
+                        List of Organization
+                    </h3>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

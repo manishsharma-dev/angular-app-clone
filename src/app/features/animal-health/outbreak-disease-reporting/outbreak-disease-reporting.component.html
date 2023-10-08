@@ -1,0 +1,382 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row breadcum align-items-center py-2">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="breadcrumb-list text-md-left">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb m-0">
+            <li routerlink="/dashboard" class="breadcrumb-item active">
+              <a>{{ "vaccination.breadcrumb_vaccinationFirst" | translate }}</a>
+            </li>
+            <li class="breadcrumb-item current">
+              <label>{{ "vaccination.breadcrumb_vaccinationSecond" | translate }} </label>
+            </li>
+            <li class="breadcrumb-item current">
+              <label>{{ "outBreak.breadcrumb_outBreakthird" | translate }} </label>
+              <label>
+              </label>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<section class="outbreak-disease">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card border-0">
+        <div class="card-body">
+          <div class="row align-items-center mb-2">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+              <div class="title-heading">
+                <h3 class="muted-label-heading">
+                  {{ "outBreak.all_active_outbreak_IDs" | translate }}
+                </h3>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <div class="fir-filter-search">
+                <div class="d-flex justify-content-end">
+                  <div class="w-50 position-relative">
+                    <img src="/assets/images/search.svg" alt="icon-search" class="input-icon-left" />
+                    <input type="text" placeholder="{{ 'outBreak.filter_by_village_name' | translate }}"
+                      autocomplete="off" class="form-control search-input" id="fir-filter-id"
+                      [(ngModel)]="searchText" />
+                  </div>
+
+                  <div class="ml-2">
+                    <button class="btn btn-light advance-filter">
+                      <i aria-hidden="true" class="fa fa-filter filterIcon" alt="icon-filter"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="h-divider">
+            <div class="dotted"></div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="table-responsive">
+                <p *ngIf="!dataSource?.length">{{ "outBreak.no_pen_cases_found" | translate }}</p>
+                <table class="table follow-up-table" *ngIf="dataSource?.length">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>{{ "outBreak.outbreak_ID" | translate }}</th>
+                      <th>{{ "fir.date_of_first_incidence" | translate }}</th>
+                      <th>{{ "outBreak.date_of_last_interim_report" | translate }}</th>
+                      <th>{{ "diseaseTesting.sample_collected" | translate }}</th>
+                      <th>{{ "fir.affected_animals" | translate }}</th>
+                      <th>{{ "common.village_name" | translate }}</th>
+                      <th>{{ "role.View" | translate }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let data1 of  dataSource | filter:searchText;
+                        let i = index;
+                        let f = first;
+                        let l = last
+                      ">
+                      <ng-container>
+                        <tr class="parent-row">
+                          <td (click)="toggleExpandRow(i)">
+                            <ng-container *ngIf="data1.cases.length">
+                              <mat-icon *ngIf="!data1.expanded" class="arrow-bg">keyboard_arrow_right</mat-icon>
+                              <mat-icon *ngIf="data1.expanded" class="arrow-bg">keyboard_arrow_down</mat-icon>
+                            </ng-container>
+                          </td>
+                          <td>{{ data1.cases[0].outbreakDetail.outbreakId }}</td>
+                          <td>{{ dateFormatChange(data1.cases[0].outbreakDetail.firstIncidenceDate) }}</td>
+                          <td>{{ dateFormatChange(data1.cases[0].outbreakDetail.interimReportDate)}}</td>
+                          <td>{{ data1.cases[0].sampleDetails.samplingStatusDesc}}<ng-template #emptyList> NA
+                            </ng-template></td>
+                          <td>{{ data1.cases[0].outbreakDetail.totalNoOfAnimalsAffected ?? "NA"}}</td>
+                          <td>
+                            <div class="ellips-text" data-toggle="tooltip" data-placement="top"
+                              title="{{ data1.cases[0].villageDetails }}">
+                              {{ data1.cases[0].villageDetails ? data1.cases[0].villageDetails : 'NA' }}
+                            </div>
+                          </td>
+                          <td><a href="javascript:void(0)">
+                              <i class="fa fa-eye" aria-hidden="true"
+                                (click)="viewInterimReport(data1.cases[0].outbreakDetail.outbreakId,data1.cases[0].outbreakDetail.interimReportNo)"></i>{{
+                              data1.view}}</a>
+                          </td>
+                          <td>
+                            <div class="d-flex">
+                              <a matTooltip="New Follow Up" appPermission [permissionType]="masterConfig.isAdd">
+
+                                <i class="fa fa-plus" aria-hidden="true" [routerLink]="['outbreak-follow-up']"
+                                  [queryParams]="{ outbreakId: data1.cases[0].outbreakDetail.outbreakId , interimReportNo:data1.cases[data1.cases.length - 1].outbreakDetail.interimReportNo}"></i>
+
+                              </a>
+                            </div>
+                          </td>
+                        </tr>
+                        <ng-container *ngIf="data1.expanded">
+                          <ng-container *ngFor="
+                              let case of data1.cases ;
+                              let j =index;
+                              let f = first
+                            ">
+                            <tr class="child-row">
+                              <td></td>
+                              <td></td>
+                              <td>{{ dateFormatChange(case.outbreakDetail.firstIncidenceDate) }}</td>
+                              <td>{{ dateFormatChange(case.outbreakDetail.interimReportDate)}}</td>
+                              <td>{{ case.sampleDetails.samplingStatusDesc}}<ng-template #emptyList> NA </ng-template>
+                              <td>{{ case.outbreakDetail.totalNoOfAnimalsAffected ?? "NA"}}</td>
+                              <td>
+                                <div class="ellips-text" data-toggle="tooltip" data-placement="top"
+                                  title="{{ case.villageDetails }}">
+                                  {{ case.villageDetails ? case.villageDetails : 'NA' }}
+                                </div>
+                              </td>
+                              <td><a href="javascript:void(0)">
+                                  <i class="fa fa-eye" aria-hidden="true"
+                                    (click)="viewInterimReport(case.outbreakDetail.outbreakId,case.outbreakDetail.interimReportNo)"></i>{{
+                                  case.view}}</a>
+                              </td>
+                            </tr>
+                          </ng-container>
+                        </ng-container>
+                        <tr>
+                          <td colspan="9"></td>
+                        </tr>
+                      </ng-container>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Closed Outbreak IDs -->
+          <div class="row align-items-center mb-2">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+              <div class="title-heading">
+                <h3 class="muted-label-heading">
+                  {{ "outBreak.all_closed_outbreak_IDs" | translate }}
+                </h3>
+              </div>
+            </div>
+          </div>
+          <div class="h-divider">
+            <div class="dotted"></div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="table-responsive">
+                <p *ngIf="!dataSourceClosed?.length">{{ "outBreak.no_closed_cases_found" | translate }}</p>
+                <table class="table follow-up-table" *ngIf="dataSourceClosed?.length">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>{{ "outBreak.outbreak_ID" | translate }}</th>
+                      <th>{{ "fir.date_of_first_incidence" | translate }}</th>
+                      <th>{{ "outBreak.date_of_last_interim_report" | translate }}</th>
+                      <th>{{ "diseaseTesting.sample_collected" | translate }}</th>
+                      <th>{{ "fir.affected_animals" | translate }}</th>
+                      <th>{{ "common.village_name" | translate }}</th>
+                      <th>{{ "role.View" | translate }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let data2 of  dataSourceClosed | filter:searchText;
+                        let i = index;
+                        let f = first;
+                        let l = last
+                      ">
+                      <ng-container>
+                        <tr class="parent-row">
+                          <td (click)="toggleExpandRowClosed(i)">
+                            <ng-container *ngIf="data2.cases.length">
+                              <mat-icon *ngIf="!data2.expanded" class="arrow-bg">keyboard_arrow_right</mat-icon>
+                              <mat-icon *ngIf="data2.expanded" class="arrow-bg">keyboard_arrow_down</mat-icon>
+                            </ng-container>
+                          </td>
+                          <td>{{ data2.cases[0].outbreakDetail.outbreakId }}</td>
+                          <td>{{ dateFormatChange(data2.cases[0].outbreakDetail.firstIncidenceDate) }}</td>
+                          <td>{{ dateFormatChange(data2.cases[0].outbreakDetail.interimReportDate) }}</td>
+                          <td>{{ data2.cases[0].sampleDetails.samplingStatusDesc}}<ng-template #emptyList> NA
+                            </ng-template></td>
+                          <td>{{ data2.cases[0].outbreakDetail.totalNoOfAnimalsAffected ?? "NA"}}</td>
+                          <td>
+                            <div class="ellips-text" data-toggle="tooltip" data-placement="top"
+                              title="{{ data2.villageDetails }}">
+                              {{ data2.cases[0].villageDetails ? data2.cases[0].villageDetails : 'NA' }}
+                            </div>
+                          </td>
+                          <td><a href="javascript:void(0)"
+                              (click)="viewReport(data2.cases[0].outbreakDetail.outbreakId)">{{ "outBreak.final_report"
+                              | translate }}</a></td>
+
+                        </tr>
+
+                        <ng-container *ngIf="data2.expanded">
+                          <ng-container *ngFor="
+                        let case of data2.cases ;
+                        let j =index;
+                        let f = first
+                      ">
+                            <tr class="child-row">
+                              <td></td>
+                              <td></td>
+
+                              <td>{{ dateFormatChange(case.outbreakDetail.firstIncidenceDate) }}</td>
+                              <td>{{ dateFormatChange(case.outbreakDetail.interimReportDate) }}</td>
+                              <td>{{ case.sampleDetails.samplingStatusDesc}}<ng-template #emptyList> NA </ng-template>
+                              </td>
+                              <td>{{ case.outbreakDetail.totalNoOfAnimalsAffected ?? "NA"}}</td>
+                              <td>
+                                <div class="ellips-text" data-toggle="tooltip" data-placement="top"
+                                  title="{{ case.villageDetails }}">
+                                  {{ case.villageDetails ? case.villageDetails : 'NA' }}
+                                </div>
+                              </td>
+                              <td><a href="javascript:void(0)" (click)="viewReport(case.outbreakDetail.outbreakId)">{{
+                                  "outBreak.final_report" | translate }}</a></td>
+
+                            </tr>
+
+                          </ng-container>
+                        </ng-container>
+
+                        <tr>
+                          <td colspan="9"></td>
+                        </tr>
+                      </ng-container>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</section>
+
+<!-- <section>
+
+  <div class="row no-gutters col-container">
+    <div class="col-md-12 col-h left-section">
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12">
+          <div class="title-heading">
+            <h3 class="muted-label-heading">All Active Outbreak IDs</h3>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="d-flex justify-content-md-end">
+            <div class="filter-search">
+              <span class="search-lable">
+                Filter:
+              </span>
+              <div class="d-flex align-items-center position-relative">
+                <input type="text" id="colFormLabelSm" placeholder="Search by village name" autocomplete="off"
+                  class="form-control search-input" />
+                <span class="input-clear"><i class="fa fa-filter" aria-hidden="true"></i>
+                </span>
+                <span _ngcontent-heo-c368="" class="search-icon">
+                  <i _ngcontent-heo-c368="" aria-hidden="true" class="fa fa-search"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="h-divider">
+        <div class="dotted"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table class="table follow-up-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Outbreak ID</th>
+                  <th>Date of First Incidence</th>
+                  <th>Date of Last Interim Report</th>
+                  <th>Sample Collected</th>
+                  <th>Affected Animals</th>
+                  <th>Village</th>
+                  <th>View</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let data1 of dataSource; let i = index">
+                  <tr class="parent-row">
+                    <td (click)="toggleExpandRow(i)">
+                      <mat-icon *ngIf="!data1.expanded">keyboard_arrow_right</mat-icon>
+                      <mat-icon *ngIf="data1.expanded">keyboard_arrow_down</mat-icon>
+                    </td>
+                    <td>{{ data1.outbreakId }}</td>
+                    <td>{{ data1.date_of_first_incidence }}</td>
+                    <td>{{ data1.date_of_last_report }}</td>
+                    <td> <a *ngIf="data1.sample_collected =='yes'">Yes</a>
+                      <a *ngIf="data1.sample_collected =='pending'" (click)="openUpdateResult(data1)">Pending</a>
+                      <span *ngIf="data1.sample_collected =='no'">No</span>
+                    </td>
+                    <td>{{ data1.affected_animals }}</td>
+                    <td>{{ data1.village }}</td>
+                    <td> <a (click)="viewFinalReport(data1)"> Final Report </a> </td>
+                  </tr>
+                  <ng-container *ngIf="data1.expanded">
+                    <tr *ngFor="let data2 of data1.list" class="child-row">
+                      <td></td>
+                      <td></td>
+                      <td> {{ data2.date_of_first_incidence }} </td>
+                      <td>{{ data2.date_of_last_report }}</td>
+                      <td>{{ data2.diagnosticDescription }}</td>
+                      <td>{{ data2.vetName }}</td>
+                      <td>
+                        <a>
+                          {{ data2.diagnostics ? " View Report" : "Pending" }}
+                        </a>
+                      </td>
+                      <td>
+                        <a (click)="viewInterimReport(data2)">
+                          Interim Report
+                        </a>
+                      </td>
+                      <td>{{ data2.noOfVisits }}</td>
+                    </tr>
+                  </ng-container>
+                  <tr class="footer-row">
+                    <td></td>
+                    <td colspan="7">
+                      <a [routerLink]="['outbreak-follow-up', data1.outbreakId]">
+                        <b>New Follow Up</b>
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="8"></td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->

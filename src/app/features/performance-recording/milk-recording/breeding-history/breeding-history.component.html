@@ -1,0 +1,170 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<app-common-breadcrumb *ngIf="showBreadCrumb"
+  [breadcrumbKeys]="[ 'performanceRecording.pr', 'performanceRecording.latestMrHistory']">
+</app-common-breadcrumb>
+
+<section>
+  <div class="row no-gutters col-container">
+    <div class="col-md-12 col-h left-section">
+      <div class="owner-details-section">
+        <div class="row owner-detail-table mb-4 mx-0 py-3 align-items-center user-detail">
+          <div class="back-arrow">
+            <i class="fa fa-chevron-left mr-2 back-section" (click)="goBack()"></i>
+          </div>
+          <div class="table-responsive">
+            <table class="table animal-table m-0" *ngIf="animalHistoryDetail?.animalResponse">
+              <thead>
+                <tr>
+                  <th>{{'animalDetails.previewAnimalDetails.tagId'|translate}}</th>
+                  <th>{{'common.species'|translate}}</th>
+                  <th>{{'animalDetails.breed'|translate}}</th>
+                  <th>{{'animalDetails.fillAnimalDetails.age'|translate}}</th>
+                  <th>{{'animalDetails.pregnant'|translate}}</th>
+                  <th>{{'animalDetails.lactation'|translate}}</th>
+                  <th>{{'animalDetails.milking_status'|translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ animalHistoryDetail?.animalResponse?.tagId }}</td>
+                  <td>{{ animalHistoryDetail?.animalResponse?.species }}</td>
+                  <td>{{ animalHistoryDetail?.animalResponse?.breed }}</td>
+                  <td>{{ animalHistoryDetail?.animalResponse?.age }}</td>
+                  <td>
+                    {{
+                    animalHistoryDetail?.animalResponse?.pregnancyStatus ==
+                    "Y"
+                    ? "Yes"
+                    : "No"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                    animalHistoryDetail?.animalResponse?.currentLactationNo
+                    }}
+                  </td>
+                  <td>
+                    {{ animalHistoryDetail?.animalResponse?.milkingStatus }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- <div class="title-heading mb-3">
+         
+        </div> -->
+        <div class="row align-items-center mb-2">
+          <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="title-section">
+              <div class="title-heading mb-3">
+                <h3 class="muted-label-heading">
+                  {{
+                  isHistory
+                  ? ("performanceRecording.latest5MR" | translate)
+                  : ("performanceRecording.latestMrHistory" | translate)
+                  }}
+                </h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12" appPermission [permissionType]="masterConfig.isAdd"
+            *ngIf="isHistory">
+            <div class="ml-auto mb-3">
+              <button class="btn btn-primary button-float" (click)="addNewPage()">
+                {{'performanceRecording.newMR' | translate}}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="table-responsive custom-view-table">
+              <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+                <ng-container matColumnDef="recordNo">
+                  <th mat-header-cell *matHeaderCellDef> {{'performanceRecording.recordingNo' | translate}}</th>
+                  <th></th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.recordNo }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="mrDate">
+                  <th mat-header-cell *matHeaderCellDef>{{'performanceRecording.mrRecordDate' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.mrDateParsed }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="morningYield">
+                  <th mat-header-cell *matHeaderCellDef>{{'performanceRecording.morningYield' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{
+                    checkNull(element?.morningYield)
+                    ? element.morningYield + 'Kg'
+                    : '--'
+                    }}
+
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="afternoonYield">
+                  <th mat-header-cell *matHeaderCellDef>{{'performanceRecording.afternoonYield' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{
+                    checkNull(element?.afternoonYield)
+                    ? element.afternoonYield + 'Kg'
+                    : '--'
+                    }}
+
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="eveningYield">
+                  <th mat-header-cell *matHeaderCellDef>{{'performanceRecording.eveningYield' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{
+                    checkNull(element?.eveningYield)
+                    ? element.eveningYield + 'Kg'
+                    : '--'
+                    }}
+
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="totalYield">
+                  <th mat-header-cell *matHeaderCellDef>{{'performanceRecording.totalYield' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{
+                    element?.totalYield && element?.totalYield != "null"
+                    ? element.totalYield + 'Kg'
+                    : '--'
+                    }}
+
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="daysInmilk">
+                  <th mat-header-cell *matHeaderCellDef>{{'performanceRecording.daysInMilk' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.daysInMilk ?? '--' }}
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+                <tr mat-row *matRowDef="let element; columns: columnsToDisplay"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell text-center" [attr.colspan]="columnsToDisplay.length">
+                    {{'performanceRecording.noMr' | translate}}
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

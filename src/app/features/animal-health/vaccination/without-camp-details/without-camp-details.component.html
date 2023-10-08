@@ -1,0 +1,314 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="campaign-edit-dialog">
+  <!-- header -->
+  <div class="campaign-edit-header">
+    <div class="headeing">
+      <h2 class="edit-heading-label">{{ "vaccination.withOut_campaign_details" | translate }}</h2>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+
+  <!-- contant -->
+  <div class="dialog-main-content">
+    <form [formGroup]="vaccinationDetailsWithoutCampaign">
+      <mat-dialog-content>
+        <div class="row p-0 mb-3">
+          <div class="col-12">
+            <div class="card border-0">
+
+              <div class="camp-detail row">
+                <div class="col-md-7">
+                  <div class="label-section">
+                    <!-- <i class="fa fa-chevron-left mr-2 back-section" (click)="goBackWithout()"></i> -->
+                    <span class="ls-label">{{ "vaccination.selected_vaccine_details" | translate }}:</span>
+                    <span class="ls-info">{{ diseaseDescWithoutCampaign }} {{ VaccineNameWithoutCampaign }}- {{
+                      batchNumberWithoutCampaign
+                      }}</span>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="row p-0 mb-3">
+          <div class="col-12">
+            <div class="card border-0">
+              <div class="form-row">
+                <div class="col-md-4">
+
+                  <label for="vaccinationDeWormingRecordDateWithout" class="form-label">{{
+                    "deworming.vaccination_data_entry_date" | translate }}<span class="mandatory-field">*</span></label>
+
+                  <input type="text" class="form-control" formControlName="vaccinationDeWormingRecordDateWithout"
+                    #vaccinationDeWormingRecordDate />
+                  <mat-error *ngIf="errorHandlingWithout('vaccinationDeWormingRecordDateWithout', 'required')">
+                    Please select<strong> Vaccination Data Entry Date</strong>
+                  </mat-error>
+
+                </div>
+                <div class="col-md-4">
+
+                  <label for="vaccinationDateWithout" class="form-label">{{ "deworming.vaccination_date" | translate
+                    }}<span class="mandatory-field">*</span></label>
+                  <input class="form-control" matInput [min]="minVaccDateWithout" [max]="today"
+                    [matDatepicker]="pickerDate" formControlName="vaccinationDateWithout" placeholder="DD/MM/YYYY" />
+                  <mat-datepicker-toggle matSuffix [for]="pickerDate" class="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerDate></mat-datepicker>
+
+                  <span class="alert-message" *ngIf="
+                  (vaccinationDetailsWithoutCampaign.controls.vaccinationDateWithout.dirty &&
+                    vaccinationDetailsWithoutCampaign.controls.vaccinationDateWithout.invalid) ||
+                  vaccinationDetailsWithoutCampaign.controls.vaccinationDateWithout.touched
+                ">
+                    <span
+                      *ngIf="vaccinationDetailsWithoutCampaign.controls.vaccinationDateWithout.hasError('matDatepickerMin')">
+                      {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                    </span>
+                    <span
+                      *ngIf="vaccinationDetailsWithoutCampaign.controls.vaccinationDateWithout.hasError('matDatepickerMax')">
+                      {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                    </span>
+                    <span
+                      *ngIf="vaccinationDetailsWithoutCampaign.controls.vaccinationDateWithout.hasError('matDatepickerParse')">
+                      {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                    </span>
+                    <span
+                      *ngIf="vaccinationDetailsWithoutCampaign.controls.vaccinationDateWithout.hasError('required') && !vaccinationDetailsWithoutCampaign.controls.vaccinationDateWithout.hasError('matDatepickerParse')">
+                      {{ validationMsg.required | translate }}
+                    </span>
+                  </span>
+
+                </div>
+              </div>
+              <div class="h-divider">
+                <div class="shadow"></div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row p-0 mb-3">
+          <div class="col-12">
+            <div class="card border-0">
+              <div class="selected-tag mb-2">
+                <p class="st-heading">{{data2.data?.length}} {{ "vaccination.without_selected_tag_id" | translate }}</p>
+              </div>
+              <div class="row selected-tag-table table-view">
+                <div class="col-md-12">
+
+                  <div class="table-responsive mb-3">
+                    <table mat-table [dataSource]="data2" class=" mat-elevation-z8"
+                      formArrayName="selected_tagId_details">
+                      <ng-container matColumnDef="sr_no">
+                        <th mat-header-cell *matHeaderCellDef>{{ "common.sno" | translate }}</th>
+                        <td mat-cell *matCellDef="let element; let i = index" class="cell-width">
+                          {{ i + 1 }}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="tagId">
+                        <th mat-header-cell *matHeaderCellDef>{{ "animalDetails.tag_id" | translate }}</th>
+                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index"
+                          class="cell-width">
+                          {{ element?.tagId }}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="lastVaccinationType">
+                        <th mat-header-cell *matHeaderCellDef>{{ "vaccination.last_vacc_type" | translate }}</th>
+                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index"
+                          class="cell-width">
+                          <!-- {{ element?.vaccinationTypeDesc }} -->
+                          {{ element.vaccinationTypeDesc && element.vaccinationTypeDesc.length > 1 ?
+                          element.vaccinationTypeDesc : element.vaccinationTypeDesc &&
+                          element.vaccinationTypeDesc.length ? element.vaccinationTypeDesc[0] : 'NA'}}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="last_vacc_date">
+                        <th mat-header-cell *matHeaderCellDef>{{ "vaccination.last_vacc_date" | translate }}</th>
+                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index"
+                          class="cell-width">
+                          {{element.lastVaccinationDate && element.lastVaccinationDate.length > 1 ?
+                          element.lastVaccinationDate : element.lastVaccinationDate &&
+                          element.lastVaccinationDate.length ?
+                          element.lastVaccinationDate[0] : 'NA'}}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="sex">
+                        <th mat-header-cell *matHeaderCellDef>{{ "common.sex" | translate }}</th>
+                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+
+                          {{ element.sex }}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="species">
+                        <th mat-header-cell *matHeaderCellDef>{{ "animalDetails.category_species" | translate }}</th>
+                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                          {{ element?.speciesName }}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="form">
+                        <th mat-header-cell *matHeaderCellDef>{{"deworming.Form" | translate}}</th>
+                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                          {{ element?.formName }}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="route">
+                        <th mat-header-cell *matHeaderCellDef>{{"deworming.route" | translate}}</th>
+                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                          {{ element?.routeName }}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="dose">
+                        <th mat-header-cell *matHeaderCellDef>{{"deworming.Dose" | translate}}</th>
+                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                          {{ element?.dosage }}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="unit">
+                        <th mat-header-cell *matHeaderCellDef> {{"deworming.Unit" | translate}}</th>
+                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                          {{ element?.unitDesc }}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="age">
+                        <th mat-header-cell *matHeaderCellDef>{{ "common.age" | translate }}</th>
+                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                          {{ element?.animalAge }}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="vaccinationType">
+                        <th mat-header-cell *matHeaderCellDef>{{ "vaccination.vaccinationType" | translate }}
+                          <span class="mandatory-field">*</span>
+                        </th>
+                        <td mat-cell *matCellDef="let elementt; let index = index" [formGroupName]="index" class="">
+                          <mat-select placeholder="Select Type" class="form-control custom-cw150"
+                            formControlName="vaccinationType" (selectionChange)="vaccTypeWithoutSelected($event,index)">
+                            <mat-option value="" disabled selected>Select Type</mat-option>
+                            <mat-option *ngFor="let vaccType of getVaccinationType" [value]="vaccType.cd">
+                              {{vaccType.value}}
+                            </mat-option>
+                          </mat-select>
+                          <span class="alert-message" *ngIf="
+                          (tableRowsControlWithoutCampaign.controls[index].get('vaccinationType').touched || tableRowsControlWithoutCampaign.controls[index].get('vaccinationType').dirty) &&
+                          tableRowsControlWithoutCampaign.controls[index].get('vaccinationType').hasError('pattern')
+                        ">
+                            {{ validationMsg.required | translate}}
+                          </span>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="reason">
+                        <th mat-header-cell *matHeaderCellDef>{{ "animalDetails.reason" | translate }}
+                          <span class="mandatory-field">*</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index" class="">
+                          <mat-select id="reason" class="form-control custom-cw250 "
+                            formControlName="repeatVaccinationReasonCd" placeholder="Select reason" *ngIf="
+                          tableRowsControlWithoutCampaign.controls[index].get('vaccinationType')
+                            .value == 3
+                        " [attr.disabled]=" ">
+                            <mat-option *ngFor="let repeatType of getRepeatVaccination" [value]="repeatType.cd">
+                              {{repeatType.value}}</mat-option>
+
+
+                          </mat-select>
+
+                          <!-- <mat-select id="reason" class="form-control custom-cw250 "
+                            formControlName="repeatVaccinationReasonCd" placeholder="Select reason"
+                            *ngIf="tableRowsControlWithoutCampaign.controls[index].get('vaccinationType').value == 1">
+                            <mat-option value="css" disabled>Select reason for repeat vaccination</mat-option>
+
+
+                          </mat-select> -->
+
+                          <input type="text" class="form-control custom-cw250" placeholder="Enter reason"
+                            formControlName="repeatVaccinationReasonCd" *ngIf="
+                          tableRowsControlWithoutCampaign.controls[index].get('vaccinationType')
+                            .value === 4
+                        " [attr.disabled]=" " />
+                          <span class="alert-message" *ngIf="
+                              (tableRowsControlWithoutCampaign.controls[index].get('repeatVaccinationReasonCd').touched || tableRowsControlWithoutCampaign.controls[index].get('repeatVaccinationReasonCd').dirty) &&
+                              tableRowsControlWithoutCampaign.controls[index].get('repeatVaccinationReasonCd').hasError('pattern')
+                            ">
+                            {{ validationMsg.invalidChar | translate }}
+                          </span>
+                          <span class="alert-message" *ngIf="
+                          (tableRowsControlWithoutCampaign.controls[index].get('repeatVaccinationReasonCd').touched || tableRowsControlWithoutCampaign.controls[index].get('repeatVaccinationReasonCd').dirty) &&
+                          tableRowsControlWithoutCampaign.controls[index].get('repeatVaccinationReasonCd').hasError('required')
+                        ">
+                            {{ validationMsg.required | translate }}
+                          </span>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="PhotoUrl">
+                        <th mat-header-cell *matHeaderCellDef>{{ "common.image" | translate }}</th>
+                        <td mat-cell *matCellDef="let element;let index = index" [formGroupName]="index"
+                          class="cell-width">
+
+
+                          <input type="file" class="form-control-file custom-cw250" id="fileUpload" name="fileUpload"
+                            (change)="uploadImageWithout($event ,index)">
+                          <div *ngIf="
+                            vaccinationDetailsWithoutCampaign.get('selected_tagId_details')['controls'][index]['controls']['PhotoUrl']?.errors
+                      ?.invalidMimeType ||
+                    ( vaccinationDetailsWithoutCampaign.get('selected_tagId_details')['controls'][index]['controls']['PhotoUrl'].touched)
+                  ">
+                            <span id="showValidation" class="alert-message">{{ "vaccination.please_select_a_valid_image"
+                              | translate }}
+                            </span>
+                          </div>
+
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="delete">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element;let i = index" class="cell-width" (click)="removeRow(i)">
+                          <mat-icon>highlight_off</mat-icon>
+                        </td>
+                      </ng-container>
+                      <tr class="action-link table-head" mat-header-row *matHeaderRowDef="DisplayedColumns">
+                      </tr>
+                      <tr class="action-link table-head" mat-row *matRowDef="let row; columns: DisplayedColumns"></tr>
+                      <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell text-center" [attr.colspan]="DisplayedColumns.length">
+                          {{'diseaseTesting.no_data_matching_the_filter' | translate}}
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+
+      </mat-dialog-content>
+    </form>
+  </div>
+  <!-- footer -->
+  <div class="campaign-edit-footer">
+    <button mat-button mat-dialog-close> {{ "animalDetails.cancel" | translate }}</button>
+    <button type="submit" class="btn btn-primary" (click)="vaccinationWithoutCampaignSubmit()"
+      [disabled]="vaccinationDetailsWithoutCampaign.invalid"> {{ "common.submit" | translate }}</button>
+  </div>
+
+</div>

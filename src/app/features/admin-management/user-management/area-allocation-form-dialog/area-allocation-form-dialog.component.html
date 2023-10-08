@@ -1,0 +1,99 @@
+<div class="row">
+  <div class="col mt-2">
+    <h3 mat-dialog-title>Role Allocation</h3>
+  </div>
+  <div class="col">
+    <button mat-dialog-close class="close close-btn">&#x2715;</button>
+  </div>
+</div>
+
+<mat-dialog-content class="mat-typography" [formGroup]="professionalInfoForm">
+  <div formArrayName="userRoleAllocations">
+    <div class="form-row" *ngFor="let row of userRoles.controls; let i=index" [formGroupName]="i">
+      <div class="form-group col-lg-4 col-md-4">
+        <label for="role" class="form-label">Role<span class="mandatory-field">*</span></label>
+        <select type="text" class="form-control" id="role" formControlName="roleCd">
+          <option selected disabled>Select</option>
+          <option *ngFor="let role of roleList" [value]="role.roleCd">{{role.roleDesc}}</option>
+        </select>
+        <!-- <mat-error>
+          <span *ngIf="!professionalInfo.roleCd.valid && professionalInfo.roleCd.touched" class="help=block">
+            Please Select Role
+          </span>
+        </mat-error> -->
+      </div>
+
+      <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 from-group">
+        <label for="orgOnboardDate" class="form-label">Mapping Start Date<span
+            class="mandatory-field">*</span></label>
+        <input matInput [matDatepicker]="pickerStart" class="form-control" formControlName="userAllocationStartDate">
+        <mat-datepicker-toggle matSuffix [for]="pickerStart" class="date-picker"></mat-datepicker-toggle>
+        <mat-datepicker #pickerStart></mat-datepicker>
+        <!-- <mat-error>
+          <span *ngIf="!professionalInfo.fromDate.valid && professionalInfo.fromDate.touched"
+            class="help=block">
+            Please choose correct date
+          </span>
+        </mat-error> -->
+      </div>
+
+      <div class="form-group col-lg-4 col-md-4">
+        <div class="form-row">
+          <div class="col-lg-10 from-group">
+            <label for="" class="form-label">Mapping End Date<span class="mandatory-field">*</span></label>
+            <input matInput [matDatepicker]="pickerEnd" class="form-control" formControlName="userAllocationEndDate">
+            <mat-datepicker-toggle matSuffix [for]="pickerEnd" class="date-picker"></mat-datepicker-toggle>
+            <mat-datepicker #pickerEnd></mat-datepicker>
+            <!-- <mat-error>
+              <span *ngIf="!professionalInfo.toDate.valid && professionalInfo.toDate.touched"
+                class="help=block">
+                Please choose correct date
+              </span>
+            </mat-error> -->
+          </div>
+          <div *ngIf="i>0" class="col-auto d-flex align-items-center justify-content-end cursor-pointer" (click)="onRemoveRole(i)">
+            <svg id="Group_4529" data-name="Group 4529" xmlns="http://www.w3.org/2000/svg" width="18"
+              height="18" viewBox="0 0 18 18">
+              <path id="Path_5203" data-name="Path 5203" d="M0,0H18V18H0Z" fill="none" />
+              <path id="Path_5204" data-name="Path 5204"
+                d="M3.609,6.827H16.48V17.285a.8.8,0,0,1-.8.8H4.413a.8.8,0,0,1-.8-.8ZM6.022,4.413V2.8a.8.8,0,0,1,.8-.8h6.436a.8.8,0,0,1,.8.8V4.413h4.022V6.022H2V4.413Zm1.609-.8v.8h4.827v-.8Zm0,6.436v4.827H9.24V10.044Zm3.218,0v4.827h1.609V10.044Z"
+                transform="translate(-1.044 -1.044)" fill="#545454" />
+            </svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-auto">
+        <button type="button" class="btn btn-outline-primary" (click)="addUserRoles()">
+          Add More</button>
+      </div>
+    </div>
+
+
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <div class="form-label h-divider px-0 font-weight-bold"></div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-dialog-close type="reset" class="btn btn-light mr-2">
+    Cancel
+  </button>
+  <button mat-dialog-close type="submit" class="btn btn-primary" routerLink="/dashboard/user-management/user-details"
+    (click)="onRollData()" [mat-dialog-close]="selectedRollList">
+    Submit
+  </button>
+  <!-- <button
+    mat-dialog-close
+    type="submit"
+    class="btn btn-primary"
+    routerLink="/dashboard/user-management/area-list"
+  >
+    Submit
+  </button> -->
+</mat-dialog-actions>

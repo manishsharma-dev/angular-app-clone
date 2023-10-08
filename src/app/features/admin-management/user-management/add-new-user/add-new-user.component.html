@@ -1,0 +1,1895 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            {{ "animalDetails.home" | translate }}
+          </li>
+          <li class="breadcrumb-item active">
+            {{ "organization.Admin_Management" | translate }}
+          </li>
+          <li class="breadcrumb-item current">
+            {{ "user.user_Management" | translate }}
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="row no-gutters col-container">
+    <div class="col-md-12 col-h left-section">
+      <form
+        class="basic-information"
+        [formGroup]="userInfoForm"
+        (ngSubmit)="onSubmit()"
+      >
+        <mat-stepper
+          class="user-regform-detail"
+          #stepper
+          linear
+          [orientation]="(stepperOrientation | async)!"
+        >
+          <mat-step [stepControl]="personalInfoForm">
+            <ng-template matStepLabel
+              ><span class="dot">1</span>
+              {{ "user.personalDetails" | translate }}</ng-template
+            >
+            <form [formGroup]="personalInfoForm">
+              <div class="form-row align-items-center py-2">
+                <div class="col-lg-auto col-md-auto">
+                  <img
+                    class="img-thumbnail"
+                    [src]="userImg"
+                    alt=""
+                    height="80"
+                    width="80"
+                  />
+                </div>
+                <div
+                  class="form-group validation-error-message col-lg-4 col-md-4"
+                >
+                  <label for="userImage" class="image-upload">
+                    {{ "user.uploadPhoto" | translate
+                    }}<span class="mandatory-field" *ngIf="!userId">*</span>
+                    <input
+                      type="file"
+                      name="userImage"
+                      id="userImage"
+                      style="display: none"
+                      (change)="onFileUpload($event)"
+                      [disabled]="isDistrictAdmin"
+                    />
+                  </label>
+                </div>
+              </div>
+              <mat-error class="validation-error-message">
+                <div *ngIf="!userId" class="validation-error-message">
+                  <span
+                    *ngIf="
+                      personalInfo.images.invalid && personalInfo.images.touched
+                    "
+                  >
+                    <span id="showValidation" class="error-style"
+                      >Please Select a valid Image file(JPG/JPEG/PNG/pdf) to
+                      upload
+                    </span>
+                  </span>
+                  <span
+                    class="validation-error-message"
+                    *ngIf="isValidProfileTypeOrSize"
+                  >
+                    {{ isValidProfileTypeOrSize }}
+                  </span>
+                </div>
+              </mat-error>
+
+              <div class="form-row" *ngIf="userId">
+                <div class="form-group col-lg-3 col-md-3">
+                  <label class="form-label"
+                    >{{ "user.userId" | translate }}: {{ userId }}</label
+                  >
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label class="form-label"
+                    >{{ "user.loginId" | translate }}: {{ loginID }}</label
+                  >
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-lg-3 col-md-3">
+                  <label for="language" class="form-label"
+                    >{{ "user.title" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+                  <ng-select
+                    [items]="title"
+                    bindLabel="value"
+                    bindValue="cd"
+                    formControlName="title"
+                    [clearable]="false"
+                    placeholder="{{
+                      'validationMessage.please_Select_Title' | translate
+                    }}"
+                  >
+                  </ng-select>
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        personalInfo.title.invalid && personalInfo.title.touched
+                      "
+                      class="help=block"
+                    >
+                      {{ "validationMessage.please_Select_Title" | translate }}
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label for="firstName" class="form-label"
+                    >{{ "user.firstName" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+                  <input
+                    type="text"
+                    minlength="1"
+                    maxlength="100"
+                    class="form-control"
+                    id="firstName"
+                    placeholder="{{ 'user.firstName' | translate }}"
+                    formControlName="firstName"
+                  />
+
+                  <!-- <p>{{personalInfo.firstName.touched && personalInfo.firstName.invalid}}</p> -->
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        personalInfo.firstName.invalid &&
+                        personalInfo.firstName.touched
+                      "
+                      class="help=block"
+                    >
+                      <span
+                        *ngIf="personalInfo.firstName.errors?.['required']"
+                        class="help=block"
+                      >
+                        {{
+                          "validationMessage.please_Enter_First_Name"
+                            | translate
+                        }}
+                      </span>
+                      <span
+                        *ngIf="personalInfo.firstName.errors?.['minlength']"
+                        class="help=block"
+                      >
+                        {{ "validationMessage.name_minlength" | translate }}
+                      </span>
+                      <span
+                        *ngIf="personalInfo.firstName.hasError('pattern')"
+                        class="help=block"
+                      >
+                        {{ "validationMessage.InvalidFirstName" | translate }}
+                      </span>
+                      <!-- <span *ngIf="personalInfo.firstName.errors?.['maxlength']" class="help=block">
+                        firstName should not be grater than 15 character
+                      </span> -->
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label for="Middle Name" class="form-label">{{
+                    "user.middleName" | translate
+                  }}</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="Middle Name"
+                    placeholder="{{ 'user.middleName' | translate }}"
+                    formControlName="middleName"
+                  />
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        personalInfo.middleName.errors &&
+                        personalInfo.middleName.touched
+                      "
+                      class="help=block"
+                    >
+                      <span
+                        *ngIf="personalInfo.middleName.hasError('pattern')"
+                        class="help=block"
+                      >
+                        {{ "validationMessage.InvalidMiddleName" | translate }}
+                      </span>
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label for="lastName" class="form-label"
+                    >{{ "user.lastName" | translate
+                    }}<span class="mandatory-field" *ngIf="!userId"
+                      >*</span
+                    ></label
+                  >
+                  <input
+                    type="text"
+                    minlength="1"
+                    maxlength="100"
+                    class="form-control"
+                    id="lastName"
+                    placeholder="{{ 'user.lastName' | translate }}"
+                    formControlName="lastName"
+                  />
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        personalInfo.lastName.invalid &&
+                        personalInfo.lastName.touched
+                      "
+                      class="help=block"
+                    >
+                      <span
+                        *ngIf="personalInfo.lastName.errors?.['required']"
+                        class="help=block"
+                      >
+                        {{
+                          "validationMessage.Please_Enter_LastName" | translate
+                        }}
+                      </span>
+                      <span
+                        *ngIf="personalInfo.lastName.hasError('minlength')"
+                        class="help=block"
+                      >
+                        {{ "validationMessage.name_minlength" | translate }}
+                      </span>
+                      <span
+                        *ngIf="personalInfo.lastName.hasError('pattern')"
+                        class="help=block"
+                      >
+                        {{ "validationMessage.InvalidLastName" | translate }}
+                      </span>
+                    </span>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-lg-2 col-md-2">
+                  <label class="form-label"
+                    >{{ "common.gender" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+                  <div class="gender-radio-group">
+                    <div class="form-check form-check-inline">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value="M"
+                        class="form-check-input"
+                        formControlName="gender"
+                      />
+                      <label for="male" class="form-check-label">{{
+                        "animalDetails.male" | translate
+                      }}</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value="F"
+                        class="form-check-input"
+                        formControlName="gender"
+                      />
+                      <label for="Female" class="form-check-label">{{
+                        "animalDetails.female" | translate
+                      }}</label>
+                    </div>
+                    <!-- <div class="form-check form-check-inline">
+                      <input type="radio" name="gender" value="others" class="form-check-input"
+                        formControlName="gender" />
+                      <label for="Others" class="form-check-label">Others</label>
+                    </div> -->
+                  </div>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label for="aadhaarNumber" class="form-label">
+                    {{ "user.aadhaarNumber" | translate
+                    }}<span class="mandatory-field" *ngIf="!userId">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control form-input-section"
+                    id="aadhaarNumber"
+                    maxlength="12"
+                    placeholder="eg. 123456789011"
+                    formControlName="aadhaarNoUuid"
+                    (keydown)="spaceRestict($event)"
+                  />
+                  <mat-error class="validation-error-message">
+                    <div
+                      *ngIf="
+                        personalInfo.aadhaarNoUuid.errors &&
+                        personalInfo.aadhaarNoUuid.touched
+                      "
+                      class="help=block"
+                    >
+                      <div
+                        *ngIf="personalInfo.aadhaarNoUuid.hasError('required')"
+                      >
+                        {{ "registration.aadhaarMessage1" | translate }}
+                      </div>
+                      <div
+                        *ngIf="personalInfo.aadhaarNoUuid.hasError('pattern')"
+                      >
+                        {{ "registration.aadhaarMessage2" | translate }}
+                      </div>
+                      <div
+                        *ngIf="
+                          personalInfo.aadhaarNoUuid.hasError('aadhaarExists')
+                        "
+                        class="help=block"
+                      >
+                        {{ "errorMsg.adhaar_exist_valid" | translate }}
+                      </div>
+                    </div>
+                  </mat-error>
+                </div>
+                <div class="form-group col-md-7">
+                  <label for="aadhaar card" class="form-label"
+                    >{{ "user.uploadAadhaarDocument" | translate }}
+                    <img
+                      src="assets/images/info.svg"
+                      [matTooltipPosition]="'after'"
+                      matTooltip="Masked Aadhaar number implies replacing of first 8 digits of Aadhaar number with some characters like “xxxx-xxxx” while only last 4 digits of the Aadhaar Number are visible."
+                      aria-label="Button that displays a tooltip when focused or hovered over"
+                    /><span class="mandatory-field" *ngIf="!userId">*</span
+                    ><span
+                      class="mandatory-field"
+                      *ngIf="
+                        this.personalInfoForm.get('aadhaarNoUuid').value &&
+                        userId
+                      "
+                      >*</span
+                    ></label
+                  >
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="aadhaarCard"
+                    name="aadhaarCard"
+                    placeholder=""
+                    (change)="onAdhaarUpload($event)"
+                    [disabled]="isDistrictAdmin"
+                  />
+                  <a
+                    class="info-link"
+                    *ngIf="userRegistrationProofUrl"
+                    [href]="userRegistrationProofUrl"
+                    target="_blank"
+                  >
+                    {{
+                      "validationMessage.Preview_Uploaded_Document" | translate
+                    }}
+                  </a>
+                  <mat-error class="validation-error-message">
+                    <div>
+                      <span
+                        *ngIf="
+                          personalInfo.adhardoc.invalid &&
+                          personalInfo.adhardoc.touched
+                        "
+                      >
+                        <span id="showValidation" class="error-style"
+                          >Please Select a valid Image file(JPG/JPEG/PNG/pdf) to
+                          upload
+                        </span>
+                      </span>
+                      <span
+                        class="validation-error-message"
+                        *ngIf="isValidFileTypeOrSize"
+                      >
+                        {{ isValidFileTypeOrSize }}
+                      </span>
+                    </div>
+                  </mat-error>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-lg-4 col-md-4">
+                  <label for="dob" class="form-label"
+                    >{{ "user.dateOfBirth" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+                  <!-- <input type="date" name="dob" id="dob" class="form-control" /> -->
+                  <input
+                    matInput
+                    [matDatepicker]="pickerDob"
+                    [max]="userDob"
+                    class="form-control input-custom-border"
+                    placeholder="DD/MM/YYYY"
+                    formControlName="dateOfBirth"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="pickerDob"
+                    class="date-picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #pickerDob></mat-datepicker>
+                  <mat-error class="validation-error-message">
+                    <span
+                      class="help=block"
+                      *ngIf="
+                        (personalInfo.dateOfBirth.dirty &&
+                          personalInfo.dateOfBirth.invalid) ||
+                        personalInfo.dateOfBirth.touched
+                      "
+                    >
+                      <span
+                        class="help=block"
+                        *ngIf="
+                          personalInfo.dateOfBirth.hasError('matDatepickerMin')
+                        "
+                      >
+                        {{ "common.please_enter_valid_date" | translate }}
+                      </span>
+                      <span
+                        class="help=block"
+                        *ngIf="
+                          personalInfo.dateOfBirth.hasError('matDatepickerMax')
+                        "
+                      >
+                        {{ "common.please_enter_valid_date" | translate }}
+                      </span>
+                      <span
+                        class="help=block"
+                        *ngIf="
+                          personalInfo.dateOfBirth.hasError(
+                            'matDatepickerParse'
+                          )
+                        "
+                      >
+                        {{ "validationMessage.please_choose_dOB" | translate }}
+                      </span>
+                      <span
+                        class="help=block"
+                        *ngIf="
+                          personalInfo.dateOfBirth.hasError('required') &&
+                          !personalInfo.dateOfBirth.hasError(
+                            'matDatepickerParse'
+                          )
+                        "
+                      >
+                        {{ "common.please_enter_valid_date" | translate }}
+                      </span>
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-lg-4 col-md-4">
+                  <label for="fatherName" class="form-label"
+                    >{{ "user.fatherName" | translate
+                    }}<span class="mandatory-field" *ngIf="!userId"
+                      >*</span
+                    ></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="fathertName"
+                    placeholder="{{ 'user.fatherName' | translate }}"
+                    maxlength="50"
+                    minlength="5"
+                    formControlName="fatherName"
+                  />
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        personalInfo.fatherName.invalid &&
+                        personalInfo.fatherName.touched
+                      "
+                      class="help=block"
+                    >
+                      <span
+                        *ngIf="personalInfo.fatherName.errors?.['required']"
+                        class="help=block"
+                      >
+                        {{
+                          "validationMessage.please_Enter_FatherName"
+                            | translate
+                        }}
+                      </span>
+                      <span
+                        *ngIf="personalInfo.fatherName.errors?.['pattern']"
+                        class="help=block"
+                      >
+                        Invalid Father name
+                      </span>
+                      <span
+                        *ngIf="personalInfo.fatherName.errors?.['minlength']"
+                        class="help=block"
+                      >
+                        {{
+                          "validationMessage.fatherName_No_maxlength"
+                            | translate
+                        }}
+                      </span>
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-lg-4 col-md-4">
+                  <label for="category" class="form-label"
+                    >{{ "user.category" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+
+                  <ng-select
+                    [items]="category"
+                    bindLabel="value"
+                    bindValue="cd"
+                    formControlName="category"
+                    [clearable]="false"
+                    placeholder="Select Category"
+                  >
+                  </ng-select>
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        personalInfo.category.invalid &&
+                        personalInfo.category.touched
+                      "
+                      class="help=block"
+                    >
+                      {{
+                        "validationMessage.please_Select_category" | translate
+                      }}
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-lg-3 col-md-3" *ngIf="userId">
+                  <label for="status" class="form-label">{{
+                    "user.userStatus" | translate
+                  }}</label>
+                  <!-- <select
+                    type="text"
+                    class="form-control"
+                    id="status"
+                    formControlName="userStatus"
+                  >
+                    <option *ngFor="let data of userStatus" [value]="data.cd">
+                      {{ data.value }}
+                    </option>
+                  </select> -->
+
+                  <ng-select
+                    [items]="userStatus"
+                    bindLabel="value"
+                    bindValue="cd"
+                    formControlName="userStatus"
+                    [clearable]="false"
+                    placeholder="Select Status"
+                  >
+                  </ng-select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="address" class="form-label"
+                    >{{ "animalDetails.address" | translate
+                    }}<span class="mandatory-field" *ngIf="!userId"
+                      >*</span
+                    ></label
+                  >
+                  <input
+                    type="text"
+                    name="address"
+                    id=""
+                    minlength="3"
+                    maxlength="250"
+                    class="form-control"
+                    placeholder="{{ 'registration.Address' | translate }}"
+                    formControlName="permAddress"
+                  />
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        personalInfo.permAddress.errors &&
+                        personalInfo.permAddress.touched
+                      "
+                      class="help=block"
+                    >
+                      <span
+                        *ngIf="personalInfo.permAddress.hasError('required')"
+                      >
+                        {{
+                          "validationMessage.please_Enter_Address" | translate
+                        }}
+                      </span>
+                      <span
+                        *ngIf="personalInfo.permAddress.hasError('minlength')"
+                      >
+                        {{
+                          "validationMessage.address_No_minlength" | translate
+                        }}
+                      </span>
+                      <span
+                        *ngIf="personalInfo.permAddress.hasError('pattern')"
+                      >
+                        {{ "errorMsg.special_character_error" | translate }}
+                      </span>
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label for="state" class="form-label"
+                    >{{ "animalDetails.state" | translate
+                    }}<span class="mandatory-field" *ngIf="!userId"
+                      >*</span
+                    ></label
+                  >
+                  <!-- <select
+                    type="text"
+                    class="form-control"
+                    id="state"
+                    (change)="getDistricts($event)"
+                    formControlName="stateCd"
+                  >
+                    <option value="" selected disabled>Select</option>
+                    <option
+                      *ngFor="let state of userstateList"
+                      [value]="state.stateCode"
+                    >
+                      {{ state.stateName }}
+                    </option>
+                  </select> -->
+
+                  <ng-select
+                    [items]="userstateList"
+                    bindLabel="stateName"
+                    bindValue="stateCode"
+                    (change)="getDistricts($event)"
+                    formControlName="stateCd"
+                    [clearable]="true"
+                    placeholder="Select State"
+                  >
+                  </ng-select>
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        personalInfo.stateCd.invalid &&
+                        personalInfo.stateCd.touched
+                      "
+                      class="help=block"
+                    >
+                      {{ "validationMessage.please_Select_state" | translate }}
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label for="language" class="form-label"
+                    >{{ "animalDetails.district" | translate
+                    }}<span class="mandatory-field" *ngIf="!userId"
+                      >*</span
+                    ></label
+                  >
+                  <ng-select
+                    [items]="districtList"
+                    bindLabel="districtName"
+                    bindValue="districtCd"
+                    formControlName="districtCd"
+                    [clearable]="true"
+                    placeholder="Select District"
+                  >
+                  </ng-select>
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        personalInfo.districtCd.invalid &&
+                        personalInfo.districtCd.touched
+                      "
+                      class="help=block"
+                    >
+                      {{
+                        "validationMessage.please_Select_district" | translate
+                      }}
+                    </span>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-lg-3 col-md-3">
+                  <label for="pincode" class="form-label"
+                    >{{ "animalDetails.pincode" | translate
+                    }}<span class="mandatory-field" *ngIf="!userId"
+                      >*</span
+                    ></label
+                  >
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="pincode"
+                    placeholder="{{ 'registration.Pincode' | translate }}"
+                    formControlName="pinCd"
+                    minlength="6"
+                    maxlength="6"
+                  />
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        personalInfo.pinCd.invalid && personalInfo.pinCd.touched
+                      "
+                      class="help=block"
+                    >
+                      {{ "validationMessage.please_Enter_PinCd" | translate }}
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label for="Email" class="form-label"
+                    >{{ "animalDetails.email" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="Email"
+                    placeholder="abc@sample.com"
+                    formControlName="emailId"
+                  />
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        personalInfo.emailId.invalid &&
+                        personalInfo.emailId.touched
+                      "
+                      class="help=block"
+                    >
+                      {{ "validationMessage.please_Enter_Email" | translate }}
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label for="mobileNumber" class="form-label"
+                    >{{ "common.mobile" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+                  <input
+                    type="tel"
+                    class="form-control"
+                    minlength="10"
+                    maxlength="10"
+                    id="mobileNumber"
+                    placeholder="{{ 'untagged.mobile_no' | translate }}"
+                    formControlName="mobileNo"
+                  />
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        personalInfo.mobileNo.invalid &&
+                        personalInfo.mobileNo.touched
+                      "
+                      class="help=block"
+                    >
+                      {{ "validationMessage.please_Enter_Mobile" | translate }}
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label for="alternateNumber" class="form-label">{{
+                    "user.alternateNumber" | translate
+                  }}</label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    minlength="10"
+                    maxlength="10"
+                    id="alternateNumber"
+                    placeholder="{{ 'untagged.mobile_no' | translate }}"
+                    minlength="10"
+                    maxlength="10"
+                    formControlName="alternateNo"
+                  />
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="personalInfo.alternateNo.errors?.['minlength'] || personalInfo.alternateNo.errors?.['maxlength']"
+                      class="help=block"
+                    >
+                      {{ "validationMessage.alternateNo_No_Max" | translate }}
+                    </span>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-end">
+                <button
+                  class="btn btn-outline-primary mr-2"
+                  matStepperPrevious
+                  (click)="backListpage()"
+                >
+                  Back
+                </button>
+                <button
+                  class="btn btn-primary"
+                  (click)="onNext()"
+                  matStepperNext
+                >
+                  {{ "animalDetails.next" | translate }}
+                </button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step [stepControl]="professionalInfoForm">
+            <ng-template matStepLabel
+              ><span class="dot">2</span>
+              {{ "user.professionalDetails" | translate }}</ng-template
+            >
+            <form [formGroup]="professionalInfoForm" (ngSubmit)="onSubmit()">
+              <div class="form-row">
+                <div class="form-group col-lg-3 col-md-3">
+                  <label for="orgName" class="form-label"
+                    >{{ "user.organizationName" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+                  <ng-select
+                    class="custom-dropdown"
+                    [items]="orglist"
+                    bindLabel="orgName"
+                    bindValue="orgId"
+                    formControlName="orgId"
+                    [clearable]="false"
+                    placeholder="{{
+                      'animalDetails.select_organisation' | translate
+                    }}"
+                    (change)="onChgOrg($event)"
+                  >
+                    <ng-template ng-label-tmp let-item="item">
+                      <span
+                        class="ng-value-label"
+                        placement="top"
+                        ngbTooltip="{{ item.orgName }}"
+                        >{{ item.orgName }}</span
+                      >
+                    </ng-template>
+                    <ng-template ng-option-tmp let-item="item">
+                      <span
+                        class="ng-option-label"
+                        placement="top"
+                        ngbTooltip="{{ item.orgName }}"
+                        >{{ item.orgName }}
+                      </span>
+                    </ng-template>
+                  </ng-select>
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        professionalInfo.orgId.errors &&
+                        professionalInfo.orgId.touched
+                      "
+                      class="help=block"
+                    >
+                      {{
+                        "validationMessage.please_Select_OrganizationName"
+                          | translate
+                      }}
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label class="form-label">{{
+                    "user.registrationNumber" | translate
+                  }}</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    minlength="5"
+                    maxlength="50"
+                    id="registrationNo"
+                    placeholder="{{ 'user.registrationNumber' | translate }}"
+                    formControlName="registrationNo"
+                  />
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="professionalInfoForm.get('registrationNo').errors?.['minlength']"
+                      class="validation-error-message"
+                    >
+                      {{
+                        "validationMessage.registrationNo_No_Max" | translate
+                      }}
+                    </span>
+                    <span
+                      *ngIf="
+                        (professionalInfoForm.get('registrationNo').invalid &&
+                          !professionalInfoForm.get('registrationNo')
+                            .pristine) ||
+                        professionalInfoForm.get('registrationNo').touched
+                      "
+                      class="validation-error-message"
+                    >
+                      <span
+                        *ngIf="
+                          professionalInfoForm.get('registrationNo').value
+                            ?.length >= 50
+                        "
+                        class="validation-error-message"
+                      >
+                        {{
+                          "validationMessage.registrationNo_No_Max" | translate
+                        }}
+                      </span>
+                      <span
+                        *ngIf="
+                          professionalInfoForm.get('registrationNo').value
+                            ?.length >= 50
+                        "
+                        class="validation-error-message"
+                      >
+                        {{
+                          "validationMessage.registrationNo_No_Max" | translate
+                        }}
+                      </span>
+                      <span
+                        *ngIf="
+                          professionalInfo.registrationNo.hasError('pattern')
+                        "
+                        class="validation-error-message"
+                      >
+                        {{
+                          "validationMessage.registration_No_pattern"
+                            | translate
+                        }}
+                      </span>
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label class="form-label"
+                    >{{ "user.usertype" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+
+                  <ng-select
+                    [items]="userType"
+                    bindLabel="value"
+                    bindValue="cd"
+                    formControlName="userType"
+                    [clearable]="false"
+                    placeholder="Select UserType"
+                  >
+                  </ng-select>
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        professionalInfo.userType.invalid &&
+                        professionalInfo.userType.touched
+                      "
+                      class="help=block"
+                    >
+                      {{
+                        "validationMessage.please_select_userType" | translate
+                      }}
+                    </span>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label class="form-label h-divider px-0 font-weight-bold">{{
+                    "user.baseLocation" | translate
+                  }}</label>
+                </div>
+              </div>
+
+              <div class="form-row" formGroupName="baseLocation">
+                <div class="form-group col-lg-3 col-md-3">
+                  <label class="form-label"
+                    >{{ "animalDetails.state" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+
+                  <ng-select
+                    [items]="stateAllList"
+                    bindLabel="stateName"
+                    bindValue="stateCode"
+                    formControlName="stateCd"
+                    [clearable]="true"
+                    (change)="getAllDistricts($event)"
+                    placeholder="Select State"
+                  >
+                  </ng-select>
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        professionalInfo.baseLocation.get('stateCd').invalid &&
+                        professionalInfo.baseLocation.get('stateCd').touched
+                      "
+                      class="help=block"
+                    >
+                      {{ "validationMessage.please_Select_state" | translate }}
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label class="form-label"
+                    >{{ "animalDetails.district" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+
+                  <ng-select
+                    [items]="districtAllList"
+                    bindLabel="districtName"
+                    bindValue="districtCd"
+                    (change)="getTehsil($event)"
+                    formControlName="districtCd"
+                    [clearable]="true"
+                    placeholder="Select District"
+                  >
+                  </ng-select>
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        professionalInfo.baseLocation.get('districtCd')
+                          .invalid &&
+                        professionalInfo.baseLocation.get('districtCd').touched
+                      "
+                      class="help=block"
+                    >
+                      {{
+                        "validationMessage.please_Select_district" | translate
+                      }}
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label class="form-label"
+                    >{{ "user.tehsil" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+
+                  <ng-select
+                    [items]="tehsilList"
+                    bindLabel="tehsilName"
+                    bindValue="tehsilCd"
+                    formControlName="tehsilCd"
+                    (change)="getVillage($event)"
+                    [clearable]="true"
+                    placeholder="Select Tehsil"
+                  >
+                  </ng-select>
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        professionalInfo.baseLocation.get('tehsilCd').invalid &&
+                        professionalInfo.baseLocation.get('tehsilCd').touched
+                      "
+                      class="help=block"
+                    >
+                      {{ "validationMessage.please_Select_Tehsil" | translate }}
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label class="form-label"
+                    >{{ "user.village" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+
+                  <ng-select
+                    [items]="villageList"
+                    bindLabel="villageName"
+                    bindValue="villageCd"
+                    formControlName="villageCd"
+                    [clearable]="true"
+                    placeholder="Select village"
+                  >
+                  </ng-select>
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        professionalInfo.baseLocation.get('villageCd')
+                          .invalid &&
+                        professionalInfo.baseLocation.get('villageCd').touched
+                      "
+                      class="help=block"
+                    >
+                      {{
+                        "validationMessage.please_Select_Village" | translate
+                      }}
+                    </span>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label class="form-label h-divider px-0 font-weight-bold">{{
+                    "user.role" | translate
+                  }}</label>
+                </div>
+              </div>
+              <div class="form-row">
+                <div
+                  class="form-group col-lg-6 col-md-6"
+                  formGroupName="defaultRole"
+                >
+                  <label for="role" class="form-label"
+                    >{{ "user.defaultRole" | translate
+                    }}<span class="mandatory-field">*</span></label
+                  >
+
+                  <ng-select
+                    [items]="roleList"
+                    bindLabel="roleDesc"
+                    bindValue="roleCd"
+                    formControlName="roleCd"
+                    (change)="onchgRole($event)"
+                    [clearable]="false"
+                    placeholder="Select Role"
+                  >
+                  </ng-select>
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        professionalInfo.defaultRole.get('roleCd').invalid &&
+                        professionalInfo.defaultRole.get('roleCd').touched
+                      "
+                      class="help=block"
+                    >
+                      {{ "validationMessage.please_Select_Role" | translate }}
+                    </span>
+                  </mat-error>
+                </div>
+                <div class="form-group col-lg-6 col-md-6">
+                  <div class="gender-radio-group">
+                    <div class="form-check form-check-inline">
+                      <input
+                        type="radio"
+                        value="1"
+                        class="form-check-input"
+                        formControlName="subOrgType"
+                        (change)="onchangeAI($event)"
+                        form
+                      />
+                      <label for="1" class="form-check-label fw-normal">{{
+                        "user.aiCenter" | translate
+                      }}</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        type="radio"
+                        value="10"
+                        class="form-check-input"
+                        formControlName="subOrgType"
+                        (change)="onchangeAI($event)"
+                      />
+                      <label for="10" class="form-check-label fw-normal">
+                        {{ "user.hospital" | translate }}
+                      </label>
+                    </div>
+                  </div>
+
+                  <ng-select
+                    [items]="aiList"
+                    [multiple]="true"
+                    bindLabel="subOrgName"
+                    groupBy="subOrgTypeDesc"
+                    [selectableGroup]="true"
+                    [selectableGroupAsModel]="false"
+                    [closeOnSelect]="false"
+                    bindValue="subOrgId"
+                    [loading]="isLoadingSpinner"
+                    placeholder="{{
+                      'user.select_AIcenter/Hospital' | translate
+                    }}"
+                    formControlName="aiCenterCd"
+                  >
+                    <ng-template
+                      class="form-control"
+                      ng-optgroup-tmp
+                      let-item="item"
+                      let-item$="item$"
+                      let-index="index"
+                    >
+                      {{ item.subOrgTypeDesc }}
+                      <!-- <input
+                        id="item-{{ index }}"
+                        type="checkbox"
+                        [(ngModel)]="item$.selected"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                      Select All -->
+                    </ng-template>
+
+                    <ng-template
+                      class="form-control"
+                      ng-option-tmp
+                      let-item="item"
+                      let-item$="item$"
+                    >
+                      <input
+                        id="item-{{ item.subOrgId }}"
+                        type="checkbox"
+                        [(ngModel)]="item$.selected"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                      {{ item.subOrgName }}
+                    </ng-template>
+                  </ng-select>
+                  <mat-error class="validation-error-message">
+                    <span
+                      *ngIf="
+                        professionalInfo.aiCenterCd.invalid &&
+                        (professionalInfo.aiCenterCd.dirty ||
+                          professionalInfo.aiCenterCd.touched)
+                      "
+                      class="help=block"
+                    >
+                      {{
+                        "validationMessage.please_select_AI_Center" | translate
+                      }}
+                    </span>
+                  </mat-error>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <div class="form-row">
+                    <div class="form-group col-lg-6 col-md-6">
+                      <label for="validFrom" class="form-label"
+                        >{{ "user.UserValidFrom" | translate
+                        }}<span class="mandatory-field">*</span></label
+                      >
+                      <input
+                        matInput
+                        [matDatepicker]="pickerFrom"
+                        class="form-control input-custom-border"
+                        formControlName="userValidFrom"
+                        [min]="onTenureDate"
+                        [max]="onCompletionDate"
+                        placeholder="DD/MM/YYYY"
+                        (dateChange)="dateChange($event)"
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="pickerFrom"
+                        class="date-picker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #pickerFrom></mat-datepicker>
+                      <mat-error class="validation-error-message">
+                        <span
+                          class="help=block"
+                          *ngIf="
+                            (professionalInfo.userValidFrom.dirty &&
+                              professionalInfo.userValidFrom.invalid) ||
+                            professionalInfo.userValidFrom.touched
+                          "
+                        >
+                          <span
+                            class="help=block"
+                            *ngIf="
+                              professionalInfo.userValidFrom.hasError(
+                                'matDatepickerMin'
+                              )
+                            "
+                          >
+                            {{ "common.please_enter_valid_date" | translate }}
+                          </span>
+                          <span
+                            class="help=block"
+                            *ngIf="
+                              professionalInfo.userValidFrom.hasError(
+                                'matDatepickerMax'
+                              )
+                            "
+                          >
+                            {{ "common.please_enter_valid_date" | translate }}
+                          </span>
+                          <span
+                            class="help=block"
+                            *ngIf="
+                              professionalInfo.userValidFrom.hasError(
+                                'matDatepickerParse'
+                              )
+                            "
+                          >
+                            {{
+                              "validationMessage.please_choose_date" | translate
+                            }}
+                          </span>
+                          <span
+                            class="help=block"
+                            *ngIf="
+                              professionalInfo.userValidFrom.hasError(
+                                'required'
+                              ) &&
+                              !professionalInfo.userValidFrom.hasError(
+                                'matDatepickerParse'
+                              )
+                            "
+                          >
+                            {{ "common.please_enter_valid_date" | translate }}
+                          </span>
+                        </span>
+                      </mat-error>
+                    </div>
+
+                    <div class="form-group col-lg-6 col-md-6">
+                      <label for="validTo" class="form-label"
+                        >{{ "user.userValidTo" | translate
+                        }}<span class="mandatory-field">*</span></label
+                      >
+                      <input
+                        matInput
+                        [matDatepicker]="pickerTo"
+                        class="form-control input-custom-border"
+                        formControlName="userValidTo"
+                        placeholder="DD/MM/YYYY"
+                        [min]="professionalInfo.userValidFrom.value || fromDate"
+                        [max]="onCompletionDate"
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="pickerTo"
+                        class="date-picker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #pickerTo></mat-datepicker>
+                      <mat-error class="validation-error-message">
+                        <span
+                          class="help=block"
+                          *ngIf="
+                            (professionalInfo.userValidTo.dirty &&
+                              professionalInfo.userValidTo.invalid) ||
+                            professionalInfo.userValidTo.touched
+                          "
+                        >
+                          <span
+                            class="help=block"
+                            *ngIf="
+                              professionalInfo.userValidTo.hasError(
+                                'matDatepickerMin'
+                              )
+                            "
+                          >
+                            {{ "common.please_enter_valid_date" | translate }}
+                          </span>
+                          <span
+                            class="help=block"
+                            *ngIf="
+                              professionalInfo.userValidTo.hasError(
+                                'matDatepickerMax'
+                              )
+                            "
+                          >
+                            {{ "common.please_enter_valid_date" | translate }}
+                          </span>
+                          <span
+                            class="help=block"
+                            *ngIf="
+                              professionalInfo.userValidTo.hasError(
+                                'matDatepickerParse'
+                              )
+                            "
+                          >
+                            {{
+                              "validationMessage.please_choose_date" | translate
+                            }}
+                          </span>
+                          <span
+                            class="help=block"
+                            *ngIf="
+                              professionalInfo.userValidTo.hasError(
+                                'required'
+                              ) &&
+                              !professionalInfo.userValidTo.hasError(
+                                'matDatepickerParse'
+                              )
+                            "
+                          >
+                            {{ "common.please_enter_valid_date" | translate }}
+                          </span>
+                        </span>
+                      </mat-error>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row" *ngIf="userId">
+                <div class="form-group col-md-12">
+                  <label class="form-label h-divider px-0 font-weight-bold"
+                    >Project Allocation/DeAllocation</label
+                  >
+                </div>
+              </div>
+              <div class="form-group" *ngIf="userId">
+                <a
+                  class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover cursor-pointer"
+                  (click)="projectAllocation()"
+                  >Project List
+                  <i class="fa fa-external-link" aria-hidden="true"></i
+                ></a>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <div class="form-label h-divider px-0 font-weight-bold"></div>
+                </div>
+              </div>
+
+              <div class="form-row mx-0">
+                <div class="form-check mb-3">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="check2"
+                    name="option2"
+                    [value]="isaddRole"
+                    [checked]="isaddRole"
+                    (change)="addRole($event)"
+                  />
+                  <label class="form-check-label" for="check2">{{
+                    "user.userRoleAllocations" | translate
+                  }}</label>
+                </div>
+              </div>
+              <!-- <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label class="form-label h-divider px-0 font-weight-bold">{{
+                    "user.userRoleAllocations" | translate
+                    }}</label>
+                </div>
+              </div> -->
+
+              <div *ngIf="isaddRole">
+                <div formArrayName="userRoleAllocations">
+                  <div
+                    class="form-row"
+                    *ngFor="let row of userRoles.controls; let i = index"
+                    [formGroupName]="i"
+                  >
+                    <div class="form-group col-lg-4 col-md-4">
+                      <label for="role" class="form-label">{{
+                        "user.role" | translate
+                      }}</label>
+                      <!-- <select
+                        type="text"
+                        class="form-control"
+                        id="role"
+                        formControlName="roleCd"
+                        (change)="onCheckDupRole()"
+                      >
+                        <option value="null" selected>Select</option>
+                        <option
+                          *ngFor="let role of additionalRole"
+                          [value]="role.roleCd"
+                        >
+                          {{ role.roleDesc }}
+                        </option>
+                      </select> -->
+
+                      <ng-select
+                        [items]="additionalRole"
+                        bindLabel="roleDesc"
+                        bindValue="roleCd"
+                        formControlName="roleCd"
+                        (change)="onCheckDupRole()"
+                        [clearable]="true"
+                        placeholder="Select Role"
+                      >
+                      </ng-select>
+
+                      <mat-error class="validation-error-message">
+                        <span
+                          *ngIf="
+                            row.get('roleCd').invalid &&
+                            row.get('roleCd').touched
+                          "
+                          class="help=block"
+                        >
+                          {{
+                            "validationMessage.please_Select_Role" | translate
+                          }}
+                        </span>
+                      </mat-error>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 from-group">
+                      <label for="orgOnboardDate" class="form-label">{{
+                        "user.mappingStartDate" | translate
+                      }}</label>
+                      <input
+                        matInput
+                        [matDatepicker]="pickerStart"
+                        class="form-control input-custom-border"
+                        formControlName="userAllocationStartDate"
+                        placeholder="DD/MM/YYYY"
+                        [min]="onTenureDate"
+                        [max]="onCompletionDate"
+                        (dateChange)="mappingdateChange($event, i)"
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="pickerStart"
+                        class="date-picker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #pickerStart></mat-datepicker>
+                      <mat-error class="validation-error-message">
+                        <span
+                          class="help=block"
+                          *ngIf="
+                            (row.get('userAllocationStartDate').dirty &&
+                              row.get('userAllocationStartDate').invalid) ||
+                            row.get('userAllocationStartDate').touched
+                          "
+                        >
+                          <span
+                            class="help=block"
+                            *ngIf="
+                              row
+                                .get('userAllocationStartDate')
+                                .hasError('matDatepickerMin')
+                            "
+                          >
+                            {{ "common.please_enter_valid_date" | translate }}
+                          </span>
+                          <span
+                            class="help=block"
+                            *ngIf="
+                              row
+                                .get('userAllocationStartDate')
+                                .hasError('matDatepickerMax')
+                            "
+                          >
+                            {{ "common.please_enter_valid_date" | translate }}
+                          </span>
+                          <span
+                            class="help=block"
+                            *ngIf="
+                              row
+                                .get('userAllocationStartDate')
+                                .hasError('matDatepickerParse')
+                            "
+                          >
+                            {{
+                              "validationMessage.please_choose_date" | translate
+                            }}
+                          </span>
+                          <span
+                            class="help=block"
+                            *ngIf="
+                              row
+                                .get('userAllocationStartDate')
+                                .hasError('required') &&
+                              !row
+                                .get('userAllocationStartDate')
+                                .hasError('matDatepickerParse')
+                            "
+                          >
+                            {{ "common.please_enter_valid_date" | translate }}
+                          </span>
+                        </span>
+                      </mat-error>
+                    </div>
+
+                    <div class="form-group col-lg-4 col-md-4">
+                      <div class="form-row">
+                        <div class="col-lg-10 from-group">
+                          <label for="" class="form-label">{{
+                            "user.mappingEndDate" | translate
+                          }}</label>
+                          <input
+                            matInput
+                            [matDatepicker]="pickerEnd"
+                            class="form-control input-custom-border"
+                            placeholder="DD/MM/YYYY"
+                            formControlName="userAllocationEndDate"
+                            [min]="row.get('userAllocationStartDate').value"
+                            [max]="onCompletionDate"
+                          />
+                          <mat-datepicker-toggle
+                            matSuffix
+                            [for]="pickerEnd"
+                            class="date-picker"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker #pickerEnd></mat-datepicker>
+                          <mat-error class="validation-error-message">
+                            <span
+                              class="help=block"
+                              *ngIf="
+                                (row.get('userAllocationEndDate').dirty &&
+                                  row.get('userAllocationEndDate').invalid) ||
+                                row.get('userAllocationEndDate').touched
+                              "
+                            >
+                              <span
+                                class="help=block"
+                                *ngIf="
+                                  row
+                                    .get('userAllocationEndDate')
+                                    .hasError('matDatepickerMin')
+                                "
+                              >
+                                {{
+                                  "common.please_enter_valid_date" | translate
+                                }}
+                              </span>
+                              <span
+                                class="help=block"
+                                *ngIf="
+                                  row
+                                    .get('userAllocationEndDate')
+                                    .hasError('matDatepickerMax')
+                                "
+                              >
+                                {{
+                                  "common.please_enter_valid_date" | translate
+                                }}
+                              </span>
+                              <span
+                                class="help=block"
+                                *ngIf="
+                                  row
+                                    .get('userAllocationEndDate')
+                                    .hasError('matDatepickerParse')
+                                "
+                              >
+                                {{
+                                  "validationMessage.please_choose_date"
+                                    | translate
+                                }}
+                              </span>
+                              <span
+                                class="help=block"
+                                *ngIf="
+                                  row
+                                    .get('userAllocationEndDate')
+                                    .hasError('required') &&
+                                  !row
+                                    .get('userAllocationEndDate')
+                                    .hasError('matDatepickerParse')
+                                "
+                              >
+                                {{
+                                  "common.please_enter_valid_date" | translate
+                                }}
+                              </span>
+                            </span>
+                            <!-- <span
+                            *ngIf="!row.get('userAllocationEndDate').valid && row.get('userAllocationEndDate').touched"
+                            class="help=block">
+                            {{"validationMessage.please_choose_date" | translate}}
+                          </span> -->
+                          </mat-error>
+                        </div>
+                        <div
+                          class="col-auto d-flex align-items-center justify-content-end cursor-pointer"
+                          (click)="onRemoveRole(i)"
+                        >
+                          <svg
+                            id="Group_4529"
+                            data-name="Group 4529"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="18"
+                            height="18"
+                            viewBox="0 0 18 18"
+                          >
+                            <path
+                              id="Path_5203"
+                              data-name="Path 5203"
+                              d="M0,0H18V18H0Z"
+                              fill="none"
+                            />
+                            <path
+                              id="Path_5204"
+                              data-name="Path 5204"
+                              d="M3.609,6.827H16.48V17.285a.8.8,0,0,1-.8.8H4.413a.8.8,0,0,1-.8-.8ZM6.022,4.413V2.8a.8.8,0,0,1,.8-.8h6.436a.8.8,0,0,1,.8.8V4.413h4.022V6.022H2V4.413Zm1.609-.8v.8h4.827v-.8Zm0,6.436v4.827H9.24V10.044Zm3.218,0v4.827h1.609V10.044Z"
+                              transform="translate(-1.044 -1.044)"
+                              fill="#545454"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <span class="validation-error-message" *ngIf="isShowError">
+                    <!-- Role Name already exist. please select another Role ! -->
+                    {{ isShowError }}
+                  </span>
+                  <div class="row">
+                    <div class="col-auto" *ngIf="!isDistrictAdmin">
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary"
+                        (click)="addUserRoles()"
+                      >
+                        {{ "common.add" | translate }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row mt-3">
+                <div class="form-group col-md-12">
+                  <div class="form-label h-divider px-0 font-weight-bold"></div>
+                </div>
+              </div>
+
+              <div class="form-row mx-0">
+                <div class="form-check mb-3">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="check3"
+                    name="option2"
+                    [value]="isaddArea"
+                    [checked]="isaddArea"
+                    (change)="addArea($event)"
+                  />
+                  <label class="form-check-label" for="check3">{{
+                    "user.additionalAreaAllocationMultiselect" | translate
+                  }}</label>
+                </div>
+              </div>
+
+              <div class="" *ngIf="isaddArea">
+                <ng-container *ngIf="userId; else addNewArea">
+                  <app-additional-area-allocation
+                    [userId]="userId"
+                    [stateAllList]="stateAllList"
+                    [additionalAreaAllocations]="additionalAreaAllocations"
+                    (deleteAreaAllocation)="deleteAreaAllocation($event)"
+                    #updateAreaAllocation
+                  ></app-additional-area-allocation>
+                </ng-container>
+                <ng-template #addNewArea>
+                  <app-new-area-allocation
+                    [stateAllList]="stateAllList"
+                    #newareaAllocation
+                  ></app-new-area-allocation>
+                </ng-template>
+
+                <!-- <div formArrayName="userAreaAllocations" *ngFor="let row of rows.controls; let i = index">
+                  <div class="dynamicAdd form-row" [formGroupName]="i">
+                    <div class="form-group col-lg-3 col-md-3">
+                      <label class="form-label">{{ "animalDetails.state" | translate
+                        }}<span class="mandatory-field">*</span></label>
+                      <select type="text" class="form-control" id="state" (change)="getMultiDistricts($event, i)"
+                        formControlName="stateCd">
+                        <option value="null" selected disabled>Select</option>
+                        <option *ngFor="let state of stateMultiList" [value]="state.stateCode">
+                          {{ state.stateName }}
+                        </option>
+                      </select>
+                      <mat-error class="validation-error-message">
+                        <span *ngIf="
+                            row.get('stateCd').invalid &&
+                            row.get('stateCd').touched
+                          " class="help=block">
+                          {{
+                          "validationMessage.please_Select_state" | translate
+                          }}
+                        </span>
+                      </mat-error>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                      <label class="form-label">{{ "animalDetails.district" | translate
+                        }}<span class="mandatory-field">*</span></label>
+                      <select type="text" class="form-control" id="district" (change)="getMultiTehsil($event, i)"
+                        formControlName="districtCd">
+                        <option value="null" selected disabled>Select</option>
+                        <option *ngFor="let district of districtMultiList[i]" [value]="district['districtCd']">
+                          {{ district.districtName }}
+                        </option>
+                      </select>
+                      <mat-error class="validation-error-message">
+                        <span *ngIf="
+                            row.get('districtCd').invalid &&
+                            row.get('districtCd').touched
+                          " class="help=block">
+                          {{
+                          "validationMessage.please_Select_district"
+                          | translate
+                          }}
+                        </span>
+                      </mat-error>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                      <label class="form-label">{{ "user.tehsil" | translate
+                        }}<span class="mandatory-field">*</span></label>
+                      <select type="text" class="form-control" id="tehsil" (change)="getMultiVillage($event, i)"
+                        formControlName="tehsilCd">
+                        <option value="null" selected disabled>Select</option>
+                        <option *ngFor="let tehsil of tehsilMultiList[i]" [value]="tehsil['tehsilCd']">
+                          {{ tehsil.tehsilName }}
+                        </option>
+                      </select>
+                      <mat-error class="validation-error-message">
+                        <span *ngIf="
+                            row.get('tehsilCd').invalid &&
+                            row.get('tehsilCd').touched
+                          " class="help=block">
+                          {{
+                          "validationMessage.please_Select_Tehsil" | translate
+                          }}
+                        </span>
+                      </mat-error>
+                    </div>
+                    <div class="form-group col-lg-2 col-md-2 wf-20">
+                      <label class="form-label">{{ "user.village" | translate
+                        }}<span class="mandatory-field">*</span></label>
+                      <ng-select [items]="villageMultiList[i]" [multiple]="true" bindLabel="villageName"
+                        groupBy="selectedAllGroup" [selectableGroup]="true" [selectableGroupAsModel]="false"
+                        [closeOnSelect]="false" bindValue="villageCd" formControlName="villageCd">
+                        <ng-template class="form-control" ng-optgroup-tmp let-item="item" let-item$="item$"
+                          let-index="index">
+                          <input id="item-{{ index }}" type="checkbox" [(ngModel)]="item$.selected"
+                            [ngModelOptions]="{ standalone: true }" />
+                          Select All
+                        </ng-template>
+
+                        <ng-template class="form-control" ng-option-tmp let-item="item" let-item$="item$">
+                          <input id="item-{{ item.villageCd }}" type="checkbox" [(ngModel)]="item$.selected"
+                            [ngModelOptions]="{ standalone: true }" />
+                          {{ item.villageName }}
+                        </ng-template>
+                      </ng-select>
+
+                      <mat-error class="validation-error-message">
+                        <span *ngIf="
+                            row.get('villageCd').invalid &&
+                            row.get('villageCd').touched
+                          " class="help=block">
+                          {{
+                          "validationMessage.please_Select_Village"
+                          | translate
+                          }}
+                        </span>
+                      </mat-error>
+                    </div>
+                    <div class="col-auto d-flex align-items-center justify-content-end cursor-pointer"
+                      (click)="onRemoveRow(i)">
+                      <svg id="Group_4529" data-name="Group 4529" xmlns="http://www.w3.org/2000/svg" width="18"
+                        height="18" viewBox="0 0 18 18">
+                        <path id="Path_5203" data-name="Path 5203" d="M0,0H18V18H0Z" fill="none" />
+                        <path id="Path_5204" data-name="Path 5204"
+                          d="M3.609,6.827H16.48V17.285a.8.8,0,0,1-.8.8H4.413a.8.8,0,0,1-.8-.8ZM6.022,4.413V2.8a.8.8,0,0,1,.8-.8h6.436a.8.8,0,0,1,.8.8V4.413h4.022V6.022H2V4.413Zm1.609-.8v.8h4.827v-.8Zm0,6.436v4.827H9.24V10.044Zm3.218,0v4.827h1.609V10.044Z"
+                          transform="translate(-1.044 -1.044)" fill="#545454" />
+                      </svg>
+                    </div>
+                  </div>
+                </div> -->
+
+                <!-- <div class="row">
+                  <div class="col-auto">
+                    <button type="button" class="btn btn-outline-primary" (click)="addRow()">
+                      {{ "common.add" | translate }}
+                    </button>
+                  </div>
+                </div> -->
+              </div>
+
+              <div class="d-flex justify-content-end mt-4">
+                <button class="btn btn-outline-primary mr-2" matStepperPrevious>
+                  {{ "animalDetails.back" | translate }}
+                </button>
+                <button type="submit" class="btn btn-primary">
+                  {{ btnTextDynamic }}
+                </button>
+              </div>
+            </form>
+          </mat-step>
+        </mat-stepper>
+      </form>
+
+      <br />
+      <br />
+    </div>
+  </div>
+</section>

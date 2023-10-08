@@ -1,0 +1,260 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<app-common-breadcrumb [breadcrumbKeys]="[ 'performanceRecording.pr', 'performanceRecording.genetic_analysis']">
+</app-common-breadcrumb>
+
+<section class="add-genetic-analysis">
+  <div class="row no-gutters col-container">
+    <div class="col-md-12 col-h left-section">
+      <!-- owner Details section-->
+      <div class="owner-details-section">
+        <div class="row owner-detail-table mb-4 mx-0 py-3 align-items-center user-detail">
+          <div class="back-arrow">
+            <i class="fa fa-chevron-left mr-2 back-section" (click)="goBack()"></i>
+          </div>
+          <div class="table-responsive">
+            <table class="table animal-table m-0" *ngIf="animal">
+              <thead>
+                <tr>
+                  <th>{{'animalDetails.previewAnimalDetails.tagId'|translate}}</th>
+                  <th>{{'common.species'|translate}}</th>
+                  <th>{{'animalDetails.breed'|translate}}</th>
+                  <th>{{'common.sex'|translate}}</th>
+                  <th>{{'common.age'|translate}}</th>
+                  <th>{{'animalDetails.pregnant'|translate}}</th>
+                  <th>{{'animalDetails.milking_status'|translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ animal.tagId }}</td>
+                  <td>{{ animal.species }}</td>
+                  <td>
+                    {{
+                    animal.breedAndExoticLevels &&
+                    animal.breedAndExoticLevels.length > 1
+                    ? "Cross Breed"
+                    : animal.breedAndExoticLevels &&
+                    animal.breedAndExoticLevels.length
+                    ? animal.breedAndExoticLevels[0].breed
+                    : "NA"
+                    }}
+                  </td>
+                  <td>{{ animal.sex }}</td>
+                  <td>
+                    {{ getAnimalAge(animal.ageInMonths) }}
+                  </td>
+                  <td class="col-auto">
+                    {{
+                    animal.pregnancyStatus
+                    ? animal.pregnancyStatus === "Y"
+                    ? "Yes"
+                    : "No"
+                    : "NA"
+                    }}
+                  </td>
+                  <td class="col-auto">{{ animal.milkingStatus ?? "NA" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="title-heading mb-3">
+          <h3 class="muted-label-heading">{{'performanceRecording.sample_information' | translate}}</h3>
+        </div>
+      </div>
+
+      <div class="h-divider">
+        <div class="shadow"></div>
+      </div>
+
+      <form [formGroup]="geneticSampleForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="examinationType" class="form-label">{{
+              "performanceRecording.examination_type" | translate
+              }}
+            </label>
+            <input type="text" class="form-control" formControlName="breedingExaminationType" />
+          </div>
+          <div class="form-group col-md-3 icon-input">
+            <label for="" class="form-label">{{ "performanceRecording.sample_collection_date" | translate
+              }}<span class="mandatory-field">*</span></label>
+            <input type="text" class="form-control" [min]="minDate" [max]="today" [matDatepicker]="pickerDate"
+              formControlName="sampleCollectionDate" placeholder="dd/mm/yyyy" />
+            <mat-datepicker-toggle matSuffix [for]="pickerDate" class="calender-icon"></mat-datepicker-toggle>
+            <mat-datepicker #pickerDate></mat-datepicker>
+            <span class="alert-message" *ngIf="
+                    (geneticSampleForm.get('sampleCollectionDate').dirty &&
+                      geneticSampleForm.get('sampleCollectionDate').invalid) ||
+                    geneticSampleForm.get('sampleCollectionDate').touched
+                    ">
+              <span *ngIf="geneticSampleForm.get('sampleCollectionDate').hasError('matDatepickerMin')">
+                {{'common.please_enter_valid_date' | translate}}
+              </span>
+              <span *ngIf="geneticSampleForm.get('sampleCollectionDate').hasError('matDatepickerMax')">
+                {{'common.please_enter_valid_date' | translate}}
+              </span>
+              <span *ngIf="geneticSampleForm.get('sampleCollectionDate').hasError('matDatepickerParse')">
+                {{'common.please_enter_valid_date' | translate}}
+              </span>
+              <span
+                *ngIf="geneticSampleForm.get('sampleCollectionDate').hasError('required') && !geneticSampleForm.get('sampleCollectionDate').hasError('matDatepickerParse')">
+                {{cmnValidation.required|translate}}
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div class="examination-section my-2" formArrayName="examinationRows">
+          <div class="examination-rows" *ngFor="let element of examinationRows.controls; let index = index"
+            [formGroupName]="index">
+            <div class="form-row">
+              <div class="col-md-2 form-group">
+                <label class="form-label">{{
+                  "performanceRecording.sample_type" | translate
+                  }}<span class="mandatory-field">*</span></label>
+                <ng-select appendTo="body" formControlName="breedingSampleType" (change)="
+                    onSelectingOtherType('breedingSampleType', $event, index)
+                  ">
+                  <ng-option *ngFor="let sampleType of sampleTypes" [value]="sampleType.cd">
+                    {{ sampleType.value }}</ng-option>
+                </ng-select>
+                <div class="alert-message" *ngIf="
+                    (element.get('breedingSampleType').touched ||
+                      element.get('breedingSampleType').dirty) &&
+                    element.get('breedingSampleType').invalid
+                  ">
+                  <span *ngIf="
+                      element.get('breedingSampleType').hasError('required')
+                    ">
+                    {{ cmnValidation.required | translate}}
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-2 form-group">
+                <label class="form-label">{{
+                  "performanceRecording.sub_examination_type" | translate
+                  }}</label>
+                <ng-select formControlName="breedingExaminationSubtype" (change)="
+                    onSelectingOtherType(
+                      'breedingExaminationSubtype',
+                      $event,
+                      index
+                    )
+                  ">
+                  <ng-option *ngFor="let subType of examinationSubTypes" [value]="subType.breedingExaminationSubtype">
+                    {{ subType.breedingExaminationSubtypeDesc }}
+                  </ng-option>
+                </ng-select>
+              </div>
+              <div class="col-md-2 form-group" *ngIf="element.get('breedingExaminationSubtypeOther').enabled">
+                <label class="form-label">{{'performanceRecording.other_sub-type' | translate}} <span
+                    class="mandatory-field">*</span></label><input type="text" class="form-control"
+                  formControlName="breedingExaminationSubtypeOther" />
+                <div class="alert-message" *ngIf="
+                    (element.get('breedingExaminationSubtypeOther').touched ||
+                      element.get('breedingExaminationSubtypeOther').dirty) &&
+                    element.get('breedingExaminationSubtypeOther').invalid
+                  ">
+                  <span *ngIf="
+                      element
+                        .get('breedingExaminationSubtypeOther')
+                        .hasError('required')
+                    ">
+                    {{ cmnValidation.required | translate}}
+                  </span>
+                  <span *ngIf="
+                      element
+                        .get('breedingExaminationSubtypeOther')
+                        .hasError('pattern')
+                    ">
+                    {{ cmnValidation.invalidChar | translate}}
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-2 form-group">
+                <label class="form-label">{{ "performanceRecording.lab_name" | translate
+                  }} <span class="mandatory-field">*</span></label><ng-select formControlName="labCd">
+                  <ng-option *ngFor="let lab of labs" [value]="lab.subOrgId">
+                    {{ lab.subOrgName }}</ng-option>
+                </ng-select>
+                <div class="alert-message" *ngIf="
+                    (element.get('labCd').touched ||
+                      element.get('labCd').dirty) &&
+                    element.get('labCd').invalid
+                  ">
+                  <span *ngIf="element.get('labCd').hasError('required')">
+                    {{ cmnValidation.required | translate}}
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-2 form-group">
+                <label class="form-label">{{
+                  "performanceRecording.testing_charges" | translate
+                  }}</label><input type="text" class="form-control" formControlName="testCharges" />
+                <div class="alert-message" *ngIf="
+                    (element.get('testCharges').touched ||
+                      element.get('testCharges').dirty) &&
+                    element.get('testCharges').invalid
+                  ">
+                  <span *ngIf="
+                      element.get('testCharges').hasError('invalidDecimalNo')
+                    ">
+                    {{ cmnValidation.decimalValidation | translate}}
+                  </span>
+                  <span *ngIf="
+                      element.get('testCharges').hasError('min')
+                    ">
+                    {{ cmnValidation.minMax | translate}}
+                  </span>
+                </div>
+              </div>
+              <div class="form-group" [ngClass]="{
+                  'col-md-2': element.get('breedingExaminationSubtypeOther')
+                    .disabled,
+                  'col-md': element.get('breedingExaminationSubtypeOther')
+                    .enabled
+                }">
+                <label class="form-label">{{"performanceRecording.receiptNo" | translate}}</label>
+                <input type="text" class="form-control" formControlName="receiptNo" />
+                <div class="alert-message" *ngIf="
+                    (element.get('receiptNo').touched ||
+                      element.get('receiptNo').dirty) &&
+                    element.get('receiptNo').invalid
+                  ">
+                  <span *ngIf="element.get('receiptNo').hasError('maxlength')">
+                    {{ validationMsg.receiptNoLength | translate}}
+                  </span>
+                  <span *ngIf="element.get('receiptNo').hasError('pattern')">
+                    {{ cmnValidation.number | translate}}
+                  </span>
+                </div>
+              </div>
+              <div class="col-auto delete-row-btn">
+                <i class="fa fa-trash-o" (click)="removeRow(index)"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="add-row" (click)="addRow()"> + {{'diseaseTesting.add_sample' | translate}} </span>
+
+        <div class="footer d-flex">
+          <button type="button" (click)="goBack()" class="btn btn-outline-primary mr-2 ml-auto">
+            {{ "animalDetails.cancel" | translate }}
+          </button>
+          <button type="button" (click)="onReset()" class="btn btn-outline-primary mr-2">
+            {{ "animalDetails.reset" | translate }}
+          </button>
+          <button type="submit" class="btn btn-primary">
+            {{ "common.submit" | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

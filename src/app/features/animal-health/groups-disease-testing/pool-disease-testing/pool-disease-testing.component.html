@@ -1,0 +1,49 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<section class="group-disease-testing">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <app-animal-by-village [isPool]=true [poolAnimalCount]="poolAnimalCount" [firFlag]="firFlag"
+            #animalSearch></app-animal-by-village>
+          <ng-container>
+
+            <div class="h-divider">
+              <div class="dashed"></div>
+            </div>
+
+
+            <div class="row w-100">
+              <div class="col-lg-12 col-md-12">
+                <div class="row align-items-center no-gutters mb-2">
+                  <div class="col-md-9 m-0 p-0">
+                    <span class="st-label">{{'diseaseTesting.total_number_of_animals_selected' | translate}} :
+                    </span>
+                    <span class="st-id">
+                      [{{ animalSearch?.animalDetail.length }} {{'diseaseTesting.tagged_animal' | translate}} +
+                      {{poolAnimalCount -
+                      animalSearch?.animalDetail.length}} {{'diseaseTesting.untagged_animal' | translate}}] </span>
+                  </div>
+                  <div class="col-lg-3 col-md-3">
+                    <div class="button-section">
+                      <button type="button" class="btn btn-outline-primary mr-2" (click)="onReset()">{{'diseaseTesting.cancel' |
+                        translate}}</button>
+                      <button type="submit" class="btn btn-primary" (click)="onSubmit()" appPermission
+                        [permissionType]="masterConfig.isAdd">
+                        {{'animalDetails.proceed' | translate}}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

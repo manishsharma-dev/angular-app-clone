@@ -1,0 +1,209 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="ear-tag-detail">
+  <div class="cross-icon">
+    <mat-icon mat-dialog-close>clear</mat-icon>
+  </div>
+  <div class="tag-detail-header">
+    <div class="heading-section">
+      <h2 class="tag-detail-heading" [ngClass]="{'text-center': !data?.isBreedingActivity}">{{data?.title | translate}}</h2>
+      <p class="edit-heading-desc" *ngIf="data?.isBreedingActivity">{{'animalBreeding.commonLabel.proceed_further' | translate}}</p>
+    </div>
+  </div>
+
+
+  <div class="tag-detail-form" *ngIf="!data?.isBreedingActivity">
+    <form [formGroup]="animalForm" (ngSubmit)="submitStatus()">
+      <div class="row">
+        <div class="col-12">
+          <div class="form-row">
+            <div class="col-md-12">
+              <div class="form-group form-font">
+                <label for="isPregnant" class="label-value">{{'animalBreeding.commonLabel.animal_pregnant'|translate}}
+                </label>
+                <div class="d-flex justify-content-between">
+                  <div class="w-100">
+                    <div class="form-check-inline">
+                      <label class="form-check-label">
+                        <input type="radio" class="form-check-input" formControlName="pregnancyStatus" value="Y"
+                          (click)="markPregnancyStatus($event)" />{{'common.yes'|translate}}
+                      </label>
+                    </div>
+                    <div class="form-check-inline">
+                      <input type="radio" class="form-check-input" formControlName="pregnancyStatus" value="N"
+                        (click)="markPregnancyStatus($event)" />
+                      <label class="form-check-label">{{'common.no'|translate}}</label>
+                    </div>
+                    <div class="alert-message" *ngIf="searchInfo?.pregnancyStatus?.errors?.required && isFormSubmit">
+                      {{'errorMsg.field_mandatory' | translate}}
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="row" *ngIf="showStatusField">
+        <div class="col-12">
+          <div class="form-row">
+            <div class="col-md-12">
+              <div class="form-group form-font">
+                <label for="tagId" class="label-value">{{'animalBreeding.select_reason' | translate}}<span class="mandatory-field">*</span></label>
+                <div class="d-flex justify-content-between">
+                  <div class="field-width">
+                    <select class="form-control" name="aiPregnancyReason" formControlName="aiPregnancyReason">
+                      <option [value]="null">{{'animalBreeding.select_reason' | translate}}</option>
+                      <option [value]="reason?.cd" *ngFor="let reason of pregReason">{{reason?.value}}</option>
+                    </select>
+                    <div class="alert-message" *ngIf="searchInfo?.aiPregnancyReason?.errors?.required && isFormSubmit">
+                      {{'errorMsg.field_mandatory' | translate}}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12" *ngIf="searchInfo?.aiPregnancyReason?.value == 2">
+          <div class="form-row">
+            <div class="col-md-12">
+              <div class="form-group form-font">
+                <label for="tagId" class="label-value">{{'animalDetails.lactation'|translate}}<span class="mandatory-field">*</span></label>
+                <div class="d-flex justify-content-between">
+                  <div class="field-width">
+                    <input class="form-control" type="text" formControlName="currentLactationNo"
+                      (keyup)="onKey($event)" />
+                      <span class="alert-message" *ngIf="searchInfo.currentLactationNo.hasError('pattern')">
+                        Invalid Characters Present
+                      </span>
+                    <div class="alert-message" *ngIf="isLactationNoValid">
+                     {{'errorMsg.lactation_number_validation'|translate}}
+                    </div>
+                    <div class="alert-message" *ngIf="searchInfo?.currentLactationNo?.errors?.required && isFormSubmit">
+                      {{'errorMsg.field_mandatory' | translate}}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center mt-3" *ngIf="searchInfo?.pregnancyStatus?.value == 'Y'">
+        <button type="submit" class="btn btn-primary">
+          {{'animalBreeding.send_for_approval'|translate}}
+        </button>
+      </div>
+      <div class="d-flex justify-content-center mt-3" *ngIf="searchInfo?.pregnancyStatus?.value == 'N'">
+        <button type="button" class="btn btn-primary btn-width" mat-dialog-close>
+          {{'animalDetails.ok'|translate}}
+        </button>
+      </div>
+      <!-- <div class="d-flex justify-content-center mt-3" *ngIf="searchInfo?.aiPregnancyReason?.value == 2">
+          <a class="underline-calving-detail" (click)="isCalving = true ;submitStatus()">
+            Add Calving Details
+          </a>
+        </div> -->
+    </form>
+  </div>
+
+  <div class="tag-detail-form" *ngIf="data?.isBreedingActivity">
+    <form [formGroup]="animalForm" (ngSubmit)="submitStatus()">
+      <div class="row">
+        <div class="col-12">
+          <div class="form-row">
+            <div class="col-md-6">
+              <div class="form-group ">
+                <label for="tagId" class="label-value">{{'animalDetails.pregnant'|translate}}<span class="mandatory-field">*</span></label>
+                <div class="d-flex justify-content-between">
+                  <div class="field-width">
+                    <select class="form-control" name="pregnancyStatus" formControlName="pregnancyStatus">
+                      <option [value]="null">{{'animalDetails.select'| translate}}</option>
+                      <option [value]="1">{{'common.yes'|translate}}</option>
+                      <option [value]="2">{{'common.no'|translate}}</option>
+                      <!-- <option [value]="reason?.cd" *ngFor="let reason of pregStatus">{{reason?.value}}</option> -->
+                    </select>
+                    <div class="alert-message" *ngIf="searchInfo?.pregnancyStatus?.errors?.required && isFormSubmit">
+                      {{'errorMsg.field_mandatory' | translate}}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group ">
+                <label for="tagId" class="label-value">{{'animalBreeding.miliking_status' | translate}}<span class="mandatory-field">*</span></label>
+                <div class="d-flex justify-content-between">
+                  <div class="field-width">
+                    <select class="form-control" name="milkingStatus" formControlName="milkingStatus">
+                      <option [value]="null">Select</option>
+                      <option [value]="reason?.cd" *ngFor="let reason of milkingStatus">{{reason?.value}}</option>
+                    </select>
+                    <div class="alert-message" *ngIf="searchInfo?.milkingStatus?.errors?.required && isFormSubmit">
+                      {{'errorMsg.field_mandatory' | translate}}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="tagId" class="label-value">{{'animalDetails.lactation'|translate}}<span class="mandatory-field">*</span></label>
+                <div class="d-flex justify-content-between">
+                  <div class="field-width">
+                    <input class="form-control" type="text" formControlName="currentLactationNo"
+                      (keyup)="onKey($event)" />
+                      <span class="alert-message" *ngIf="searchInfo.currentLactationNo.hasError('pattern')">
+                        {{'errorMsg.only_numeric'| translate}}
+                      </span>
+                    <div class="alert-message" *ngIf="isLactationNoValid">
+                      {{'errorMsg.lactation_number_validation'|translate}}
+                    </div>
+                    <div class="alert-message" *ngIf="searchInfo?.currentLactationNo?.errors?.required && isFormSubmit">
+                      {{'errorMsg.field_mandatory' | translate}}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="d-flex justify-content-center mt-3" *ngIf="!data?.isBreedingActivity">
+        <button type="submit" class="btn btn-primary">
+          {{'animalBreeding.send_for_approval'|translate}}
+        </button>
+      </div>
+      <!-- <div class="d-flex justify-content-center mt-3" *ngIf="!data?.isBreedingActivity">
+          <a class="underline-calving-detail" (click)="isCalving = true ;submitStatus()">
+            Add Calving Details
+          </a>
+        </div> -->
+      <div class="d-flex justify-content-left mt-3" *ngIf="data?.isBreedingActivity">
+        <button type="submit" class="btn btn-light mr-2 ml-auto" mat-dialog-close>
+          {{'animalDetails.cancel'|translate}}
+        </button>
+        <button type="submit" class="btn btn-primary">
+          {{'common.submit'|translate}}
+        </button>
+      </div>
+    </form>
+  </div>
+
+</div>

@@ -1,0 +1,142 @@
+<div class="add-diagnostics-dialog">
+  <div class="add-diagnostics-header">
+    <div class="headeing">
+      <p class="diagnostics-heading-label">{{data.viewFlag ? 'View' : 'Update'}} Lab Samples</p>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+  <div class="dialog-main-content">
+    <div class="row">
+      <div class="align-items-center treatment-information col-md-12">
+        <div class="col-12 mt-3 px-0">
+          <form [formGroup]="diagnosticsForm">
+            <div formArrayName="labTestingDetails" *ngFor="let item of labTestingDetails['controls']; let i = index;">
+              <div class="table-outebox my-3" [formGroupName]="i" *ngIf="isSampleShow(item) || data.viewFlag">
+                <h4 class="font-weight-bold label-header">{{'diseaseTesting.sample_details' | translate}} :</h4>
+                {{labTestingDetails['controls'][i]['value']['sampleId']}}
+                <div class="w-100 border p-3 mt-2">
+                  <div class="row pb-3">
+                    <div class="col-md-4 ">
+                      <h4 class="font-weight-bold label-header">
+                        {{'performanceRecording.sample_collection_date' | translate}}
+                      </h4>
+                      <p>
+                        {{labTestingDetails['controls'][i]['value']['sampleCollectionDate']
+                        | customDateFormatter}}
+                      </p>
+                    </div>
+                    <div class="col-md-4 ">
+                      <h4 class="font-weight-bold label-header">{{'diseaseTesting.sample_type' | translate}}</h4>
+                      <p>
+                        {{labTestingDetails['controls'][i]['value']['sampleTypeDesc']}}
+                      </p>
+                    </div>
+                  </div>
+                  <ng-container formArrayName="sampleExaminationDetails"
+                    *ngFor="let sample of getLabExams(i)['controls'];let index=index">
+                    <ng-container [formGroupName]="index"
+                      *ngIf="sample['value']['samplingStatus'] ==1 || data.viewFlag">
+                      <div class="row pb-3">
+                        <div class="w-100 border p-3 m-3">
+                          <div class="form-row mb-2">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <h4 class="font-weight-bold label-header">{{'performanceRecording.examination_type' |
+                                  translate}}</h4>
+                                <p>{{sample['value']['sampleExaminationTypeCdDesc']}}</p>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <h4 class="font-weight-bold label-header">{{'performanceRecording.sub_examination_type'
+                                  | translate}}</h4>
+                                <p>{{sample['value']['sampleExaminationSubtypeCdDesc']}}</p>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <h4 class="font-weight-bold label-header">{{'diseaseTesting.lab' | translate}}</h4>
+                                <p>{{sample['value']['labCdDesc']}}</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-row mb-2">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <h4 class="font-weight-bold label-header">{{'diseaseTesting.lab_charges' | translate}}
+                                </h4>
+                                <p>{{sample['value']['labCharges']}}</p>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <h4 class="font-weight-bold label-header">{{'diseaseTesting.receipt_no' | translate}}
+                                </h4>
+                                <p>{{sample['value']['receiptNo']}}</p>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <h4 class="font-weight-bold label-header">{{'diseaseTesting.mode_of_transport' |
+                                  translate}}</h4>
+                                <p>{{sample['value']['modeOfTransportDesc']}}</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-row mb-2">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <h4 class="font-weight-bold label-header">{{'diseaseTesting.final_reading' | translate}}
+                                </h4>
+                                <input type="text" id="final" class="form-control"
+                                  onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"
+                                  formControlName="finalSampleResultValue" />
+                                <ng-container *ngIf="sample.get('finalSampleResultValue').hasError('maxlength')">
+                                  <span class="alert-message">
+                                    {{"animalTreatmentSurgery.final_reading_cannot_be_more_than_5_characters" |
+                                    translate}}
+                                  </span>
+                                </ng-container>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <h4 class="font-weight-bold label-header">{{'diseaseTesting.results' | translate}}</h4>
+                                <select class="form-control" formControlName="sampleResult">
+                                  <option value="1">{{'diseaseTesting.positive' | translate}}</option>
+                                  <option value="2">{{'diseaseTesting.negative' | translate}}</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </div>
+                <div class="h-divider">
+                  <div class="shadow"></div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+  <div class="add-diagnostics-footer">
+    <button type="reset" mat-dialog-close class="btn btn-light mr-2" (click)="onCancel()">
+      {{'diseaseTesting.cancel' | translate}}
+    </button>
+    <button type="submit" class="btn btn-primary" (click)="saveLab()" *ngIf="!data.viewFlag">{{'animalDetails.save' |
+      translate}}</button>
+  </div>
+</div>

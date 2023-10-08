@@ -1,0 +1,246 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<app-common-breadcrumb
+  [breadcrumbKeys]="[ 'animalTreatmentSurgery.animal_health', 'animalTreatmentSurgery.animal_treatment_surgery']">
+</app-common-breadcrumb>
+
+<section>
+  <div class="row no-gutters col-container">
+    <div class="col-md-12 col-h left-section">
+      <!-- owner Details section-->
+      <div class="owner-details-section">
+        <div class="row owner-detail-table mb-4 mx-0 py-3 align-items-center user-detail">
+          <div class="back-arrow">
+            <i class="fa fa-chevron-left mr-2 back-section" (click)="goBack()"></i>
+          </div>
+          <div class="table-responsive">
+            <table class="table animal-table m-0" *ngIf="animal">
+              <thead>
+                <tr>
+                  <th>{{"animalTreatmentSurgery.animal_health" | translate}}</th>
+                  <th>{{"animalTreatmentSurgery.category_species" | translate}}</th>
+                  <th>{{"animalTreatmentSurgery.breed" | translate}}</th>
+                  <th>{{"common.sex" | translate}}</th>
+                  <th>{{"common.age" | translate}}</th>
+                  <th>{{"animalDetails.pregnant" | translate}}</th>
+                  <th>{{"animalDetails.milking_status" | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ animal.tagId }}</td>
+                  <td>{{ animal.species }}</td>
+                  <td>{{
+                    animal.breedAndExoticLevels &&
+                    animal.breedAndExoticLevels.length > 1
+                    ? 'Cross Breed'
+                    : animal.breedAndExoticLevels &&
+                    animal.breedAndExoticLevels.length
+                    ? animal.breedAndExoticLevels[0].breed
+                    : 'NA' }}</td>
+                  <td>{{ animal.sex }}</td>
+                  <td>
+                    {{ getAnimalAge(animal.ageInMonths) }}
+                  </td>
+                  <td class="col-auto">
+                    {{ animal.pregnancyStatus ? (animal.pregnancyStatus === "Y" ? "Yes" : "No"): 'NA' }}
+                  </td>
+                  <td class="col-auto">{{ animal.milkingStatus ?? "NA" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <p *ngIf="!dataSource.length">{{"animalTreatmentSurgery.no_open_cases_found" | translate}}</p>
+              <table class="table follow-up-table" *ngIf="dataSource.length">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>{{"animalTreatmentSurgery.sr_no" | translate}}</th>
+                    <th>{{"animalTreatmentSurgery.case_id" | translate}}</th>
+                    <th>{{"animalTreatmentSurgery.treatment_date" | translate}}</th>
+                    <th>{{"animalTreatmentSurgery.disease" | translate}}</th>
+                    <th>{{"animalTreatmentSurgery.vet_name" | translate}}</th>
+                    <th>{{"animalTreatmentSurgery.diagnostics" | translate}}</th>
+                    <th>{{"animalTreatmentSurgery.prescription" | translate}}</th>
+                    <th>{{"animalTreatmentSurgery.no_of_visits" | translate}}</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="
+                      let data1 of dataSource;
+                      let i = index;
+                      let f = first;
+                      let l = last
+                    ">
+                    <ng-container>
+                      <tr class="parent-row">
+                        <td (click)="toggleExpandRow(i)">
+                          <ng-container *ngIf="data1.cases.length > 1">
+                            <mat-icon *ngIf="!data1.expanded">keyboard_arrow_right</mat-icon>
+                            <mat-icon *ngIf="data1.expanded">keyboard_arrow_down</mat-icon>
+                          </ng-container>
+                        </td>
+                        <td>{{i+1}}</td>
+                        <td>
+                          {{ data1.cases[0].caseId }}
+                        </td>
+                        <td>
+                          {{
+                          formatDate(
+                          data1.cases[0].treatmentDate
+                          )
+                          }}
+                        </td>
+                        <td>
+                          <ng-container *ngIf="
+                              data1.cases[0].diseaseDetails?.length;
+                              else emptyList
+                            ">
+
+                            {{ data1.cases[0].diseaseDetails }}
+
+
+                          </ng-container>
+                          <ng-template #emptyList> NA </ng-template>
+                        </td>
+                        <td>{{data1.cases[0].vetName}}</td>
+                        <td>
+                          <a (click)="manageDiagnostics(data1.cases[0]); "
+                            *ngIf="data1.cases[0].samplingStatus !== 0; else noLink1">
+                            <span *ngIf="data1.cases[0].samplingStatus == 1; else viewReport" appPermission
+                              [permissionType]="masterConfig.isModify">
+                              {{data1.cases[0].samplingStatusDesc}}
+                            </span>
+                            <ng-template #viewReport>
+                              {{data1.cases[0].samplingStatusDesc}}
+                            </ng-template>
+
+                          </a>
+                          <ng-template #noLink1>
+                            {{data1.cases[0].samplingStatusDesc}}
+                          </ng-template>
+                        </td>
+                        <td>
+                          <a class="link" (click)="
+                              viewPrescription(
+                                data1.cases[0].caseId,
+                                data1.cases[0].followUpNo
+                              )
+                            ">
+                            {{"animalHealthHistory.view" | translate }}
+                          </a>
+                        </td>
+                        <td>
+                          {{ data1.cases[0].followUpNo + 1 }}
+                        </td>
+                        <td>
+                          <div class="d-flex">
+                            <a matTooltip="New Follow Up" appPermission [permissionType]="masterConfig.isAdd">
+
+                              <i class="fa fa-plus" aria-hidden="true"
+                                (click)="navigateToNewFollowUp(animal.animalId, data1.cases[0].caseId,data1.cases[0].followUpNo)"></i>
+                            </a>
+                            <a class="ml-4" *ngIf="isUpdate(data1.cases[0],1)" matTooltip="Modify Transaction"
+                              appPermission [permissionType]="masterConfig.isModify">
+                              <i class="fa fa-pencil" aria-hidden="true" [routerLink]="['../..', 'updatecase']"
+                                [queryParams]="{
+                                animalId: animal.animalId,
+                                caseId: data1.cases[0].caseId,
+                                followUpNo:
+                                  data1.cases[0].followUpNo
+                              }"></i>
+                            </a>
+                          </div>
+
+                        </td>
+                      </tr>
+                      <ng-container *ngIf="data1.expanded">
+                        <ng-container *ngFor="
+                            let case of data1.cases | slice: 1;
+                            let j =index;
+                            let f = first
+                          ">
+                          <tr class="child-row">
+                            <td></td>
+                            <td></td>
+                            <td>--</td>
+                            <td>
+                              {{
+                              formatDate(case.treatmentDate)
+                              }}
+                            </td>
+                            <td>
+                              <ng-container *ngIf="
+                                  case.diseaseDetails?.length;
+                                  else emptyList
+                                ">
+
+                                {{ case.diseaseDetails }}
+
+                              </ng-container>
+                            </td>
+                            <td>{{case.vetName}}</td>
+                            <td>
+
+                              <a (click)="manageDiagnostics(case); " *ngIf="case.samplingStatus !== 0; else noLink2">
+                                <span *ngIf="case.samplingStatus == 1; else viewReportC" appPermission
+                                  [permissionType]="masterConfig.isModify">
+                                  {{case.samplingStatusDesc}}
+                                </span>
+                                <ng-template #viewReportC>
+                                  {{case.samplingStatusDesc}}
+                                </ng-template>
+                              </a>
+                              <ng-template #noLink2>
+                                {{case.samplingStatusDesc}}
+                              </ng-template>
+                            </td>
+                            <td>
+                              <a class="link" (click)="
+                                  viewPrescription(
+                                    case.caseId,
+                                    case.followUpNo
+                                  )
+                                ">
+                                {{"animalHealthHistory.view" | translate }}
+                              </a>
+                            </td>
+                            <td>{{ case.followUpNo + 1 }}</td>
+                            <td>
+                              <a class="ml-4" *ngIf="isUpdate(case,2)" matTooltip="Modify Transaction" appPermission
+                                [permissionType]="masterConfig.isModify">
+                                <i class="fa fa-pencil" aria-hidden="true" [routerLink]="['../..', 'updatecase']"
+                                  [queryParams]="{
+                                  animalId: animal.animalId,
+                                  caseId: case.caseId,
+                                  followUpNo:
+                                  case.followUpNo
+                                }"></i>
+                              </a>
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </ng-container>
+                      <tr>
+                        <td colspan="9"></td>
+                      </tr>
+                    </ng-container>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

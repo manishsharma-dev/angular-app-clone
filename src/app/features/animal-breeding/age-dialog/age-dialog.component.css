@@ -1,0 +1,27 @@
+.ear-tag-detail .tag-detail-header {
+    justify-content: space-between;
+    margin-bottom: 25px;
+  }
+  
+  .heading-section .tag-detail-heading {
+    font-size: 18px;
+    font-family: Noto Sans;
+    font-weight: bold;
+    letter-spacing: 0px;
+    color: #3c3c3c;
+    text-align: center;
+   
+  }
+  
+.edit-heading-desc{
+    text-align: center;
+    font-size: 14px;
+    font-family: Noto Sans;
+    font-weight: normal;
+    letter-spacing: 0px;
+    color: #545454;
+    margin-top: 20px;
+}
+.btn-width{
+    width: 80px;
+}

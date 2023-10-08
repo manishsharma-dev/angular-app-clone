@@ -1,0 +1,64 @@
+.ear-tag-detail .tag-detail-header {
+    justify-content: space-between;
+    margin-bottom: 25px;
+  }
+  
+  .heading-section .tag-detail-heading {
+    font-size: 18px;
+    font-family: Noto Sans;
+    font-weight: bold;
+    letter-spacing: 0px;
+    color: #3c3c3c;
+   
+  }
+  
+  .heading-section .tag-detail-subheading {
+    font-size: 14px;
+    font-family: Noto Sans;
+    font-weight: normal;
+    letter-spacing: 0px;
+    color: #545454;
+  }
+  
+  .tag-detail-content .tag-detail-label {
+    font-size: 12px;
+    font-family: Noto Sans;
+    font-weight: normal;
+    letter-spacing: 0px;
+    color: #3c3c3c;
+  }
+  
+  .tag-detail-content .tag-detail-info {
+    font-size: 14px;
+    font-family: Noto Sans;
+    font-weight: bold;
+    letter-spacing: 0px;
+    color: #3c3c3c;
+  }
+  
+  .ear-tag-detail .tag-detail-content {
+    margin-bottom: 15px;
+  }
+  
+  .scan-btn{
+    margin: 0px 10px;
+    padding: 6px 6px;
+    border: 1px solid #dcdcdc;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+ .form-font{
+    margin-left:26%;
+    font-size: 12px;
+ }
+ .field-width{
+  width: 250px;
+ }
+ .underline-calving-detail {
+  text-decoration: underline;
+}
+.text-center{
+  text-align: center;
+}

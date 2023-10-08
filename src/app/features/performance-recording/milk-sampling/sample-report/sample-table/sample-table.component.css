@@ -1,0 +1,37 @@
+.sample-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.sample-table .sample-table-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sample-table .sample-table-row > * {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #9a9a9a;
+}
+
+.sample-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.sample-table .sample-table-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sample-table .sample-table-row > * {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #9a9a9a;
+}
+
+.sample-table .sample-table-row > *:first-child {
+  background-color: #f0f0f07c;
+  border-right: none;
+  font-weight: bold;
+}

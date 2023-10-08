@@ -1,0 +1,560 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<!-- New Dialog -->
+<div class="campaign-edit-dialog">
+  <div class="campaign-edit-header">
+    <div class="edit-heading">
+      <h2 class="edit-heading-label">
+        {{ "animalDetails.add_additional_details" | translate }}
+      </h2>
+      <p class="edit-heading-desc">
+        {{ "animalDetails.animalAddInfo.enter_details" | translate }}
+      </p>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+
+  <div class="dialog-main-content">
+    <form class="additional-form" [formGroup]="addAnimalInfoForm">
+      <div class="form-row mb-2">
+        <div class="col-md-6">
+          <h3>
+            <strong>{{ "animalDetails.basic_inform" | translate }}</strong>
+          </h3>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col-md-12 species-selection">
+          <label for="species" class="form-label"
+            >{{ "common.species" | translate
+            }}<span class="mandatory-field">*</span></label
+          >
+          <select id="species" class="form-control" formControlName="speciesCd">
+            <option value="" selected disabled>
+              {{ "errorMsg.select_species" | translate }}
+            </option>
+            <option *ngFor="let specie of species" [value]="specie.cd">
+              {{ specie.value }}
+            </option>
+          </select>
+          <div
+            *ngIf="
+              (additionalAnimalInfo.speciesCd.invalid &&
+                !additionalAnimalInfo.speciesCd.pristine) ||
+              additionalAnimalInfo.speciesCd.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="additionalAnimalInfo.speciesCd.errors?.required">
+              {{ "errorMsg.select_species" | translate }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row" *ngIf="isSpeciesSelected">
+        <div class="col-md-6">
+          <label
+            >{{ "animalDetails.blood_level" | translate
+            }}<span class="mandatory-field">*</span></label
+          >
+        </div>
+      </div>
+      <div formArrayName="breedAndExoticLevels" *ngIf="isSpeciesSelected">
+        <div
+          class="form-row"
+          *ngFor="let item of formRowTitles; let i = index"
+          [formGroupName]="i"
+        >
+          <div class="col-md-7">
+            <div class="form-group">
+              <select
+                class="form-control"
+                formControlName="breedCd"
+                (change)="onBreedSelect()"
+              >
+                <option value="" disabled>
+                  {{ "animalDetails.animalAddInfo.select_breed" | translate }}
+                </option>
+                <option
+                  selected
+                  *ngFor="let breed of breeds"
+                  [value]="breed.breedCd"
+                >
+                  {{ breed.breedName }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <select class="form-control" formControlName="bloodExoticLevelCd">
+                <option value="" disabled>
+                  {{ "animalDetails.animalAddInfo.select_exotic" | translate }}
+                </option>
+                <option *ngFor="let level of bloodLevels" [value]="level.cd">
+                  {{ level.value }}%
+                </option>
+              </select>
+            </div>
+          </div>
+          <div
+            class="col-md-1 align-self-center"
+            *ngIf="rowAdd.length > 1 && isTrashVisible"
+          >
+            <div class="form-group">
+              <i class="fa fa-trash" (click)="removeRow(i)"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div
+        class="alert-message mb-2"
+        *ngIf="
+        addAnimalInfoForm.get('breedAndExoticLevels.breedCd').invalid &&
+        addAnimalInfoForm.get('breedAndExoticLevels.breedCd').touched
+        "
+      >
+        Please Select Breed and Blood level
+      </div> -->
+      <div class="alert-message mb-2" *ngIf="isShowBreedError">
+        {{ isShowBreedError }}
+      </div>
+      <div class="alert-message mb-2" *ngIf="isShowError">
+        {{ isShowError }}
+      </div>
+      <div
+        class="row mb-3"
+        *ngIf="isAddMoreVisible && rowAdd.length < 4 && isSpeciesSelected"
+      >
+        <div class="col-md-6">
+          <a href="javascript: void(0)" class="add-more" (click)="addRow()"
+            >+
+            <u>{{
+              "animalDetails.editAnimalDetails.add_more" | translate
+            }}</u></a
+          >
+        </div>
+      </div>
+    </form>
+    <form [formGroup]="familyDetailsForm">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="coatColourCd" class="form-label">{{
+            "animalDetails.coat_color" | translate
+          }}</label>
+          <select
+            id="coatColor"
+            class="form-control"
+            formControlName="coatColourCd"
+          >
+            <option value="" disabled>
+              {{ "animalDetails.animalAddInfo.select_coat" | translate }}
+            </option>
+            <option *ngFor="let colour of coatColour" [value]="colour.cd">
+              {{ colour.value }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-6" *ngIf="data?.animalData.sex == 'F'">
+          <label for="numberCalvings" class="form-label">{{
+            "animalDetails.no_of_calving" | translate
+          }}</label>
+          <input
+            type="text"
+            class="form-control"
+            id="numberCalvings"
+            formControlName="numberCalvings"
+            placeholder="{{ 'animalDetails.enter_Number_calving' | translate }}"
+            (input)="checkCalvings($event)"
+            [maxLength]="2"
+          />
+          <div
+            *ngIf="
+              !familyDetailsForm.controls.numberCalvings?.pristine &&
+              familyDetailsForm.controls.numberCalvings?.invalid
+            "
+            class="alert-message"
+          >
+            <p>{{ "errorMsg.invalid_input" | translate }}</p>
+          </div>
+        </div>
+
+        <div class="form-group col-md-6" *ngIf="data?.animalData.sex == 'F'">
+          <label for="milkingStatus" class="form-label">{{
+            "animalDetails.milking_status" | translate
+          }}</label>
+          <select
+            id="milkingStatus"
+            formControlName="milkingStatus"
+            class="form-control"
+            (change)="onMilkingChange()"
+          >
+            <option value="" selected disabled>
+              {{ "animalDetails.animalAddInfo.select_milking" | translate }}
+            </option>
+            <option *ngFor="let status of milkingStatus" [value]="status.cd">
+              {{ status.value }}
+            </option>
+          </select>
+        </div>
+
+        <!-- <div class="form-group col-md-6" *ngIf="data?.animalData.sex == 'F'">
+          <label for="altid" class="form-label">Lactation No.</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="currentLactationNo"
+            id="lactationNo"
+            placeholder="Enter Lactation No."
+            [maxLength]="2"
+          />
+          <div
+            *ngIf="
+              !familyDetailsForm.controls.currentLactationNo.pristine &&
+              familyDetailsForm.controls.currentLactationNo.invalid
+            "
+            class="alert-message"
+          >
+            <p>Enter Valid Value</p>
+          </div>
+        </div> -->
+      </div>
+      <div class="form-row mb-2">
+        <div class="col-md-6">
+          <h3>
+            <strong>{{ "animalDetails.family_details" | translate }}</strong>
+          </h3>
+        </div>
+      </div>
+
+      <!-- Sire IDs Logic -->
+
+      <div
+        *ngIf="
+          +animalData.speciesCd === 1 || +animalData.speciesCd === 2;
+          else otherSpecies
+        "
+      >
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="typeOfSireID">Type Of Sire ID</label>
+            <select
+              class="form-control"
+              name="typeOfSireID"
+              (change)="onSelectingSireIDType($event)"
+              formControlName="sireIdType"
+            >
+              <option value="" selected disabled>Select Sire Id type</option>
+              <option *ngFor="let crrType of sireIdTypes" [value]="crrType.cd">
+                {{ crrType.value }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row" *ngIf="isSireIdTypeSelected">
+          <div class="form-group col-md-6">
+            <label for="sireId" class="form-label">{{
+              "animalDetails.sire_Id" | translate
+            }}</label>
+            <input
+              type="email"
+              class="form-control"
+              id="sireId"
+              formControlName="sireId"
+              placeholder="{{ 'animalDetails.enter_sireId' | translate }}"
+              [maxLength]="50"
+              (blur)="getSireSireId()"
+            />
+            <div
+              *ngIf="
+                !familyDetailsForm.controls.sireId?.pristine &&
+                familyDetailsForm.controls.sireId?.invalid
+              "
+              class="alert-message"
+            >
+              <p>{{ "errorMsg.no_sire_id" | translate }}</p>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="altid" class="form-label">{{
+              "animalDetails.sire_sire_id" | translate
+            }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="altid"
+              formControlName="sireSireId"
+              placeholder="{{ 'animalDetails.enter_siresireId' | translate }}"
+              [maxLength]="50"
+              [value]="sireSireIdValue"
+            />
+            <div
+              *ngIf="
+                !familyDetailsForm.controls.sireSireId?.pristine &&
+                familyDetailsForm.controls.sireSireId?.invalid
+              "
+              class="alert-message"
+            >
+              <p>{{ "errorMsg.no_sire2_id" | translate }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="typeOfSireID">Type Of Dam ID</label>
+            <select
+              class="form-control"
+              name="typeOfSireID"
+              (change)="onSelectingDamIDType($event)"
+              formControlName="damIdType"
+            >
+              <option value="" selected disabled>Select Dam Id type</option>
+              <option *ngFor="let crrType of damIdTypes" [value]="crrType.cd">
+                {{ crrType.value }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row" *ngIf="isDamIdTypeSelected">
+          <div class="form-group col-md-6">
+            <label for="damid" class="form-label">{{
+              "animalDetails.dam_Id" | translate
+            }}</label>
+            <input
+              type="text"
+              value=""
+              class="form-control"
+              id="damId"
+              formControlName="damId"
+              placeholder="{{ 'animalDetails.enter_damId' | translate }}"
+              [maxLength]="50"
+              (blur)="getDamSireId()"
+            />
+            <div
+              *ngIf="
+                !familyDetailsForm.controls.damId?.pristine &&
+                familyDetailsForm.controls.damId?.invalid
+              "
+              class="alert-message"
+            >
+              <p>{{ "errorMsg.no_dam_id" | translate }}</p>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="dsid" class="form-label">{{
+              "animalDetails.dam_Sire_Id" | translate
+            }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="dsid"
+              formControlName="damSireId"
+              placeholder="{{ 'animalDetails.enter_damsireId' | translate }}"
+              [maxLength]="50"
+            />
+            <div
+              *ngIf="
+                !familyDetailsForm.controls.damSireId?.pristine &&
+                familyDetailsForm.controls.damSireId?.invalid
+              "
+              class="alert-message"
+            >
+              <p>{{ "errorMsg.no_damSire_id" | translate }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- For species other than cattle -->
+      <ng-template #otherSpecies>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="sireId" class="form-label">{{
+              "animalDetails.sire_Id" | translate
+            }}</label>
+            <input
+              type="email"
+              class="form-control"
+              id="sireId"
+              formControlName="sireId"
+              placeholder="{{ 'animalDetails.enter_sireId' | translate }}"
+              [maxLength]="12"
+              (input)="getSireSireIdForOtherSpecies($event)"
+            />
+            <div
+              *ngIf="
+                !familyDetailsForm.controls.sireId?.pristine &&
+                familyDetailsForm.controls.sireId?.invalid
+              "
+              class="alert-message"
+            >
+              <p>{{ "errorMsg.no_sire_id" | translate }}</p>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="altid" class="form-label">{{
+              "animalDetails.sire_sire_id" | translate
+            }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="altid"
+              formControlName="sireSireId"
+              placeholder="{{ 'animalDetails.enter_siresireId' | translate }}"
+              [maxLength]="12"
+              [value]="sireSireIdValue"
+            />
+            <div
+              *ngIf="
+                !familyDetailsForm.controls.sireSireId?.pristine &&
+                familyDetailsForm.controls.sireSireId?.invalid
+              "
+              class="alert-message"
+            >
+              <p>{{ "errorMsg.no_sire2_id" | translate }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row" *ngIf="!isDamIdTypeSelected">
+          <div class="form-group col-md-6">
+            <label for="damid" class="form-label">{{
+              "animalDetails.dam_Id" | translate
+            }}</label>
+            <input
+              type="text"
+              value=""
+              class="form-control"
+              id="damId"
+              formControlName="damId"
+              placeholder="{{ 'animalDetails.enter_damId' | translate }}"
+              [maxLength]="12"
+              (input)="getDamSireIdForOtherSpecies($event)"
+            />
+            <div
+              *ngIf="
+                !familyDetailsForm.controls.damId?.pristine &&
+                familyDetailsForm.controls.damId?.invalid
+              "
+              class="alert-message"
+            >
+              <p>{{ "errorMsg.no_dam_id" | translate }}</p>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="dsid" class="form-label">{{
+              "animalDetails.dam_Sire_Id" | translate
+            }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="dsid"
+              formControlName="damSireId"
+              placeholder="{{ 'animalDetails.enter_damsireId' | translate }}"
+              [maxLength]="12"
+            />
+            <div
+              *ngIf="
+                !familyDetailsForm.controls.damSireId?.pristine &&
+                familyDetailsForm.controls.damSireId?.invalid
+              "
+              class="alert-message"
+            >
+              <p>{{ "errorMsg.no_damSire_id" | translate }}</p>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <!-- <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="damid" class="form-label">{{
+            "animalDetails.dam_Id" | translate
+          }}</label>
+          <input
+            type="text"
+            value=""
+            class="form-control"
+            id="damId"
+            formControlName="damId"
+            placeholder="{{ 'animalDetails.enter_damId' | translate }}"
+            [maxLength]="12"
+            (input)="getDamSireId()"
+          />
+          <div
+            *ngIf="
+              !familyDetailsForm.controls.damId.pristine &&
+              familyDetailsForm.controls.damId.invalid
+            "
+            class="alert-message"
+          >
+            <p>{{ "errorMsg.no_dam_id" | translate }}</p>
+          </div>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="dsid" class="form-label">{{
+            "animalDetails.dam_Sire_Id" | translate
+          }}</label>
+          <input
+            type="text"
+            class="form-control"
+            id="dsid"
+            formControlName="damSireId"
+            placeholder="{{ 'animalDetails.enter_damsireId' | translate }}"
+            [maxLength]="12"
+          />
+          <div
+            *ngIf="
+              !familyDetailsForm.controls.damSireId.pristine &&
+              familyDetailsForm.controls.damSireId.invalid
+            "
+            class="alert-message"
+          >
+            <p>{{ "errorMsg.no_damSire_id" | translate }}</p>
+          </div>
+        </div>
+      </div> -->
+      <!-- Sire Id end -->
+
+      <div class="checkbox-group">
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value=""
+              id="isLoanOnAnimal"
+              formControlName="isLoanOnAnimal"
+            />
+            <label class="form-check-label" for="isLoanOnAnimal">
+              {{ "animalDetails.loaned" | translate }}
+            </label>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="campaign-edit-footer">
+    <button type="button" class="btn btn-outline-primary mr-2" mat-dialog-close>
+      {{ "animalDetails.cancel" | translate }}
+    </button>
+    <button
+      type="submit"
+      class="btn btn-primary"
+      (click)="onSubmit()"
+      *ngIf="!checkIfAllControlsDisabled()"
+    >
+      {{ "common.save" | translate }}
+    </button>
+  </div>
+</div>

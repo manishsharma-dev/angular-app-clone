@@ -1,0 +1,319 @@
+.interim-edit-dialog {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.interim-edit-header {
+  flex-grow: 0;
+  flex-shrink: 0;
+  background: #124c60;
+  padding: 15px;
+  color: #fff;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.interim-edit-header .edit-heading-label {
+  font-weight: bold;
+  font-family: Noto Sans;
+  font-size: 18px;
+  color: #fff;
+  letter-spacing: 1;
+}
+
+.interim-edit-dialog .dialog-main-content {
+  flex-grow: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 15px 15px;
+}
+
+.worklist-header .worklist-heading {
+  font-weight: normal;
+  color: #000;
+  font-size: 16px;
+}
+
+/*  worklist-section  */
+.worklist {
+  display: flex;
+  flex-wrap: wrap;
+  background: #f8f7fa 0% 0% no-repeat padding-box;
+  padding: 3px 15px;
+  margin-bottom: 15px;
+}
+
+.worklist .worklist-title {
+  font-weight: bold;
+  color: #8a8a8a;
+  font-size: 14px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.worklist .worklist-title .worklist-id,
+.worklist .worklist-title .worklist-status {
+  color: #000;
+}
+
+.worklist .worklist-id li::after {
+  content: ",";
+}
+.worklist .worklist-id li:last-child:after {
+  content: none;
+}
+
+.worklist .worklist-id--item {
+  padding-right: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: Noto Sans;
+  letter-spacing: 0px;
+  color: #4e4e4e;
+}
+
+/*  worklist-item-firid  */
+.worklist-item {
+  display: flex;
+  flex-wrap: wrap;
+}
+.worklist-item .label-text {
+  font-size: 14px;
+  font-weight: bold;
+  font-family: Noto Sans;
+  letter-spacing: 0px;
+  color: #616161;
+}
+
+.worklist-item .muted-text {
+  font-size: 14px;
+  font-weight: normal;
+  font-family: Noto Sans;
+  letter-spacing: 0px;
+  color: #616161;
+}
+
+/* report-details-table */
+.report-details-table {
+  box-shadow: none !important;
+  border-collapse: collapse;
+}
+
+.report-details-table td.mat-cell {
+  padding: 0px 10px !important;
+  color: black;
+}
+.report-details-table th.mat-header-cell {
+  padding: 0px 10px !important;
+  white-space: nowrap;
+  font-weight: bold;
+  color: black;
+}
+
+.report-details-table tr.mat-header-row th,
+.report-details-table td.mat-cell {
+  border: 1px solid #dcdcdc;
+}
+
+.report-details-table .table-input {
+  border: transparent;
+  background-color: #fff;
+  padding: 0px;
+}
+
+.report-details-table tr.mat-row,
+.report-details-table tr.mat-header-row {
+  height: 40px;
+}
+
+.report-details-table tr.mat-header-row th {
+  background: #f8f7fa;
+  height: 38px;
+}
+
+.interim-edit-footer {
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border: 1px solid #beccd1;
+  background: #eaf0f2;
+  padding: 15px;
+}
+
+.interim-edit-dialog .dialog-main-content::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #fff;
+}
+
+.interim-edit-dialog .dialog-main-content::-webkit-scrollbar {
+  width: 5px;
+  background-color: #fff;
+  opacity: 0.8;
+}
+
+.interim-edit-dialog .dialog-main-content::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #5f6160;
+  opacity: 0.8;
+}
+
+/* .add-diagnostics-dialog {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-diagnostics-header {
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dialog-main-content {
+  flex-grow: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 0 5px 0 0;
+}
+
+.add-diagnostics-footer {
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.dialog-main-content::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #fff;
+}
+
+.dialog-main-content::-webkit-scrollbar {
+  width: 5px;
+  background-color: #fff;
+  opacity: 0.8;
+}
+
+.dialog-main-content::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #5f6160;
+  opacity: 0.8;
+}
+
+.section-title {
+  width: 100%;
+  font-size: 12px;
+  background: #f8f7fa;
+  font-weight: bold;
+  padding: 12px !important;
+  color: #9a9a9a;
+}
+
+.label-header {
+  margin-bottom: 8px !important;
+  font-size: 13px;
+  color: #000;
+}
+
+.padding-0 {
+  padding: 0;
+}
+.w-80{
+  width: 80%;
+}
+.affected-animal-table tr th {
+  background: #f8f7fa;
+  height: 38px;
+} */
+
+/*Expansion Panel*/
+
+.examination-expansion-panel {
+  box-shadow: none !important;
+}
+
+.mat-expansion-panel:not([class*="examination-expansion-panel"]) {
+  box-shadow: none !important;
+}
+
+.examination-expansion-panel .mat-expansion-panel-header.mat-expanded:hover {
+  background-color: none !important;
+}
+
+.examination-expansion-panel .mat-expansion-panel-header-title {
+  margin-right: 0px !important;
+  font-weight: bold;
+}
+
+.examination-expansion-panel .mat-expansion-panel-header,
+.examination-expansion-panel .mat-expansion-panel-header.mat-expanded {
+  height: 40px;
+  background-color: none !important;
+}
+
+.examination-expansion-panel .mat-expansion-panel-header .mat-content {
+  order: 1 !important;
+  margin-left: 5px;
+}
+
+.examination-expansion-panel .mat-expansion-indicator {
+  position: relative;
+  left: 4px;
+  bottom: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.examination-expansion-panel
+  .mat-expansion-panel-header.mat-expanded
+  .mat-expansion-indicator {
+  position: relative;
+  left: 4px;
+  bottom: -2px;
+}
+
+.examination-expansion-panel .mat-expansion-indicator::after {
+  border-style: solid;
+  border-width: 0 3px 3px 0;
+  content: "";
+  display: inline-block;
+  color: #000;
+  padding: 3px;
+  transform: rotate(45deg);
+  vertical-align: middle;
+}
+
+.examination-expansion-panel .mat-expansion-panel-body {
+  padding: 0 !important;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.separator .line {
+  height: 1px;
+  flex: 1;
+  background-color: #dcdcdc;
+}
+
+.separator div {
+  padding: 0 8px !important;
+}
+
+/*Expansion Panel*/

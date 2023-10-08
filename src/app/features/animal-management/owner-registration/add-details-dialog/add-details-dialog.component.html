@@ -1,0 +1,144 @@
+<div class="campaign-edit-dialog">
+  <div class="campaign-edit-header">
+    <div class="edit-heading">
+      <h2 class="edit-heading-label">{{"animalDetails.add_additional_details" | translate}}</h2>
+      <p class="edit-heading-desc">{{"animalDetails.enter_owner_details" | translate}}</p>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+
+  <div class="dialog-main-content">
+    <form [formGroup]="additionalOwnerDetailsForm">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="emailId" class="form-label">{{"animalDetails.email_id" | translate}}</label>
+          <input
+            type="email"
+            class="form-control"
+            id="emailId"
+            placeholder="{{'animalDetails.emailHint' | translate}}"
+            formControlName="emailId"
+          />
+          <div
+            *ngIf="
+              addAdditionalInfo.emailId.invalid &&
+              addAdditionalInfo.emailId.errors?.pattern
+            "
+            class="alert-message"
+          >
+            <span>{{"animalDetails.invalid_email" | translate}}</span>
+          </div>
+        </div>
+        <div class="form-group col-md-6" *ngIf="data.isIndividual">
+          <label for="alternateMobileNo" class="form-label"
+            >{{"animalDetails.alternative_mobile_no" | translate}}</label
+          >
+          <input
+            type="tel"
+            class="form-control"
+            id="altNumber"
+            formControlName="alternateMobileNo"
+            placeholder="{{'animalDetails.enterAltMobile' | translate}}"
+            [maxlength]="10"
+          />
+          <div
+            *ngIf="
+              addAdditionalInfo.alternateMobileNo.invalid &&
+              addAdditionalInfo.alternateMobileNo.errors?.pattern
+            "
+            class="alert-message"
+          >
+            <span
+              >{{"errorMsg.mobile_start" | translate}}
+              </span
+            >
+          </div>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="ownerLandHoldingCd" class="form-label"
+            >{{"animalDetails.land_holding" | translate}}</label
+          >
+          <select
+            id="landHolding"
+            class="form-control"
+            formControlName="ownerLandHoldingCd"
+          >
+            <option value="" disabled>{{"errorMsg.select_land_holding" | translate}}</option>
+            <option *ngFor="let holding of landHoldings" [ngValue]="holding.cd">
+              {{ holding.value }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="hhid" class="form-label">{{"animalDetails.HHID" | translate}}</label>
+          <input
+            type="text"
+            id="hhid"
+            class="form-control"
+            formControlName="hhid"
+            placeholder="{{'errorMsg.no_hhid' | translate}}"
+            [maxLength]="50"
+          />
+          <div
+            *ngIf="
+              addAdditionalInfo.hhid.touched && addAdditionalInfo.hhid.invalid
+            "
+            class="alert-message"
+          >
+            <div *ngIf="addAdditionalInfo.hhid.errors?.pattern">
+              {{"errorMsg.enter_valid_hhid" | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkbox-group">
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value=""
+              id="pourermember"
+              formControlName="isPourerMember"
+            />
+            <label class="form-check-label" for="isPourerMember">
+              {{"animalDetails.pourer_member" | translate}}
+            </label>
+          </div>
+        </div>
+        <div class="form-row" *ngIf="data.isIndividual">
+          <div class="form-group col-md-12">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value=""
+              id="bpl"
+              formControlName="isOwnerBelowPovertyLine"
+            />
+            <label class="form-check-label" for="isOwnerBelowPovertyLine">
+              {{"animalDetails.below_poverty" | translate}}
+            </label>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="campaign-edit-footer">
+    <button type="button" class="btn btn-outline-primary mr-2" mat-dialog-close>
+      {{"common.cancel" | translate}}
+    </button>
+    <button
+      *ngIf="!checkIfAllControlsDisabled()"
+      type="submit"
+      class="btn btn-primary"
+      (click)="submitOwnerAdditionalDetails()"
+    >
+    {{"common.save" | translate}}
+    </button>
+  </div>
+</div>

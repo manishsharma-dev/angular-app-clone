@@ -1,0 +1,66 @@
+.custom-view-table {
+  box-shadow: none !important;
+  border-collapse: inherit;
+}
+
+.custom-view-table td.mat-cell,
+.custom-view-table th.mat-header-cell {
+  padding: 0px 5px !important;
+  white-space: nowrap;
+}
+
+.custom-view-table td.mat-cell {
+  border: 1px solid #dcdcdc;
+}
+
+.custom-view-table .table-input {
+  border: transparent;
+  background-color: #fff;
+  padding: 0px;
+}
+
+.custom-view-table tr.mat-row,
+.custom-view-table tr.mat-header-row {
+  height: 40px;
+}
+
+.custom-view-table tr.mat-header-row th {
+  background: #f8f7fa;
+  height: 38px;
+}
+
+.custom-view-table ::ng-deep.mat-sort-header-arrow {
+  position: absolute;
+  left: -20px !important;
+}
+
+.custom-view-table .status-highlight {
+  padding: 4px 10px;
+  border-radius: 16px;
+  background: #929292;
+  font-weight: bold;
+  opacity: 0.5;
+}
+
+.mat-column-srno {
+  width: 50px;
+}
+
+.mat-column-tagId {
+  width: 140px;
+}
+.mat-column-initialSampleResultValue{
+  width: 70px;
+}
+.mat-column-finalSampleResultValue{
+  width: 70px;
+}
+.mat-column-difference{
+  width: 70px;
+}
+.mat-column-sampleResult{
+  width: 100px;
+}
+.add-degnostics-table{
+  width: auto;
+}

@@ -1,0 +1,124 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<app-common-breadcrumb [breadcrumbKeys]="[ 'performanceRecording.pr', 'performanceRecording.typing']">
+</app-common-breadcrumb>
+
+<section class="new-gm">
+  <div class="row no-gutters col-container">
+    <div class="col-md-12 col-h left-section">
+      <div class="treatment-header">
+        <div class="back-arrow">
+          <i class="fa fa-chevron-left mr-2 back-section" (click)="goBack()"></i>
+        </div>
+
+        <div class="title-section">
+          <div class="title-heading">
+            <span class="muted-label-heading"> {{'performanceRecording.fill_typing_details'| translate}} </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="h-divider">
+        <div class="shadow"></div>
+      </div>
+
+      <form [formGroup]="typingForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="col-md-3 form-group">
+            <label for="locationNo" class="form-label">{{'animalDetails.lactation' | translate}}</label>
+            <input type="text" class="form-control" id="lactationNo" formControlName="currentLactationNo" />
+          </div>
+          <div class="col-md-3 form-group">
+            <label for="recordDate" class="form-label">{{'performanceRecording.data_entry_date' | translate}}</label>
+            <input type="text" class="form-control" id="recordDate" formControlName="recordDate">
+          </div>
+          <div class="col-md-3 form-group input-section">
+            <label for="typingDate" class="form-label">{{'performanceRecording.typing_date' | translate}} <span
+                class="mandatory-field">*</span></label>
+            <input class="form-control" type="text" [min]="minDate" [max]="today" [matDatepicker]="pickerDate"
+              id="typingDate" formControlName="typingDate" placeholder="dd/mm/yyyy" />
+            <mat-datepicker-toggle matSuffix [for]="pickerDate" class="calender-icon"></mat-datepicker-toggle>
+            <mat-datepicker #pickerDate></mat-datepicker>
+            <span class="alert-message" *ngIf="
+                    (typingForm.get('typingDate').dirty &&
+                      typingForm.get('typingDate').invalid) ||
+                    typingForm.get('typingDate').touched
+                    ">
+              <span *ngIf="typingForm.get('typingDate').hasError('matDatepickerMin')">
+                {{'common.please_enter_valid_date' | translate}}
+              </span>
+              <span *ngIf="typingForm.get('typingDate').hasError('matDatepickerMax')">
+                {{'common.please_enter_valid_date' | translate}}
+              </span>
+              <span *ngIf="typingForm.get('typingDate').hasError('matDatepickerParse')">
+                {{'common.please_enter_valid_date' | translate}}
+              </span>
+              <span
+                *ngIf="typingForm.get('typingDate').hasError('required') && !typingForm.get('typingDate').hasError('matDatepickerParse')">
+                {{validationMsg.required|translate}}
+              </span>
+            </span>
+          </div>
+        </div>
+
+
+
+        <div class="form-row" formArrayName="animalTypingTraitsList">
+          <div class="form-group col-md-3" *ngFor="let trait of traitListControls; let i = index" [formGroupName]="i">
+            <label [for]="trait.get('typingTrait').value" class="form-label">{{trait.get('label').value}}
+              ({{trait.get('measurementUnitDesc').value}})</label>
+            <input type="text" class="form-control" [id]="trait.get('typingTrait').value"
+              formControlName="typingTraitValue" *ngIf="trait.get('measurementUnitCd').value !== 1; else dropDown">
+            <ng-template #dropDown>
+              <select class="form-control" [id]="trait.get('typingTrait').value" formControlName="typingTraitValue">
+                <option [value]="null" disabled>Select</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+
+              </select>
+            </ng-template>
+            <div class="alert-message"
+              *ngIf="(trait.get('typingTraitValue').touched || trait.get('typingTraitValue').dirty) && trait.get('typingTraitValue').invalid">
+              <span *ngIf="trait.get('typingTraitValue').hasError('invalidDecimalNo')">
+                {{validationMsg.decimalValidation| translate}}
+              </span>
+              <span *ngIf="trait.get('typingTraitValue').hasError('min')">
+                {{typingValidations.value_must_be_greater_than_or_equal_to | translate}} {{trait.get('min').value}}
+              </span>
+              <span *ngIf="trait.get('typingTraitValue').hasError('max')">
+                {{typingValidations.value_must_be_less_than_or_equal_to | translate}} {{trait.get('max').value}}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="h-divider">
+          <div class="shadow"></div>
+        </div>
+
+        <div class="footer d-flex">
+          <button type="button" (click)="goBack()" class="btn btn-outline-primary mr-2 ml-auto">
+            {{ "animalDetails.cancel" | translate }}
+          </button>
+          <button type="button" (click)="onReset()" class="btn btn-outline-primary mr-2">
+            {{ "animalDetails.reset" | translate }}
+          </button>
+          <button type="submit" class="btn btn-primary">
+            {{ "common.submit" | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

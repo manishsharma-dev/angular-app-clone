@@ -1,0 +1,33 @@
+<div class="owner-reg-dialog">
+  <div class="cross-icon">
+    <mat-icon (click)="skipVerification()">clear</mat-icon>
+  </div>
+  <div class="owner-reg-msg">
+    <img
+      *ngIf="!data?.isDisplayIcon; else display"
+      src="/assets/images/verified.svg"
+      class="icon-verified ml-2"
+      alt="icon-verified"
+    />
+    <ng-template #display>
+      <i class="fa fa-exclamation-triangle warning_icon"></i>
+    </ng-template>
+    <div class="farmer-id">
+      {{ data?.header }}
+    </div>
+    <h2 class="succes-msg">{{ data?.heading }}</h2>
+    <h4 class="succes-msg-desc">
+      <b>{{ data?.tagid }}</b> {{ data?.message }}
+    </h4>
+  </div>
+  <div class="verify-number">
+    <button
+      type="submit"
+      class="btn btn-primary verify-btn"
+      mat-dialog-close
+      (click)="openVerificationDialog()"
+    >
+      {{ "animalDetails.verify_mobile_number" | translate }}
+    </button>
+  </div>
+</div>

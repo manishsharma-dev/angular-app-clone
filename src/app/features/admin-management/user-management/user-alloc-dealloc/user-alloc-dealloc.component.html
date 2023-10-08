@@ -1,0 +1,373 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="edit-dialog">
+  <div class="edit-section-header">
+    <div class="edit-heading">
+      <h3>{{ "user.project_Allocation/DeAllocation" | translate }}</h3>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+
+  <div class="edit-container">
+    <mat-tab-group
+      animationDuration="0ms"
+      (selectedTabChange)="tabClick($event)"
+      [(selectedIndex)]="value"
+    >
+      <mat-tab label="{{ 'user.project_Allocation' | translate }}">
+        <div class="h-divider"></div>
+
+        <div class="table-responsive table-view">
+          <table mat-table [dataSource]="dataSource" matSort>
+            <!-- Checkbox Column -->
+
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox
+                  (change)="$event ? toggleAllRows() : null"
+                  [checked]="selection.hasValue() && isAllSelected()"
+                  [indeterminate]="selection.hasValue() && !isAllSelected()"
+                  [aria-label]="checkboxLabel()"
+                  [color]="'primary'"
+                >
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <mat-checkbox
+                  (click)="$event.stopPropagation()"
+                  (change)="$event ? selection.toggle(row) : null"
+                  [checked]="selection.isSelected(row)"
+                  [aria-label]="checkboxLabel(row)"
+                  [color]="'primary'"
+                >
+                </mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- projectId Name Column -->
+            <ng-container matColumnDef="projectId">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "project.Project_ID" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let project">
+                {{ project.project_id }}
+              </td>
+            </ng-container>
+
+            <!-- projectId Name Column -->
+            <ng-container matColumnDef="runSeqNo">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let project">
+                <!-- {{ project.runSeqNo }} -->
+              </td>
+            </ng-container>
+
+            <!-- projectName Name Column -->
+            <ng-container matColumnDef="projectName">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "project.Project_Name" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let project">
+                {{ project.project_name }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="projectStartDate">
+              <th mat-header-cell *matHeaderCellDef>Start Date</th>
+              <td
+                mat-cell
+                *matCellDef="let project; let i = index"
+                style="width: 150px; margin-left: 10px"
+              >
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  class="form-control"
+                  [min]="project.startDate"
+                  [max]="project.endDate"
+                  [(ngModel)]="userAllocationSelectStartDate[i]"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                  class="date-picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </td>
+            </ng-container>
+
+            <!-- projectEndDate Name  Column -->
+            <ng-container matColumnDef="projectEndDate">
+              <th mat-header-cell *matHeaderCellDef>End Date</th>
+              <td
+                mat-cell
+                *matCellDef="let project; let i = index"
+                style="width: 150px"
+              >
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  class="form-control"
+                  [min]="userAllocationSelectStartDate[i]"
+                  [max]="project.endDate"
+                  [(ngModel)]="userAllocationSelectEndDate[i]"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                  class="date-picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="loading">
+              <mat-footer-cell
+                *matFooterCellDef
+                [attr.colspan]="displayedColumns.length"
+              >
+                Loading, please wait...
+              </mat-footer-cell>
+            </ng-container>
+            <ng-container matColumnDef="noData">
+              <mat-footer-cell
+                *matFooterCellDef
+                [attr.colspan]="displayedColumns.length"
+              >
+                {{ "common.No_records_found" | translate }}
+              </mat-footer-cell>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <div *ngIf="dataSource.data.length > 0">
+              <!-- <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+              {{ "common.no_matching_filter" | translate }} "{{ input.value }}"
+            </td>
+          </tr> -->
+            </div>
+
+            <mat-footer-row
+              *matFooterRowDef="['noData']"
+              [hidden]="dataSource && dataSource.data.length > 0"
+            >
+            </mat-footer-row>
+            <mat-footer-row
+              *matFooterRowDef="['loading']"
+              [hidden]="dataSource !== undefined"
+            ></mat-footer-row>
+          </table>
+
+          <!-- <div class="h-divider mt-3"></div>
+          <div class="d-flex justify-content-end mt-2">
+            <button
+              type="reset"
+              class="btn btn-outline-primary mr-2"
+              routerLink="/dashboard/project-management/list"
+            >
+              {{ "animalDetails.back" | translate }}
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              (click)="onUserAllocation('Users Allocate ')"
+            >
+              {{ "common.submit" | translate }}
+            </button>
+          </div> -->
+        </div>
+      </mat-tab>
+      <mat-tab label="{{ 'user.project_DeAllocation' | translate }}">
+        <div class="h-divider"></div>
+
+        <div class="table-responsive table-view">
+          <table mat-table [dataSource]="dataSource" matSort>
+            <!-- Checkbox Column -->
+
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox
+                  (change)="$event ? toggleAllRows() : null"
+                  [checked]="selection.hasValue() && isAllSelected()"
+                  [indeterminate]="selection.hasValue() && !isAllSelected()"
+                  [aria-label]="checkboxLabel()"
+                  [color]="'primary'"
+                >
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <mat-checkbox
+                  (click)="$event.stopPropagation()"
+                  (change)="$event ? selection.toggle(row) : null"
+                  [checked]="selection.isSelected(row)"
+                  [aria-label]="checkboxLabel(row)"
+                  [color]="'primary'"
+                >
+                </mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- projectId Name Column -->
+            <ng-container matColumnDef="projectId">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "project.Project_ID" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let project">
+                {{ project.project_id }}
+              </td>
+            </ng-container>
+
+            <!-- projectId Name Column -->
+            <ng-container matColumnDef="runSeqNo">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let project">
+                <!-- {{ project.runSeqNo }} -->
+              </td>
+            </ng-container>
+
+            <!-- projectName Name Column -->
+            <ng-container matColumnDef="projectName">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "project.Project_Name" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let project">
+                {{ project.project_name }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="projectStartDate">
+              <th mat-header-cell *matHeaderCellDef>Start Date</th>
+              <td
+                mat-cell
+                *matCellDef="let project; let i = index"
+                style="width: 150px; margin-left: 10px"
+              >
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  class="form-control"
+                  [min]="project.startDate"
+                  [max]="project.endDate"
+                  [(ngModel)]="userAllocationSelectStartDate[i]"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                  class="date-picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </td>
+            </ng-container>
+
+            <!-- projectEndDate Name  Column -->
+            <ng-container matColumnDef="projectEndDate">
+              <th mat-header-cell *matHeaderCellDef>End Date</th>
+              <td
+                mat-cell
+                *matCellDef="let project; let i = index"
+                style="width: 150px"
+              >
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  class="form-control"
+                  [min]="userAllocationSelectStartDate[i]"
+                  [max]="project.endDate"
+                  [(ngModel)]="userAllocationSelectEndDate[i]"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                  class="date-picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="loading">
+              <mat-footer-cell
+                *matFooterCellDef
+                [attr.colspan]="displayedColumns.length"
+              >
+                Loading, please wait...
+              </mat-footer-cell>
+            </ng-container>
+            <ng-container matColumnDef="noData">
+              <mat-footer-cell
+                *matFooterCellDef
+                [attr.colspan]="displayedColumns.length"
+              >
+                {{ "common.No_records_found" | translate }}
+              </mat-footer-cell>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <div *ngIf="dataSource.data.length > 0">
+              <!-- <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+              {{ "common.no_matching_filter" | translate }} "{{ input.value }}"
+            </td>
+          </tr> -->
+            </div>
+
+            <mat-footer-row
+              *matFooterRowDef="['noData']"
+              [hidden]="dataSource && dataSource.data.length > 0"
+            >
+            </mat-footer-row>
+            <mat-footer-row
+              *matFooterRowDef="['loading']"
+              [hidden]="dataSource !== undefined"
+            ></mat-footer-row>
+          </table>
+
+          <!-- <div class="h-divider mt-3"></div>
+          <div class="d-flex justify-content-end mt-2">
+            <button
+              type="reset"
+              class="btn btn-outline-primary mr-2"
+              routerLink="/dashboard/project-management/list"
+            >
+              {{ "animalDetails.back" | translate }}
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              (click)="onUserAllocation('Users Allocate ')"
+            >
+              {{ "common.submit" | translate }}
+            </button>
+          </div> -->
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <div class="edit-footer">
+    <button type="button" class="btn btn-outline-primary mr-2" mat-dialog-close>
+      {{ "common.cancel" | translate }}
+    </button>
+    <button
+      type="submit"
+      class="btn btn-primary"
+      id="editFormSave"
+      [mat-dialog-close]="true"
+      [disabled]="this.selection.selected.length <= 0"
+      (click)="onSubmit('Users Deallocate')"
+    >
+      {{ "common.submit" | translate }}
+    </button>
+  </div>
+</div>

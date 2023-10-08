@@ -1,0 +1,187 @@
+.sub-title-heading {
+    width: 100%;
+    float: left;
+    padding: 15px;
+    font-weight: 600;
+}
+.hr-space{
+  
+        padding: 5px 0px;
+        display: block;
+        clear: both;
+        float: left;
+        width: 100%;
+    
+    
+}
+.animal-edit-detail .edit-label {
+    font-size: 14px;
+    font-weight: normal;
+    letter-spacing: 0px;
+    color: #757575;
+    opacity: 0.8;
+  }
+  
+  .animal-edit-detail .edit-desc {
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 0px;
+    color: #757575;
+  }
+  
+  .animal-edit-detail .edit-img {
+    max-height: 130px;
+    max-width: 130px;
+  }
+  
+  .animal-edit-detail .edit-img img {
+    width: 100%;
+  }
+  
+  .mb-15 {
+    margin-bottom: 15px;
+  }
+  
+  .animal-edit-detail .info-icon {
+    height: 14px;
+    width: 14px;
+    font-size: 14px;
+    margin-left: 5px;
+    vertical-align: middle;
+  }
+  
+  .animal-edit-detail .info-msg {
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0px;
+    color: #757575;
+    opacity: 0.7;
+  }
+  
+  .view-animal-info {
+    background-color: #e4eaef;
+    border-top: 2px solid #185b85;
+  }
+  
+  .view-animal-info .animal-image {
+    height: 80px;
+    width: 80px;
+  }
+  
+  .view-animal-info img.tick-icon {
+    position: absolute;
+    bottom: -9px;
+    left: 30px;
+    height: 20px;
+    width: 20px;
+  }
+  
+  #animal-detail ul li,
+  #animal-unique-detail ul li {
+    list-style-type: none;
+    display: inline;
+  }
+  
+  #animal-detail ul li {
+    font-weight: bold;
+    font-family: Noto Sans;
+    font-size: 12px;
+    letter-spacing: 0px;
+    color: #3c3c3c;
+  }
+  
+  #animal-unique-detail ul li .tag-bold {
+    font-weight: bold;
+    font-family: Noto Sans;
+    font-size: 16px;
+    letter-spacing: 0px;
+    color: #3c3c3c;
+    margin-right: 8px;
+  }
+  
+  #animal-unique-detail ul li .ticket-no {
+    font-weight: normal;
+    font-family: Noto Sans;
+    font-size: 12px;
+    letter-spacing: 0px;
+    color: #3c3c3c;
+  }
+  
+  .view-animal-detail .view-animal-info .info-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #animal-detail li:not(:first-child):before {
+    content: " | ";
+    margin: 0px 2px;
+  }
+  
+  .animal-bio-info .flex-custom-left {
+    flex: 0 0 40% !important;
+    flex-wrap: wrap;
+    word-break: break-word;
+  }
+  .animal-bio-info .flex-custom-right {
+    flex: 0 0 60% !important;
+    flex-wrap: wrap;
+    word-break: break-word;
+  }
+  
+  .basic-details .details-heading,
+  .family-details .details-heading {
+    font-weight: bold;
+    font-family: Noto Sans;
+    font-size: 14px;
+    letter-spacing: 0px;
+    margin-bottom: 10px !important;
+    color: #3c3c3c;
+  }
+  
+  .animal-bio-info .info-label {
+    font-weight: normal;
+    font-family: Noto Sans;
+    font-size: 12px;
+    color: #3c3c3c;
+  }
+  
+  .animal-bio-info .info-data {
+    font-weight: bold;
+    font-family: Noto Sans;
+    font-size: 12px;
+    color: #3c3c3c;
+  }
+  
+  .footer-transparent {
+    background-color: transparent !important;
+  }
+  
+  .view-animal-detail .change-request-msg {
+    display: flex;
+    align-items: center;
+  }
+  
+  .view-animal-detail .change-request-msg > span {
+    font-weight: normal;
+    font-family: Noto Sans;
+    font-size: 12px;
+    color: #3c3c3c;
+  }
+  
+  .icon-edit{
+    height: 26px;
+    width: 26px;
+    cursor: pointer;
+  }
+  
+  .icon-info{
+    height: 17px;
+    width: 17px;
+  }
+  .h-space{
+    margin-top: 20px;
+    float: left;
+    width: 100%;
+
+  }
+  

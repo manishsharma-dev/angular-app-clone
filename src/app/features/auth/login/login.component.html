@@ -1,0 +1,116 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+
+<section class="login-section">
+  <div class="login-header-left">
+    <div class="col-12">
+      <div class="dhad-logo">
+        <object type="image/svg+xml" data="assets/images/newDAHD_logo.svg" class="icon-dhad">
+        </object>
+      </div>
+    </div>
+  </div>
+  <div class="login-header-right">
+    <div class="col-12">
+      <div class="nddb-logo">
+        <object type="image/svg+xml" data="assets/images/nddb_logo.svg" class="icon-nddb">
+        </object>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-container ">
+    <div class="col-lg-4 col-md-6  col-sm-6 col-xs-12 left-section bg-color">
+      <div class="col-my">
+        <div class="login-heading mb-2 text-center">
+          <div class="pashudhan-logo mb-2">
+            <object data="assets/images/bharat_pashudhan.svg" class="icon-bharat-pashudhan">
+            </object>
+          </div>
+          <p class="login-title mb-2">Login</p>
+          <p class="login-title-desc">Enter your credentials to access your account</p>
+
+        </div>
+        <form [formGroup]="loginForm" (submit)="onLogin()" autocomplete="off">
+          <div class="form-group">
+            <label for="userId" class="label-color">User ID</label>
+            <input type="text" class="form-control" id="userId" placeholder="Enter User ID" name="username"
+              formControlName="userId" minlength="4" maxlength="30" />
+            <mat-error>
+              <span
+                *ngIf="loginForm.get('userId').invalid && !loginForm.get('userId').pristine|| loginForm.get('userId').touched"
+                class="validation-error-message">
+                <span *ngIf="loginForm.get('userId').errors?.['required']" class="validation-error-message">
+                  Please enter a valid user Id
+                </span>
+                <span *ngIf="loginForm.get('userId').errors?.['pattern']" class="validation-error-message">
+                  Please enter a valid user Id,
+                </span>
+                <span *ngIf="loginForm.get('userId').errors?.['minlength']" class="validation-error-message">
+                  User Id should not be less than 4 character.
+                </span>
+
+
+                <span *ngIf="loginForm.get('userId').value?.length>=30" class="validation-error-message">
+                  User Id should not be more than 30 character.
+                </span>
+
+              </span>
+            </mat-error>
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="Password" class="label-color">Password</label>
+            <span class="password_view_icon">
+              <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </span>
+            <input [type]="hide ? 'password' : 'text'" class="form-control" maxlength="50" id="password"
+              placeholder="Enter Password" name="password" formControlName="password" required>
+            <mat-error>
+              <span
+                *ngIf="loginForm.get('password').invalid && !loginForm.get('password').pristine|| loginForm.get('password').touched"
+                class="validation-error-message">
+                <span *ngIf="loginForm.get('password').errors?.['required']" class="validation-error-message">
+                  Please enter a valid Password.
+                </span>
+                <span *ngIf="loginForm.get('password').errors?.['pattern']" class="validation-error-message">
+                  Password should contain at least One capital letter, One digit and at least One special characters .
+                </span>
+                <!-- <span *ngIf="loginForm.get('password').errors?.['minlength']" class="validation-error-message">
+                  Password should not be less than 8 character.
+                </span> -->
+
+                <!-- 
+                <span *ngIf="loginForm.get('password').value?.length>=15" class="validation-error-message">
+                  Password should not be more than 15 character.
+                </span> -->
+
+              </span>
+            </mat-error>
+
+          </div>
+          <div class="form-group">
+
+            <a for="forgot-password" class="label-color text-right"
+              style="float: right; text-decoration: underline; cursor: pointer;"
+              routerLink="/auth/forgot-password">Forgot Password</a>
+          </div>
+          <button class="login-signup-button btn btn-dark mb-2" [disabled]="loginForm.invalid" mat-button
+            type="submit">Login
+
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</section>
+<!-- <footer class="footer_version">
+  Version : 1.0 | Version Date : 25-Sept-2023
+</footer> -->

@@ -1,0 +1,581 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<form [formGroup]="viewWorkListForm">
+  <div class="edit-dialog owner-reg">
+    <div class="edit-section-header">
+      <div class="edit-heading">
+        <h2 class="edit-heading-label">
+          {{ "notification.worklist_title" | translate }}
+        </h2>
+        <p class="edit-heading-desc">
+          {{ "notification.view_worklist_title" | translate }}
+        </p>
+      </div>
+      <div class="cross-icon">
+        <mat-icon (click)="closeDialog()">clear</mat-icon>
+      </div>
+    </div>
+
+    <!--edit owner info details -->
+    <div class="edit-container">
+      <div class="row mb-2" *ngIf="!data.selectedUserTab">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body card-body--background position-relative">
+              <span class="floating-filedset fildset-bg-green">
+                <span class="float-label">{{
+                  "common.req_details" | translate
+                }}</span>
+              </span>
+              <div class="row align-items-center mb-1 mt-4">
+                <div class="col-md-12 col-sm-12">
+                  <span class="custmer-label d-flex">
+                    <p
+                      class="owner-name mr-1"
+                      [ngClass]="
+                        data?.crrData[0]?.requestorName?.length > 15
+                          ? 'ellips-text'
+                          : ''
+                      "
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="{{ data.crrData[0]?.requestorName }}"
+                    >
+                      {{ data.crrData[0]?.requestorName || "--" }}
+                    </p>
+                    <p>({{ data.crrData[0]?.requestorUserId || "--" }})</p>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-2" *ngIf="data.selectedUserTab">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body card-body--background position-relative">
+              <span class="floating-filedset fildset-bg-green">
+                <span class="float-label">{{
+                  "notification.supervisordetails_lbl" | translate
+                }}</span>
+              </span>
+              <div class="row align-items-center mb-1 mt-4">
+                <div class="col-md-12 col-sm-12">
+                  <span class="custmer-label d-flex">
+                    <p
+                      class="owner-name mr-1"
+                      [ngClass]="
+                        data?.crrData[0]?.supervisorName?.length > 15
+                          ? 'ellips-text'
+                          : ''
+                      "
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="{{ data.crrData[0]?.supervisorName }}"
+                    >
+                      {{ data.crrData[0]?.supervisorName || "--" }}
+                    </p>
+                    <p>({{ data.crrData[0]?.supervisorUserId || "--" }})</p>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="row mb-2"
+        *ngIf="
+          data.crrData[0].animalId &&
+          completeAnimalDetails?.ownerDetails?.ownerId
+        "
+      >
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body card-body--background position-relative">
+              <span class="floating-filedset fildset-bg-green">
+                <span class="float-label">{{
+                  "common.owner_details" | translate
+                }}</span>
+              </span>
+              <div class="row align-items-center mb-1 mt-4">
+                <div class="col-md-12 col-sm-12">
+                  <span class="custmer-label d-flex">
+                    <p
+                      class="owner-name mr-1"
+                      [ngClass]="
+                        completeAnimalDetails?.ownerDetails?.ownerName?.length >
+                        15
+                          ? 'ellips-text'
+                          : ''
+                      "
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="{{
+                        completeAnimalDetails?.ownerDetails?.ownerName
+                      }}"
+                    >
+                      {{ completeAnimalDetails?.ownerDetails?.ownerName }}
+                    </p>
+                    <p>({{ completeAnimalDetails?.ownerDetails?.ownerId }})</p>
+                    <img
+                      *ngIf="
+                        completeAnimalDetails?.ownerDetails
+                          ?.isOwnerMobileVerified;
+                        else elseBlock
+                      "
+                      src="/assets/images/verified.svg"
+                      class="icon-verified"
+                      alt="icon-verified"
+                    />
+                    <ng-template #elseBlock>
+                      <p
+                        class="alert-message"
+                        [ngClass]="isOwnerActive ? '' : 'ellips-text'"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{
+                          isOwnerActive
+                            ? 'Not-Verified'
+                            : 'Please verify Owner Mobile Number for renewal of services.'
+                        }}"
+                      >
+                        <i
+                          class="fa fa-exclamation-circle"
+                          aria-hidden="true"
+                        ></i>
+                        {{ isOwnerActive ? "Not Verified" : "Inactive" }}
+                      </p>
+                    </ng-template>
+                    <!-- <span>({{ ownerDetailsByID.ownerId }})</span> -->
+                  </span>
+                </div>
+                <div class="col-md-9 col-sm-12">
+                  <div id="owner-detail" class="owner-name col-md-12"></div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div id="owner-detail" class="owner-name col-md-12">
+                  <ul class="custmer-label">
+                    <li
+                      *ngIf="
+                        completeAnimalDetails?.ownerDetails?.ownerTypeCd == 1
+                      "
+                    >
+                      <span
+                        [ngClass]="
+                          completeAnimalDetails?.ownerDetails?.fatherName
+                            ?.length > 15
+                            ? 'ellips-text'
+                            : ''
+                        "
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{
+                          completeAnimalDetails?.ownerDetails?.fatherName
+                        }}"
+                      >
+                        {{ "common.care_of" | translate }}
+                        {{ completeAnimalDetails?.ownerDetails?.fatherName }}
+                      </span>
+                    </li>
+                    <li
+                      *ngIf="
+                        completeAnimalDetails?.ownerDetails?.ownerTypeCd == 2
+                      "
+                      [ngClass]="
+                        completeAnimalDetails?.ownerDetails?.ownerTypeCategory
+                          ?.length > 10
+                          ? 'ellips-text'
+                          : ''
+                      "
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="{{
+                        completeAnimalDetails?.ownerDetails?.ownerTypeCategory
+                      }}"
+                    >
+                      {{ "animalDetails.nonIndividualType" | translate }}:
+                      {{
+                        completeAnimalDetails?.ownerDetails?.ownerTypeCategory
+                      }}
+                    </li>
+                    <li>
+                      {{ "common.mobile" | translate }}:
+                      {{ completeAnimalDetails?.ownerDetails?.ownerMobileNo }}
+                    </li>
+                    <li
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      [ngClass]="
+                        completeAnimalDetails?.ownerDetails?.ownerVillageName
+                          .length > 12
+                          ? 'ellips-text'
+                          : ''
+                      "
+                      title="{{
+                        completeAnimalDetails?.ownerDetails?.ownerVillageName
+                      }}"
+                    >
+                      {{ "common.village" | translate }}:
+                      {{
+                        completeAnimalDetails?.ownerDetails?.ownerVillageName ||
+                          "---"
+                      }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="row mb-2"
+        *ngIf="
+          data.crrData[0].animalId && completeAnimalDetails?.ownerDetails?.orgId
+        "
+      >
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body card-body--background position-relative">
+              <span class="floating-filedset fildset-bg-green">
+                <span class="float-label">{{
+                  "common.owner_details" | translate
+                }}</span>
+              </span>
+              <div class="row align-items-center mb-1 mt-4">
+                <div class="col-md-12 col-sm-12">
+                  <span class="custmer-label d-flex">
+                    <p
+                      class="owner-name mr-1"
+                      [ngClass]="
+                        completeAnimalDetails?.ownerDetails?.orgName?.length >
+                        15
+                          ? 'ellips-text'
+                          : ''
+                      "
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="{{ completeAnimalDetails?.ownerDetails?.orgName }}"
+                    >
+                      {{ completeAnimalDetails?.ownerDetails?.orgName }}
+                    </p>
+                    <p>({{ completeAnimalDetails?.ownerDetails?.orgId }})</p>
+                    <!-- <span>({{ ownerDetailsByID.ownerId }})</span> -->
+                  </span>
+                </div>
+                <div class="col-md-9 col-sm-12">
+                  <div id="owner-detail" class="owner-name col-md-12"></div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div id="owner-detail" class="owner-name col-md-12">
+                  <ul class="custmer-label d-flex">
+                    <li>
+                      {{ "common.mobile" | translate }}:
+                      {{ completeAnimalDetails?.ownerDetails?.orgMobileNo }}
+                    </li>
+                    <li
+                      [ngClass]="
+                        completeAnimalDetails?.ownerDetails?.orgRegistrationNo
+                          .length > 15
+                          ? 'ellips-text'
+                          : ''
+                      "
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="{{
+                        completeAnimalDetails?.ownerDetails?.orgRegistrationNo
+                      }}"
+                    >
+                      {{ "common.reg_no" | translate }}:-
+                      {{
+                        completeAnimalDetails?.ownerDetails?.orgRegistrationNo
+                      }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-2" *ngIf="data.crrData[0].animalId">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body card-body--background position-relative">
+              <span class="floating-filedset fildset-bg-blue">
+                <span class="float-label">{{
+                  "animalDetails.animalDetails.animal_detail" | translate
+                }}</span>
+              </span>
+              <div class="row align-items-center mb-1 mt-4">
+                <div class="col-md-12 col-sm-12">
+                  <span class="custmer-label d-flex">
+                    <svg
+                      class="mr-2"
+                      width="18.137"
+                      height="18.115"
+                      viewBox="0 0 18.137 18.115"
+                    >
+                      <path
+                        id="Path_4915"
+                        data-name="Path 4915"
+                        d="M181.9,121.785l.075-8.326h0a.712.712,0,0,0-.711-.747l-8.361.122h0a.711.711,0,0,0-.5.208l-8.352,8.351a.712.712,0,0,0,0,1.007l8.218,8.218a.712.712,0,0,0,1.007,0l8.42-8.366a.712.712,0,0,0,.208-.467Zm-2.441-6.539a1.344,1.344,0,1,1-.95-.394A1.345,1.345,0,0,1,179.457,115.246Zm-6.243,12.727a.185.185,0,0,1-.261,0l-6.262-6.261a.186.186,0,0,1,0-.262l.375-.375a.186.186,0,0,1,.261,0l6.261,6.262a.185.185,0,0,1,0,.261Zm2.547-2.547a.186.186,0,0,1-.261,0l-6.262-6.261a.185.185,0,0,1,0-.262l.375-.375h0a.185.185,0,0,1,.261,0l6.262,6.262a.185.185,0,0,1,0,.261Z"
+                        transform="translate(-163.838 -112.712)"
+                        fill="#185b85"
+                      />
+                    </svg>
+                    <p
+                      class="owner-name mr-1"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                    >
+                      {{ completeAnimalDetails?.tagId }}
+                    </p>
+                    <!-- <span>({{ ownerDetailsByID.ownerId }})</span> -->
+                  </span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div id="owner-detail" class="owner-name col-md-12">
+                  <ul class="custmer-label d-flex">
+                    <li>
+                      {{ "common.sex" | translate }}:
+                      {{ completeAnimalDetails?.sex }}
+                    </li>
+                    <li>
+                      {{ "common.species" | translate }}:
+                      {{ completeAnimalDetails?.species }}
+                    </li>
+                    <li>
+                      {{ "common.age" | translate }}:
+                      {{
+                        completeAnimalDetails?.ageInMonths
+                          ? calculateAge(completeAnimalDetails?.ageInMonths)
+                          : completeAnimalDetails?.ageInDays + " days"
+                      }}
+                    </li>
+                    <li>
+                      {{ "common.status" | translate }}:
+                      {{ completeAnimalDetails?.animalStatus }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-1" *ngIf="data.crrData[0].animalId">
+        <div class="h-divider"></div>
+      </div>
+
+      <div class="row worklist-heading">
+        <div class="col-md-5 col-sm-12">
+          <div>
+            <strong>{{
+              "notification.recent_trans_record" | translate
+            }}</strong>
+          </div>
+        </div>
+        <div class="col-md-7 col-sm-12 badge badge-pill list-category">
+          <span>{{ "notification.module" | translate }}: </span>
+          <span>{{ data.crrData[0].moduleName }}</span>
+        </div>
+      </div>
+
+      <div class="row mb-1">
+        <div class="card-body transaction-detail">
+          <ul class="transaction-list">
+            <li class="transaction-item">
+              <div class="transaction-title">
+                <strong
+                  >{{ "notification.sub_module" | translate }}:
+                  {{ data.crrData[0].subModuleName }}</strong
+                >
+              </div>
+            </li>
+            <hr />
+            <li
+              class="form-row transaction-item"
+              *ngFor="let transc of data.crrData[0]?.transactionDetailsJson"
+            >
+              <div class="col-md-5 transaction-title">{{ transc?.key }}</div>
+              <div class="col-md-2 transaction-title"></div>
+              <div
+                class="col-md-5 transaction-desc"
+                *ngIf="!isDataArray(transc.value); else showArray"
+              >
+                {{
+                  transc?.key === "Date Of Death"
+                    ? formatDate(transc?.value)
+                    : transc?.value || ""
+                }}
+              </div>
+              <ng-template #showArray>
+                <div class="col-md-5 transaction-desc">
+                  <ul class="list-unstyled">
+                    <li *ngFor="let ele of transc?.value">
+                      <span *ngIf="!isDataObject(ele); else showObj">{{
+                        ele
+                      }}</span>
+                      <ng-template #showObj>
+                        <!-- <a
+                          href="javascript:void(0)"
+                          placement="left"
+                          ngbPopover="{{ ele?.breed + ' ' }}-{{
+                            ' ' + ele.bloodExoticLevel
+                          }}%"
+                          popoverTitle="Breed and Blood level"
+                        >
+                          View
+                        </a> -->
+                        <span>
+                          {{ ele?.breed + " " }}-{{
+                            " " + ele.bloodExoticLevel
+                          }}%
+                        </span>
+                      </ng-template>
+                    </li>
+                  </ul>
+                </div>
+              </ng-template>
+            </li>
+            <li class="form-row transaction-item" *ngIf="timeOfDeath">
+              <div class="col-md-5 transaction-title">
+                {{ "common.timeOfDeath" | translate }}
+              </div>
+              <div class="col-md-2 transaction-title"></div>
+              <div class="col-md-5 transaction-desc">{{ timeOfDeath }}</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div
+        class="row"
+        *ngIf="data.crrData[0]?.requestorRemarks && !data.selectedUserTab"
+      >
+        <div class="dialog-main-content">
+          <div class="remarks-section">
+            <label for="requestorremarks"
+              ><strong
+                >{{ "notification.requestor_remarks" | translate }}:</strong
+              ></label
+            >
+            <span> {{ data.crrData[0].requestorRemarks || "--" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="row"
+        *ngIf="
+          data.crrData[0].approvalReasonDesc &&
+          data.crrData[0]?.transactionApprovalStatusCd != '1' &&
+          data.selectedUserTab
+        "
+      >
+        <div class="dialog-main-content">
+          <div class="remarks-section">
+            <label for="supervisorremarks"
+              ><strong
+                >{{ "notification.supervisor_remarks" | translate }}:</strong
+              ></label
+            >
+            <span> {{ data.crrData[0].rejectionRemarks || "--" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="row"
+        *ngIf="
+          data.crrData[0].statusChangeDate &&
+          data.crrData[0]?.transactionApprovalStatusCd != '1' &&
+          data.selectedUserTab
+        "
+      >
+        <div class="dialog-main-content">
+          <div class="remarks-section">
+            <label
+              ><strong
+                >{{ "notification.approvedrejecteddate" | translate }}:</strong
+              ></label
+            >
+            <span>
+              {{
+                dateFormatChange(data.crrData[0].statusChangeDate) || "--"
+              }}</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="!data.selectedUserTab">
+        <div class="dialog-main-content">
+          <div class="remarks-section">
+            <label for="remarks"
+              ><strong>{{
+                "notification.enter_remarks_here" | translate
+              }}</strong
+              ><span class="mandatory-field">*</span></label
+            >
+            <textarea class="form-control" formControlName="remarks"></textarea>
+            <div
+              *ngIf="
+                (!worklistInfo.remarks.pristine &&
+                  worklistInfo.remarks.invalid) ||
+                worklistInfo.remarks.touched
+              "
+              class="alert-message"
+            >
+              <div *ngIf="worklistInfo.remarks.errors?.required">
+                {{ "notification.enter_remarks" | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="edit-footer">
+      <button
+        type="submit"
+        class="btn btn-primary mr-2"
+        (click)="performActionOnWorklist(2)"
+        [disabled]="
+          data.crrData[0]?.transactionApprovalStatusCd != '1' ||
+          data.selectedUserTab
+        "
+      >
+        {{ "notification.reject_btn" | translate }}
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        (click)="performActionOnWorklist(1)"
+        [disabled]="
+          data.crrData[0]?.transactionApprovalStatusCd != '1' ||
+          data.selectedUserTab
+        "
+      >
+        {{ "notification.approve_btn" | translate }}
+      </button>
+    </div>
+  </div>
+</form>

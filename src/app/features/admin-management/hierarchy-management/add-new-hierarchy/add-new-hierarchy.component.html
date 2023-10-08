@@ -1,0 +1,210 @@
+
+<div class="overlay" *ngIf="isLoadingSpinner">
+    <div class="center">
+      <mat-spinner class="center"></mat-spinner>
+    </div>
+  </div>
+  
+<div class="row breadcum align-items-center py-2">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="breadcrumb-list text-md-left">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item active">
+                        {{"animalDetails.home" | translate}}
+                    </li>
+                    <li class="breadcrumb-item active">
+                        {{"organization.Admin_Management" | translate}}
+                    </li>
+                    <li class="breadcrumb-item current">
+                        {{"hierarchy.Hierarchy_Management" | translate}}
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="container-white-bg">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="title-heading">
+                <!-- <i class="fa fa-chevron-left mr-2 back-section" [routerLink]="['..', 'list']"></i> -->
+                <h4>{{ "hierarchy.createStateLevelHierarchy" | translate }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <form [formGroup]="hierarchyRegForm" (ngSubmit)="onSubmit()">
+
+        <div class="row mt-4">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-group">
+                <label for="state" class="form-label"> {{"organization.Organization_Name" | translate}} <span class="mandatory-field">*</span></label>
+                <select id="orgId" class="form-control" formControlName="orgId" (ngModelChange)="getSateOnOrg($event)">
+
+                    <option *ngFor="let getOrgList of getOrgLists" [value]="getOrgList['orgId']">{{getOrgList['orgName']}}</option>
+                </select>
+
+                <mat-error>
+                    <span
+                      *ngIf="hierarchyRegForm.get('orgId').invalid && !hierarchyRegForm.get('orgId').pristine || hierarchyRegForm.get('orgId').touched"
+                      class="validation-error-message">
+          
+                      <span *ngIf="hierarchyRegForm.get('orgId').errors?.['required']" class="validation-error-message">
+                        {{"validationMessage.org_name_required" | translate}}
+                      </span>
+                    </span>
+                  </mat-error>
+
+                
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-group">
+                <label for="state" class="form-label">{{"animalDetails.state" | translate}}<span class="mandatory-field">*</span></label>
+                <select id="stateCd" class="form-control" formControlName="stateCd">
+
+                    <option *ngFor="let state of states" [value]="state.stateCode">{{state.stateName}}</option>
+                </select>
+
+                <mat-error>
+                    <span
+                      *ngIf="hierarchyRegForm.get('stateCd').invalid && !hierarchyRegForm.get('stateCd').pristine || hierarchyRegForm.get('stateCd').touched"
+                      class="validation-error-message">
+          
+                      <span *ngIf="hierarchyRegForm.get('stateCd').errors?.['required']" class="validation-error-message">
+                        {{"animalDetails.state" | translate}}
+                      </span>
+                    </span>
+                  </mat-error>
+
+                
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-group">
+                <label for="hierarchyName" class="form-label">{{ "hierarchy.Hierarchy_Name" | translate }} <span class="mandatory-field">*</span></label>
+                <input type="text" class="form-control" id="hierarchyName" placeholder="" maxlength="100" minlength="5"
+                    formControlName="hierarchyName" />
+                    <mat-error>
+                        <span
+                          *ngIf="hierarchyRegForm.get('hierarchyName').errors  && !hierarchyRegForm.get('hierarchyName').pristine || hierarchyRegForm.get('hierarchyName').touched"
+                          class="validation-error-message">
+              
+                          <span *ngIf="hierarchyRegForm.get('hierarchyName').errors?.['required']" class="validation-error-message">
+                            
+                            {{"validationMessage.hierarchy_Name_required" | translate}}
+                          </span>
+
+                          <span *ngIf="hierarchyRegForm.get('hierarchyName').errors?.['minlength']" class="validation-error-message">
+                         
+                          {{"validationMessage.hierarchy_Name_minlength" | translate}}
+                          </span>
+                          <span *ngIf="hierarchyRegForm.get('hierarchyName').hasError('pattern')">
+                            {{'errorMsg.special_character_error'| translate}}
+                          </span>
+                        </span>
+                      </mat-error>
+                       
+                    
+            </div>
+            
+        </div>
+        <div class="row px-3">
+            <div class="col-lg-10 col-md-10 p-3 bg-hirarchy" formArrayName="levelsInfo">
+                <div class="row">
+                    <div class="col-1 d-flex align-items-center">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label">{{ "hierarchy.roleName" | translate }}</label>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label">{{ "hierarchy.roleArea" | translate }}
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="dynamicAdd" *ngFor="let level of levels.controls; let i=index" [formGroupName]="i">
+                    <div>
+                        <div class="row">
+                            <div class="col-auto d-flex align-items-center">
+                                <label class="form-label">{{ "hierarchy.level" | translate }}  {{i+1}}</label>
+                            </div>
+                            <input type="hidden" formControlName="level" />
+                            <div class="col-4">
+                                <select id="rollName" class="form-control" formControlName="roleCd"  (change)="onCheckDuplicateRollName()">
+                                    <option selected>Select Role Area</option>
+                                    <option *ngFor="let roleName of roleNameLists" [value]="roleName.roleCd" [hidden]="roleName.roleCd =='1' || roleName.isActive=='N'">
+                                        <span >{{roleName.roleDesc}}</span>
+                                    </option>
+                                </select>
+                                <mat-error>
+                                    <span
+                                      *ngIf="level.get('roleCd').invalid && !level.get('roleCd').pristine || level.get('roleCd').touched"
+                                      class="validation-error-message">
+                    
+                                      <span *ngIf="level.get('roleCd').errors?.['required']" class="validation-error-message">
+                                        {{"validationMessage.role_name" | translate}}
+                                      </span>
+                                    </span>
+                                  </mat-error>
+                            </div>
+                            <div class="col-4">
+                                <select id="roleArea" class="form-control" formControlName="roleArea" (ngModelChange)="onCheckHierarchyLevel($event)">
+                                    <option selected>Select Role Area</option>
+                                    <option *ngFor="let role of roleList" [value]="role.cd" [disabled]="(role.cd==isStateDisabled?'disabled':null) || (role.cd==isDistrictDisabled?'disabled':null)||(role.cd==isTehsilDisabled?'disabled':null)">{{role.value}}</option>
+                                </select>
+                                <mat-error>
+                                    <span
+                                      *ngIf="level.get('roleArea').invalid && !level.get('roleArea').pristine || level.get('roleArea').touched"
+                                      class="validation-error-message">
+                    
+                                      <span *ngIf="level.get('roleArea').errors?.['required']" class="validation-error-message">
+                                        {{"validationMessage.role_area" | translate}}
+                                      </span>
+                                    </span>
+                                  </mat-error>
+                            </div>
+
+                            <div *ngIf="i>0" class="col-auto d-flex align-items-center cursor-pointer"
+                                (click)="removeLevelAt(i,hierarchyRegForm.value)">
+                                <svg id="Group_4529" data-name="Group 4529" xmlns="http://www.w3.org/2000/svg"
+                                    width="18" height="18" viewBox="0 0 18 18">
+                                    <path id="Path_5203" data-name="Path 5203" d="M0,0H18V18H0Z" fill="none" />
+                                    <path id="Path_5204" data-name="Path 5204"
+                                        d="M3.609,6.827H16.48V17.285a.8.8,0,0,1-.8.8H4.413a.8.8,0,0,1-.8-.8ZM6.022,4.413V2.8a.8.8,0,0,1,.8-.8h6.436a.8.8,0,0,1,.8.8V4.413h4.022V6.022H2V4.413Zm1.609-.8v.8h4.827v-.8Zm0,6.436v4.827H9.24V10.044Zm3.218,0v4.827h1.609V10.044Z"
+                                        transform="translate(-1.044 -1.044)" fill="#545454" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto v-line-dotted"></div>
+                        </div>
+                    </div>
+                </div>
+                <span class="validation-error-message ml-5" *ngIf="isShowError">
+                    {{ isShowError }}
+                </span>
+                  
+                <div class="row mt-2">
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-outline-primary"
+                            [disabled]="isAddLevel" (click)="addLevel()">{{"common.add" | translate}} {{"hierarchy.level" | translate}}
+                            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="d-flex d-row justify-content-end py-4">
+                    <!-- <button type="reset" class="btn btn-outline-primary mr-2" *ngIf="!hierarchyId">Reset</button> -->
+                    
+                    <button type="button"  class="btn btn-outline-primary mr-2" [routerLink]="['..', 'list']">{{"animalDetails.back" | translate}}</button>
+                    <button type="submit" *ngIf="!hierarchyId" class="btn btn-primary">{{"common.submit" |translate}}</button>
+                    <button type="submit" *ngIf="hierarchyId && type !='clone'" class="btn btn-primary">{{"common.update" |translate}}</button>
+                    <button type="submit" *ngIf="hierarchyId && type =='clone'" class="btn btn-primary">{{"common.clone" |translate}}</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>

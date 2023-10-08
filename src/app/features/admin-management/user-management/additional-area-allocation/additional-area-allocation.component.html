@@ -1,0 +1,128 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="row justify-content-end">
+  <div class="col-md-3 d-flex justify-content-end my-2">
+    <a (click)="deleteAreaAllocationConfirmation()" title="{{'common.delete_area_allocation' |translate }}">
+      <svg id="Group_4529" data-name="Group 4529" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+        viewBox="0 0 18 18">
+        <path id="Path_5203" data-name="Path 5203" d="M0,0H18V18H0Z" fill="none" />
+        <path id="Path_5204" data-name="Path 5204"
+          d="M3.609,6.827H16.48V17.285a.8.8,0,0,1-.8.8H4.413a.8.8,0,0,1-.8-.8ZM6.022,4.413V2.8a.8.8,0,0,1,.8-.8h6.436a.8.8,0,0,1,.8.8V4.413h4.022V6.022H2V4.413Zm1.609-.8v.8h4.827v-.8Zm0,6.436v4.827H9.24V10.044Zm3.218,0v4.827h1.609V10.044Z"
+          transform="translate(-1.044 -1.044)" fill="#545454" />
+      </svg>
+    </a>
+  </div>
+</div>
+<div class="form-row">
+  <div class="form-group col-lg-3 col-md-4 col-sm-6">
+    <label class="form-label">{{ "animalDetails.state" | translate }}<span class="mandatory-field">*</span></label>
+    <div class="col-md-12 border p-2 d-flex justify-content-between">
+      <span class="d-flex flex-wrap" *ngIf="selectedState && selectedState.length; else noStateSelected">
+        <span class="p-1 selected-area outline" *ngFor="let state of selectedState | slice : 0 : 3">
+          <span class="selected-area-name border" [title]="state.stateName">{{state.stateName.length > 10 ?
+            (state.stateName | slice:0:10) + '...' :
+            state.stateName}}</span>
+        </span>
+        <span *ngIf="selectedState.length>3"> + {{selectedState.length -3}} more </span>
+      </span>
+      <ng-template #noStateSelected>
+        <span class="span">
+          No State Selected
+        </span>
+      </ng-template>
+      <span class="span float-right">
+        <a (click)="manageAreaAllocation('state')"><svg xmlns="http://www.w3.role/2000/svg" width="16" height="16"
+            viewBox="0 0 16 16">
+            <path id="pencil-alt"
+              d="M15.583,4.513,14.142,5.954a.375.375,0,0,1-.531,0L10.142,2.485a.375.375,0,0,1,0-.531L11.583.513a1.5,1.5,0,0,1,2.122,0l1.878,1.878A1.5,1.5,0,0,1,15.583,4.513ZM8.9,3.192.7,11.4.035,15.2a.751.751,0,0,0,.869.869L4.7,15.4l8.207-8.207a.375.375,0,0,0,0-.531L9.439,3.192a.379.379,0,0,0-.534,0Zm-5,7.5a.436.436,0,0,1,0-.619L8.714,5.263a.438.438,0,0,1,.619.619L4.52,10.695a.436.436,0,0,1-.619,0ZM2.773,13.323h1.5v1.134l-2.016.353-.972-.972.353-2.016H2.773Z"
+              transform="translate(-0.024 -0.075)" fill="#185b85" />
+          </svg>
+        </a>
+      </span>
+    </div>
+  </div>
+  <div class="form-group col-lg-3 col-md-4 col-sm-6">
+    <label class="form-label">{{ "animalDetails.district" | translate }}<span class="mandatory-field">*</span></label>
+    <div class="col-md-12 border p-2 d-flex justify-content-between">
+      <span class="d-flex flex-wrap" *ngIf="selectedDistrict && selectedDistrict.length; else noDistrictSelected">
+        <span class="p-1 selected-area outline" *ngFor="let dist of selectedDistrict | slice : 0 : 3">
+          <span class="border selected-area-name" [title]="dist.districtName">{{dist.districtName.length > 10 ?
+            (dist.districtName | slice:0:10) + '...' :
+            dist.districtName}}</span>
+        </span>
+        <span *ngIf="selectedDistrict.length>3"> + {{selectedDistrict.length -3}} more </span>
+      </span>
+      <ng-template #noDistrictSelected>
+        <span class="span">
+          No district Selected
+        </span>
+      </ng-template>
+      <span class="span float-right ">
+        <a (click)="manageAreaAllocation('district')"><svg xmlns="http://www.w3.role/2000/svg" width="16" height="16"
+            viewBox="0 0 16 16">
+            <path id="pencil-alt"
+              d="M15.583,4.513,14.142,5.954a.375.375,0,0,1-.531,0L10.142,2.485a.375.375,0,0,1,0-.531L11.583.513a1.5,1.5,0,0,1,2.122,0l1.878,1.878A1.5,1.5,0,0,1,15.583,4.513ZM8.9,3.192.7,11.4.035,15.2a.751.751,0,0,0,.869.869L4.7,15.4l8.207-8.207a.375.375,0,0,0,0-.531L9.439,3.192a.379.379,0,0,0-.534,0Zm-5,7.5a.436.436,0,0,1,0-.619L8.714,5.263a.438.438,0,0,1,.619.619L4.52,10.695a.436.436,0,0,1-.619,0ZM2.773,13.323h1.5v1.134l-2.016.353-.972-.972.353-2.016H2.773Z"
+              transform="translate(-0.024 -0.075)" fill="#185b85" />
+          </svg>
+        </a>
+      </span>
+    </div>
+  </div>
+  <div class="form-group col-lg-3 col-md-4 col-sm-6">
+    <label class="form-label">{{ "user.tehsil" | translate }}<span class="mandatory-field">*</span></label>
+    <div class="col-md-12 border p-2 d-flex justify-content-between  ">
+      <span class="d-flex flex-wrap" *ngIf="selectedTehsil && selectedTehsil.length; else noTehsilSelected">
+        <span class="p-1 selected-area  outline" *ngFor="let teh of selectedTehsil | slice : 0 : 3">
+          <span class="border selected-area-name" [title]="teh.tehsilName">{{teh.tehsilName.length > 10 ?
+            (teh.tehsilName | slice:0:10) + '...' :
+            teh.tehsilName}}</span>
+        </span>
+        <span *ngIf="selectedTehsil.length>3"> + {{selectedTehsil.length -3}} more </span>
+      </span>
+      <ng-template #noTehsilSelected>
+        <span class="span">
+          No Tehsil Selected
+        </span>
+      </ng-template>
+      <span class="span float-right">
+        <a (click)="manageAreaAllocation('tehsil')"><svg xmlns="http://www.w3.role/2000/svg" width="16" height="16"
+            viewBox="0 0 16 16">
+            <path id="pencil-alt"
+              d="M15.583,4.513,14.142,5.954a.375.375,0,0,1-.531,0L10.142,2.485a.375.375,0,0,1,0-.531L11.583.513a1.5,1.5,0,0,1,2.122,0l1.878,1.878A1.5,1.5,0,0,1,15.583,4.513ZM8.9,3.192.7,11.4.035,15.2a.751.751,0,0,0,.869.869L4.7,15.4l8.207-8.207a.375.375,0,0,0,0-.531L9.439,3.192a.379.379,0,0,0-.534,0Zm-5,7.5a.436.436,0,0,1,0-.619L8.714,5.263a.438.438,0,0,1,.619.619L4.52,10.695a.436.436,0,0,1-.619,0ZM2.773,13.323h1.5v1.134l-2.016.353-.972-.972.353-2.016H2.773Z"
+              transform="translate(-0.024 -0.075)" fill="#185b85" />
+          </svg>
+        </a>
+      </span>
+    </div>
+  </div>
+  <div class="form-group col-lg-3 col-md-4 col-sm-6 ">
+    <label class="form-label">{{ "user.village" | translate }}<span class="mandatory-field">*</span></label>
+    <div class="col-md-12 border p-2 d-flex justify-content-between ">
+      <span class="d-flex flex-wrap" *ngIf="selectedVillage && selectedVillage.length; else noVillageSelected">
+        <span class="p-1 selected-area outline" *ngFor="let vill of selectedVillage | slice : 0 : 3">
+          <span class="border selected-area-name" [title]="vill.villageName">{{vill.villageName.length
+            > 10 ? (vill.villageName | slice:0:10) + '...' :
+            vill.villageName}}</span>
+        </span>
+        <span *ngIf="selectedVillage.length>3"> + {{selectedVillage.length -3}} more </span>
+      </span>
+      <ng-template #noVillageSelected>
+        <span class="span">
+          No Village Selected
+        </span>
+      </ng-template>
+      <span class="span float-right">
+        <a (click)="manageAreaAllocation('village')"><svg xmlns="http://www.w3.role/2000/svg" width="16" height="16"
+            viewBox="0 0 16 16">
+            <path id="pencil-alt"
+              d="M15.583,4.513,14.142,5.954a.375.375,0,0,1-.531,0L10.142,2.485a.375.375,0,0,1,0-.531L11.583.513a1.5,1.5,0,0,1,2.122,0l1.878,1.878A1.5,1.5,0,0,1,15.583,4.513ZM8.9,3.192.7,11.4.035,15.2a.751.751,0,0,0,.869.869L4.7,15.4l8.207-8.207a.375.375,0,0,0,0-.531L9.439,3.192a.379.379,0,0,0-.534,0Zm-5,7.5a.436.436,0,0,1,0-.619L8.714,5.263a.438.438,0,0,1,.619.619L4.52,10.695a.436.436,0,0,1-.619,0ZM2.773,13.323h1.5v1.134l-2.016.353-.972-.972.353-2.016H2.773Z"
+              transform="translate(-0.024 -0.075)" fill="#185b85" />
+          </svg>
+        </a>
+      </span>
+    </div>
+  </div>
+</div>

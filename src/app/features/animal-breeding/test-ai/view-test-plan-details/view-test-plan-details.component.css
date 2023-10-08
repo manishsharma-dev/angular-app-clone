@@ -1,0 +1,105 @@
+.view-test-plan-dialog {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.view-test-plan-dialog .dialog-header {
+  flex-grow: 0;
+  flex-shrink: 0;
+  background: #124c60;
+  padding: 15px;
+  color: #fff;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.view-test-plan-dialog .dialog-body {
+  padding: 1rem;
+}
+
+.view-test-plan-dialog .date-section {
+  background-color: #f8f7fa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+}
+
+.view-test-plan-dialog .label-header {
+  /* margin-bottom: 8px !important; */
+  letter-spacing: 0px;
+  color: #777777;
+  opacity: 1;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.view-test-plan-dialog .panel-default > .panel-heading {
+  color: #333;
+  background-color: #fff;
+  border-color: #e4e5e7;
+  padding: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.view-test-plan-dialog .panel-default > .panel-heading a {
+  display: block;
+  padding: 10px 15px;
+}
+
+.view-test-plan-dialog .panel-default > .panel-heading a:after {
+  content: "";
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: "FontAwesome";
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  float: right;
+  transition: transform 0.25s linear;
+  -webkit-transition: -webkit-transform 0.25s linear;
+}
+
+.view-test-plan-dialog .panel-default > .panel-heading a {
+  background-color: #eee;
+}
+
+.view-test-plan-dialog
+  .panel-default
+  > .panel-heading
+  a[aria-expanded="true"]:after {
+  content: "\f077";
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+
+.view-test-plan-dialog
+  .panel-default
+  > .panel-heading
+  a[aria-expanded="false"]:after {
+  content: "\f077";
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+
+.view-test-plan-dialog .panel {
+  margin: 0.5rem auto;
+}
+
+.view-test-plan-dialog .panel-header {
+  letter-spacing: 0px;
+  color: #777777 !important;
+  opacity: 1;
+  font-size: 16px;
+  font-weight: bold;
+}

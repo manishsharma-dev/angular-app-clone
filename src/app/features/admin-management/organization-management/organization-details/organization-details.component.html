@@ -1,0 +1,290 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            {{ "common.breadcrumb_home" | translate }}
+          </li>
+          <li class="breadcrumb-item active">
+            {{ "organization.Admin_Management" | translate }}
+          </li>
+          <li class="breadcrumb-item current">
+            {{ "organization.Organization_Management" | translate }}
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="row p-0 view-animal-detail mb-3">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="card mb-4">
+          <div class="card-header view-animal-info">
+            <div class="row" *ngIf="orgDetail">
+              <div class="col-md-10 d-flex align-items-center">
+                <div class="info-details">
+                  <div id="animal-detail">
+                    <ul>
+                      <h4>{{ orgDetail.organizationBasicInfo.orgName }}</h4>
+                    </ul>
+                  </div>
+                  <div id="animal-unique-detail" class="d-flex mb-1">
+                    <ul>
+                      <li>
+                        <span class="ticket-no"
+                          >{{ "organization.Org. ID" | translate }} :
+                          {{ orgDetail.orgId }} ({{
+                            orgDetail.orgStatusDesc
+                          }})</span
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-md-2 d-flex justify-content-end"
+                appPermission
+                [permissionType]="masterConfig.isModify"
+                *ngIf="
+                  isLivestackAdmin ||
+                  (!isLivestackAdmin && userOrgId == orgDetail?.orgId)
+                "
+              >
+                <img
+                  src="/assets/images/edit.svg"
+                  class="icon-edit"
+                  alt="icon-edit"
+                  [routerLink]="['..', 'edit-org']"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="card-body" *ngIf="orgDetail">
+            <div class="row animal-bio-info">
+              <div class="col-sm-6">
+                <div class="row">
+                  <div class="col-md-12 basic-details">
+                    <h5 class="mb-2">
+                      {{ "organization.basicInformation" | translate }}
+                    </h5>
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "organization.organizationType" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ orgDetail.organizationBasicInfo.orgTypeDesc }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "organization.onBoardingDate" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{
+                          orgDetail.organizationBasicInfo.orgOnboardDate
+                            | customDateFormatter
+                        }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "organization.tenureCompletionDate" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{
+                          orgDetail.organizationBasicInfo.orgTenureCompleteDate
+                            | customDateFormatter
+                        }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "organization.registrationNo." | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ orgDetail.organizationBasicInfo.orgRegistrationNo }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="h-space"></div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-md-12 family-details">
+                        <h3 class="details-heading">
+                          {{ "organization.contactInformation" | translate }}
+                        </h3>
+                        <div class="d-flex">
+                          <div class="flex-custom-left detail-page-text">
+                            {{ "animalDetails.address" | translate }}
+                          </div>
+                          <div class="flex-custom-right detail-page-text-bold">
+                            {{ orgDetail.organizationContactInfo.orgAddress }}
+                          </div>
+                        </div>
+
+                        <div class="d-flex">
+                          <div class="flex-custom-left detail-page-text">
+                            {{ "animalDetails.state" | translate }}
+                          </div>
+                          <div class="flex-custom-right detail-page-text-bold">
+                            {{ orgDetail.organizationContactInfo.stateName }}
+                          </div>
+                        </div>
+
+                        <div class="d-flex">
+                          <div class="flex-custom-left detail-page-text">
+                            {{ "animalDetails.district" | translate }}
+                          </div>
+                          <div class="flex-custom-right detail-page-text-bold">
+                            {{ orgDetail.organizationContactInfo.districtName }}
+                          </div>
+                        </div>
+
+                        <div class="d-flex">
+                          <div class="flex-custom-left detail-page-text">
+                            {{ "animalDetails.pincode" | translate }}
+                          </div>
+                          <div class="flex-custom-right detail-page-text-bold">
+                            {{ orgDetail.organizationContactInfo.orgPin }}
+                          </div>
+                        </div>
+
+                        <div class="d-flex">
+                          <div class="flex-custom-left detail-page-text">
+                            {{ "organization.contactPersonName" | translate }}
+                          </div>
+                          <div class="flex-custom-right detail-page-text-bold">
+                            {{
+                              orgDetail.organizationContactInfo
+                                .contactPersonName
+                            }}
+                          </div>
+                        </div>
+                        <div class="d-flex">
+                          <div class="flex-custom-left detail-page-text">
+                            {{
+                              "organization.contactPersonDesignation"
+                                | translate
+                            }}
+                          </div>
+                          <div class="flex-custom-right detail-page-text-bold">
+                            {{
+                              orgDetail.organizationContactInfo
+                                .contactPersonDesignation
+                            }}
+                          </div>
+                        </div>
+
+                        <div class="d-flex">
+                          <div class="flex-custom-left detail-page-text">
+                            {{ "common.mobile" | translate }}
+                          </div>
+                          <div class="flex-custom-right detail-page-text-bold">
+                            {{ orgDetail.organizationContactInfo.mobileNo }}
+                          </div>
+                        </div>
+
+                        <div class="d-flex">
+                          <div class="flex-custom-left detail-page-text">
+                            {{ "animalDetails.email" | translate }}
+                          </div>
+                          <div class="flex-custom-right detail-page-text-bold">
+                            {{ orgDetail.organizationContactInfo.emailId }}
+                          </div>
+                        </div>
+                        <div class="d-flex">
+                          <div class="flex-custom-left detail-page-text">
+                            {{ "organization.LandLine_Number" | translate }}
+                          </div>
+                          <div class="flex-custom-right detail-page-text-bold">
+                            {{ orgDetail.organizationContactInfo.landlineNo }}
+                          </div>
+                        </div>
+                        <div class="d-flex">
+                          <div class="flex-custom-left detail-page-text">
+                            {{ "organization.Fax_Number" | translate }}
+                          </div>
+                          <div class="flex-custom-right detail-page-text-bold">
+                            {{ orgDetail.organizationContactInfo.faxNo }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 basic-details">
+                <h3 class="details-heading">
+                  {{ "organization.participatingArea" | translate }}
+                </h3>
+                <div class="flex-custom-left detail-page-text">
+                  {{ "animalDetails.state" | translate }}
+                </div>
+                <div style="padding: 0px 12px 0px 0px" class="detail-page-text">
+                  <ul class="animal-detail">
+                    <li
+                      *ngFor="
+                        let organizationParticipatingAreaWithName of orgDetail[
+                          'organizationParticipatingAreaWithNames'
+                        ]
+                      "
+                    >
+                      <!-- <a href="javascript:void(0)"></a> -->
+                      <a
+                        href="javascript:void(0)"
+                        placement="right"
+                        ngbPopover="{{
+                          organizationParticipatingAreaWithName.districts
+                        }}"
+                        popoverTitle="{{
+                          'animalDetails.district' | translate
+                        }}"
+                      >
+                        {{
+                          organizationParticipatingAreaWithName.state.split(
+                            "-"
+                          )[1]
+                        }}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- <div class="d-flex">
+                  <div class="flex-custom-left detail-page-text">District</div>
+                  <div class="flex-custom-right detail-page-text-bold"
+                    *ngFor="let state of orgDetail.organizationParticipatingArea">{{state.districtName}}</div>
+                </div> -->
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12 text-right">
+                <button
+                  class="btn btn-outline-primary"
+                  [routerLink]="['..', 'list']"
+                >
+                  {{ "animalDetails.back" | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

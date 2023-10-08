@@ -1,0 +1,50 @@
+.ticket-section {
+  font-size: 12px;
+  font-weight: normal;
+  letter-spacing: 0px;
+}
+
+.treatment-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  position: relative;
+  padding-left: 1.5rem;
+  margin: 10px 0px 20px 0px;
+}
+
+@media screen and (max-width: 767px) {
+  .treatment-header {
+    align-items: start;
+  }
+}
+
+.treatment-header .back-arrow {
+  position: absolute;
+  top: 6px;
+  left: 2px;
+}
+
+.treatment-information .tabs-nav-list {
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.elite-animal .input-icon {
+  position: relative;
+}
+
+.elite-animal .input-icon input {
+  padding-right: 50px;
+}
+
+.elite-animal .input-icon .calender-icon {
+  position: absolute;
+  top: 29px;
+  right: 0px;
+}
+.ticket-section {
+  font-size: 12px;
+  font-weight: normal;
+  letter-spacing: 0px;
+}

@@ -1,0 +1,61 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<section class="group-disease-testing">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <app-animal-by-village #animalSearch [firFlag]="firFlag"></app-animal-by-village>
+          <ng-container *ngIf="animalSearch?.isTableVisible || animalSearch?.groupTagCheckFlag">
+            <div class="row">
+              <div class="h-divider">
+                <div class="dashed"></div>
+              </div>
+            </div>
+
+            <div class="row select-id">
+              <div class="col-lg-12 col-md-12">
+                <div class="row no-gutters mb-2">
+                  <div class="col-md-2 m-0 p-0">
+                    <span class="st-label">{{'diseaseTesting.selected_tag_id' | translate}}<span class="st-id">[{{
+                        animalSearch?.animalDetail.length }}]</span>
+                    </span>
+                  </div>
+
+                  <div class="col-md-10 m-0 p-0">
+                    <div *ngIf="isAnimalTableVisible">
+                      <ul class="selected-animal-list">
+                        <li class="selected-animal-listitem outline ng-star-inserted"
+                          *ngFor="let animal of animalSearch?.animalDetail | slice:0:4 ">
+                          {{ animal.tagId }}
+                          <img src="/assets/images/cross-icon.svg" alt="icon-cross" (click)="onClickingRemove(animal)"
+                            class="animal-listitem-cross" />
+                        </li>
+                        <li class="selected-viewMore" *ngIf="animalSearch?.animalDetail.length > 4 ">
+                          <span class="viewMore-text" (click)="openDialog()">{{'diseaseTesting.view_more' | translate}}</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-12 col-md-12">
+                <div class="form-row justify-content-end my-2">
+                  <button type="button" class="btn btn-outline-primary mr-2" (click)="onReset()">{{'common.cancel' | translate}}</button>
+                  <button type="submit" class="btn btn-primary" (click)="onSubmit()" appPermission
+                    [permissionType]="masterConfig.isAdd">
+                    {{'animalDetails.proceed' | translate}}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

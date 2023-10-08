@@ -1,0 +1,62 @@
+<div class="row p-0 mb-3">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body position-relative">
+        <span class="floating-filedset fildset-bg-blue">
+          <span class="float-label">{{"animalTreatmentSurgery.saved_draft_details" | translate}}</span>
+        </span>
+        <div class="table-view mt-4">
+          <div class="table-responsive">
+            <ng-template #noDrafts>
+              <h3>{{"animalTreatmentSurgery.no_saved_drafts_found" | translate}}!</h3>
+            </ng-template>
+            <ng-container *ngIf="draftDataSource.data.length; else noDrafts">
+              <table matSort mat-table [dataSource]="draftDataSource" class="mat-elevation-z8">
+                <ng-container matColumnDef="#">
+                  <th mat-header-cell *matHeaderCellDef>{{"animalTreatmentSurgery.sr_no" | translate}}</th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ draftPaginatorRef.pageIndex * draftPaginatorRef.pageSize + i + 1 }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="tagId">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{"animalTreatmentSurgery.tag_id" | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.tagId }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="creationDate">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{"animalTreatmentSurgery.draft_time_date" | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <a>{{ getParsedDate(element.creationDate) }}</a>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="openDraft" >
+                  <th mat-header-cell *matHeaderCellDef> <span appPermission [permissionType]="masterConfig.isAdd">{{"animalTreatmentSurgery.action" | translate}}</span> </th>
+                  <td mat-cell *matCellDef="let element">
+                    <a href="javascript:void(0)"
+                      (click)="onOpenDraft(element.draftId,element.tagId, element.animalId)" appPermission [permissionType]="masterConfig.isAdd">{{"animalTreatmentSurgery.open_draft"
+                      | translate}}</a>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="draftColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: draftColumns"></tr>
+
+              </table>
+              <mat-paginator #animalPaginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of drafts"
+                #draftPaginatorRef>
+              </mat-paginator>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

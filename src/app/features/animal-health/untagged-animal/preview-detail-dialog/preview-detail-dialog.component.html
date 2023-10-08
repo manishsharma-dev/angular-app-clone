@@ -1,0 +1,110 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+    <div class="center">
+        <mat-spinner class="center"></mat-spinner>
+    </div>
+</div>
+<div class="preview-detail-dialog">
+    <!-- header -->
+    <div class="preview-detail-header">
+        <div class="headeing">
+            <h2 class="edit-heading-label" tabindex="0">
+                {{ "untagged.preview_details" | translate }}
+            </h2>
+        </div>
+        <div class="cross-icon">
+            <mat-icon mat-dialog-close>clear</mat-icon>
+        </div>
+    </div>
+
+    <!-- contant -->
+    <div class="dialog-main-content">
+        <div class="preview-content">
+            <div class="owner-detail-list mb-4">
+                <div class="label-header mb-2">
+                    {{ "untagged.owner_details" | translate }}
+                </div>
+                <div class="d-flex">
+                    <div class="col-md-6">
+                        <p class="label">{{ "untagged.name" | translate }}</p>
+                        <p class="desc">{{ requestorName ?? "NA" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="label">{{ "untagged.mobile_no" | translate }}</p>
+                        <p class="desc">{{ mobileNumber }}</p>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="col-md-6">
+                        <p class="label">{{ "untagged.village" | translate }}</p>
+                        <p class="desc">{{ villageNames }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="treatment-fir-list">
+                <div class="label-header mb-2">
+                    <ng-container *ngIf="data.currentRoute === 'untagged-treatment'">{{
+                        "untagged.animal_treatment_details" | translate
+                        }}</ng-container>
+                    <ng-container *ngIf="data.currentRoute === 'untagged-first-aid'">{{
+                        "untagged.anima_first_aid_details" | translate
+                        }}</ng-container>
+                </div>
+                <div class="d-flex flex-wrap text-break">
+                    <div class="col-md-6">
+                        <p class="label">{{ "untagged.species" | translate }}</p>
+                        <p class="desc">{{ speciesCd }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="label">{{ "common.sex" | translate }}</p>
+                        <p class="desc">{{ data?.formData?.sex }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="label">{{ "untagged.service_provided" | translate }}</p>
+                        <p class="desc">
+                            {{
+                            data.currentRoute === "untagged-treatment"
+                            ? "Treatment"
+                            : "First aid"
+                            }}
+                        </p>
+                    </div>
+
+                    <div class="col-md-6">
+                        <ng-container *ngIf="data.currentRoute === 'untagged-first-aid'">
+                            <p class="label">{{ "firstAid.Minor_Ailment" | translate }}</p>
+                            <p class="desc">{{ ailmentCd }}</p>
+                        </ng-container>
+
+                        <ng-container *ngIf="data.currentRoute === 'untagged-treatment'">
+                            <p class="label">{{ "untagged.disease" | translate }}</p>
+                            <p class="desc">{{ diseaseCd }}</p>
+                        </ng-container>
+                    </div>
+
+                    <div class="col-md-6">
+                        <p class="label">
+                            {{ "untagged.reason_for_not_tagging" | translate }}
+                        </p>
+                        <p class="desc">{{ noTagReason }}</p>
+                    </div>
+
+                    <div class="col-md-12">
+                        <p class="label">{{ "untagged.prescription" | translate }}</p>
+                        <p class="desc">{{ prescription }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <div class="preview-detail-footer">
+        <button mat-dialog-close type="submit" class="btn btn-outline-primary mr-2">
+            {{ "untagged.cancel" | translate }}
+        </button>
+        <button mat-dialog-close type="submit" class="btn btn-primary" (click)="onSubmit()">
+            {{ "untagged.submit" | translate }}
+        </button>
+    </div>
+</div>

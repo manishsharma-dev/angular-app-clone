@@ -1,0 +1,152 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row breadcum align-items-center py-2">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="breadcrumb-list text-md-left">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item active">
+              <a>{{'animalDetails.home' | translate}}</a>
+            </li>
+            <li class="breadcrumb-item active">
+              <a href="javascript:void(0)">{{'animalBreeding.breeding_module'|translate}} </a>
+            </li>
+            <li class="breadcrumb-item current">
+              <a href="javascript:void(0)">{{'animalBreeding.et'|translate}} -
+                {{'animalBreeding.synchronization'|translate}}</a>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="new-case">
+  <div class="row no-gutters col-container">
+    <div class="col-md-12 col-h left-section">
+      <div class="row mb-3 justify-content-between margin-10">
+        <div class="title-section">
+          <div class="title-heading">
+
+            {{'animalBreeding.Sync_details'|translate}}
+
+          </div>
+        </div>
+
+      </div>
+      <div class="h-divider">
+        <div class="shadow"></div>
+      </div>
+      <form [formGroup]="form">
+        <div class="main-section">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="table-responsive custom-view-table">
+                <!-- <form [formGroup]="form"> -->
+                <table mat-table [dataSource]="dataSource" formArrayName="sync">
+                  <!-- Row definitions -->
+                  <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+                  <tr mat-row *matRowDef="let row; let i = index; columns: displayColumns;"></tr>
+
+                  <!-- Column definitions -->
+                  <ng-container matColumnDef="sr_no">
+                    <th mat-header-cell *matHeaderCellDef>{{'animalBreeding.sr_no'| translate}}</th>
+                    <td mat-cell *matCellDef="let element; let i = index">
+                      {{ i + 1 }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="tagId">
+                    <th mat-header-cell *matHeaderCellDef>{{'animalBreeding.tagId'|translate}} </th>
+                    <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                      {{row?.value?.tagId}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="species">
+                    <th mat-header-cell *matHeaderCellDef> {{'animalDetails.category_species'|translate}} </th>
+                    <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                      {{row?.value?.species}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="breed">
+                    <th mat-header-cell *matHeaderCellDef> {{'animalDetails.breed'|translate}} </th>
+                    <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                      {{row?.value?.breed}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="syncDate">
+                    <th mat-header-cell *matHeaderCellDef> {{'animalBreeding.transaction_date'|translate}} <span
+                        class="mandatory-field">*</span></th>
+                    <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+
+
+                      <div class="form-row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8">
+                          <div class="form-group">
+                            <input class="form-control" type="text" [min]="breedingMinDate" [max]="today"
+                              [matDatepicker]="SyncDate" formControlName="syncDate" placeholder="dd-mm-yyyy" />
+                            <mat-datepicker-toggle matSuffix [for]="SyncDate" class="calender-icon">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #SyncDate></mat-datepicker>
+                          </div>
+                        </div>
+                        <div class="col-md-2"></div>
+                      </div>
+
+
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="drugUsed">
+                    <th mat-header-cell *matHeaderCellDef> {{'animalBreeding.drug_injected'|translate}} <span
+                        class="mandatory-field">*</span> </th>
+                    <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                      <div class="form-row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8">
+                          <select class="form-control" name="projectType" formControlName="drugUsed"
+                            id="embryoGrade{{index}}">
+                            <option [value]="null">{{'animalDetails.select'|translate}}
+                              {{'animalBreeding.drug_injected'|translate}}</option>
+                            <option [value]="drug?.cd" *ngFor="let drug of drugList">
+                              {{drug?.value}}
+                            </option>
+                          </select>
+                        </div>
+                        <div class="col-md-2"></div>
+                      </div>
+
+                    </td>
+                  </ng-container>
+
+                </table>
+                <!-- </form> -->
+
+
+
+              </div>
+              <div class="h-divider additional-info">
+                <div class="shadow"></div>
+              </div>
+              <div class="footer d-flex">
+                <button type="button" class="btn btn-light mr-2 ml-auto" (click)="gotoPreviousScreen()">
+                  {{'animalDetails.cancel'|translate}}
+                </button>
+                <button type="submit" class="btn btn-primary"
+                  (click)="saveSyncDetail()">{{'common.submit'|translate}}</button>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </form>
+
+    </div>
+  </div>
+</section>

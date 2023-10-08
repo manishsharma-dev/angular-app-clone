@@ -1,0 +1,193 @@
+<div class="overlay" *ngIf="isLoading">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<section class="health-history">
+  <!-- header -->
+  <div class="history-header">
+    <div class="headeing">
+      <h2 class="edit-heading-label">
+        {{ "animalHealthHistory.history_view" | translate }}
+      </h2>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+
+  <!-- header-section -->
+  <div class="dialog-main-content">
+    <app-common-owner-detail *ngIf="data.ownerDetails" [ownerDetailsByID]="data.ownerDetails"></app-common-owner-detail>
+
+    <div class="row justify-content-between align-items-center mr-0">
+      <div class="col-md-auto">
+        <p class="history-label">
+          {{ "registration.Animal Details" | translate }}
+        </p>
+        <p class="history-desc">
+          {{ data?.animalData?.tagId }} - {{ data?.animalData?.species }} -
+          {{ data?.animalData?.sex }} -
+          {{ data?.animalData?.dateOfBirth | age }} -
+          {{ "animalDetails.date_of_birth" | translate }}:
+          {{ data?.animalData?.dateOfBirth | date : "dd/MM/YYYY" }}
+        </p>
+      </div>
+      <div class="col-md-auto px-0" *ngIf="data.parent === 'status-report' && historyArray.length">
+        <button type="submit" class="btn btn-primary" (click)="downloadHistory()">
+          {{ "userReport.download" | translate }}
+        </button>
+      </div>
+    </div>
+    <!--  -->
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+
+    <!--  -->
+
+    <div class="history-detail">
+      <div class="col-md-12">
+        <form [formGroup]="form">
+          <div class="row">
+            <div class="col-md-5 form-group">
+              <label for="moduleCd" class="history-filter">{{ "animalHealthHistory.filter_by" | translate }}:</label>
+              <ng-select id="moduleCd" formControlName="animalHistoryCd" tabindex="1" [clearable]="false"
+                [placeholder]="'animalHealthHistory.select' | translate" [items]="modules" bindValue="cd"
+                bindLabel="value" (change)="onChange('animalHistoryCd')">
+              </ng-select>
+            </div>
+            <div class="col-md-7 form-group position-relative">
+              <label class="history-filter">{{
+                  "animalHealthHistory.select_date_range" | translate
+                }}:</label>
+              <div class="form-row">
+                <div class="col-6">
+                  <input class="form-control" [matDatepicker]="fromDate" formControlName="fromDate" [min]="birthDate"
+                    [max]="currentDate" placeholder="dd/mm/yyyy" (dateChange)="onChange('fromDate')" />
+                  <mat-datepicker-toggle matSuffix [for]="fromDate" class="filter-picker"></mat-datepicker-toggle>
+                  <mat-datepicker #fromDate></mat-datepicker>
+                  <div class="alert-message" *ngIf="
+                      (form.controls.fromDate.dirty &&
+                        form.controls.fromDate.invalid) ||
+                      form.controls.fromDate.touched
+                    ">
+                    <span *ngIf="
+                        form.controls.fromDate.hasError('matDatepickerMin')
+                      ">
+                      {{ "common.please_enter_valid_date" | translate }}
+                    </span>
+                    <span *ngIf="
+                        form.controls.fromDate.hasError('matDatepickerMax')
+                      ">
+                      {{ "common.please_enter_valid_date" | translate }}
+                    </span>
+                    <span *ngIf="
+                        form.controls.fromDate.hasError('matDatepickerParse')
+                      ">
+                      {{ "common.please_enter_valid_date" | translate }}
+                    </span>
+                    <span *ngIf="
+                        form.controls.fromDate.hasError('required') &&
+                        !form.controls.fromDate.hasError('matDatepickerParse')
+                      ">
+                      {{ "common.required" | translate }}
+                    </span>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <input class="form-control" [matDatepicker]="toDate" formControlName="toDate"
+                    [min]="form.get('fromDate').value" [max]="currentDate" placeholder="dd/mm/yyyy"
+                    (dateChange)="onChange('toDate')" />
+                  <mat-datepicker-toggle matSuffix [for]="toDate" class="filter-picker"></mat-datepicker-toggle>
+                  <mat-datepicker #toDate></mat-datepicker>
+                  <div class="alert-message" *ngIf="
+                      (form.controls.toDate.dirty &&
+                        form.controls.toDate.invalid) ||
+                      form.controls.toDate.touched
+                    ">
+                    <span *ngIf="form.controls.toDate.hasError('matDatepickerMin')">
+                      {{ "common.please_enter_valid_date" | translate }}
+                    </span>
+                    <span *ngIf="form.controls.toDate.hasError('matDatepickerMax')">
+                      {{ "common.please_enter_valid_date" | translate }}
+                    </span>
+                    <span *ngIf="
+                        form.controls.toDate.hasError('matDatepickerParse')
+                      ">
+                      {{ "common.please_enter_valid_date" | translate }}
+                    </span>
+                    <span *ngIf="
+                        form.controls.toDate.hasError('required') &&
+                        !form.controls.toDate.hasError('matDatepickerParse')
+                      ">
+                      {{ "common.required" | translate }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="col-md-12">
+        <h3 *ngIf="!historyArray?.length; else timeline">
+          {{ "animalHealthHistory.no_history_record_found" | translate }}
+        </h3>
+        <ng-template #timeline>
+          <ul class="timeline">
+            <li class="timeline-items" *ngFor="let dateArray of historyArray">
+              <span class="timeline-date">{{
+                dateArray[0].data[0].date | date : "dd/MM/YYYY"
+              }}</span>
+
+              <div class="timeline-section mb-3" [ngClass]="{ 'd-flex': dateArray.length > 1 }" *ngFor="
+                  let serviceArray of dateArray;
+                  let i = index;
+                  let serviceCount = count
+                ">
+                <div class="timeline-count mr-3" *ngIf="serviceCount > 1">
+                  <span>{{ i + 1 }}</span>
+                </div>
+                <div class="timeline-desc mb-3">
+                  <p class="timeline-heading">{{ serviceArray.service }}</p>
+                  <ul class="timeline-item-list list-inline" *ngFor="
+                      let transaction of serviceArray.data;
+                      let lastTransaction = last
+                    " [ngClass]="{ 'history-list-separator': !lastTransaction }">
+                    <li class="timeline-list list-inline-item" *ngFor="
+                        let entry of transaction.data | objectEntries;
+                        let last = last
+                      ">
+                      <b class="mr-2">
+                        {{
+                          entry[0] === "FollowUp No" ? "No of visit" : entry[0]
+                        }}:</b>
+                      <span>{{
+                        entry[0] === "FollowUp No" ? +entry[1] + 1 : entry[1]
+                      }}</span>
+                    </li>
+                    <li class="timeline-list list-inline-item" *ngIf="transaction.serviceCd === 2">
+                      <b>{{
+                          "animalTreatmentSurgery.prescription" | translate
+                        }}:</b>&nbsp;
+                      <a href="javascript:void(0)" (click)="
+                          viewPrescription(
+                            transaction?.data['Case Id'] ?? transaction?.data['case Id'],
+                            transaction?.data['FollowUp No']
+                          )
+                        ">
+                        {{ "animalHealthHistory.view" | translate }}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</section>

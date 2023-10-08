@@ -1,0 +1,85 @@
+<div class="overlay" *ngIf="isLoading">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="row p-0 mb-3" [ngClass]="{'h-100': inDashboard }">
+  <div class="col-md-12">
+    <div [ngClass]="{'h-100': inDashboard,'card': !isVaccination }">
+      <div [ngClass]="{'card-body': !inDashboard, 'custom-card--body': inDashboard, 'p-0': isVaccination }">
+        <!-- Search By -->
+        <div id="search-section" class="row" *ngIf="inDashboard">
+          <b>{{'common.view_animal_history' | translate}}</b>
+        </div>
+        <form [formGroup]="searchForm">
+          <div id="search-section" class="row" *ngIf="searchNonIndividual || searchOrganization">
+            <span class="searchby-label-black">{{'animalDetails.search_by' |translate}}:</span>
+            <div class="form-check-inline">
+              <input id="ind" type="radio" class="form-check-input" [value]="ownerType.individual"
+                formControlName="ownerType">
+
+              <label for="ind" class="form-check-label">{{'animalDetails.individual'|translate}}</label>
+            </div>
+            <div class="form-check-inline" *ngIf="searchNonIndividual">
+              <input id="non" type="radio" class="form-check-input" [value]="ownerType.nonIndividual"
+                formControlName="ownerType" />
+              <label for="non" class="form-check-label">{{'animalDetails.nonIndividual' | translate}}</label>
+            </div>
+            <div class="form-check-inline" *ngIf="searchOrganization">
+              <input id="org" type="radio" class="form-check-input" [value]="ownerType.organization"
+                formControlName="ownerType" />
+              <label for="org" class="form-check-label">{{'animalDetails.organisation' | translate}}</label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-3" *ngIf="searchProject">
+              <label for="" class="form-label">{{'performanceRecording.project'| translate}}</label>
+              <ng-select [items]="userProjects" bindLabel="projectName" bindValue="projectId" id="projectId"
+                formControlName="projectId" placeholder="Select Project">
+              </ng-select>
+            </div>
+            <div class="search-by"
+              [ngClass]="{'col-md-7': searchProject, 'col-md-8 search-project': !searchProject, 'col-md-9': inDashboard, 'col-md-12': isVaccination}"
+              *ngIf="searchForm.get('ownerType').value !== ownerType.organization">
+
+              <label for="" class="form-label" *ngIf="searchProject">{{'performanceRecording.search_btn' |
+                translate}}</label>
+              <img src="/assets/images/search.svg" class="input-icon-left" alt="icon-search" />
+              <input type="text" class="form-control input input-search-section" id="search-by"
+                [placeholder]="searchPlaceholder | translate" formControlName="searchValue" maxlength="15" />
+              <span class="input-clear" (click)="resetValue()"> {{'performanceRecording.clear' | translate}} </span>
+            </div>
+
+            <div class="col-md-7 search-by" *ngIf="searchForm.get('ownerType').value === ownerType.organization">
+              <label for="" class="form-label" *ngIf="searchProject">
+                {{'performanceRecording.search_btn' | translate}}
+              </label>
+              <ng-select class="select-dropdown" [items]="orgsList" (clear)="resetValue()"
+                [placeholder]="'animalDetails.select_organisation' | translate" formControlName="searchValue"
+                bindLabel="orgName" bindValue="orgId">
+              </ng-select>
+            </div>
+
+            <div class="col-auto btn-mobile-view" [ngClass]="{'submit-btn': searchProject}" *ngIf="!this.isVaccination">
+              <button type=" submit" class="btn btn-primary" (click)="
+                  searchResults()
+                ">
+                {{'performanceRecording.search_btn' | translate}}
+              </button>
+            </div>
+            <div class="alert-message mx-1" *ngIf="(this.searchForm.invalid && this.searchForm.touched) ">
+              <span
+                *ngIf="!this.searchForm.get('searchValue').hasError('required') && this.searchForm.hasError('invalidSearchValue')">
+                {{ this.searchForm.errors?.invalidSearchValue | translate}}
+              </span>
+              <span *ngIf="this.searchForm.get('searchValue').hasError('required')">
+                {{ 'animalBreedingValidations.common.required' | translate}}
+              </span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,453 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<!-- section breadcum -->
+<div class="container p-0">
+  <div class="row breadcum align-items-center py-2">
+    <div class="col-12">
+      <div class="breadcrumb-list">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item active">
+              <a> {{ "common.breadcrumb_home" | translate }}</a>
+            </li>
+            <li class="breadcrumb-item current">
+              <a href="javascript:void(0)">{{
+                "notification.worklist_lbl" | translate
+              }}</a>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- section breadcum -->
+
+<section class="worklist-section mt-3">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="owner-reg--heading">
+            {{ "notification.all_worklist" | translate }}
+          </div>
+
+          <div class="owner-reg--tabs mt-2">
+            <div class="tabs-nav-list row">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-12 col-md-9 d-flex">
+                    <div class="form-check form-check-inline mr-3">
+                      <i class="fa fa-filter mr-1"></i>
+                      <label class="form-check-label" for="filterBy">{{
+                        "notification.filter_by" | translate
+                      }}</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="pending"
+                        [(ngModel)]="pending"
+                        (change)="applyFilter()"
+                      />
+                      <label class="form-check-label" for="pending">{{
+                        "notification.pending_lbl" | translate
+                      }}</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="approved"
+                        [(ngModel)]="approved"
+                        (change)="applyFilter()"
+                      />
+                      <label class="form-check-label" for="approved">{{
+                        "notification.approved_lbl" | translate
+                      }}</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="rejected"
+                        [(ngModel)]="rejected"
+                        (change)="applyFilter()"
+                      />
+                      <label class="form-check-label" for="rejected">{{
+                        "notification.rejected_lbl" | translate
+                      }}</label>
+                    </div>
+                    <div class="form-check form-check-inline form-to-date">
+                      <label class="form-check-label mr-2" for="fromDate">{{
+                        "notification.from" | translate
+                      }}</label>
+                      <input
+                        readonly
+                        [matDatepicker]="frompicker"
+                        class="form-control"
+                        placeholder="dd/mm/yyyy"
+                        (dateInput)="applyDateFilter()"
+                        [(ngModel)]="fromDateFilter"
+                        [max]="dateToday"
+                        [min]="getPastDate(1)"
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="frompicker"
+                        class="date-picker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #frompicker></mat-datepicker>
+                    </div>
+                    <div class="form-check form-check-inline form-to-date">
+                      <label class="form-check-label mr-2" for="toDate">{{
+                        "notification.to" | translate
+                      }}</label>
+                      <input
+                        readonly
+                        [matDatepicker]="topicker"
+                        class="form-control"
+                        placeholder="dd/mm/yyyy"
+                        (dateInput)="applyDateFilter()"
+                        [(ngModel)]="toDateFilter"
+                        [max]="dateToday"
+                        [min]="fromDateFilter"
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="topicker"
+                        class="date-picker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #topicker></mat-datepicker>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-3">
+                    <div
+                      class="d-flex align-items-baseline justify-content-md-end"
+                    >
+                      <label class="d-inline-block mr-2" for="category"
+                        ><small
+                          ><strong
+                            >{{ "animalDetails.category" | translate }}:</strong
+                          ></small
+                        ></label
+                      >
+
+                      <select
+                        name="category"
+                        class="form-control form-control-sm d-inline-block"
+                        style="width: auto"
+                        id="from_year"
+                        [(ngModel)]="moduleCode"
+                        (change)="applyModuleFilter($event)"
+                      >
+                        <option value="0">
+                          {{
+                            "animalDetails.owner_category_placeholder"
+                              | translate
+                          }}
+                        </option>
+                        <option
+                          *ngFor="let module of modulesList"
+                          [value]="module.moduleCd"
+                        >
+                          {{ module.moduleName }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <ng-container>
+              <div class="row align-items-center mt-4">
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                  <div class="title-heading">
+                    <form *ngIf="worklistDataSource?.data?.length > 0">
+                      <div class="filter-by">
+                        <img
+                          src="/assets/images/search.svg"
+                          class="input-icon-left"
+                          alt="icon-search"
+                        />
+                        <input
+                          type="text"
+                          class="form-control input input-section"
+                          id="filter-by"
+                          [(ngModel)]="searchValue"
+                          [ngModelOptions]="{ standalone: true }"
+                          placeholder="Search by keywords"
+                          (input)="searchInWorklist()"
+                        />
+                      </div>
+                    </form>
+                    <h3 *ngIf="worklistDataSource.data?.length === 0">
+                      {{ "animalDetails.no_data_found" | translate }}
+                    </h3>
+                  </div>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-12">
+                  <div class="add-member float-md-right float-sm-left">
+                    <!-- <button
+                      type="button"
+                      class="btn btn-primary mr-2 btn-mv"
+                      [disabled]="filteredRequestId?.length === 0"
+                      (click)="
+                        openRemarksDialog('reject', filteredWorklistData)
+                      "
+                    >
+                      Reject
+                    </button> -->
+                    <button
+                      type="button"
+                      class="btn btn-primary mr-2 btn-mv"
+                      *ngIf="!selectedUserTab"
+                      [disabled]="filteredRequestId?.length == 0"
+                      (click)="openRemarksDialog(2, filteredWorklistData)"
+                    >
+                      {{ "notification.reject_btn" | translate }}
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      *ngIf="!selectedUserTab"
+                      [disabled]="filteredRequestId?.length == 0"
+                      (click)="openRemarksDialog(1, filteredWorklistData)"
+                    >
+                      {{ "notification.approve_btn" | translate }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="table-view mt-4"
+                *ngIf="worklistDataSource.data?.length != 0"
+              >
+                <div class="table-responsive text-nowrap">
+                  <table mat-table matSort [dataSource]="worklistDataSource">
+                    <ng-container matColumnDef="cb">
+                      <th mat-header-cell *matHeaderCellDef>
+                        <input
+                          type="checkbox"
+                          *ngIf="!selectedUserTab"
+                          (change)="checkAllBoxes($event)"
+                          [checked]="
+                            noOfPendingReq == filteredRequestId.length &&
+                            noOfPendingReq != 0
+                          "
+                        />
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        <input
+                          *ngIf="!selectedUserTab"
+                          type="checkbox"
+                          (change)="onCheckboxChange($event, element.requestId)"
+                          [checked]="checkIfInSelectedList(element.requestId)"
+                          [disabled]="element.transactionApprovalStatusCd != 1"
+                        />
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="requestId">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        {{ "notification.req_id_lbl" | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element.requestId }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="requestorName">
+                      <th
+                        mat-header-cell
+                        [hidden]="selectedUserTab"
+                        *matHeaderCellDef
+                        mat-sort-header
+                      >
+                        {{ "notification.username_lbl" | translate }}
+                      </th>
+                      <td
+                        mat-cell
+                        [hidden]="selectedUserTab"
+                        *matCellDef="let element"
+                        [ngClass]="
+                          element?.requestorName?.length > 15
+                            ? 'owner-name ellips-text mr-1'
+                            : ''
+                        "
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ element?.requestorName }}"
+                      >
+                        {{ element?.requestorName || "--" }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="supervisorName">
+                      <th
+                        mat-header-cell
+                        [hidden]="!selectedUserTab"
+                        *matHeaderCellDef
+                        mat-sort-header
+                      >
+                        {{ "notification.supervisorname_lbl" | translate }}
+                      </th>
+                      <td
+                        mat-cell
+                        [hidden]="!selectedUserTab"
+                        *matCellDef="let element"
+                        [ngClass]="
+                          element?.supervisorName?.length > 15
+                            ? 'owner-name ellips-text mr-1'
+                            : ''
+                        "
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ element?.supervisorName }}"
+                      >
+                        {{ element?.supervisorName || "--" }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="moduleName">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        {{ "notification.module" | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element.moduleName }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="subModuleName">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        {{ "notification.sub_module" | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element.subModuleName }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="creationDate">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        {{ "notification.received_on" | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ dateFormatChange(element.creationDate) }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="transactionApprovalStatus">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        {{ "common.status" | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element.transactionApprovalStatus }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="action">
+                      <th mat-header-cell *matHeaderCellDef>
+                        {{ "common.action" | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        <a
+                          href="javascript:void(0)"
+                          (click)="viewWorkListDialog(element)"
+                          >{{ "common.view" | translate }}</a
+                        >
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr
+                      mat-row
+                      *matRowDef="let row; columns: displayedColumns"
+                    ></tr>
+                  </table>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+
+          <!-- <div
+            class="owner-reg--approved"
+            class="tab-pane fade"
+            [id]="'approved'"
+            [ngClass]="{
+              active: activeTab == 'approved',
+              show: activeTab == 'approved'
+            }"
+            role="tabpanel worklist-tab-panel"
+            aria-labelledby="approved-tab"
+          >
+            <ng-container *ngIf="activeTab == 'approved'">
+              <div>approved</div>
+            </ng-container>
+          </div> -->
+
+          <!-- <div
+            class="owner-reg--rejected"
+            class="tab-pane fade"
+            [id]="'rejected'"
+            [ngClass]="{
+              active: activeTab == 'rejected',
+              show: activeTab == 'rejected'
+            }"
+            role="tabpanel worklist-tab-panel"
+            aria-labelledby="rejected-tab"
+          >
+            <ng-container *ngIf="activeTab == 'rejected'">
+              <div>rejected</div>
+            </ng-container>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div
+  class="paginator-outer-container"
+  *ngIf="worklistDataSource.data?.length > 0"
+>
+  <div class="paginator-inner-container">
+    <div class="paginator-page-size">
+      <div class="paginator-page-size--label">
+        {{ "notification.item_per_page" | translate }}:
+      </div>
+      <div class="item-per-page-option">
+        <select [(ngModel)]="itemPerPage" (change)="fetchDataFromPagination()">
+          <option (value)="(5)">5</option>
+          <option (value)="(10)">10</option>
+          <option (value)="(20)">20</option>
+          <option (value)="(30)">30</option>
+          <option (value)="(100)">100</option>
+        </select>
+      </div>
+    </div>
+    <div class="mr-2">
+      {{ "notification.page" | translate }} {{ currPageNo + 1 }}
+      {{ "notification.of" | translate }} {{ totalPages }}
+    </div>
+    <div>
+      <i
+        class="fa fa-solid fa-chevron-left"
+        style="margin-right: 10px"
+        (disable)="(currPageNo == 0)"
+        (click)="fetchPageData('pre')"
+      ></i>
+      <i
+        class="fa fa-solid fa-chevron-right"
+        (disable)="(currPageNo == totalPages)"
+        (click)="fetchPageData('next')"
+      ></i>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,160 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<!-- section breadcum -->
+<div class="container p-0">
+  <div class="row breadcum align-items-center py-2">
+    <div class="col-12">
+      <div class="breadcrumb-list">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item active" routerLink="/dashboard">
+              <a>{{ "vaccination.breadcrumb_vaccinationFirst" | translate }}</a>
+            </li>
+            <li class="breadcrumb-item active">
+              <label>{{ "vaccination.breadcrumb_vaccinationSecond" | translate }} </label>
+            </li>
+            <li class="breadcrumb-item current">
+              <label>{{ "intimation.breadcrumb_intimationthird" | translate }} </label>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- section breadcum -->
+
+<section class="intimation-reportList">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card border-0">
+        <div class="card-body">
+          <div class="row intimation-header">
+            <div class="col-md-12">
+              <span class="reportList-heading">
+                {{ "intimation.previous_intimation_reports" | translate }}
+              </span>
+            </div>
+          </div>
+
+          <div class="row align-items-center mt-3 filter-section">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+              <div class="form-row">
+                <div class="filter-by">
+                  <img src="/assets/images/search.svg" alt="icon-search" class="input-icon-left" />
+                  <input type="text" id="filter-by" placeholder="{{'common.Search_by_keywords' | translate}}"
+                    class="form-control input input-search-section" (keyup)="searchInTable($event)" />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="add-report">
+                <button type="submit" class="btn btn-primary" [routerLink]="['new-report']" appPermission
+                  [permissionType]="masterConfig.isAdd">
+                  {{"intimation.create_new_report" | translate}}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="report-table table-view mt-3">
+            <div class="table-responsive">
+              <table matSort mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+                <!-- reportsID Column -->
+                <ng-container matColumnDef="intimationId">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{"intimation.report_id" | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.intimationId }}
+                  </td>
+                </ng-container>
+
+                <!-- First Intimation Date Column -->
+                <ng-container matColumnDef="firstIntimationDate">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{"fir.date_of_first_intimation" | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.firstIntimationDate }}
+                  </td>
+                </ng-container>
+
+                <!-- symptoms Column -->
+                <ng-container matColumnDef="symptomDesc">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{"fir.symptoms" | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="mat-custom-column">
+                      {{ element.intimationReportSymptomDetails }}
+                    </div>
+                  </td>
+                </ng-container>
+
+                <!-- disease Column -->
+                <ng-container matColumnDef="diseaseDesc">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{"animalTreatmentSurgery.suspected_disease" | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="mat-custom-column">
+                      {{ element.intimationReportDiseaseDetails }}
+                    </div>
+                  </td>
+                </ng-container>
+
+                <!-- village Column -->
+                <ng-container matColumnDef="villageName">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{"common.village_name" | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="mat-custom-column">
+                      {{ element.intimationReportVillageDetails }}
+                    </div>
+                  </td>
+                </ng-container>
+
+                <!-- edit Column -->
+                <ng-container matColumnDef="edit">
+                  <th mat-header-cell *matHeaderCellDef>{{"common.action" | translate}}</th>
+                  <td mat-cell *matCellDef="let element" class="action-link">
+                    <ul class="action-list">
+                      <li class="action-item">
+                        <a class="edit text-link" [routerLink]="['new-report']"
+                          [queryParams]="{ intimationId: element.intimationId }" appPermission
+                          [permissionType]="masterConfig.isModify">{{"common.edit" | translate}}</a>
+                      </li>
+                      <li class="action-item">
+                        <a class="view text-link" href="javascript:void(0)"
+                          (click)="viewReportDialog(element.intimationId)">
+                          {{"animalBreeding.view" | translate}}
+                        </a>
+                      </li>
+                    </ul>
+                  </td>
+                </ng-container>
+                <!-- view Column -->
+
+                <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+                <tr mat-row *matRowDef="let element; columns: columnsToDisplay"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell text-center" [attr.colspan]="columnsToDisplay.length">
+                    {{"intimation.no_data_found" | translate}}
+                  </td>
+                </tr>
+              </table>
+              <mat-paginator #listPaginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of reports">
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

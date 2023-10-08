@@ -1,0 +1,404 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            <a routerLink="/dashboard">{{'common.breadcrumb_home'| translate}}</a>
+          </li>
+          <li class="breadcrumb-item current">
+            <label>{{'performanceRecording.pr'| translate}} </label>
+          </li>
+          <li class="breadcrumb-item current">
+            <label>{{'performanceRecording.mr_schedule'| translate}} </label>
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<section class="owner-reg">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <!-- Search By -->
+          <form [formGroup]="searchForm">
+            <div class="form-row">
+              <div class="col-md-2 search-by">
+                <div class="form-group">
+                  <label for="Treatment Record Date">{{'performanceRecording.project'| translate}}<span
+                      class="mandatory-field">*</span></label>
+                  <select class="form-control" name="projectType" formControlName="projectType">
+                    <option [value]="null">{{'animalDetails.select'| translate}} {{'performanceRecording.project'| translate}}</option>
+                    <option [value]="project?.projectId" *ngFor="let project of userDetails?.userProject">
+                      {{project?.projectName}}</option>
+                  </select>
+                  <div class="alert-message"
+                    *ngIf="formControls?.projectType?.errors?.required && formControls?.projectType.touched">
+                    {{cmnValidations.required | translate}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2 search-by">
+                <div class="form-group">
+                  <label for="Treatment Record Date">{{'performanceRecording.frequency'| translate}}</label>
+                  <input class="form-control" type="text" formControlName="frequency" readonly />
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group input-icon">
+                  <label for="Case Status">{{'performanceRecording.from_date'|translate}}</label>
+                  <input class="form-control" type="text" [max]="today" [matDatepicker]="FromDate"
+                    formControlName="fromDate" placeholder="dd-mm-yyyy" />
+                  <mat-datepicker-toggle matSuffix [for]="FromDate" class="calender-icon">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #FromDate></mat-datepicker>
+                </div>
+              </div>
+              <div class="col-md-2 search-by">
+                <div class="form-group">
+                  <label for="Treatment Record Date">{{'animalDetails.state'| translate}}<span
+                      class="mandatory-field">*</span></label>
+                  <ng-select [items]="statesList" appendTo="body" class="custom" name="stateCd" id="stateCd"
+                    formControlName="stateCd" bindLabel="stateName" (change)="getDistrictDetails($event)"
+                    bindValue="stateCd" placeholder="Select State">
+
+                  </ng-select>
+                  <div class="alert-message"
+                    *ngIf="formControls?.stateCd?.errors?.required && formControls?.stateCd.touched">
+                    This field is mandatory
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2 search-by">
+                <div class="form-group">
+                  <label for="Treatment Record Date">{{'animalDetails.district'| translate}}<span
+                      class="mandatory-field">*</span></label>
+                  <ng-select [items]="districtList" appendTo="body" class="custom" id="districtCd"
+                    formControlName="districtCd" bindLabel="districtName" bindValue="districtCd"
+                    placeholder="Select District" (change)="getTehsilDetails($event)">
+
+                  </ng-select>
+                  <div class="alert-message"
+                    *ngIf="formControls?.districtCd?.errors?.required && formControls?.districtCd.touched">
+                    This field is mandatory
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2 search-by">
+                <div class="form-group">
+                  <label for="Treatment Record Date">{{'animalDetails.tehsil'| translate}}<span
+                      class="mandatory-field">*</span></label>
+                  <ng-select [items]="tehsilList" appendTo="body" class="custom" name="tehsilCd"
+                    formControlName="tehsilCd" (change)="getVillagesDetails($event)" placeholder="Select Tehsil"
+                    bindLabel="tehsilName" bindValue="tehsilCd">
+                  </ng-select>
+                  <div class="alert-message"
+                    *ngIf="formControls?.tehsilCd?.errors?.required && formControls?.tehsilCd.touched">
+                    This field is mandatory
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 search-by">
+                <div class="form-group">
+                  <label for="Treatment Record Date">{{'common.village_name' | translate}}<span
+                      class="mandatory-field">*</span></label>
+                  <ng-select appendTo="body" class="custom g" [items]="villageList" [multiple]="true"
+                    bindLabel="villageName" groupBy="selectedAllGroup" [selectableGroup]="true"
+                    [selectableGroupAsModel]="false" [closeOnSelect]="false" bindValue="villageCd"
+                    placeholder="Select Villages" id="villageCd" formControlName="villageCd"
+                    [ngClass]="{ 'is-invalid': formControls?.villageCd.touched && formControls?.villageCd?.errors }">
+                    <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+                      {{'campaignCreation.select_all' | translate}}
+                    </ng-template>
+
+                    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input class="mr-2" id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />{{
+                      item.villageName }}
+                    </ng-template>
+                  </ng-select>
+                  <div class="alert-message"
+                    *ngIf="formControls?.villageCd?.errors?.required && formControls?.villageCd.touched">
+                    This field is mandatory
+                  </div>
+
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group form-check-inline">
+                     <input type="checkbox" class="form-check-input checkbox-alignment" id="de-wormerCheck"
+                       formControlName="isPreviousRecord" />
+                     <label class="form-check-label label-postition" for="de-wormerCheck"><b>{{'performanceRecording.previous_record'|translate}}</b></label>
+                   </div>
+             </div>
+
+             <div class="col-md-2" *ngIf="formControls?.isPreviousRecord?.value != false">
+               <div class="form-group input-icon">
+                 <label for="Case Status">{{'performanceRecording.start_date'|translate}}</label>
+                 <input class="form-control" type="text" [min]="prevousDate" [max]="today" [matDatepicker]="StartDate"
+                   formControlName="startDate" placeholder="dd-mm-yyyy" />
+                 <mat-datepicker-toggle matSuffix [for]="StartDate" class="calender-icon">
+                 </mat-datepicker-toggle>
+                 <mat-datepicker #StartDate></mat-datepicker>
+                 <span class="alert-message" *ngIf="
+                 (formControls?.startDate.dirty &&
+                 formControls?.startDate.invalid) ||
+                 formControls?.startDate.touched
+             ">
+             <span *ngIf="formControls?.startDate.hasError('matDatepickerMin')">
+                 {{'common.please_enter_valid_date' | translate}}
+             </span>
+             <span *ngIf="formControls?.startDate.hasError('matDatepickerMax')">
+                 {{'common.please_enter_valid_date' | translate}}
+             </span>
+             <span *ngIf="formControls?.startDate.hasError('matDatepickerParse')">
+                 {{'common.please_enter_valid_date' | translate}}
+             </span>
+             <span
+                 *ngIf="formControls?.startDate.hasError('required') && !formControls?.startDate.hasError('matDatepickerParse')">
+                 {{'errorMsg.field_mandatory' | translate}}
+             </span>
+         </span>
+               </div>
+             </div>
+             <div class="col-md-2 button-class btn-mobile-view search-btn mr-30" >
+              <button type="submit" class="btn btn-primary" (click)="searchMRList()">
+                {{'performanceRecording.search_btn' | translate}}
+              </button>
+             </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row p-0 mb-3" *ngIf="isMRList?.length > 0">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <!-- Search By -->
+          <form [formGroup]="animalForm">
+            <div class="form-row">
+              <div class="col-md-5 search-by">
+                <label for="Animal ID">{{'performanceRecording.add_animal_to_create_a_schedule' | translate}} </label>
+                <!-- <img src="/assets/images/search.svg" class="input-icon-left" alt="icon-search" /> -->
+                <input type="text" class="form-control input input-section" id="search-by" placeholder="Enter Animal ID"
+                  maxlength="12" formControlName="tagId" />
+                <!-- <span class="input-clear" (click)="resetValue()"> clear </span> -->
+                <div class="alert-message"
+                  *ngIf="(animalformControls?.tagId?.hasError('minlength') || animalformControls?.tagId?.hasError('maxlength')) && (animalformControls?.tagId?.touched ||animalformControls?.tagId?.dirty) ">
+                  Tag ID must be 12 digits
+                </div>
+
+                <div class="alert-message"
+                  *ngIf="animalformControls?.tagId?.errors?.pattern && (animalformControls?.tagId.touched )">
+                  Please Enter Valid Sire ID
+                </div>
+              </div>
+
+              <div class="col-auto align-self-end btn-mobile-view">
+                <button type="submit" class="btn btn-primary" (click)="addAnimal()">
+                  {{'animalDetails.add_animal' | translate}}
+                </button>
+              </div>
+              <!-- <div class="alert-message" *ngIf="errorMessage">
+                  {{ errorMessage }}
+                </div> -->
+            </div>
+          </form>
+          <!-- <app-common-module (emitFunctionOfParent)="myMethod($event)"></app-common-module> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row p-0 mb-3" *ngIf="isMRList">
+    <div class="col-md-12">
+
+      <div class="card">
+        <div class="card-body position-relative">
+          <span class="floating-filedset fildset-bg-blue">
+            <span class="float-label">{{'performanceRecording.select_animal_to_create_a_schedule' | translate}}</span>
+          </span>
+          <div class="row align-items-center mt-4" *ngIf="isMRList?.length > 0">
+            <div class="col-lg-4 col-md-4 col-sm-12">
+              <div class="title-heading">
+                <form>
+                  <div class="form-row">
+                    <div class="filter-by">
+                      <img src="/assets/images/search.svg" class="input-icon-filter" alt="icon-search" />
+                      <input type="text" class="form-control input input-section" id="filter-by"
+                        placeholder="Search by keywords" (keyup)="searchInTable($event)" />
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-12">
+
+            </div>
+          </div>
+          <div *ngIf="isMRList?.length == 0" class="mt-3 title-heading">
+            <h3>{{'diseaseTesting.no_animals_registered' | translate}}</h3>
+          </div>
+          <div class="table-responsive table-view mb-3" *ngIf="isMRList && isMRList?.length > 0">
+            <div class="table-responsive">
+              <table mat-table matSort [dataSource]="tableDataSource" class="mat-elevation-z8 mt-4">
+                <ng-container matColumnDef="radio">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    <div class="form-check form-check-inline">
+                      <input appPermission [permissionType]="masterConfig.isAdd" type="checkbox" class="check-input"
+                        name="rowcheck" id="selectrow" [value]="" [checked]="checkIfInSelectedList(element)"
+                        (change)="onCheckboxChange($event, element)" />
+                    </div>
+                  </td>
+                </ng-container>
+
+                <!-- S. No. Column -->
+                <ng-container matColumnDef="sNo">
+                  <th mat-header-cell *matHeaderCellDef>{{'performanceRecording.sno'| translate}}</th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ paginator.pageIndex * paginator.pageSize + (i + 1) }}
+                  </td>
+                </ng-container>
+
+
+                <!-- Tag ID Column -->
+                <ng-container matColumnDef="lastMRDate">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Last MR Date</th>
+                  <td mat-cell *matCellDef="let element">{{ element?.lastMRDate | date: 'dd-MM-yyyy' }}</td>
+                </ng-container>
+
+                <!-- Species Column -->
+                <ng-container matColumnDef="lastMRNo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Last MR No.</th>
+                  <td mat-cell *matCellDef="let element">{{ element?.lastMRNo }}</td>
+                </ng-container>
+
+                <!-- Breed Column -->
+                <ng-container matColumnDef="tagNo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'animalDetails.tag_id' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">{{ element?.tagId}}</td>
+                </ng-container>
+
+                <!-- Age Column -->
+                <ng-container matColumnDef="species">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ "animalDetails.category_species" |
+                    translate }}</th>
+                  <td mat-cell *matCellDef="let element">{{ element?.species }}</td>
+                </ng-container>
+
+                <!-- Pregnancy Status Column -->
+                <ng-container matColumnDef="calvingDate">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'performanceRecording.calving_date' |
+                    translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.lastCalvingDate }}
+                  </td>
+                </ng-container>
+
+                <!-- Milking Status Column -->
+                <ng-container matColumnDef="village">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'common.village_name' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{ element?.ownerDetails?.ownerVillageName }}
+                  </td>
+                </ng-container>
+
+                <!-- Current Location number -->
+                <ng-container matColumnDef="ownersName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'common.owner_name_lbl' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{ element?.ownerDetails?.ownerName}}
+                  </td>
+                </ng-container>
+
+                <!-- Elite -->
+                <ng-container matColumnDef="scheduled">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'performanceRecording.scheduled' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.scheduled}}
+                  </td>
+                </ng-container>
+
+                <!-- Action Column -->
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef> {{'common.action'|translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    <a appPermission [permissionType]="masterConfig.isDelete" class="health-history"
+                      href="javascript:void(0)">Remove</a>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+              </table>
+              <!-- <mat-paginator *ngIf="isMRList?.length > 0" [pageSizeOptions]="[5, 10, 25, 100]"
+                aria-label="Select page of users" #paginatorRef>
+              </mat-paginator> -->
+              <mat-paginator #paginator [length]="totalRows" [pageIndex]="currentPage" [pageSize]="pageSize"
+              [pageSizeOptions]="pageSizeOptions" (page)="pageChanged($event)" aria-label="Select page" >
+            </mat-paginator>
+            </div>
+
+            <div class="row" *ngIf="animalDetail?.length > 0">
+              <div class="h-divider">
+                <div class="dashed"></div>
+              </div>
+            </div>
+
+            <div class="row select-id" *ngIf="animalDetail?.length > 0">
+              <div class="col-lg-12 col-md-12">
+                <div class="row no-gutters mb-2">
+                  <div class="col-md-2 m-0 p-0">
+                    <span class="st-label">{{'performanceRecording.selected_tag_ids' | translate}}:<span
+                        class="st-id">[{{ animalDetail.length
+                        }}]</span>
+                    </span>
+                  </div>
+
+                  <div class="col-md-10 m-0 p-0">
+                    <div *ngIf="animalDetail?.length > 0">
+                      <ul class="selected-animal-list">
+                        <li class="selected-animal-listitem outline ng-star-inserted" *ngFor="
+                                  let animal of animalDetail 
+                                ">
+                          {{ animal?.tagId }}
+                          <img src="/assets/images/cross-icon.svg" alt="icon-cross"
+                            (click)="onClickingRemoveWithOutCampaign(animal)" class="animal-listitem-cross" />
+                        </li>
+
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-12 col-md-12">
+                <div class="form-row justify-content-end my-2">
+                  <button type="reset" class="btn btn-outline-primary mr-2">
+                    {{'animalDetails.cancel' | translate}}
+                  </button>
+
+                  <button type="submit" class="btn btn-primary" (click)="createSchedule()">
+                    {{'animalDetails.proceed' | translate}}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

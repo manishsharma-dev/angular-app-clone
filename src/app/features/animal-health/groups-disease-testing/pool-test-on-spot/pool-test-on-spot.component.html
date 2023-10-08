@@ -1,0 +1,100 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<form [formGroup]="onSpotRequestDtos">
+  <div class="form-row">
+    <div class="col-md-3 form-group">
+      <label for="date_of_testing" class="form-label">
+        {{'diseaseTesting.disease_suspected_on_spot' | translate}}
+      </label>
+      <ng-select class="custom" appendTo="body" [items]="suspectedDiseaseMaster" bindLabel="diseaseDesc"
+        [selectableGroup]="true" [selectableGroupAsModel]="false" [virtualScroll]="true"
+        placeholder="{{'diseaseTesting.search_disease' | translate}}" [closeOnSelect]="true"
+        formControlName="diseaseCd">
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          <div class="d-flex justify-content-between">
+            <span>{{ item.diseaseDesc }}</span>
+          </div>
+        </ng-template>
+      </ng-select>
+      <span class="alert-message" *ngIf="
+                      (formControls.diseaseCd.dirty &&
+                        formControls.diseaseCd.invalid) ||
+                      formControls.diseaseCd.touched
+                    ">
+        <span *ngIf="formControls.diseaseCd.hasError('required')">
+          {{ validationMsg.required | translate }}
+        </span>
+      </span>
+    </div>
+    <div class="col-3 form-group">
+      <label for="Sample">{{'diseaseTesting.test_type' | translate}} <span class="mandatory-field">*</span> </label>
+      <select class="form-control" formControlName="onSpotTestCd">
+        <option value="null">{{'diseaseTesting.select_test_type' | translate}}</option>
+        <option *ngFor="let test of onSpotTest" [value]="test.onSpotTestCd">{{test.onSpotTestDesc}}</option>
+      </select>
+      <span class="alert-message" *ngIf="
+                      (formControls.onSpotTestCd.dirty &&
+                        formControls.onSpotTestCd.invalid) ||
+                      formControls.onSpotTestCd.touched
+                    ">
+        <span *ngIf="formControls.onSpotTestCd.hasError('required')">
+          {{ validationMsg.required | translate }}
+        </span>
+      </span>
+    </div>
+    <div class="col-3 form-group">
+      <label for="Sample">{{'diseaseTesting.sample_type' | translate}}</label>
+      <ng-select class="custom" appendTo="body" [items]="onSpotSampleMaster" bindLabel="sampleTypeDesc"
+        [selectableGroup]="true" [selectableGroupAsModel]="false" [virtualScroll]="true"
+        placeholder="{{'diseaseTesting.search_sample_type' | translate}}" [closeOnSelect]="true"
+        formControlName="sampleType">
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          <div class="d-flex justify-content-between">
+            <span>{{ item.sampleTypeDesc }}</span>
+          </div>
+        </ng-template>
+      </ng-select>
+    </div>
+  </div>
+  <div class="form-row">
+    <ng-container *ngIf="isReadingShow">
+      <div class="col-md-3">
+        <label for="initial">{{'diseaseTesting.initial_reading' | translate}}</label>
+        <input type="text" class="form-control" formControlName="initialSampleResultValue">
+        <span class="alert-message" *ngIf="
+                      (formControls.initialSampleResultValue.dirty &&
+                        formControls.initialSampleResultValue.invalid) ||
+                      formControls.initialSampleResultValue.touched
+                    ">
+          <span *ngIf="formControls.initialSampleResultValue.hasError('invalidDecimalNo')">
+            {{"errorMsg.check_field" | translate}}
+          </span>
+        </span>
+      </div>
+      <div class="col-md-3">
+        <label for="final">{{'diseaseTesting.final_reading' | translate}}</label>
+        <input type="text" class="form-control" formControlName="finalSampleResultValue">
+        <span class="alert-message" *ngIf="
+                      (formControls.finalSampleResultValue.dirty &&
+                        formControls.finalSampleResultValue.invalid) ||
+                      formControls.finalSampleResultValue.touched
+                    ">
+          <span *ngIf="formControls.finalSampleResultValue.hasError('invalidDecimalNo')">
+            {{"errorMsg.check_field" | translate}}
+          </span>
+        </span>
+      </div>
+    </ng-container>
+
+    <div class="col-md-3">
+      <label for="result">{{'diseaseTesting.results' | translate}}</label>
+      <select class="form-control" formControlName="sampleResult">
+        <option value="1">{{'diseaseTesting.positive' | translate}}</option>
+        <option value="2">{{'diseaseTesting.negative' | translate}}</option>
+      </select>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,373 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<!-- section breadcum -->
+<div class="container p-0">
+  <div class="row breadcum align-items-center py-2">
+    <div class="col-12">
+      <div class="breadcrumb-list">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item active" routerLink="/dashboard">
+              <a>{{ "vaccination.breadcrumb_vaccinationFirst" | translate }}</a>
+            </li>
+            <li class="breadcrumb-item active">
+              <label>{{ "vaccination.breadcrumb_vaccinationSecond" | translate }}
+              </label>
+            </li>
+            <li class="breadcrumb-item current" *ngIf="currentRoute === 'untagged-treatment'">
+              <label>{{ "untagged.untagged_treatment" | translate }}</label>
+            </li>
+            <li class="breadcrumb-item current" *ngIf="currentRoute === 'untagged-first-aid'">
+              <label>{{ "untagged.Untagged_first_aid" | translate }}</label>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- section breadcum -->
+
+<section class="untagged-animal">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card border-0">
+        <form class="card-body" [formGroup]="untaggedForm">
+          <!-- owner detail -->
+          <div class="owner-details">
+            <div class="row mb-3">
+
+              <div class="col-auto ml-auto">
+                <button class="btn btn-primary" [routerLink]="['..', 'view-transactions']">
+                  {{'untagged.view_past_transactions' | translate}}
+                </button>
+              </div>
+            </div>
+            <div class="h-divider">
+              <div class="shadow"></div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <p class="label-heading">
+                  {{ "untagged.owner_details" | translate }}
+                </p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label for="requestorName" class="form-label">{{ "untagged.requestor_name" | translate
+                  }}<span class="mandatory-field">*</span></label>
+
+                <input type="text" class="form-control" id="requestorName" placeholder="{{
+                    'untagged.enter_requestor_name' | translate
+                  }}" formControlName="requestorName" />
+
+                <span class="alert-message" *ngIf="
+                    (f.requestorName.dirty && f.requestorName.invalid) ||
+                    f.requestorName.touched
+                  ">
+                  <span *ngIf="f.requestorName.hasError('pattern')">
+                    {{ validationMsg.requestorNamePattern | translate }}
+                  </span>
+                  <span *ngIf="
+                      !f.requestorName.hasError('pattern') &&
+                      f.requestorName.hasError('maxlength')
+                    ">
+                    {{ validationMsg.requestorNameRemarks | translate }}
+                  </span>
+
+                  <span *ngIf="f.requestorName.hasError('required')">
+                    {{ validationMsg.required | translate }}
+                  </span>
+                </span>
+              </div>
+
+              <div class="form-group col-md-4">
+                <label for="requestorMobNo" class="form-label">{{ "common.mobile" | translate
+                  }}<span class="mandatory-field">*</span></label>
+                <input type="tel" class="form-control" id="requestorMobNo" minlength="10" maxlength="10"
+                  placeholder="{{ 'untagged.enter_mobile_no' | translate }}" formControlName="requestorMobNo" />
+                <span *ngIf="
+                    (untaggedForm.get('requestorMobNo').invalid &&
+                      !untaggedForm.get('requestorMobNo').pristine) ||
+                    untaggedForm.get('requestorMobNo').touched
+                  " class="validation-error-message">
+                  <span *ngIf="untaggedForm.get('requestorMobNo').errors?.['required']"
+                    class="validation-error-message">
+                    {{ "validationMessage.Mobile_Number_required" | translate }}
+                  </span>
+                  <span *ngIf="untaggedForm.get('requestorMobNo').errors?.['pattern']" class="validation-error-message">
+                    {{ "validationMessage.Mobile_Number_pattern" | translate }}
+                  </span>
+                  <span *ngIf="untaggedForm.get('requestorMobNo').errors?.['minlength']"
+                    class="validation-error-message">
+                    {{
+                    "validationMessage.Mobile_Number_minlength" | translate
+                    }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="villages" class="form-label">{{ "campaignCreation.campaign_select_village" |
+                  translate
+                  }}<span class="mandatory-field">*</span></label>
+                <!-- <ng-select class="custom" [items]="villages" [multiple]="true" bindLabel="villageName"
+                                    groupBy="selectedAllGroup" [selectableGroup]="true" [selectableGroupAsModel]="false"
+                                    [closeOnSelect]="false" formControlName="villages"
+                                    placeholder="{{ 'campaignCreation.campaign_select_village'  | translate}}"> -->
+                <!-- <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                                        <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+                                        {{"intimation.select_all" | translate}}
+                                    </ng-template> -->
+                <!--
+                                    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                                        <input class="mr-2" id="item-{{ index }}" type="checkbox"
+                                            [checked]="item$.selected" />
+                                        {{ item.villageName }}
+                                    </ng-template>
+                                </ng-select> -->
+                <ng-select bindLabel="villageName" placeholder="{{
+                    'campaignCreation.campaign_select_village' | translate
+                  }}" [searchable]="true" [clearable]="true" id="villages" formControlName="villages">
+                  <ng-option [value]="data" *ngFor="let data of temVillageList">
+                    {{ data.villageName }}
+                  </ng-option>
+                </ng-select>
+                <span class="alert-message" *ngIf="
+                    (f.villages.dirty && f.villages.invalid) ||
+                    f.villages.touched
+                  ">
+                  <span *ngIf="f.villages.hasError('required')">
+                    {{ validationMsg.required | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- horizontal-seprator -->
+          <div class="h-divider">
+            <div class="shadow"></div>
+          </div>
+
+          <!-- animal treatment & first-aid details -->
+          <div class="animal-details mt-4 mb-4">
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <p class="label-heading">
+                  <ng-container *ngIf="currentRoute === 'untagged-treatment'">{{
+                    "untagged.animal_treatment_details" | translate
+                    }}</ng-container>
+                  <ng-container *ngIf="currentRoute === 'untagged-first-aid'">{{
+                    "untagged.anima_first_aid_details" | translate
+                    }}</ng-container>
+                </p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label for="Treatment Record Date"> {{"animalTreatmentSurgery.treatment_date_entry_date" |
+                  translate}}<span class="mandatory-field">*</span></label>
+                <input type="text" class="form-control" formControlName="treatmentRecordDate" #treatmentRecordDate />
+              </div>
+              <div class="form-group col-md-4 input-icon">
+                <label for="Treatment Date"> {{"animalTreatmentSurgery.treatment_date" |
+                  translate}}<span class="mandatory-field">*</span></label>
+                <input class="form-control" type="text" [min]="minDate" [max]="today" [matDatepicker]="pickerDate"
+                  formControlName="treatmentDate" placeholder="dd/mm/yyyy" />
+                <mat-datepicker-toggle matSuffix [for]="pickerDate" class="calender-icon"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDate></mat-datepicker>
+
+                <span class="alert-message" *ngIf="
+                  (f.treatmentDate.dirty &&
+                  f.treatmentDate.invalid) ||
+                  f.treatmentDate.touched
+                ">
+                  <span *ngIf="f.treatmentDate.hasError('matDatepickerMin')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span *ngIf="f.treatmentDate.hasError('matDatepickerMax')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span *ngIf="f.treatmentDate.hasError('matDatepickerParse')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span *ngIf="f.treatmentDate.hasError('required') && !f.treatmentDate.hasError('matDatepickerParse')">
+                    {{ validationMsg.required | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label for="speciesCd" class="form-label">{{ "untagged.species" | translate
+                  }}<span class="mandatory-field">*</span></label>
+                <ng-select bindLabel="name" placeholder="{{
+                    'animalDetails.animal_species_placeholder' | translate
+                  }}" [searchable]="true" [clearable]="true" id="speciesCd" formControlName="speciesCd">
+                  <ng-option [value]="species" *ngFor="let species of speciesMaster">
+                    {{ species.value }}
+                  </ng-option>
+                </ng-select>
+
+                <span class="alert-message" *ngIf="
+                    (f.speciesCd.dirty && f.speciesCd.invalid) ||
+                    f.speciesCd.touched
+                  ">
+                  <span *ngIf="f.speciesCd.hasError('required')">
+                    {{ validationMsg.required | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group col-md-3">
+                <label for="sex" class="form-label">{{ "common.sex" | translate
+                  }}<span class="mandatory-field">*</span></label>
+                <select class="form-control" id="sex" formControlName="sex">
+                  <option [ngValue]="null" disabled>{{'animalDetails.selectSex' | translate}}
+                  </option>
+                  <option value="M">{{'animalDetails.male' | translate}}</option>
+                  <option value="F">{{'animalDetails.female' | translate}}</option>
+                </select>
+
+                <span class="alert-message" *ngIf="
+                    (f.sex.dirty && f.sex.invalid) ||
+                    f.sex.touched
+                  ">
+                  <span *ngIf="f.sex.hasError('required')">
+                    {{ validationMsg.required | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group col-md-3" *ngIf="currentRoute === 'untagged-first-aid'">
+                <label for="ailmentCd" class="form-label">
+                  {{ "firstAid.Minor_Ailment" | translate
+                  }}<span class="mandatory-field">*</span></label>
+                <ng-select bindLabel="name" placeholder="{{
+                    'firstAid.select_minor_ailment_details' | translate
+                  }}" [searchable]="true" [clearable]="true" id="ailmentCd" formControlName="ailmentCd">
+                  <ng-option *ngFor="let data of minor_ailment" [value]="data">
+                    {{ data.value }}
+                  </ng-option>
+                </ng-select>
+
+                <div *ngIf="
+                    (!f.ailmentCd.pristine && f.ailmentCd.invalid) ||
+                    f.ailmentCd.touched
+                  " class="alert-message">
+                  <div *ngIf="f.ailmentCd.errors?.required">
+                    {{ "firstAid.select_minor_ailment_details" | translate }}
+                  </div>
+                  <div *ngIf="f.ailmentCd.errors?.pattern">
+                    {{ "firstAid.minor_ailment_details_required" | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-3" *ngIf="currentRoute === 'untagged-treatment'">
+                <label for=" diseaseCd" class="form-label">{{ "untagged.disease" | translate
+                  }}<span class="mandatory-field">*</span></label>
+                <ng-select bindLabel="name" placeholder=" {{ 'untagged.select_disease' | translate }}"
+                  [searchable]="true" [clearable]="true" id="diseaseCd" formControlName="diseaseCd">
+                  <ng-option *ngFor="let data of getVaccinationFor" [value]="data">
+                    {{ data.diseaseDesc }}
+                  </ng-option>
+                </ng-select>
+
+                <span class="alert-message" *ngIf="
+                    (f.diseaseCd.dirty && f.diseaseCd.invalid) ||
+                    f.diseaseCd.touched
+                  ">
+                  <span *ngIf="f.diseaseCd.hasError('required')">
+                    {{ validationMsg.required | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group col-md-3">
+                <label for="noTagReason" class="form-label">{{ "untagged.reason_for_not_tagging" |
+                  translate
+                  }}<span class="mandatory-field">*</span></label>
+                <ng-select bindLabel="name" [searchable]="true" [clearable]="true" id="noTagReason"
+                  formControlName="noTagReason" [placeholder]="'untagged.reason_for_not_tagging' | translate">
+                  <ng-option *ngFor="let data of noTaggingData" [value]="data">
+                    {{ data.value }}
+                  </ng-option>
+                  <ng-option [value]="{ cd: 0 }">
+                    {{ "untagged.other" | translate }}
+                  </ng-option>
+                </ng-select>
+              </div>
+              <div class="form-group col-md-3" *ngIf="f?.noTagReason?.value?.cd === 0">
+                <label for="specifyReason" class="form-label">{{ "untagged.specify_reason" | translate
+                  }}<span class="mandatory-field">*</span></label>
+                <input type="text" class="form-control" id="specifyReason" placeholder="{{
+                    'untagged.enter_specify_reason' | translate
+                  }}" formControlName="specifyReason" />
+
+                <span class="alert-message" *ngIf="
+                    (f.specifyReason.dirty && f.specifyReason.invalid) ||
+                    f.specifyReason.touched
+                  ">
+                  <span *ngIf="f.specifyReason.hasError('pattern')">
+                    {{ validationMsg.specifyReasonPattern | translate }}
+                  </span>
+                  <span *ngIf="
+                      !f.specifyReason.hasError('pattern') &&
+                      f.specifyReason.hasError('maxlength')
+                    ">
+                    {{ validationMsg.specifyReasonRemarks | translate }}
+                  </span>
+
+                  <span *ngIf="f.specifyReason.hasError('required')">
+                    {{ validationMsg.required | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group col-md-12">
+                <label for="prescription" class="form-label">{{ "untagged.prescription" | translate
+                  }}<span class="mandatory-field">*</span></label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" formControlName="prescription"
+                  placeholder="{{ 'untagged.add_prescription' | translate }}"></textarea>
+
+                <span class="alert-message" *ngIf="
+                    (f.prescription.dirty && f.prescription.invalid) ||
+                    f.prescription.touched
+                  ">
+                  <!-- <span *ngIf="f.prescription.hasError('pattern')">
+                                        {{ validationMsg.prescriptionRemarksPattern | translate}}
+                                    </span> -->
+                  <span *ngIf="
+                      !f.prescription.hasError('pattern') &&
+                      f.prescription.hasError('maxlength')
+                    ">
+                    {{ validationMsg.prescriptionfirstAidRemarks | translate }}
+                  </span>
+
+                  <span *ngIf="f.prescription.hasError('required')">
+                    {{ validationMsg.required | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- button section -->
+          <div class="row my-2">
+            <div class="col-md-12">
+              <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-outline-primary mr-2" (click)="resetForm()">
+                  {{ "animalDetails.reset" | translate }}
+                </button>
+                <button type="submit" class="btn btn-primary" (click)="openPreviewDialog()">
+                  {{ "untagged.preview" | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

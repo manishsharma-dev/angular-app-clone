@@ -1,0 +1,200 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            <a>{{'animalDetails.home' | translate}}</a>
+          </li>
+          <li class="breadcrumb-item active">
+            <a href="javascript:void(0)">{{'animalBreeding.breeding_module'|translate}} </a>
+          </li>
+          <li class="breadcrumb-item current">
+            <a href="javascript:void(0)">{{'animalBreeding.et'|translate}} -
+              {{'animalBreeding.embryo_master'|translate}}</a>
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+<section class="owner-reg">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body position-relative">
+          <span class="floating-filedset fildset-bg-blue">
+            <span class="float-label">{{'animalBreeding.master_list_embryo'|translate}}</span>
+          </span>
+          <div class="row align-items-center mt-4">
+            <div class="col-lg-4 col-md-4 col-sm-12">
+              <div class="title-heading">
+                <form>
+                  <div class="form-row">
+                    <div class="filter-by">
+                      <img src="/assets/images/search.svg" class="input-icon-left" alt="icon-search" />
+                      <input type="text" class="form-control input input-section" id="filter-by"
+                        placeholder="{{'errorMsg.search_by_keywords'|translate}}" (keyup)="searchInTable($event)" />
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-12">
+              <div class="add-member float-md-right float-sm-left">
+                <button class="btn btn-primary mr-2" (click)="editEmbryoDetails()"
+                  [disabled]="animalDetail?.length === 0" appPermission [permissionType]="masterConfig.isModify">
+                  {{'common.edit'|translate}}
+                </button>
+                <button class="btn btn-primary mr-2">
+                  {{'animalBreeding.import'| translate}}
+                </button>
+                <button class="btn btn-primary mr-2" (click)="deleteRow('Discarded')"
+                  [disabled]="animalDetail?.length === 0">
+                  {{'animalBreeding.discard'| translate}}
+                </button>
+                <button class="btn btn-primary mr-2" (click)="allocateEmbryo('allocation')"
+                  [disabled]="animalDetail?.length === 0">
+                  {{'animalBreeding.allocate_embryo'| translate}}
+                </button>
+                <button class="btn btn-primary mr-2" routerLink="../new-embryo-master"
+                  [disabled]="animalDetail?.length !== 0" appPermission [permissionType]="masterConfig.isAdd">
+                  {{'animalBreeding.create_embryo'| translate}}
+                </button>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!animalDetail" class="mt-3 title-heading">
+            <h3>{{'animalDetails.no_animal'|translate}}</h3>
+          </div>
+          <div class="table-responsive table-view mb-3" *ngIf="embryoDetails?.length">
+            <div class="table-responsive custom-view-table">
+              <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8 mt-4">
+                <!-- <ng-container matColumnDef="checkbox">
+                        <th mat-header-cell *matHeaderCellDef>
+                          <input type="checkbox" class="check-input" name="selectAll" id="selectHeader" [value]=""
+                            [checked]="animalDetail?.length === dataSource?.filteredData?.length"
+                            (change)="checkAllBoxes($event)" />
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="cell-width">
+                          <input type="checkbox" class="check-input" name="rowcheck" id="selectrow" [value]=""
+                            [checked]="checkIfInSelectedList(element)" (change)="onCheckboxChange($event, element)" />
+                        </td>
+                      </ng-container> -->
+
+                <ng-container matColumnDef="checkbox">
+                  <!-- <th mat-header-cell *matHeaderCellDef mat-sort-header></th> -->
+                  <th mat-header-cell *matHeaderCellDef>
+                    <input type="checkbox" class="check-input" name="selectAll" id="selectHeader" [value]=""
+                    [checked]="animalDetail?.length === dataSource?.filteredData?.length"
+                    (change)="checkAllBoxes($event)" />
+                  </th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+
+                    <div class="form-check form-check-inline">
+                      <input type="checkbox" [checked]="checkIfInSelectedList(element)"
+                        (change)="onCheckboxChange($event, element)" [id]="element?.animalId" />
+                    </div>
+                  </td>
+                </ng-container>
+
+                <!-- S. No. Column -->
+                <ng-container matColumnDef="sr_no">
+                  <th mat-header-cell *matHeaderCellDef>{{'animalBreeding.sr_no'| translate}}</th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    <!-- {{ i + 1 }} -->
+                    {{ paginatorRef.pageIndex * paginatorRef.pageSize + (i + 1) }}
+                  </td>
+                </ng-container>
+
+
+                <!-- Tag ID Column -->
+                <ng-container matColumnDef="flushing_date">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'animalBreeding.flushing_date'|translate}} / {{"animalBreeding.opu_date"|translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">{{ element?.opuDate }}</td>
+                </ng-container>
+
+                <!-- Species Column -->
+                <ng-container matColumnDef="embryo_id">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'animalBreeding.embryo_id'|translate}}</th>
+                  <td mat-cell *matCellDef="let element">{{ element?.embryoId }}</td>
+                </ng-container>
+
+                <!-- Breed Column -->
+                <ng-container matColumnDef="donor_id">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'animalBreeding.donor_id'|translate}}</th>
+                  <td mat-cell *matCellDef="let element">{{ element?.donorId}}</td>
+                </ng-container>
+
+                <!-- Age Column -->
+                <ng-container matColumnDef="sire_id">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'animalDetails.sire_Id'|translate}}</th>
+                  <td mat-cell *matCellDef="let element">{{ element?.sireId }}</td>
+                </ng-container>
+
+                <!-- Pregnancy Status Column -->
+                <ng-container matColumnDef="grade">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'animalBreeding.grade'|translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.embryoGrade}}
+                  </td>
+                </ng-container>
+
+                <!-- Milking Status Column -->
+                <ng-container matColumnDef="stage">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'animalBreeding.stage'|translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.embryoStage}}
+                  </td>
+                </ng-container>
+
+                <!-- Current Location number -->
+                <ng-container matColumnDef="age">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'common.age'|translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.embryoAge}}
+                  </td>
+                </ng-container>
+
+                <!-- Elite -->
+                <ng-container matColumnDef="allocated">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'animalBreeding.allocated'|translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.allocatedTo}}
+                  </td>
+                </ng-container>
+                <!-- Elite -->
+                <ng-container matColumnDef="allocated_to">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'animalBreeding.allocated_to'|translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.allocatedToIdDesc ?? element?.allocatedTo }}
+                  </td>
+                </ng-container>
+                <!-- Action Column -->
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef> {{'animalBreeding.action'|translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    <a class="health-history" href="javascript:void(0)" routerLink="../view-detail"
+                      [queryParams]="{ embryoId: element?.embryoId}">{{'animalBreeding.view'|translate}}</a>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="spotTestingDisplayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: spotTestingDisplayedColumns">
+                </tr>
+              </table>
+              <mat-paginator  [pageSizeOptions]="[5, 10, 25, 50]"
+                aria-label="Select page of users" #paginatorRef>
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

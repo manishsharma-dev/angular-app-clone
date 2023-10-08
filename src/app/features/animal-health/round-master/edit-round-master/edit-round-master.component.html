@@ -1,0 +1,115 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+
+
+<div class="edit-dialog">
+  <div class="edit-section-header">
+    <div class="edit-heading">
+      <h3>{{ "round.modify_round" | translate }}</h3>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+ 
+  <div class="edit-container">
+    <div class="row mt-4 section-title">
+      <div class="col-md-6">
+        <p class="">{{ "round.round_number" | translate
+          }}:  {{ prescriptionRes }} </p>
+      </div>
+      <div class="col-md-6">
+        <p class="">{{ "round.diseaseName" | translate
+          }}:  {{ diseaseRes }} </p>
+      </div>
+
+    </div>
+
+
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+
+
+<form class="mb-3" [formGroup]="itemForm" (ngSubmit)="editroundSubmit()">
+
+      <div class="form-row">
+        <div class="form-group col-12">
+          <label for="selectState" class="form-label">{{"round.campaign_select_state" | translate }}<span
+              class="mandatory-field">*</span></label>
+          <ng-select class="custom" [items]="state" [multiple]="true" bindLabel="stateName"
+            groupBy="selectedAllGroup" [selectableGroup]="true" [selectableGroupAsModel]="false" [closeOnSelect]="false"
+            formControlName="selectedState"
+            placeholder="{{ 'round.campaign_select_state'  | translate}}">
+            <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+              <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+              {{"campaignCreation.select_all" | translate}}
+            </ng-template>
+
+            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+              <input class="mr-2" id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />{{
+              item.stateName }}
+            </ng-template>
+          </ng-select>
+        </div>
+
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="roundSD" class="form-label">{{ "round.round_start_date" |
+            translate }}<span class="mandatory-field">*</span></label>
+          <input type="text" class="form-control vaccDate" formControlName="roundSD" placeholder="Select Start Date"
+            #roundSD />
+
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="roundEndDate" class="form-label">{{'round.round_end_date' | translate}}<span
+              class="mandatory-field">*</span></label>
+          <input class="form-control vaccDate" id="roundEndDate" [min]="fromDate"
+            [matDatepicker]="roundEndDate" formControlName="roundEndDate"
+            placeholder="{{ 'common.select_date' | translate }}" />
+          <mat-datepicker-toggle matSuffix [for]="roundEndDate" class="picker"></mat-datepicker-toggle>
+          <mat-datepicker #roundEndDate></mat-datepicker>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="roundRD" class="form-label">{{'round.round_entryEnd_date' | translate}}<span
+              class="mandatory-field">*</span></label>
+          <input type="text" class="form-control" formControlName="roundRD" placeholder="Enter Record Date"
+            #roundRD />
+
+        </div>
+
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="remarks" class="form-label">{{"animalHealthHistory.remarks" | translate}}</label>
+          <textarea name="" class="form-control" id="remarks"
+            placeholder="{{ 'animalTreatmentSurgery.enter_reason_details' | translate}}" formControlName="remarks"
+            cols="30" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="h-divider">
+        <div class="shadow"></div>
+      </div>
+      <div class="edit-footer">
+        <button type="button" class="btn btn-outline-primary mr-2" mat-dialog-close>
+          {{ "animalDetails.cancel" | translate }}
+        </button>
+        <button type="submit" class="btn btn-primary">
+          {{ "campaignCreation.save_exit" | translate }}
+        </button>
+      </div>
+    </form> 
+  </div>
+
+
+
+
+</div>

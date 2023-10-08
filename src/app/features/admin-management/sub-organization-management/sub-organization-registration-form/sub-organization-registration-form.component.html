@@ -1,0 +1,422 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            {{ "common.breadcrumb_home" | translate }}
+          </li>
+          <li class="breadcrumb-item active">
+            {{ "organization.Admin_Management" | translate }}
+          </li>
+          <li class="breadcrumb-item current">
+            {{ "subOrganization.subOrganizationManagement" | translate }}
+          </li>
+          <li class="breadcrumb-item current">
+            {{ "subOrganization.Sub-Organization" | translate }}
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="container-white-bg">
+  <div class="row">
+    <div class="col-md-12">
+      <h4 class="mb-3">
+        <!-- <i class="fa fa-chevron-left mr-2 back-section" [routerLink]="['..', 'list']"></i> -->
+        <span>{{
+          "subOrganization.Sub-OrganizationRegistrationForm" | translate
+          }}</span>
+      </h4>
+    </div>
+  </div>
+
+  <!-- row 1 -->
+  <form [formGroup]="subOrgRegForm" (ngSubmit)="onCreateSubOrgination()">
+    <h5 class="mb-3">{{ "organization.basicInformation" | translate }}</h5>
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 form-group" *ngIf="subOrgId">
+        <label>{{ "subOrganization.Sub Org. ID" | translate }}:
+          {{ subOrgId }}</label>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 form-group" *ngIf="subOrgId">
+        <label>Status</label>
+        <select id="orgstatus" class="form-control" formControlName="orgstatus">
+          <option *ngFor="let orgstatus of status" [value]="orgstatus.cd" selected="orgstatus.value">
+            {{ orgstatus.value }}
+          </option>
+        </select>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 form-group">
+        <label for="orgType" class="form-label">{{ "subOrganization.Parent_Organization" | translate }}
+          <span class="mandatory-field">*</span></label>
+        <select id="orgType" class="form-control" formControlName="parentOrgName">
+          <option value="">Please Select Parent Organization</option>
+          <option [value]="getPartOrgList.orgId" *ngFor="let getPartOrgList of parentOrganizationList">
+            {{ getPartOrgList.orgName }}
+          </option>
+        </select>
+        <mat-error>
+          <span *ngIf="
+              (subOrgRegForm.get('parentOrgName').invalid &&
+                !subOrgRegForm.get('parentOrgName').invalid) ||
+              subOrgRegForm.get('parentOrgName').touched
+            " class="validation-error-message">
+            <span *ngIf="subOrgRegForm.get('parentOrgName').errors?.['required']" class="validation-error-message">
+              {{ "validationMessage.Parent_Organization_required" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 form-group">
+        <label for="regNo" class="form-label">{{ "subOrganization.Sub-OrganizationName" | translate
+          }}<span class="mandatory-field">*</span></label>
+        <input type="text" class="form-control" id="suborgName" placeholder="" formControlName="suborgName"
+          minlength="5" maxlength="100" />
+        <mat-error>
+          <span *ngIf="
+              (subOrgRegForm.get('suborgName').invalid &&
+                !subOrgRegForm.get('suborgName').pristine) ||
+              subOrgRegForm.get('suborgName').touched
+            " class="validation-error-message">
+            <span *ngIf="subOrgRegForm.get('suborgName').errors?.['required']" class="validation-error-message">
+              {{ "validationMessage.suborg_Name_required" | translate }}
+            </span>
+            <span *ngIf="subOrgRegForm.get('suborgName').errors?.['pattern']" class="validation-error-message">
+              {{ "validationMessage.suborg_Name_pattern" | translate }}
+            </span>
+            <span *ngIf="subOrgRegForm.get('suborgName').errors?.['minlength']" class="validation-error-message">
+              {{ "validationMessage.suborg_Name_minlength" | translate }}
+            </span>
+
+            <span *ngIf="subOrgRegForm.get('suborgName').value?.length >= 100" class="validation-error-message">
+              {{ "validationMessage.suborg_Name_maxlength" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 form-group">
+        <label for="orgType" class="form-label">{{ "subOrganization.suborganizationType" | translate }}
+          <span class="mandatory-field">*</span></label>
+        <select id="orgType" class="form-control" formControlName="subOrgType"
+          (ngModelChange)="onChangeOrgType($event)">
+          <!-- <option value="">{{ "organization.organizationType" | translate }}</option> -->
+          <option [value]="getOrgList.cd" *ngFor="let getOrgList of getOrgLists">
+            {{ getOrgList.value }}
+          </option>
+        </select>
+        <mat-error>
+          <span *ngIf="
+              (subOrgRegForm.get('subOrgType').invalid &&
+                !subOrgRegForm.get('subOrgType').invalid) ||
+              subOrgRegForm.get('subOrgType').touched
+            " class="validation-error-message">
+            <span *ngIf="subOrgRegForm.get('subOrgType').errors?.['required']" class="validation-error-message">
+              {{ "validationMessage.sub_organization_Type" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 from-group">
+        <label for="orgOnBoardingDate" class="form-label">{{ "organization.onBoardingDate" | translate
+          }}<span class="mandatory-field">*</span></label>
+        <input matInput [matDatepicker]="picker" placeholder="dd/mm/yyyy" [min]="orgOnBoarding" [max]="orgTenure"
+          class="form-control input-custom-border" formControlName="onBoardingDate"
+          (dateChange)="setDateChanged($event)" />
+        <mat-datepicker-toggle matSuffix [for]="picker" class="date-picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error>
+          <span *ngIf="
+              !subOrgRegForm.get('onBoardingDate').valid &&
+              subOrgRegForm.get('onBoardingDate').touched
+            " class="validation-error-message">
+            <span *ngIf="subOrgRegForm.get('onBoardingDate').errors?.['required']" class="validation-error-message">
+              {{ "validationMessage.On-Boarding_Date_required" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 form-group">
+        <label for="orgTenureCompletionDate" class="form-label">{{ "organization.tenureCompletionDate" | translate }}
+          <span class="mandatory-field">*</span>
+        </label>
+        <input matInput [matDatepicker]="tenureCompletionDate" class="form-control input-custom-border"
+          formControlName="tenureCompletionDate" placeholder="dd/mm/yyyy" [min]="orgOnBoarding" [max]="orgTenure" />
+        <mat-datepicker-toggle matSuffix [for]="tenureCompletionDate" class="date-picker"></mat-datepicker-toggle>
+        <mat-datepicker #tenureCompletionDate></mat-datepicker>
+        <mat-error>
+          <span *ngIf="
+              (subOrgRegForm.get('tenureCompletionDate').invalid &&
+                !subOrgRegForm.get('tenureCompletionDate').invalid) ||
+              subOrgRegForm.get('tenureCompletionDate').touched
+            " class="validation-error-message">
+            <span *ngIf="subOrgRegForm.get('onBoardingDate').errors?.['required']" class="validation-error-message">
+              {{
+              "validationMessage.Tenure_Completion_Date_required" | translate
+              }}
+            </span>
+            <span *ngIf="subOrgRegForm.get('onBoardingDate').errors?.['min']" class="validation-error-message">
+              {{ "common.please_enter_valid_date" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 form-group">
+        <label for="regNo" class="form-label">{{ "subOrganization.Sub-Org.UniqueIdentification" | translate
+          }}<span class="mandatory-field">*</span></label>
+        <input type="text" class="form-control" id="subregNounique" placeholder="" formControlName="subregNounique"
+          minlength="5" maxlength="30" />
+        <mat-error>
+          <span *ngIf="
+              (subOrgRegForm.get('subregNounique').invalid &&
+                !subOrgRegForm.get('subregNounique').pristine) ||
+              subOrgRegForm.get('subregNounique').touched
+            " class="validation-error-message">
+            <span *ngIf="subOrgRegForm.get('subregNounique').errors?.['required']" class="validation-error-message">
+              {{ "validationMessage.sub_Reg_Nounique_required" | translate }}
+            </span>
+            <span *ngIf="subOrgRegForm.get('subregNounique').errors?.['pattern']" class="validation-error-message">
+              {{ "validationMessage.sub_Reg_Nounique_pattern" | translate }}
+            </span>
+            <span *ngIf="subOrgRegForm.get('subregNounique').errors?.['minlength']" class="validation-error-message">
+              {{ "validationMessage.sub_Reg_Nounique_minlength" | translate }}
+            </span>
+            <span *ngIf="
+                subOrgRegForm.get('subregNounique').value?.length >= 30;
+                onLabGetSampleExaminationSubtypeMaster
+              " class="validation-error-message">
+              {{ "validationMessage.sub_Reg_Nounique_maxlength" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 form-group">
+        <label>{{ "organization.registrationNo.supportingDocument" | translate }}
+          (JPG/JPEG/PNG/PDF)
+        </label>
+        <input type="file" class="form-control" id="regNosprtdoc" placeholder="" (change)="onFileUpload($event)" />
+        <a *ngIf="subOrgIdentificationProofUrl" class="info-link" [href]="subOrgIdentificationProofUrl"
+          target="_blank">{{ "validationMessage.Preview_Uploaded_Document" | translate }}
+        </a>
+        <span class="validation-error-message" *ngIf="isValidFileTypeOrSize">
+          {{ isValidFileTypeOrSize }}
+        </span>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" *ngIf="isSampleExaminationSubtype">
+        <label for="regNo" class="form-label">{{ "subOrganization.Service_Provided" | translate
+          }}<span class="mandatory-field">*</span></label>
+        <ng-select [items]="sampleExaminationMulti" [multiple]="true" bindLabel="sampleExaminationSubtypeDesc"
+          groupBy="selectedAllGroup" [selectableGroup]="true" [selectableGroupAsModel]="false" [closeOnSelect]="false"
+          bindValue="sampleExaminationSubtypeCd" formControlName="sampleExamination">
+          <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{ index }}" type="checkbox" [(ngModel)]="item$.selected"
+              [ngModelOptions]="{ standalone: true }" />
+            Select All
+          </ng-template>
+
+          <ng-template ng-option-tmp let-item="item" let-item$="item$">
+            <input id="item-{{ item.sampleExaminationSubtypeCd }}" type="checkbox" [(ngModel)]="item$.selected"
+              [ngModelOptions]="{ standalone: true }" />
+            {{ item.sampleExaminationSubtypeDesc }}
+          </ng-template>
+        </ng-select>
+
+        <mat-error>
+          <span *ngIf="
+              (subOrgRegForm.get('sampleExamination').invalid &&
+                !subOrgRegForm.get('sampleExamination').pristine) ||
+              subOrgRegForm.get('sampleExamination').touched
+            " class="validation-error-message">
+            <span *ngIf="subOrgRegForm.get('sampleExamination').errors?.['required']" class="validation-error-message">
+              {{ "validationMessage.Service_Provided" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6" *ngIf="subOrgTypeCd === 2">
+        <label for="regNo" class="form-label">{{ "subOrganization.semenStationCd" | translate
+          }}<span class="mandatory-field">*</span></label>
+        <input type="text" class="form-control" id="semenStationCd" placeholder="" formControlName="semenStationCd"
+          [minlength]="3" [maxlength]="3" (keyup)="onchgsemanStation($event)" />
+        <mat-error>
+          <span *ngIf="
+              (subOrgRegForm.get('semenStationCd').invalid &&
+                !subOrgRegForm.get('semenStationCd').pristine) ||
+              subOrgRegForm.get('semenStationCd').touched
+            " class="validation-error-message">
+            <span *ngIf="subOrgRegForm.get('semenStationCd').errors?.['required']" class="validation-error-message">
+              {{ "subOrganization.semenStationCd_required" | translate }}
+            </span>
+            <span
+              *ngIf="subOrgRegForm.get('semenStationCd').errors?.['semenStation'] && !subOrgRegForm.get('semenStationCd').errors?.['minlength']"
+              class="help=block">
+              {{ "errorMsg.semenStation_valid" | translate }}
+            </span>
+            <span *ngIf="subOrgRegForm.get('semenStationCd').errors?.['minlength']">
+              {{ "errorMsg.invalid_input" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+      <!-- EtLabs -->
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6" *ngIf="subOrgTypeCd === 11">
+        <label for="regNo" class="form-label">
+          {{ "subOrganization.etLabCd" | translate
+          }}<span class="mandatory-field">*</span>
+        </label>
+        <input type="text" class="form-control" id="semenStationCd" placeholder="" formControlName="semenStationCd"
+          [minlength]="4" [maxlength]="4" (keyup)="onchgsemanStation($event)" />
+        <mat-error>
+          <span *ngIf="
+              (subOrgRegForm.get('semenStationCd').invalid &&
+                !subOrgRegForm.get('semenStationCd').pristine) ||
+              subOrgRegForm.get('semenStationCd').touched
+            " class="validation-error-message">
+            <span *ngIf="subOrgRegForm.get('semenStationCd').errors?.['required']" class="validation-error-message">
+              {{ "subOrganization.etLabCd_required" | translate }}
+            </span>
+            <span
+              *ngIf="subOrgRegForm.get('semenStationCd').errors?.['semenStation'] && !subOrgRegForm.get('semenStationCd').errors?.['minlength']"
+              class="help=block">
+              {{ "errorMsg.etLab_invalid" | translate }}
+            </span>
+            <span *ngIf="subOrgRegForm.get('semenStationCd').errors?.['minlength']">
+              {{ "errorMsg.invalid_input" | translate }}
+            </span>
+          </span>
+        </mat-error>
+      </div>
+    </div>
+    <div class="h-divider"></div>
+    <div class="row">
+      <div class="col-sm-12">
+        <h5 class="mb-3">{{ "organization.participatingArea" | translate }}</h5>
+      </div>
+      <div class="col-lg-12 col-md-12 p-3 bg-hirarchy" formArrayName="subOrganizationParticipatingArea">
+        <div class="row">
+          <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+            <label for="state" class="form-label">{{ "animalDetails.state" | translate
+              }}<span class="mandatory-field">*</span></label>
+          </div>
+          <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+            <label for="District" class="form-label">{{ "animalDetails.district" | translate
+              }}<span class="mandatory-field">*</span></label>
+          </div>
+        </div>
+        <div class="dynamicAdd" *ngFor="let row of rows.controls; let empIndex = index" [formGroupName]="empIndex">
+          <div class="row mb-3">
+            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+              <select id="stateCd" class="form-control" formControlName="state"
+                (ngModelChange)="getDistrictsMulti($event, empIndex)">
+                <option *ngFor="let data of orgState" [value]="data.stateCd">
+                  {{ data.stateName }}
+                </option>
+              </select>
+              <mat-error>
+                <span *ngIf="
+                    (row.get('state').invalid && !row.get('state').pristine) ||
+                    row.get('state').touched
+                  " class="validation-error-message">
+                  <span *ngIf="row.get('state').errors?.['required']" class="validation-error-message">
+                    {{ "validationMessage.state_required" | translate }}
+                  </span>
+                </span>
+              </mat-error>
+            </div>
+
+            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+              <ng-select [items]="districtListMulti[empIndex]" [multiple]="true" bindLabel="districtName"
+                groupBy="selectedAllGroup" [selectableGroup]="true" [selectableGroupAsModel]="false"
+                [closeOnSelect]="false" bindValue="districtCode" formControlName="districts">
+                <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                  <input id="item-{{ index }}" type="checkbox" [(ngModel)]="item$.selected"
+                    [ngModelOptions]="{ standalone: true }" />
+                  Select All
+                </ng-template>
+
+                <ng-template ng-option-tmp let-item="item" let-item$="item$">
+                  <input id="item-{{ item.districtCode }}" type="checkbox" [(ngModel)]="item$.selected"
+                    [ngModelOptions]="{ standalone: true }" />
+                  {{ item.districtName }}
+                </ng-template>
+              </ng-select>
+
+              <mat-error>
+                <span *ngIf="
+                    (row.get('districts').invalid &&
+                      !row.get('districts').pristine) ||
+                    row.get('districts').touched
+                  " class="validation-error-message">
+                  <span *ngIf="row.get('districts').errors?.['required']" class="validation-error-message">
+                    {{ "validationMessage.districts_required" | translate }}
+                  </span>
+                </span>
+              </mat-error>
+            </div>
+
+            <div *ngIf="empIndex > 0" class="col-auto d-flex align-items-center cursor-pointer"
+              (click)="onRemoveRow(empIndex)">
+              <svg id="Group_4529" data-name="Group 4529" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                viewBox="0 0 18 18">
+                <path id="Path_5203" data-name="Path 5203" d="M0,0H18V18H0Z" fill="none" />
+                <path id="Path_5204" data-name="Path 5204"
+                  d="M3.609,6.827H16.48V17.285a.8.8,0,0,1-.8.8H4.413a.8.8,0,0,1-.8-.8ZM6.022,4.413V2.8a.8.8,0,0,1,.8-.8h6.436a.8.8,0,0,1,.8.8V4.413h4.022V6.022H2V4.413Zm1.609-.8v.8h4.827v-.8Zm0,6.436v4.827H9.24V10.044Zm3.218,0v4.827h1.609V10.044Z"
+                  transform="translate(-1.044 -1.044)" fill="#545454" />
+              </svg>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-auto v-line-dotted"></div>
+          </div>
+        </div>
+
+        <span class="validation-error-message" *ngIf="isShowError">
+          {{ isShowError }}
+        </span>
+
+        <div class="row mt-2">
+          <div class="col-auto">
+            <button type="button" class="btn btn-outline-primary" (click)="addRow()">
+              {{ "common.add" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="h-divider"></div>
+    <div class="row">
+      <div class="col-sm-12 text-right">
+        <div class="d-row justify-content-start py-3">
+          <!-- <button type="reset" class="btn btn-outline-primary mr-2" *ngIf="!subOrgId">Clear</button> -->
+          <button type="button" class="btn btn-outline-primary mr-2" [routerLink]="['..', 'list']">
+            {{ "animalDetails.back" | translate }}
+          </button>
+          <button type="submit" class="btn btn-primary" *ngIf="!subOrgId">
+            {{ "common.submit" | translate }}
+          </button>
+          <button type="submit" class="btn btn-primary" *ngIf="subOrgId">
+            {{ "common.update" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

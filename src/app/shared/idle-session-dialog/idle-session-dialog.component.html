@@ -1,0 +1,33 @@
+
+
+<div class="common-info" >
+  <div class="common-info-header">
+
+    <img [src]="data.data.icon" class="custom-icon" alt="icon-verified"/>
+    <p class="header-desc">{{data.data.title}}</p>
+
+  </div>
+  
+    <!-- <div class="common-info-body">
+     Your session will expire in <b>{{ this.idleState}} . </b>Do you want to extends the session?
+    </div> -->
+
+    <div class="common-info-body">
+      Your session has expired, please login.
+     </div>
+  
+    <div class="common-info-footer">
+      <!-- <button   class="btn btn-outline-primary mr-2 px-4" (click)="logout()">
+  
+        Logout
+  
+      </button> -->
+  
+      <button mat-dialog-close class="btn btn-primary" (click)="stay()">
+  
+        OK
+  
+      </button>
+    </div>
+  
+  </div>

@@ -1,0 +1,268 @@
+/* .medicine-dialog {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+
+
+.medicine-header {
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: auto;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.medicine-footer {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+}
+
+.medicine-list .mat-chip-list-wrapper {
+  margin: -4px !important;
+      overflow: hidden;
+    overflow-x: scroll;
+    flex: nowrap
+}
+
+.medicine-list .mat-chip.mat-standard-chip {
+  background-color: #efefef;
+  color: #4e4e4e;
+}
+
+.medicine-count {
+  border-radius: 50%;
+  margin: 0px 5px;
+  background-color: #ffffff;
+  color: #000000;
+  padding: 3px 5px;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.add-medicine-btn {
+  cursor: pointer;
+  background-color: #DCDCDC;
+  padding: 5px 10px;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 3px;
+}
+
+.font-12 {
+  font-size: 12px;
+}
+
+.other_med {
+  background-color: #125178!important;
+  color: #ffffff!important;
+}
+
+.add-diagnostics-dialog {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-diagnostics-header {
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dialog-main-content {
+  flex-grow: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 0 5px 0 0;
+}
+
+.add-diagnostics-footer {
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.dialog-main-content::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #fff;
+}
+
+.dialog-main-content::-webkit-scrollbar {
+  width: 5px;
+  background-color: #fff;
+  opacity: 0.8;
+}
+
+.dialog-main-content::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #5f6160;
+  opacity: 0.8;
+} */
+
+.medicine-dialog {
+  /* height: 100%; */
+  height: 90vh !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.medicine-edit-header {
+  flex-grow: 0;
+  flex-shrink: 0;
+  padding: 15px;
+  height: auto;
+}
+
+.medicine-edit-header .headeing {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.medicine-edit-header .edit-heading-label {
+  font-weight: bold;
+  font-family: Noto Sans;
+  font-size: 18px;
+  letter-spacing: 1;
+}
+/* .dialog-main-search{
+  padding: 10px 15px;
+  flex-grow: 0;
+  flex-shrink: 0;
+}  */
+
+.medicine-main-content {
+  flex-grow: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 0px 15px;
+}
+
+.medicine-edit-footer {
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: auto;
+  padding: 15px;
+}
+.medicine-lists {
+  list-style: none;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-y: hidden;
+  overflow-x: auto;
+  grid-gap: 10px;
+  gap: 10px;
+}
+
+.medicine-lists .medicine-listsitem {
+  font-size: 12px;
+  font-family: Noto Sans;
+  font-weight: bold;
+  letter-spacing: 0.64px;
+  color: #000;
+  background: #dcdcdc;
+  padding: 2px 5px;
+  display: flex;
+  align-items: center;
+}
+.medicine-lists .medicine-listsitem.outline {
+  border: 1px solid #beccd1;
+  border-radius: 4px;
+}
+
+.medicine-lists .mat-chip-list-wrapper {
+  margin: -4px !important;
+  overflow-y: hidden;
+  overflow-x: auto;
+  flex-wrap: unset !important;
+}
+
+.medicine-count {
+  border-radius: 50%;
+  margin-right: 5px;
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 12px;
+  padding: 3px 4px;
+}
+
+.font-12 {
+  font-size: 12px;
+}
+
+.other_med {
+  background-color: #125178 !important;
+  color: #ffffff !important;
+}
+
+.medicine-main-content::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #fff;
+}
+
+.medicine-main-content::-webkit-scrollbar {
+  width: 5px;
+  background-color: #fff;
+  opacity: 0.8;
+}
+
+.medicine-main-content::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #5f6160;
+  opacity: 0.8;
+}
+
+.medicine-lists::-webkit-scrollbar-track {
+  /* -webkit-box-shadow: inset 0 0 6px #fff; */
+  background-color: #fff;
+}
+
+.medicine-lists::-webkit-scrollbar {
+  height: 5px;
+  background-color: #fff;
+  opacity: 0.8;
+}
+
+.medicine-lists::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  /* -webkit-box-shadow: inset 0 0 6px #fff; */
+  background-color: #5f6160;
+  opacity: 0.8;
+}
+
+@media screen and (max-width: 767px) {
+  .input-sm-mobile {
+    height: 32px !important;
+    min-height: 32px !important;
+    margin-bottom: 2px;
+  }
+  .medicine-listS {
+    margin-bottom: 5px;
+  }
+}
+
+.add-medicine-section {
+  align-self: center;
+}
+
+.add-medicine-section .add-medicine-btn {
+  cursor: pointer;
+  background-color: #dcdcdc;
+  padding: 5px 10px;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 3px;
+}

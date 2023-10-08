@@ -1,0 +1,114 @@
+<!-- <div class="add-diseaseTesting-dialog">
+    <div class="add-diseaseTesting-header">
+        <div class="headeing">
+            <h2 class="edit-heading-label">Fill Disease Testing Details</h2>
+        </div>
+        <div class="cross-icon">
+            <mat-icon mat-dialog-close>clear</mat-icon>
+        </div>
+    </div>
+    <div class="h-divider">
+        <div class="shadow"></div>
+    </div>
+
+    <div class="dialog-main-content">
+        <form [formGroup]="firDiseaseTestingForm">
+            <div class="row p-0 mt-3">
+                <div class="col-12">
+                    <div class="form-row">
+                        <div class="col-md-4  form-group ">
+                            <label for="testingRecordDate" class="form-label">Record Date of Testing<span
+                                    class="mandatory-field">*</span></label>
+                            <input class="form-control " type="text" formControlName="testingRecordDate" />
+
+                            <div *ngIf="
+                          (!formControl.testingRecordDate.pristine &&
+                          formControl.testingRecordDate.invalid) ||
+                          formControl.testingRecordDate.touched
+                        " class="alert-message">
+                                <div *ngIf="formControl.testingRecordDate.errors?.required">
+                                    Record date of testing required
+                                </div>
+                                <div *ngIf="formControl.testingRecordDate.errors?.pattern">
+                                    Record date of testing required
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-group  input-section">
+                            <label for="testingDate" class="form-label">Date of Testing<span
+                                    class="mandatory-field">*</span></label>
+                            <input class="form-control" readonly [min]="minDate" [max]="maxDate"
+                                [matDatepicker]="pickerDate" formControlName="testingDate" placeholder="DD/MM/YYYY"
+                                (click)="pickerDate.open()" />
+                            <mat-datepicker-toggle matSuffix [for]="pickerDate"
+                                class="input-icon"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerDate></mat-datepicker>
+
+                            <span *ngIf="
+                          (!formControl.testingDate.pristine && formControl.testingDate.invalid) ||
+                          formControl.testingDate.touched
+                        " class="validation-error-message">
+                                <span *ngIf="formControl.testingDate.errors?.required">
+                                    Date of Testing required
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="table-outebox mb-3">
+                <div class="medicine-list mb-3">
+                    <div class="medicine-list-heading mb-3">
+                        Sample Collection Details
+                    </div>
+                    <app-lab-testing-sample [SampleStatusFlags]="['A','B','D','O']"
+                        [diagnosticsForm]="firDiseaseTestingForm" [sampleData]="[]"></app-lab-testing-sample>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+    <div class="h-divider">
+        <div class="shadow"></div>
+    </div>
+
+    <div class="add-diseaseTesting-footer">
+        <button type="button" class="btn btn-outline-primary mr-2" mat-dialog-close>
+            Cancel
+        </button>
+        <button type="submit" class="btn btn-primary" mat-dialog-close>
+            Submit
+        </button>
+    </div>
+
+
+</div> -->
+<div class="add-diseaseTesting-dialog">
+    <div class="add-diseaseTesting-header">
+        <div class="headeing">
+            <h2 class="edit-heading-label">{{'diseaseTesting.fill_disease_testing_details' | translate}}</h2>
+        </div>
+        <div class="cross-icon">
+            <mat-icon mat-dialog-close>clear</mat-icon>
+        </div>
+    </div>
+    <div class="h-divider">
+        <div class="shadow"></div>
+    </div>
+    <div class="dialog-main-content">
+        <ng-container *ngIf="!formSelected">
+            <app-group-disease-testing [firFlag]="firFlag"
+                (newFormSelected)="newFormSelected($event)"></app-group-disease-testing>
+        </ng-container>
+        <ng-container *ngIf="formSelected">
+            <app-new-group-test [firFlag]="firFlag" (formSubmitted)="formSubmitted($event)"></app-new-group-test>
+        </ng-container>
+        <ng-container *ngIf="individualTestForm">
+            <app-new-test></app-new-test>
+        </ng-container>
+    </div>
+</div>

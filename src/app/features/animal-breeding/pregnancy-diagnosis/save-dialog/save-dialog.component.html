@@ -1,0 +1,32 @@
+<div class="campaign-dialog">
+  <img src="/assets/images/verified.svg" class="icon-verified" alt="icon-verified" />
+    <div class="campaign-msg">
+      <h1 class="succes-msg"  *ngIf="data?.transaction_id">
+        <span class="succes-msg-desc">{{'animalBreeding.transaction_id'|translate}}:</span><span class="succes-msg-desc">{{ data.transaction_id }}</span>
+      </h1>
+      <h1 class="succes-msg">{{ data.title | translate }}</h1>
+    </div>
+    <div class="campaign-msg mb-4" *ngIf="data?.isCalving && data?.calvingStatus != 2 && !data?.isCalvingEdit">
+      <h1 class="succes-msg" *ngIf="data?.calfDetails[0]?.isEarTag  == 'Y' ">
+        <span class="succes-msg-desc">{{'animalBreeding.permanant_id' |translate}}:</span><span class="succes-msg-desc">{{ data?.calfDetails[0]?.calfTmporaryTagId}} </span>
+      </h1>
+      <h1 class="succes-msg" *ngIf="data?.calfDetails[1]?.isEarTag  == 'Y'">
+        <span class="succes-msg-desc">{{'animalBreeding.permanant_id' |translate}}:</span><span class="succes-msg-desc">{{ data?.calfDetails[1]?.calfTmporaryTagId}} </span>
+      </h1>
+      <h1 class="succes-msg" *ngIf="(data?.temporary_id?.calf1TagId && data?.calfDetails[0]?.isEarTag  == 'N') || (data?.temporary_id?.calf2TagId && data?.calfDetails[1]?.isEarTag  == 'N')">
+        <span class="succes-msg-desc">{{'animalBreeding.temporary_id' |translate}}:</span><span class="succes-msg-desc">{{ data?.temporary_id?.calf1TagId && data?.calfDetails[0]?.isEarTag  == 'N' ? data?.temporary_id?.calf1TagId : '' }} {{data?.temporary_id?.calf2TagId && data?.calfDetails[1]?.isEarTag  == 'N' ? ','+data?.temporary_id?.calf2TagId :''}}</span>
+      </h1>
+      <p class="success-text" *ngIf="(data?.temporary_id?.calf1TagId && data?.calfDetails[0]?.isEarTag  == 'N') || (data?.temporary_id?.calf2TagId && data?.calfDetails[1]?.isEarTag  == 'N')">{{'animalBreeding.commonLabel.complete_tag_reg' |translate}} <b>{{data?.calvingDate}}</b> ({{'animalBreeding.commonLabel.to_be_complete' |translate}} <b>{{'animalBreeding.commonLabel.days_limit' |translate}} </b> {{'animalBreeding.commonLabel.reg_temp_id' |translate}} )</p>
+    </div>
+    <div class="close-button">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        (click)="closeDialog()"
+        mat-dialog-close
+      >
+        {{'common.ok'| translate}}
+      </button>
+    </div>
+  </div>
+  

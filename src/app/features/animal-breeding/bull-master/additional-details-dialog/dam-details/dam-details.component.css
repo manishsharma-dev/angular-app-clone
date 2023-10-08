@@ -1,0 +1,95 @@
+.table th,
+td {
+  border: none !important;
+}
+
+/* .table {
+  table-layout: fixed;
+} */
+
+/* table {
+ width:  600px;
+ overflow-x: auto;
+} */
+
+th,
+td {
+  width: 200px !important;
+}
+
+input {
+  width: 200px !important;
+}
+
+.table tbody th {
+  position: relative;
+  font-weight: normal;
+}
+.table thead th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background-color: rgb(255, 255, 255);
+ 
+}
+.table tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background-color: rgb(255, 255, 255);
+
+}
+
+.bull-details-parameters {
+  max-width: 660px;
+  overflow-x: auto;
+}
+
+.table-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 10px;
+}
+
+.table-heading i {
+  cursor: pointer;
+}
+
+.bull-details-parameters::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #fff;
+}
+
+.bull-details-parameters::-webkit-scrollbar {
+  height: 5px;
+  background-color: #fff;
+  opacity: 0.8;
+}
+
+.bull-details-parameters::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  box-shadow: inset 0 0 6px #fff;
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #5f6160;
+  opacity: 0.8;
+}
+
+.scroll-btn {
+  position: absolute;
+  z-index: 100;
+  background-color: transparent;
+  border: none;
+  height: 2rem;
+  font-size: 20px;
+  padding-block: 10px;
+  padding-inline: 5px;
+}
+
+.scroll-left-btn {
+  left: 0;
+}
+
+.scroll-right-btn {
+  right: 0;
+}

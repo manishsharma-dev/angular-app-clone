@@ -1,0 +1,160 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row breadcum align-items-center py-2">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="breadcrumb-list text-md-left">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item active">
+              <a>{{'animalDetails.home' | translate}}</a>
+            </li>
+            <li class="breadcrumb-item active">
+              <a href="javascript:void(0)">{{'animalBreeding.breeding_module'|translate}} </a>
+            </li>
+            <li class="breadcrumb-item current">
+              <label>{{'animalBreeding.elite_animal_dec' |translate}} </label>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="elite-animal">
+  <div class="row no-gutters col-container">
+    <div class="col-md-12 col-h left-section">
+      <div class="treatment-header">
+        <div class="back-arrow">
+          <i class="fa fa-chevron-left mr-2 back-section" (click)="goBack()"></i>
+        </div>
+
+        <div class="title-section">
+          <div class="title-heading">
+            <span class="muted-label-heading">
+              {{'animalBreeding.elite_animal_info'|translate}}
+            </span>
+          </div>
+        </div>
+
+        <div class="ticket-section" *ngIf="animal">
+          <span class="mr-2">
+            {{'animalBreeding.tagId'|translate}}: <b>{{ animal.tagId }} </b>
+          </span>
+          <span class="mr-2">
+            {{'animalDetails.category_species'|translate}}: <b>{{ animal.species }} </b>
+          </span>
+          <span class="mr-2">
+            {{'common.age'|translate}}:
+            <b>
+              {{ animal.ageInMonths ? getAnimalAge(animal.ageInMonths) : "0M" }}
+            </b>
+          </span>
+
+          <!-- <span class=""> Ticket Number : <b>1234567890</b></span> -->
+        </div>
+      </div>
+
+      <div class="h-divider">
+        <div class="shadow"></div>
+      </div>
+
+      <form [formGroup]="eliteForm" (ngSubmit)="onSubmit()">
+        <div class="main-section">
+          <div class="form-row">
+            <div class="col-md-3 form-group">
+              <label for="recordDate" class="form-label">{{'animalBreeding.record_date'|translate}}</label>
+              <input type="text" id="recordDate" class="form-control" formControlName="eadRecordDate">
+            </div>
+
+            <div class="col-md-3 form-group input-icon">
+              <label for="eadDate" class="form-label">{{'animalDetails.transaction_date'|translate}}<span
+                  class="mandatory-field">*</span></label>
+              <input  class="form-control" type="text" [matDatepicker]="pickerDate" placeholder="dd/mm/yyyy"
+                 formControlName="eadDate" [min]="minDate" [max]="today" />
+              <mat-datepicker-toggle matSuffix [for]="pickerDate" class="calender-icon"></mat-datepicker-toggle>
+              <mat-datepicker #pickerDate></mat-datepicker>
+              <span class="alert-message" *ngIf="
+              (basicDetailFormControls.eadDate.dirty &&
+              basicDetailFormControls.eadDate.invalid) ||
+              basicDetailFormControls.eadDate.touched
+          ">
+          <span *ngIf="basicDetailFormControls.eadDate.hasError('matDatepickerMin')">
+              {{'common.please_enter_valid_date' | translate}}
+          </span>
+          <span *ngIf="basicDetailFormControls.eadDate.hasError('matDatepickerMax')">
+              {{'common.please_enter_valid_date' | translate}}
+          </span>
+          <span *ngIf="basicDetailFormControls.eadDate.hasError('matDatepickerParse')">
+              {{'common.please_enter_valid_date' | translate}}
+          </span>
+          <span
+              *ngIf="basicDetailFormControls.eadDate.hasError('required') && !basicDetailFormControls.eadDate.hasError('matDatepickerParse')">
+              {{'errorMsg.field_mandatory' | translate}}
+          </span>
+      </span>
+            </div>
+          </div>
+
+
+          <div class="h-divider">
+            <div class="shadow"></div>
+          </div>
+
+          <div class="form-row">
+            <div class="col-md form-group">
+              <label for="eliteAnimal" class="form-label">{{'animalBreeding.elite_animal'|translate}}<span
+                  class="mandatory-field">*</span>&nbsp;</label>
+              <input type="radio" formControlName="isElite" id="isEliteYes" class="ml-2 mr-1" [value]="true"><label
+                for="isEliteYes">{{'common.yes'|translate}}</label>
+              <input type="radio" formControlName="isElite" id="isEliteNo" class="ml-2 mr-1" [value]="false"><label
+                for="isEliteNo">{{'common.no'|translate}}</label>
+              <div class="alert-message" *ngIf="isControlValid('isElite')">
+                <span *ngIf="eliteForm.get('isElite').hasError('required')">
+                  {{cmnValidationMsg.required| translate}}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="reason" class="form-label">{{'animalDetails.reason'|translate}}<span
+                  class="mandatory-field">*</span></label>
+              <textarea id="reason" rows="3" class="form-control" placeholder="Reason for status change"
+                formControlName="reason"></textarea>
+              <div class="alert-message" *ngIf="isControlValid('reason')">
+                <div *ngIf="eliteForm.get('reason').hasError('required')">
+                  {{cmnValidationMsg.required| translate}}
+                </div>
+                <div *ngIf="eliteForm.get('reason').hasError('pattern')">
+                  {{cmnValidationMsg.invalidChar| translate}}
+                </div>
+                <div *ngIf="eliteForm.get('reason').hasError('maxlength')">
+                  {{validationMsg.reasonLength | translate}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="h-divider">
+          <div class="shadow"></div>
+        </div>
+        <div class="footer d-flex">
+
+          <button type="button" (click)="goBack()" class="btn btn-outline-primary mr-2 ml-auto">
+            {{'animalDetails.cancel' | translate}}
+          </button>
+          <button type="button" (click)="onReset()" class="btn btn-outline-primary mr-2">
+            {{'animalDetails.reset' | translate}}
+          </button>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

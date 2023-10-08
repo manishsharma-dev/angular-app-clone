@@ -1,0 +1,42 @@
+<div class="common-info">
+  <div class="common-info-header">
+
+    <img [src]="data.icon" class="custom-icon" alt="icon-verified" />
+    <p class="header-desc">{{this.data['selectedItem'].orgSuborgName}}</p>
+
+  </div>
+
+  <div class="common-info-body">
+
+    <ul class="view-mapping-dialog">
+      <li>
+        Mapping Start Date :- {{this.data['selectedItem'].orgMappingStartDate| customDateFormatter}}
+
+      </li>
+      <li>
+
+        Mapping End Date :- {{this.data['selectedItem'].orgMappingEndDate | customDateFormatter}}
+
+      </li>
+      <li>
+
+        Mapping Data Entry End Date :- {{this.data['selectedItem'].deEndDate |customDateFormatter}}
+      </li>
+
+    </ul>
+
+  </div>
+
+
+
+  <div class="common-info-footer">
+
+
+    <button mat-dialog-close class="btn btn-primary" [mat-dialog-close]="true">
+
+      {{ data.primaryBtnText | translate }}
+
+    </button>
+  </div>
+
+</div>

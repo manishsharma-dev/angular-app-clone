@@ -1,0 +1,214 @@
+mat-form-field {
+  width: 100%;
+}
+
+mat-spinner {
+  margin: auto;
+}
+
+.login-signup-button {
+  font-size: 16px;
+  letter-spacing: 0px;
+  width: 100%;
+  border-radius: 8px;
+  background: #fff 0% 0% no-repeat padding-box;
+  margin-top: 12px;
+  font-family: Noto Sans, Regular;
+  color: #3c3c3c;
+  font-weight: 600;
+}
+
+.btn-dark:not(:disabled):not(.disabled).active,
+.btn-dark:not(:disabled):not(.disabled):active,
+.show > .btn-dark.dropdown-toggle {
+  color: #3c3c3c;
+  background-color: #fff;
+  border-color: #fff;
+}
+
+/* login section */
+.login-section {
+  background-color: #185b85;
+  height: 100vh;
+  /* padding: 15px;*/
+  background-image: url("../../../../assets/images/bgImage.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+.login-section .login-header-left {
+  position: absolute;
+  left: 0;
+}
+
+.login-section .login-header-right {
+  position: absolute;
+  right: 0;
+}
+
+.login-section .login-header-left .dhad-logo,
+.login-section .login-header-right .nddb-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0px;
+}
+
+.login-section .login-header-left .dhad-logo .icon-dhad,
+.login-section .login-header-right .nddb-logo .icon-nddb {
+  display: inline-block;
+  height: auto;
+  width: 108px;
+  background-size: cover;
+}
+
+.login-section .login-container .icon-bharat-pashudhan {
+  height: auto;
+  width: 150px;
+}
+
+/* .login-section .left-section .col-my{
+margin: 30px 0px ;
+} */
+
+.login-section .logo-header {
+  align-items: center;
+}
+
+.logo-header .brand-logo-text {
+  font-size: 14px;
+  font-weight: normal;
+  letter-spacing: 0px;
+  color: #000000;
+  text-transform: uppercase;
+  opacity: 1;
+}
+
+.login-section .company-logo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.logo-header .company-logo-text {
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 0px;
+  color: #000000;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+}
+
+.login-section .login-container {
+  /* height: calc(100vh - 103px);
+  margin: auto; */
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Noto Sans, Regular;
+}
+
+.login-heading .login-title {
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 0px;
+  color: #fff;
+}
+
+.login-heading .login-title-desc {
+  font-size: 12px;
+  font-weight: normal;
+  letter-spacing: 0px;
+  color: #fff;
+  opacity: 0.8;
+}
+
+.login-section .form-check .form-check-label {
+  font-size: 12px;
+  font-weight: normal;
+  letter-spacing: 0px;
+  color: #333333;
+  opacity: 1;
+}
+
+.login-section .signup {
+  font-size: 12px;
+  font-weight: normal;
+  letter-spacing: 0px;
+  color: #929292;
+  opacity: 0.8;
+  text-align: center;
+  text-decoration: underline;
+  margin-top: 10px;
+}
+
+.signup ul {
+  margin: 0;
+  padding: 0;
+  display: inline;
+}
+
+.signup ul li {
+  list-style-type: none;
+  display: inline;
+}
+
+/* .bg-color{
+  background: #fff;
+  font-family: Noto Sans, Regular;
+  border-radius: 10px;
+} */
+.captcha {
+  /* Layout Properties */
+  top: 566px;
+  left: 725px;
+  height: 100px;
+  /* UI Properties */
+  background: #f6f6f9 0% 0% no-repeat padding-box;
+  border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  opacity: 1;
+}
+
+.recaptcha {
+  width: 100%;
+  margin: -1px 0px;
+}
+
+input#userId {
+  background: transparent;
+  color: #fff;
+}
+input#password {
+  background: transparent;
+  color: #fff;
+}
+.label-color {
+  color: #fff;
+}
+::placeholder {
+  color: #fff;
+}
+span.password_view_icon {
+  float: right;
+  position: relative;
+  color: #fff;
+  padding: 5px;
+  top: 2.4rem;
+}
+
+.forgot-password-btn {
+  float: right;
+  text-decoration: underline;
+  cursor: pointer;
+}
+footer.footer_version {
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  color: #fff;
+  left: 0;
+  right: 0;
+}

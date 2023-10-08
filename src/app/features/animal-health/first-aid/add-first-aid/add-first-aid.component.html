@@ -1,0 +1,192 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<!-- breadcum start -->
+<div class="container">
+  <div class="row breadcum align-items-center py-2">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="breadcrumb-list text-md-left">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item active" routerLink="/dashboard">
+              <a>{{ "vaccination.breadcrumb_vaccinationFirst" | translate }}</a>
+            </li>
+            <li class="breadcrumb-item current">
+              <label>{{ "vaccination.breadcrumb_vaccinationSecond" | translate }} </label>
+            </li>
+            <li class="breadcrumb-item current">
+              <label>{{ "firstAid.breadcrumb_firstAidthird" | translate }} </label>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- section outer start -->
+<section>
+  <div class="row no-gutters col-container">
+    <div class="col-md-12 col-h left-section">
+      <!-- screen 5 -->
+      <div class="campaign-form">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="title-heading">
+              <i class="fa fa-chevron-left mr-2 back-section" (click)="routeToAnimalTreatment()"></i>
+              <span class="muted-label-heading">{{ "firstAid.Fill_First_Aid_Details" | translate }} </span>
+              <span class="ls-info">{{ TagID }} - {{ Species }} - {{ Sex }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="h-divider">
+          <div class="shadow"></div>
+        </div>
+
+        <form class="mb-3" [formGroup]="firstAidForm" (ngSubmit)="onSubmit()">
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="DateOfFA" class="form-label">
+                {{ "firstAid.Date_of_First_Aid" | translate }}</label>
+
+              <input type="text" class="form-control" formControlName="DateOfFA" />
+            </div>
+
+            <div class="form-group col-md-4">
+              <label for="ailmentCd" class="form-label"> {{ "firstAid.Minor_Ailment" | translate }}<span
+                  class="mandatory-field">*</span></label>
+              <select id="ailmentCd" class="form-control" formControlName="ailmentCd" [ngClass]="{
+                  'is-invalid': f.ailmentCd.touched && f.ailmentCd.errors
+                }">
+                <option value="">{{ "firstAid.select_minor_ailment_details" | translate }}</option>
+                <option *ngFor="let data of minor_ailment" [ngValue]="data.cd">
+                  {{ data.value }}
+                </option>
+              </select>
+              <div *ngIf="
+                  (!f.ailmentCd.pristine && f.ailmentCd.invalid) ||
+                  f.ailmentCd.touched
+                " class="alert-message">
+                <div *ngIf="f.ailmentCd.errors?.required">
+
+                  {{ "firstAid.select_minor_ailment_details" | translate }}
+                </div>
+                <div *ngIf="f.ailmentCd.errors?.pattern">
+
+                  {{ "firstAid.minor_ailment_details_required" | translate }}
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="firstAidTreatmentGiven" class="form-label">{{ "firstAid.Treatment_Given" | translate
+                }}</label>
+              <input type="text" class="form-control" id="firstAidTreatmentGiven"
+                placeholder="{{ 'firstAid.enter_treatment_given' | translate }}"
+                formControlName="firstAidTreatmentGiven" />
+              <!-- <div
+              *ngIf="!f.firstAidTreatmentGiven.pristine && f.firstAidTreatmentGiven.invalid"
+              class="alert-message"
+            >
+              <div *ngIf="f.firstAidTreatmentGiven.errors.pattern">
+                Please Enter received amount
+              </div>
+            </div> -->
+              <span class="alert-message" *ngIf="f.firstAidTreatmentGiven.dirty && f.firstAidTreatmentGiven.invalid">
+                <span *ngIf="f.firstAidTreatmentGiven.hasError('pattern')">
+                  {{ validationMsg.treatmentGivenPattern | translate }}
+                </span>
+                <span
+                  *ngIf="!f.firstAidTreatmentGiven.hasError('pattern') && f.firstAidTreatmentGiven.hasError('maxlength')">
+                  {{ validationMsg.treatmentGivenRemarks | translate}}
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label for="treatmentRemarks" class="form-label">{{ "firstAid.Remarks_fid" | translate }}<span
+                  class="mandatory-field">*</span></label>
+              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                formControlName="treatmentRemarks"
+                placeholder="{{ 'firstAid.enter_remarks_details' | translate }}"></textarea>
+
+
+              <span class="alert-message"
+                *ngIf="f.treatmentRemarks.dirty && f.treatmentRemarks.invalid  || f.treatmentRemarks.touched">
+                <span *ngIf="f.treatmentRemarks.hasError('pattern')">
+                  {{ validationMsg.firstAidRemarksPattern | translate}}
+                </span>
+                <span *ngIf="!f.treatmentRemarks.hasError('pattern') && f.treatmentRemarks.hasError('maxlength')">
+                  {{ validationMsg.firstAidRemarks | translate}}
+                </span>
+
+                <span *ngIf="f.treatmentRemarks.hasError('required')">
+                  {{ validationMsg.required | translate}}
+                </span>
+              </span>
+
+
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="paymentAmount" class="form-label">
+                {{ "firstAid.Amount_to_be_Paid" | translate }}</label>
+              <input type="text" class="form-control" id="paymentAmount"
+                placeholder="{{ 'firstAid.enter_received_amount' | translate }}" formControlName="paymentAmount" />
+              <span class="alert-message" *ngIf="
+              f.paymentAmount.dirty &&
+              f.paymentAmount.invalid
+            ">
+                <span *ngIf="f.paymentAmount.hasError('pattern')">
+                  {{ validationMsg.paymentAmountPattern | translate}}
+                </span>
+                <span *ngIf="
+                !f.paymentAmount.hasError('pattern') &&
+                f.paymentAmount.hasError('maxlength')
+              ">
+                  {{ validationMsg.paymentAmountmaxlength | translate}}
+                </span>
+              </span>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="receiptNo" class="form-label">
+                {{ "firstAid.Receipt_Number" | translate }}</label>
+              <input type="text" class="form-control" id="receiptNo"
+                placeholder="{{ 'firstAid.enter_receipt_number' | translate }}" formControlName="receiptNo" />
+              <span class="alert-message" *ngIf="
+              f.receiptNo.dirty &&
+              f.receiptNo.invalid
+            ">
+                <span *ngIf="f.receiptNo.hasError('pattern')">
+                  {{ validationMsg.receiptNoPattern | translate}}
+                </span>
+                <span *ngIf="
+                !f.receiptNo.hasError('pattern') &&
+                f.receiptNo.hasError('maxlength')
+              ">
+                  {{ validationMsg.receiptNomaxlength | translate}}
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="h-divider">
+            <div class="shadow"></div>
+          </div>
+
+          <div class="d-flex justify-content-end">
+            <button type="reset" class="btn btn-outline-primary mr-2 ml-auto" (click)="clearWithoutField()"> {{
+              "animalDetails.cancel" | translate }}
+            </button>
+            <button type="submit" class="btn btn-primary">{{ "animalDetails.save" | translate }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

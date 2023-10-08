@@ -1,0 +1,220 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="container p-0">
+  <div class="row breadcum align-items-center py-2">
+    <div class="col-12">
+      <div class="breadcrumb-list">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item active">
+              <a>{{"common.home" | translate}}</a>
+            </li>
+            <li class="breadcrumb-item active">
+              <a href="javascript:void(0)">{{'vaccination.breadcrumb_vaccinationSecond' | translate}} </a>
+            </li>
+            <li class="breadcrumb-item current">
+              <a href="javascript:void(0)">{{'diseaseTesting.disease_testing' | translate}} </a>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="new-disease-testing">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card border-0">
+        <div class="card-body">
+          <!-- report-header -->
+          <div class="report-header row mx-0 justify-content-between mb-3">
+            <div class="title-section">
+              <div class="title-heading">
+                <i class="fa fa-chevron-left mr-2 back-section" (click)="goBack()"></i>
+                <span class="muted-label-heading">
+                  {{'diseaseTesting.fill_disease_testing_details' | translate}}
+                </span>
+              </div>
+            </div>
+            <div class="ticket-section">
+              <span class="mr-2">
+                {{'diseaseTesting.total_number_of_animals_selected' | translate}}: <b>{{ poolCount }} </b>
+              </span> |
+              <span class="mr-2">
+                {{'diseaseTesting.testing_type' | translate}}: <b>{{'diseaseTesting.pool' | translate}} </b>
+              </span>
+            </div>
+          </div>
+          <!-- horizontal-separator -->
+          <div class="h-divider">
+            <div class="shadow"></div>
+          </div>
+
+          <form [formGroup]="poolDiseaseTestingForm">
+            <ng-container>
+              <!-- First row -->
+              <div class="form-row">
+                <div class="col-md-3 form-group">
+                  <label for="record_date" class="form-label">{{'performanceRecording.data_entry_date' | translate}}
+                    <span class="mandatory-field">*</span></label><input type="text" formControlName="testingRecordDate"
+                    id="record_date" class="form-control" #testingRecordDate />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label for="date_of_testing" class="form-label">
+                    {{'diseaseTesting.date_of_testing' | translate}} <span class="mandatory-field">*</span>
+                  </label>
+                  <input type="text" formControlName="testingDate" id="date_of_testing" class="form-control"
+                    placeholder="dd/mm/yyyy" [matDatepicker]="pickerDate" [max]="today" [min]="minDate" />
+                  <mat-datepicker-toggle matSuffix [for]="pickerDate" class="calender-icon"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerDate></mat-datepicker>
+                  <span class="alert-message" *ngIf="
+                (formControls.testingDate.dirty &&
+                  formControls.testingDate.invalid) ||
+                formControls.testingDate.touched
+              ">
+                    <span *ngIf="formControls.testingDate.hasError('matDatepickerMin')">
+                      {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                    </span>
+                    <span *ngIf="formControls.testingDate.hasError('matDatepickerMax')">
+                      {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                    </span>
+                    <span *ngIf="formControls.testingDate.hasError('matDatepickerParse')">
+                      {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                    </span>
+                    <span
+                      *ngIf="formControls.testingDate.hasError('required') && !formControls.testingDate.hasError('matDatepickerParse')">
+                      {{ validationMsg.required | translate }}
+                    </span>
+                  </span>
+                </div>
+                <div class="col-md-3 form-group">
+                  <label for="date_of_testing" class="form-label">
+                    {{'diseaseTesting.disease_suspected' | translate}} <span class="mandatory-field">*</span>
+                  </label>
+                  <ng-select class="custom" appendTo="body" [items]="onSpotDiseaseSuspected" bindLabel="diseaseDesc"
+                    [selectableGroup]="true" [selectableGroupAsModel]="false" [virtualScroll]="true"
+                    placeholder="{{'diseaseTesting.search_disease' | translate}}" [closeOnSelect]="true"
+                    formControlName="suspectedDisease">
+                    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                      <div class="d-flex justify-content-between">
+                        <span>{{ item.diseaseDesc }}</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                  <span class="alert-message" *ngIf="
+                    (formControls.suspectedDisease.dirty &&
+                      formControls.suspectedDisease.invalid) ||
+                    formControls.suspectedDisease.touched
+                  ">
+                    <span *ngIf="formControls.suspectedDisease.hasError('required')">
+                      {{ validationMsg.suspectedDiseaseRequired |translate }}
+                    </span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- On Spot Testing -->
+              <div class="sample-lab--testing mb-3">
+                <div class="separator mb-2">
+                  <div>
+                    <span class="mr-2"><b>{{'diseaseTesting.on-spot_testing' | translate}}</b></span>
+                    <div class="form-check-inline">
+                      <label class="form-check-label">
+                        <input type="radio" class="form-check-input" formControlName="onSpotTestingFlg"
+                          value="Y" />{{'diseaseTesting.yes' | translate}}
+                      </label>
+                    </div>
+                    <div class="form-check-inline">
+                      <input type="radio" class="form-check-input" formControlName="onSpotTestingFlg" value="N" />
+                      <label class="form-check-label">{{'diseaseTesting.no' | translate}}</label>
+                    </div>
+                  </div>
+                  <div class="line"></div>
+                </div>
+                <div class="table-outbox mb-3" *ngIf="poolDiseaseTestingForm.get('onSpotTestingFlg').value == 'Y'">
+                  <app-pool-test-on-spot [animalTagList]="animalTagList"
+                    [testingDate]="poolDiseaseTestingForm.get('testingDate').value"
+                    [sampleTypeMaster]="sampleTypeMaster" #onSpotChild></app-pool-test-on-spot>
+                </div>
+              </div>
+
+              <!-- Shared sample testing -->
+
+              <div class="sample-labCd--testing mb-3">
+                <div class="separator mb-2">
+                  <div>
+                    <span class="mr-2"><b>{{'diseaseTesting.sample_for_lab_testing' | translate}}</b></span>
+                    <div class="form-check-inline">
+                      <label class="form-check-label">
+                        <input type="radio" class="form-check-input" formControlName="labTestingFlg"
+                          value="Y" />{{'diseaseTesting.yes' | translate}}
+                      </label>
+                    </div>
+                    <div class="form-check-inline">
+                      <input type="radio" class="form-check-input" formControlName="labTestingFlg" value="N" />
+                      <label class="form-check-label">{{'diseaseTesting.no' | translate}}</label>
+                    </div>
+                  </div>
+                  <div class="line"></div>
+                </div>
+                <div class="table-outbox mb-3" *ngIf="poolDiseaseTestingForm.get('labTestingFlg').value == 'Y'">
+                  <div class="medicine-list mb-3">
+                    <div class="medicine-list-heading mb-3">
+                      {{'diseaseTesting.sample_collection_details' | translate}}
+                    </div>
+                    <app-pool-test-sample #onLabChild [SampleStatusFlags]="['A','B','D','O']">
+                    </app-pool-test-sample>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Shared sample testing -->
+              <!-- Remarks Section -->
+              <div class="form-row">
+                <div class="col-md-12 form-group">
+                  <label for="remarks" class="form-label">{{'diseaseTesting.remarks' | translate}}</label><textarea
+                    name="remarks" id="remarks" rows="5" class="form-control"
+                    placeholder="{{'diseaseTesting.enter_remarks_details' | translate}}"
+                    formControlName="remarks"></textarea>
+                  <span class="alert-message" *ngIf="
+                      (formControls.remarks.dirty &&
+                        formControls.remarks.invalid) ||
+                      formControls.remarks.touched
+                    ">
+                    <span *ngIf="formControls.remarks.hasError('maxlength')">
+                      {{'diseaseTesting.remarks_cannot_be_more_than_250_characters' | translate}}
+                    </span>
+                    <span *ngIf="formControls.remarks.hasError('pattern')">
+                      {{'diseaseTesting.invalid_characters_present' | translate}}
+                    </span>
+                  </span>
+                </div>
+              </div>
+
+              <div class="h-divider">
+                <div class="shadow"></div>
+              </div>
+
+              <div class="footer-btn d-flex">
+                <button type="button" (click)="cancelPage()" class="btn btn-light ml-auto mr-2">
+                  {{'diseaseTesting.cancel' | translate}}
+                </button>
+                <button type="button" (click)="onReset()" class="btn btn-light mr-2">
+                  {{'diseaseTesting.reset' | translate}}
+                </button>
+                <button type="submit" class="btn btn-primary"
+                  (click)="submitPoolDiseaseTest()">{{'diseaseTesting.submit' |
+                  translate}}</button>
+              </div>
+            </ng-container>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,296 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="search-org" style="margin-top: 16px">
+  <span class="floating-filedset fildset-bg-green">
+    <span class="float-label">{{ "animalDetails.search" | translate }}</span>
+  </span>
+  <form [formGroup]="searchForm">
+    <div class="row">
+      <div class="form-group col-lg-3 col-md-3">
+        <!-- <label for="aiCenterCd" class="form-label">{{"registration.state" | translate}}<span class="mandatory-field">*</span></label> -->
+        <ng-select
+          [items]="stateList"
+          bindLabel="stateName"
+          bindValue="stateCd"
+          placeholder="Select State"
+          formControlName="state"
+          [loading]="isLoadingSpinner"
+          (change)="getDistrictList($event)"
+          [clearable]="true"
+        >
+        </ng-select>
+      </div>
+
+      <div class="form-group col-lg-3 col-md-3">
+        <ng-select
+          [items]="districtList"
+          bindLabel="areaName"
+          bindValue="areaCode"
+          placeholder="Select District"
+          id="orgName"
+          formControlName="districts"
+          [loading]="isLoadingSpinner"
+          [clearable]="true"
+        >
+        </ng-select>
+      </div>
+
+      <!-- <div class="form-group col-lg-3 col-md-3">
+        <ng-select [items]="districtList" [multiple]="true" bindLabel="areaName" groupBy="selectedAllGroup"
+          [selectableGroup]="true" [selectableGroupAsModel]="false" [closeOnSelect]="false" bindValue="areaCode"
+          placeholder="Select District" [loading]="isLoadingSpinner" formControlName="districts" [clearable]="true">
+
+          <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+              <span class="ng-value-label">
+                {{item['areaName']}}</span>
+              <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+            </div>
+            <div class="ng-value" *ngIf="items.length > 2">
+              <span class="ng-value-label">{{items.length - 2}} more...</span>
+            </div>
+          </ng-template>
+
+          <ng-template class="form-control" ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{ index }}" type="checkbox" [(ngModel)]="item$.selected"
+              [ngModelOptions]="{ standalone: true }" />
+            Select All
+          </ng-template>
+
+          <ng-template class="form-control" ng-option-tmp let-item="item" let-item$="item$">
+            <input id="item-{{ item.areaCode }}" type="checkbox" [(ngModel)]="item$.selected"
+              [ngModelOptions]="{ standalone: true }" />
+            {{ item.areaName }}
+          </ng-template>
+        </ng-select>
+      </div> -->
+      <div class="form-group col-lg-3 col-md-3 sub-org-tooltips">
+        <ng-select
+          [items]="orglist"
+          bindLabel="orgSuborgName"
+          bindValue="orgSuborgId"
+          placeholder=" Select organization Name"
+          id="orgName"
+          formControlName="organization"
+          (change)="onGetRole($event)"
+          [loading]="isLoadingSpinner"
+          [clearable]="true"
+        >
+          <ng-template ng-label-tmp let-item="item">
+            <span
+              class="ng-value-label"
+              placement="top"
+              ngbTooltip="{{ item.orgSuborgName }}"
+              >{{ item.orgSuborgName }}</span
+            >
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item">
+            <span
+              class="ng-option-label"
+              placement="top"
+              ngbTooltip="{{ item.orgSuborgName }}"
+              >{{ item.orgSuborgName }}
+            </span>
+          </ng-template>
+        </ng-select>
+      </div>
+
+      <div class="form-group col-lg-3 col-md-3">
+        <ng-select
+          [items]="roleList"
+          bindLabel="roleDesc"
+          bindValue="roleCd"
+          placeholder=" Select Role"
+          id="orgName"
+          formControlName="roleCds"
+          [loading]="isLoadingSpinner"
+          [clearable]="true"
+        >
+        </ng-select>
+      </div>
+
+      <!-- <div class="form-group col-lg-3 col-md-3">
+        <ng-select [items]="roleList" [multiple]="true" bindLabel="roleDesc" groupBy="selectedAllGroup"
+          [selectableGroup]="true" [selectableGroupAsModel]="false" [closeOnSelect]="false" bindValue="roleCd"
+          placeholder="Select Role" [loading]="isLoadingSpinner" formControlName="roleCds" [clearable]="true">
+
+          <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+              <span class="ng-value-label">
+                {{item['roleDesc']}}</span>
+              <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+            </div>
+            <div class="ng-value" *ngIf="items.length > 2">
+              <span class="ng-value-label">{{items.length - 2}} more...</span>
+            </div>
+          </ng-template>
+
+          <ng-template class="form-control" ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{ index }}" type="checkbox" [(ngModel)]="item$.selected"
+              [ngModelOptions]="{ standalone: true }" />
+            Select All
+          </ng-template>
+
+          <ng-template class="form-control" ng-option-tmp let-item="item" let-item$="item$">
+            <input id="item-{{ item.roleCd }}" type="checkbox" [(ngModel)]="item$.selected"
+              [ngModelOptions]="{ standalone: true }" />
+            {{ item.roleDesc }}
+          </ng-template>
+        </ng-select>
+      </div> -->
+
+      <div class="form-group col-lg-3 col-md-3">
+        <ng-select
+          [items]="userType"
+          bindLabel="value"
+          bindValue="cd"
+          placeholder="Select User Type"
+          id="userType"
+          formControlName="type"
+          [clearable]="true"
+        >
+        </ng-select>
+      </div>
+    </div>
+
+    <!-- <form [formGroup]="searchForm"> -->
+    <div id="search-section" class="row">
+      <span class="searchby-label-black"
+        >{{ "animalDetails.search_by" | translate }}:</span
+      >
+      <div class="search-mobile-view">
+        <div class="form-check-inline">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="optRadio"
+            value="userName"
+            (change)="onSelectingSearchBy($event)"
+            formControlName="optRadio"
+          />
+          <label class="form-check-label">{{
+            "user.userName" | translate
+          }}</label>
+        </div>
+
+        <div class="form-check-inline">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="optRadio"
+            value="userId"
+            (change)="onSelectingSearchBy($event)"
+            formControlName="optRadio"
+          />
+          <label class="form-check-label">{{
+            "user.loginId" | translate
+          }}</label>
+        </div>
+
+        <div class="form-check-inline">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="optRadio"
+            value="mobileNo"
+            (change)="onSelectingSearchBy($event)"
+            formControlName="optRadio"
+          />
+          <label class="form-check-label">{{
+            "registration.filter.mobile" | translate
+          }}</label>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col-md-8 search-by">
+        <img
+          src="/assets/images/search.svg"
+          class="input-icon-left"
+          alt="icon-search"
+        />
+        <input
+          [type]="inputType"
+          class="form-control input input-section"
+          id="search-by"
+          placeholder="{{ 'user.search_keyword' | translate }}"
+          formControlName="searchValue"
+          [maxLength]="maxLength"
+          (keypress)="enterInputType()"
+          (paste)="enterInputType()"
+          [minlength]="3"
+        />
+
+        <!-- <div class="alert-message">
+         
+        </div> -->
+        <a class="input-clear" (click)="resetValue()">
+          {{ "common.clear" | translate }}
+        </a>
+      </div>
+
+      <div class="col-auto btn-mobile-view">
+        <ul class="project-mgmt">
+          <li>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="isSearchButton"
+              (click)="onGetUserList()"
+            >
+              {{ "animalDetails.search" | translate }}
+            </button>
+          </li>
+          <!-- <li>
+            <button type="button" class="btn btn-outline-primary" (click)="resetSearch()">
+              {{ "animalDetails.clear_all" | translate }}
+            </button>
+          </li> -->
+        </ul>
+      </div>
+      <div class="col-sm-12">
+        <!-- <mat-error *ngIf="errorMsg">
+        
+
+        </mat-error> -->
+        <mat-error>
+          <!-- <span *ngIf="searchForm.get('searchValue').errors?.['pattern']" class="validation-error-message">
+            {{errorMsg}},
+          </span> -->
+          <span
+            *ngIf="
+              (searchForm.get('searchValue').invalid &&
+                !searchForm.get('searchValue').pristine) ||
+              searchForm.get('searchValue').touched
+            "
+            class="validation-error-message"
+          >
+            <span
+              *ngIf="searchForm.get('searchValue').errors?.['pattern']"
+              class="validation-error-message"
+            >
+              {{ errorMsg }} ,
+            </span>
+            <span
+              *ngIf="searchForm.get('searchValue').errors?.['minlength']"
+              class="validation-error-message"
+            >
+              {{ searchType }} should not be less than 3 {{ dataType }}.
+            </span>
+            <!-- <span
+              *ngIf="searchForm.get('searchValue').value?.length >= maxLength"
+              class="validation-error-message"
+            >
+              {{ searchType }} should not be more than {{ maxLength }}
+              {{ dataType }}.
+            </span> -->
+          </span>
+        </mat-error>
+      </div>
+    </div>
+  </form>
+</div>

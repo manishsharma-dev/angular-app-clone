@@ -1,0 +1,260 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="ear-tag-detail">
+  <div class="tag-detail-header">
+    <div class="heading-section">
+      <h3 class="tag-detail-heading">
+        {{ "animalDetails.ear_tag_change" | translate }}
+      </h3>
+      <p class="tag-detail-subheading">
+        {{ "animalDetails.ear_tag_details_text" | translate }}
+      </p>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+
+  <div class="row tag-detail-content">
+    <div class="col-md-5">
+      <p class="tag-detail-label">
+        {{ "animalDetails.ear_tag_number" | translate }}
+      </p>
+      <p class="tag-detail-info">{{ data.tagNumber }}</p>
+    </div>
+    <div class="col-md-7">
+      <p class="tag-detail-label">
+        {{ "animalDetails.tag_change_record_date" | translate }}
+      </p>
+      <p class="tag-detail-info">{{ dateFormatChange(dateToday) }}</p>
+    </div>
+  </div>
+
+  <div class="tag-detail-form">
+    <form [formGroup]="earTagForm">
+      <div class="form-row">
+        <div class="form-group col-md-5 datepicker-margin">
+          <label for="tagEffectiveFrom" class="label-value"
+            >{{ "animalDetails.tag_change_date" | translate
+            }}<span class="mandatory-field">*</span></label
+          >
+          <input
+            [matDatepicker]="tagEffectiveFrom"
+            class="form-control"
+            formControlName="tagEffectiveFrom"
+            placeholder="{{
+              'animalDetails.owner_dob_placeholder' | translate
+            }}"
+            [max]="dateToday"
+            [min]="getPastDate()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="tagEffectiveFrom"
+            class="date-picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #tagEffectiveFrom></mat-datepicker>
+          <div
+            *ngIf="
+              (!earTagForm.get('tagEffectiveFrom').pristine &&
+                earTagForm.get('tagEffectiveFrom').invalid) ||
+              earTagForm.get('tagEffectiveFrom').touched
+            "
+            class="alert-message"
+          >
+            <mat-error
+              class="mb-2"
+              *ngIf="
+                earTagForm.get('tagEffectiveFrom').hasError('matDatepickerMin')
+              "
+              >{{ "common.invalid_date" | translate }}</mat-error
+            >
+            <mat-error
+              class="mb-2"
+              *ngIf="
+                earTagForm.get('tagEffectiveFrom').hasError('matDatepickerMax')
+              "
+              >{{ "common.invalid_date" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="
+                earTagForm
+                  .get('tagEffectiveFrom')
+                  .hasError('matDatepickerParse')
+              "
+              >{{ "common.please_enter_valid_date" | translate }}</mat-error
+            >
+            <div
+              *ngIf="
+                earTagForm.get('tagEffectiveFrom').errors?.required &&
+                !earTagForm
+                  .get('tagEffectiveFrom')
+                  .hasError('matDatepickerParse')
+              "
+            >
+              <span> {{ "errorMsg.no_date_birth" | translate }} </span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-md-7">
+          <label for="reasonForChange" class="label-value"
+            >{{ "animalDetails.reason" | translate
+            }}<span class="mandatory-field">*</span></label
+          >
+          <select id="" class="form-control" formControlName="reasonForChange">
+            <option selected disabled value="">
+              {{ "animalDetails.ear_tag_reason_change" | translate }}
+            </option>
+            <option *ngFor="let reason of earTagReasons" [value]="reason.cd">
+              {{ reason.value }}
+            </option>
+          </select>
+          <div
+            *ngIf="
+              (!earTagForm.controls.reasonForChange.pristine &&
+                earTagForm.controls.reasonForChange.invalid) ||
+              earTagForm.controls.reasonForChange.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="earTagForm.controls.reasonForChange.errors?.required">
+              <span>{{ "errorMsg.tag_reason_select" | translate }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12">
+            <div class="form-row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="form-label"
+                    >{{
+                      "animalDetails.fillAnimalDetails.photo_of_animal"
+                        | translate
+                    }}
+                    <span class="mandatory-field">*</span>
+                  </label>
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="animalPic"
+                    name="animalPic"
+                    (change)="onFileUpload($event)"
+                  />
+                  <strong>{{ "animalDetails.file_type" | translate }}</strong>
+                  <div *ngIf="uploadedFileError">
+                    <span class="alert-message">{{ uploadedFileError }}</span>
+                  </div>
+                  <div
+                    *ngIf="
+                      earTagForm.controls.animalPic.errors?.required &&
+                      earTagForm.controls.animalPic.touched
+                    "
+                  >
+                    <span id="showValidation" class="alert-message">
+                      {{ "errorMsg.no_image" | translate }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="form-group col-md-12">
+          <label for="animalPic" class="form-label"
+            >{{ "animalDetails.fillAnimalDetails.photo_of_animal" | translate }}
+            <span class="mandatory-field">*</span>
+          </label>
+          <input
+            type="file"
+            class="form-control"
+            id="animalPic"
+            name="animalPic"
+            (change)="onFileUpload($event)"
+          />
+          <strong>{{ "animalDetails.file_type" | translate }}</strong>
+          <div *ngIf="uploadedFileError">
+            <span class="alert-message">{{ uploadedFileError }}</span>
+          </div>
+          <div
+            *ngIf="
+              earTagForm.controls.animalPic.errors?.required &&
+              earTagForm.controls.animalPic.touched
+            "
+          >
+            <span id="showValidation" class="alert-message">
+              {{ "errorMsg.no_image" | translate }}
+            </span>
+          </div>
+        </div> -->
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-12">
+          <div class="form-row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="tagId" class="label-value"
+                  >{{ "animalDetails.new_ear_tag_number" | translate
+                  }}<span class="mandatory-field">*</span></label
+                >
+                <div class="d-flex justify-content-between">
+                  <div class="w-100">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="{{
+                        'animalDetails.ear_tag_number' | translate
+                      }}"
+                      value="--"
+                      [maxlength]="12"
+                      formControlName="tagId"
+                    />
+                  </div>
+                  <div class="align-self-end">
+                    <span class="scan-btn mr-0"
+                      ><img src="/assets/images/scanner.svg" alt="icon-scanner"
+                    /></span>
+                  </div>
+                </div>
+                <div
+                  *ngIf="
+                    (!earTagForm.controls.tagId.pristine &&
+                      earTagForm.controls.tagId.invalid) ||
+                    earTagForm.controls.tagId.touched
+                  "
+                  class="alert-message"
+                >
+                  <div *ngIf="earTagForm.controls.tagId.errors?.pattern">
+                    {{ "errorMsg.ear_tag_err1" | translate }}
+                  </div>
+                  <div *ngIf="earTagForm.controls.tagId.errors?.required">
+                    {{ "errorMsg.ear_tag_err2" | translate }}
+                  </div>
+                  <span
+                    *ngIf="earTagForm.controls.tagId.errors?.['tagExists']"
+                    class="alert-message"
+                  >
+                    {{ "errorMsg.ear_tag_err3" | translate }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="d-flex justify-content-end mt-3">
+    <button type="button" class="btn btn-outline-primary mr-2" mat-dialog-close>
+      {{ "animalDetails.cancel" | translate }}
+    </button>
+    <button type="submit" class="btn btn-primary" (click)="openSnackBar()">
+      {{ "common.submit" | translate }}
+    </button>
+  </div>
+</div>

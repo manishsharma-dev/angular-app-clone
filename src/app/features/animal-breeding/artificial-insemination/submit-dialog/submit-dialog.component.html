@@ -1,0 +1,20 @@
+<div class="campaign-dialog">
+  <img src="/assets/images/verified.svg" class="icon-verified" alt="icon-verified" />
+    <div class="campaign-msg mb-4">
+      <h1 class="succes-msg">
+        <span class="succes-msg-desc">{{'animalBreeding.transaction_id' | translate }}:</span><span class="succes-msg-desc">{{ data.transaction_id }}</span>
+      </h1>
+      <h1 class="succes-msg">{{ data.title | translate }}</h1>
+    </div>
+  
+    <div class="close-button">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        (click)="closeDialog()"
+        mat-dialog-close
+      >
+        {{'animalDetails.close'|translate}}
+      </button>
+    </div>
+  </div>

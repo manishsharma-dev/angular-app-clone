@@ -1,0 +1,145 @@
+<div class="overlay" *ngIf="isLoading">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+
+
+
+<section class="sign-up-section">
+
+  <div class="logo-header row mb-5">
+    <div class="brand-logo col-md-6">
+      <svg width="33" height="33">
+        <rect width="33" height="33" style="fill:#CFCFCF;stroke-width:8;stroke:#FFFFFF" />
+      </svg><span class="ml-2 brand-logo-text">LOGO</span>
+    </div>
+
+    <div class="company-logo  col-md-6 justify-content-md-end">
+      <svg width="33" height="33">
+        <rect width="33" height="33" style="fill:#CFCFCF;stroke-width:8;stroke:#FFFFFF" />
+      </svg>
+      <div class="ml-2 company-logo-text"><span>
+          Department of Animal <br>
+          Husbandry and Dairying
+        </span></div>
+    </div>
+  </div>
+
+
+
+  <div class="sign-up-container">
+    <div class="row no-gutters col-container w-100">
+      <div class="col-md-8 left-section order-1">
+        <div class="col-my">
+          <div class="login-heading mb-2">
+            <p class="login-title mb-2">Registration</p>
+            <!-- <p class="login-title-desc">Log in with your data which you have received in your email.</p> -->
+          </div>
+
+          <form (submit)="onSignup(loginForm)" #loginForm="ngForm" *ngIf="!isLoading">
+            <mat-form-field [floatLabel]="'never'">
+              <mat-label> UserName </mat-label>
+
+              <input matInput name="userName" ngModel type="username" placeholder="UserName" #username="ngModel"
+                required autocomplete="off">
+              <span matPrefix><i class="fa fa-fa-light fa-user login-icon"></i>&nbsp;</span>
+
+              <mat-error *ngIf="username.invalid">Please enter a valid username.</mat-error>
+            </mat-form-field>
+            <mat-form-field [floatLabel]="'never'">
+              <mat-label> Password </mat-label>
+
+              <input type="password" name="password" ngModel matInput placeholder="Password" #passwordInput="ngModel"
+                required>
+              <span matPrefix><i class="fa fa-regular fa-lock login-icon"></i>&nbsp;</span>
+
+              <mat-error *ngIf="passwordInput.invalid">Please enter a valid password.</mat-error>
+            </mat-form-field>
+            <mat-form-field [floatLabel]="'never'">
+              <mat-label> Confirm Password </mat-label>
+
+              <input type="password" name="confirmPassword" ngModel matInput placeholder="Confirm Password"
+                #confirmPasswordInput="ngModel" required>
+              <span matPrefix><i class="fa fa-regular fa-lock login-icon"></i>&nbsp;</span>
+
+              <mat-error *ngIf="confirmPasswordInput.invalid">Please enter a Confirm password.</mat-error>
+            </mat-form-field>
+            <button class="login-signup-button btn btn-dark mb-2" mat-button type="submit"
+              *ngIf="!isLoading">Register</button>
+            <div class="signup">
+              <span class="mr-2"> Don't have an account ?</span>
+              <ul>
+                <li> <a routerLink="/auth/login">Sign in.</a></li>
+                <li> <a routerLink="/auth/login">Forgot Password?</a></li>
+              </ul>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+      <div class="col-md-4  right-section">
+      </div>
+    </div>
+  </div>
+
+
+
+
+</section>
+
+
+<!-- <div class="row login-form justify-content-center">
+        <div class="col-lg-10 col-md-10 col-sm-10">
+          <div class="card login-card">
+            <div class="card-header login-header d-flex justify-content-between align-items-end">
+              <div>
+                <span class="card-heading-title login-heading-title">Registration</span>
+              </div>
+            </div>
+            <div class="card-body"> -->
+<!-- <mat-card-title class="login_title mb-3">Login</mat-card-title> -->
+<!-- <mat-card-content>
+            <form (submit)="onSignup(loginForm)" #loginForm="ngForm" *ngIf="!isLoading">
+              <mat-form-field [floatLabel]="'never'">
+                <mat-label> UserName </mat-label>
+  
+                <input matInput name="userName" ngModel type="username" placeholder="UserName" #username="ngModel" required
+                   autocomplete="off">
+                  <span matPrefix><i class="fa fa-fa-light fa-user login-icon"></i>&nbsp;</span>
+  
+                <mat-error *ngIf="username.invalid">Please enter a valid username.</mat-error>
+              </mat-form-field>
+              <mat-form-field [floatLabel]="'never'">
+                <mat-label> Password </mat-label>
+  
+                <input type="password" name="password" ngModel matInput placeholder="Password" #passwordInput="ngModel"
+                  required>
+                  <span matPrefix><i class="fa fa-regular fa-lock login-icon"></i>&nbsp;</span>
+                  
+                <mat-error *ngIf="passwordInput.invalid">Please enter a valid password.</mat-error>
+              </mat-form-field>
+              <mat-form-field [floatLabel]="'never'">
+                <mat-label> Confirm Password </mat-label>
+  
+                <input type="password" name="confirmPassword" ngModel matInput placeholder="Confirm Password" #confirmPasswordInput="ngModel"
+                  required>
+                  <span matPrefix><i class="fa fa-regular fa-lock login-icon"></i>&nbsp;</span>
+                  
+                <mat-error *ngIf="confirmPasswordInput.invalid">Please enter a Confirm password.</mat-error>
+              </mat-form-field>
+              <button class="login-button btn btn-primary mb-2" mat-button type="submit" *ngIf="!isLoading">Register</button>
+              <p class="signup">
+                Already have an account ?
+                <a routerLink="/auth/login">Sign in.</a>
+              </p> -->
+<!-- <p routerLink="/auth/forgot-password" class="forgot-password text-center">Forgot Password?</p> -->
+<!-- </form>
+          </mat-card-content>
+          </div>
+        </div>
+        </div>
+      </div>
+    -->

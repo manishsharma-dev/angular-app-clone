@@ -1,0 +1,180 @@
+<!-- New Dialog -->
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="campaign-edit-dialog">
+  <div class="campaign-edit-header">
+    <div class="headeing">
+      <h3 class="edit-heading-label">
+        {{ "animalDetails.view_transaction" | translate }}
+      </h3>
+      <p class="edit-heading-desc">
+        {{ "animalDetails.view_transaction_msg" | translate }}
+      </p>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+
+  <div class="dialog-main-content">
+    <div class="owner-transfer-section">
+      <div class="current-trans">
+        <!--Accordion wrapper-->
+        <div
+          class="accordion transaction-accordion"
+          id="accordionOwnerTransCurr"
+          role="tablist"
+          aria-multiselectable="true"
+          *ngFor="let transaction of animalTransactionData; let i = index"
+        >
+          <!-- Accordion card -->
+          <div class="card mt-2">
+            <!-- Card header -->
+            <div class="card-header" role="tab" id="ownerTransHeading">
+              <a
+                data-toggle="collapse"
+                data-parent="#accordionOwnerTransCurr"
+                [href]="'#ownerTransCollapseCurr' + i"
+                aria-expanded="false"
+                [attr.aria-controls]="'ownerTransCollapseCurr' + i"
+              >
+                <h5 class="mb-0 acc-heading">
+                  {{ transaction?.modificationTitle }}
+                  <i
+                    class="fa fa-angle-down rotate-icon"
+                    aria-hidden="true"
+                  ></i>
+                </h5>
+              </a>
+            </div>
+
+            <!-- Card body -->
+            <div
+              [id]="'ownerTransCollapseCurr' + i"
+              class="collapse"
+              role="tabpanel"
+              aria-labelledby="ownerTransHeadingCurr"
+              data-parent="#accordionOwnerTransCurr"
+            >
+              <div class="card-body transaction-detail">
+                <ul class="transaction-list">
+                  <li class="transaction-item">
+                    <div class="transaction-title">
+                      {{ "animalDetails.transaction_id" | translate }}
+                    </div>
+                    <div class="transaction-desc">
+                      #{{ transaction?.transactionId }}
+                    </div>
+                  </li>
+                  <li class="transaction-item">
+                    <div class="transaction-title">
+                      {{ "animalDetails.transaction_date" | translate }}
+                    </div>
+                    <div class="transaction-desc">
+                      {{ dateFormatChange(transaction?.transactionDate) }}
+                    </div>
+                  </li>
+                  <ul>
+                    <li
+                      class="transaction-item"
+                      *ngFor="
+                        let element of transaction?.animalModificationJson
+                      "
+                    >
+                      <div class="transaction-title">
+                        {{ element?.key }}
+                      </div>
+                      <div
+                        *ngIf="!checkIfArray(element?.value); else breed"
+                        class="transaction-desc"
+                        [ngClass]="[
+                          element?.value?.length > 20 ? 'ellips-text' : ''
+                        ]"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ element?.value }}"
+                      >
+                        {{
+                          element?.key === "Date Of Death"
+                            ? formatDate(element?.value)
+                            : element?.value || ""
+                        }}
+                      </div>
+                      <ng-template #breed>
+                        <div class="flex-custom-right info-data">
+                          <ul class="info-data-list custom-breed-display">
+                            <li
+                              *ngFor="let ele of element.value"
+                              class="transaction-desc info-data-list float-md-right"
+                            >
+                              {{ ele.breed }}-{{ ele.bloodExoticLevel + " " }}%
+                            </li>
+                          </ul>
+                        </div>
+                      </ng-template>
+                    </li>
+                  </ul>
+                  <li
+                    class="transaction-item"
+                    *ngIf="transaction?.requestorRemarks"
+                  >
+                    <div class="transaction-title">
+                      {{ "notification.requestor_remarks" | translate }}
+                    </div>
+                    <div
+                      class="transaction-desc"
+                      class="transaction-desc"
+                      [ngClass]="[
+                        transaction?.requestorRemarks?.length > 20
+                          ? 'ellips-text'
+                          : ''
+                      ]"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="{{ transaction?.requestorRemarks }}"
+                    >
+                      {{ transaction?.requestorRemarks }}
+                    </div>
+                  </li>
+                  <li
+                    class="transaction-item"
+                    *ngIf="
+                      timeOfDeath &&
+                      doesElementContainsDate(
+                        transaction?.animalModificationJson
+                      )
+                    "
+                  >
+                    <div class="transaction-title">
+                      {{ "common.timeOfDeath" | translate }}
+                    </div>
+                    <div class="transaction-desc">
+                      {{ timeOfDeath }}
+                    </div>
+                  </li>
+                  <li class="transaction-item">
+                    <div class="transaction-title">
+                      {{ "animalDetails.transaction_status" | translate }}
+                    </div>
+                    <div class="transaction-desc">
+                      {{ transaction?.transactionStatusValue }}
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="campaign-edit-footer">
+    <button type="submit" class="btn btn-outline-primary mr-2" mat-dialog-close>
+      Close
+    </button>
+  </div>
+</div>

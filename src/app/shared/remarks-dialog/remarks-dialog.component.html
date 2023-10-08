@@ -1,0 +1,89 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="campaign-edit-dialog">
+  <!-- header -->
+  <div class="campaign-edit-header">
+    <div class="headeing">
+      <h2 class="edit-heading-label">{{"notification.remarks_lbl" | translate}}</h2>
+    </div>
+    <div class="cross-icon">
+      <mat-icon (click)="closeDialog()">clear</mat-icon>
+    </div>
+  </div>
+  <div class="h-divider m-0">
+    <div class="shadow"></div>
+  </div>
+
+  <!-- content -->
+  <form [formGroup]="remarksForm">
+    <div class="dialog-main-content">
+      <div class="remarks-section">
+        <label for="remarks"
+          >{{"notification.enter_remarks_here" | translate}}<span class="mandatory-field">*</span></label
+        >
+        <textarea class="form-control" formControlName="remarks"></textarea>
+      </div>
+      <div
+        *ngIf="
+          (!remarksInfo.remarks.pristine && remarksInfo.remarks.invalid) ||
+          remarksInfo.remarks.touched
+        "
+        class="alert-message"
+      >
+        <div *ngIf="remarksInfo.remarks.errors?.required">{{"notification.enter_remarks" | translate}}</div>
+      </div>
+    </div>
+
+    <div class="h-divider m-0">
+      <div class="shadow"></div>
+    </div>
+
+    <!-- footer -->
+    <div class="campaign-edit-footer">
+      <button mat-dialog-close class="btn btn-outline-primary mr-2 px-4">
+        {{"common.cancel" | translate}}
+      </button>
+
+      <button class="btn btn-primary" (click)="onSubmit()">
+        <!-- {{ data.primaryBtnText }} -->
+        {{"common.submit" | translate}}
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- <form>
+  <div class="remarks-dialog"> -->
+<!-- <div class="verified_icon">
+    <i class="fa fa-exclamation-triangle warning_icon"></i>
+  </div> -->
+<!-- <h3 class="">Remarks</h3>
+   
+
+    <mat-dialog-content>
+      <label for="remark">Enter Remarks here</label>
+      <textarea class="form-control"></textarea>
+    </mat-dialog-content>
+
+ 
+
+    <mat-dialog-actions align="center">
+      <button
+        mat-dialog-close
+        class="btn btn-outline-primary mr-2 px-4"
+        *ngIf="data.secondaryBtnText"
+      >
+        Cancel
+      </button>
+
+      <button mat-dialog-close class="btn btn-primary"> -->
+<!-- {{ data.primaryBtnText }} -->
+<!-- Submit
+      </button>
+    </mat-dialog-actions>
+  </div>
+</form> -->

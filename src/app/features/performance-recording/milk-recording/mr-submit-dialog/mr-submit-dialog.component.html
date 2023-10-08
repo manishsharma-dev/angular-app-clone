@@ -1,0 +1,32 @@
+<div class="text-center">
+  <div class="verified_icon">
+    <img src="assets/images/verified.svg" class="icon-verified" alt="icon-verified" />
+  </div>
+  <p class="mt-2">{{'performanceRecording.transaction_id'|translate}}: {{data.id??data?.res?.data?.id}}</p>
+
+  <mat-dialog-content class="no-scroll">
+    <div *ngIf="data?.res?.msg?.msgCode !== 3046; else errMsg">
+      <h3 class="mb-2">{{'performanceRecording.milk_recording_submitted_successfully'|translate}}</h3>
+
+      <h4 *ngIf="data.samplingAllowed">{{'performanceRecording.do_you_want_add_sample'|translate}}</h4>
+    </div>
+    <div></div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center" *ngIf="data.samplingAllowed && data?.res?.msg?.msgCode !== 3046; else closeBtn">
+    <button class="btn btn-outline-primary mr-2 px-4" (click)="onSubmit(true)">
+      {{'common.yes'|translate}}
+    </button>
+    <button class="btn btn-primary" (click)="onSubmit(false)">
+      {{'common.no'|translate}}
+    </button>
+  </mat-dialog-actions>
+  <ng-template #closeBtn>
+    <button class="btn btn-primary" (click)="onSubmit(false)">
+      {{'animalDetails.close'|translate}}
+    </button>
+  </ng-template>
+</div>
+
+<ng-template #errMsg>
+  <h4>{{data?.res?.msg?.msgDesc}}</h4>
+</ng-template>

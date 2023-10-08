@@ -1,0 +1,54 @@
+<div class="dry-off">
+  <div class="dry-off-header">
+    <p class="header-desc">{{'performanceRecording.enter_dry_off_details' | translate}}</p>
+  </div>
+
+  <div class="dry-off-body">
+    <form [formGroup]="dryOffForm">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="" class="form-label">{{'performanceRecording.data_entry_date' | translate}}</label>
+          <input type="text" class="form-control" formControlName="dryOffRecordDate">
+        </div>
+        <div class="form-group col-md-6 input-icon">
+          <label for="" class="form-label">{{'performanceRecording.dry_off_date' | translate}}</label>
+          <input class="form-control" type="text" [min]="minDate" [max]="today" [matDatepicker]="pickerDate"
+            formControlName="dryOffDate" placeholder="dd/mm/yyyy" />
+          <mat-datepicker-toggle matSuffix [for]="pickerDate" class="calender-icon"></mat-datepicker-toggle>
+          <mat-datepicker #pickerDate></mat-datepicker>
+
+          <span class="alert-message" *ngIf="
+                    (dryOffForm.get('dryOffDate').dirty &&
+                      dryOffForm.get('dryOffDate').invalid) ||
+                    dryOffForm.get('dryOffDate').touched
+                    ">
+            <span *ngIf="dryOffForm.get('dryOffDate').hasError('matDatepickerMin')">
+              {{'common.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="dryOffForm.get('dryOffDate').hasError('matDatepickerMax')">
+              {{'common.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="dryOffForm.get('dryOffDate').hasError('matDatepickerParse')">
+              {{'common.please_enter_valid_date' | translate}}
+            </span>
+            <span
+              *ngIf="dryOffForm.get('dryOffDate').hasError('required') && !dryOffForm.get('dryOffDate').hasError('matDatepickerParse')">
+              {{cmnValidation.required|translate}}
+            </span>
+          </span>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="dry-off-footer">
+    <button [mat-dialog-close]="null" class="btn btn-outline-primary mr-2 px-4">
+      {{'animalDetails.cancel' | translate}}
+    </button>
+
+    <button class="btn btn-primary" (click)="onSubmit()">
+      {{'common.submit' | translate}}
+    </button>
+  </div>
+
+</div>

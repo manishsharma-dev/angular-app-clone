@@ -1,0 +1,186 @@
+/*  sample collect*/
+.radio-action>span {
+  margin-right: 16px;
+  font-size: 14px;
+  font-family: Noto Sans;
+  font-weight: bold;
+  color: #707070;
+}
+
+.form-check-label {
+  font-size: 14px;
+  font-family: Noto Sans;
+  font-weight: normal;
+  color: #212529;
+}
+
+/* Post Mortem New Mat Expansion Panel */
+.group-disease-testing .mat-expansion-panel {
+  margin-bottom: 14px;
+}
+
+.group-disease-testing .mat-expansion-panel-header {
+  height: 38px;
+  padding: 0px 15px;
+}
+
+.group-disease-testing .mat-expansion-panel-header.mat-expanded {
+  height: 48px;
+  background-color: #777777;
+}
+
+.group-disease-testing .mat-expansion-panel-header-title {
+  color: #777777;
+  font-size: 14px;
+  font-family: Noto Sans;
+  font-weight: bold;
+}
+
+.group-disease-testing .mat-expansion-panel-header.mat-expanded .mat-expansion-panel-header-title {
+  color: #fff;
+  font-size: 14px;
+  font-family: Noto Sans;
+  font-weight: bold;
+}
+
+.group-disease-testing .mat-expansion-panel-header.mat-expanded .mat-expansion-indicator::after {
+  color: #f8f7fa;
+}
+
+.group-disease-testing .mat-expansion-panel-body {
+  padding: 15px 20px;
+}
+
+.group-disease-testing .mat-expansion-panel-header.mat-expanded:hover,
+.group-disease-testing .mat-expansion-panel-header.mat-expanded:focus {
+  background-color: #777777 !important;
+}
+
+.group-disease-testing span.mat-content {
+  align-items: center;
+}
+
+.group-disease-testing .panel-check-icon {
+  font-size: 1.2rem;
+}
+
+/* table */
+
+.selectAnimalTable {
+  box-shadow: none !important;
+  /* border: 1px solid #929292; */
+  border-collapse: inherit;
+}
+
+.selectAnimalTable td.mat-cell,
+.selectAnimalTable th.mat-header-cell {
+  padding: 0px 5px !important;
+  white-space: nowrap;
+}
+
+.selectAnimalTable td.mat-cell {
+  border: none;
+}
+
+.selectAnimalTable input.check-input {
+  vertical-align: inherit;
+}
+
+.selectAnimalTable tr.mat-row,
+.selectAnimalTable tr.mat-header-row {
+  height: 40px;
+}
+
+.selectAnimalTable tr.mat-header-row th {
+  background: transparent;
+  color: #3c3c3c;
+  font-weight: bold;
+  height: 38px;
+}
+
+.selectAnimalTable ::ng-deep.mat-sort-header-arrow {
+  position: absolute;
+  left: -20px !important;
+}
+
+.selectAnimalTable .status-highlight {
+  padding: 4px 10px;
+  border-radius: 16px;
+  background: #929292;
+  font-weight: bold;
+  opacity: 0.5;
+}
+
+.mat-expansion-panel-header-title {
+  flex-grow: 3 !important;
+}
+
+.mat-expansion-panel-header-description {
+  flex-grow: 1 !important;
+}
+
+.custom-panel-title {
+  flex-direction: column;
+  width: 100%;
+}
+
+.expansion-infoEdit {
+  display: flex !important;
+  flex-wrap: wrap;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+}
+
+.separator .line {
+  height: 1px;
+  flex: 1;
+  background-color: #dcdcdc;
+}
+
+.outer-box {
+  background: #f9f9f9;
+  padding: 15px;
+}
+
+.demoClass {
+  height: 48px;
+}
+
+.number-input>input {
+  width: 38%;
+}
+
+.group-disease-testing .previous-results {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.group-disease-testing .previous-results>a {
+  text-decoration: underline;
+  font-size: 14px;
+  font-family: Noto Sans;
+  font-weight: bold;
+  letter-spacing: 0px;
+  color: #272727;
+  opacity: 1;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 320px) {
+  .demoClass {
+    height: 60px !important;
+  }
+}
+
+@media screen and (max-width: 370px) {
+  .mobile-view {
+    display: grid;
+  }
+}
+
+.ng-select.ng-select-opened .ng-select-container, .ng-dropdown-panel {
+  z-index: 1090 !important;
+}

@@ -1,0 +1,827 @@
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
+}
+
+/* Universal CSS */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0px;
+  color: #3c3c3c;
+  font-family: Noto Sans, Regular;
+  font-size: 0.875rem;
+  line-height: 1.375rem;
+}
+
+p,
+h1,
+h2,
+h4,
+h5,
+h6 {
+  margin: 0px;
+  padding: 0px;
+}
+
+h3 {
+  margin: 0px;
+  padding: 0px;
+  font-size: 1.125rem;
+  font-weight: bold;
+  font-family: Noto Sans;
+}
+
+h4 {
+  font-weight: bold;
+  font-family: Noto Sans;
+  font-size: 1rem;
+}
+
+h5 {
+  font-weight: bold;
+  font-family: Noto Sans;
+  font-size: 0.875rem;
+}
+
+ul {
+  margin: 0;
+}
+
+/* ==== Golbal Start Table CSS ====================== */
+table {
+  width: 100%;
+}
+
+.table td,
+.table th,
+.table thead th {
+  vertical-align: middle;
+}
+
+/*==================== Global start Material Card Header Custom CSS===================================== */
+.card-header {
+  border-radius: 16px 16px 0px 0px;
+  background-color: #eef0fe;
+  opacity: 0.8;
+}
+
+/*===================Global start  Divider-line CSS====================================== */
+
+.separator-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -20px;
+  margin-left: -20px;
+}
+
+.h-divider {
+  margin: 10px 0px;
+  width: 100%;
+  position: relative;
+  padding: 0px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+/*==================Global start  Common breadcrumb CSS =====================  */
+
+.breadcum .breadcrumb-list {
+  margin: 8px 0px;
+}
+
+.breadcrumb {
+  background-color: transparent;
+  display: -webkit-inline-box;
+  padding: 4px 0;
+  font-size: 0.75rem;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: "\f105";
+  font-family: "FontAwesome";
+  font-weight: 900;
+}
+
+.breadcrumb-list .breadcrumb-item a {
+  font-weight: normal;
+}
+
+.breadcrumb-item.active a {
+  color: #333333;
+}
+
+.breadcrumb-item.current a {
+  color: #545454;
+}
+
+/* ==================Global start  button css ==========================*/
+
+.btn {
+  font-size: 0.75rem;
+}
+
+.btn-primary {
+  padding: 8px 20px;
+  font-weight: normal;
+  background: #185b85;
+  color: #fff;
+  border-color: #185b85;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.btn-primary:hover {
+  color: #fff;
+  background: #0d3d4e;
+  border-color: #185b85;
+  border-radius: 4px;
+}
+
+.btn-primary:not(:disabled):not(.disabled).active,
+.btn-primary:not(:disabled):not(.disabled):active,
+.show > .btn-primary.dropdown-toggle {
+  color: #fff;
+  background: #0d3d4e;
+  border-color: #185b85;
+  border-radius: 4px;
+}
+
+.btn-primary.focus,
+.btn-primary:focus {
+  color: #fff;
+  background: #0d3d4e;
+  border-color: #185b85;
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+.btn-primary.disabled,
+.btn-primary:disabled {
+  color: #ffffff;
+  background: #c8dae5;
+  border-color: #c8dae5;
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+.btn-outline-primary {
+  color: #285773;
+  border-color: #385261;
+}
+
+.btn-outline-primary:hover {
+  color: #2a566f;
+  background-color: #e5eaf0;
+  border-color: #185b85;
+}
+
+.btn-outline-primary:not(:disabled):not(.disabled).active,
+.btn-outline-primary:not(:disabled):not(.disabled):active,
+.show > .btn-outline-primary.dropdown-toggle {
+  color: #2a566f;
+  background-color: #e4eaef;
+  border-color: #d0d7dc;
+}
+
+/*=============== Global start Info Link CSS =============== */
+
+.info-link {
+  text-decoration: underline;
+  color: #185b85;
+}
+
+/* =============Global start input File CSS ============================== */
+input[type="file"].form-control {
+  padding: 0.375rem 0.75rem 0.375rem 6rem;
+  position: relative;
+}
+
+input[type="file"]::file-selector-button {
+  background: #185b85;
+  position: absolute;
+  color: #fff;
+  left: 0px;
+  top: 0px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-family: Noto Sans;
+  cursor: pointer;
+  border: 1px solid #185b85;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: #185b85;
+  border: 1px solid #185b85;
+}
+
+/* Material card shadow CSS */
+
+.mat-card:not([class*="mat-elevation-z"]) {
+  box-shadow: 0px 0px 0px 0px rgb(0 0 0 / 0%), 0px 0px 0px 0px rgb(0 0 0 / 0%),
+    0px 0px 0px 0px rgb(0 0 0 / 0%);
+}
+
+/*================Global  start Main Parent layout css =================*/
+
+.wrapper {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+}
+
+#content {
+  width: 100%;
+  padding: 0px;
+  overflow-y: scroll;
+  height: 100vh;
+  min-height: 100vh;
+  transition: all 0.3s;
+  background: #eaf0f2;
+  position: relative;
+  min-width: calc(100% - 230px);
+  margin-left: 230px;
+}
+
+.container {
+  max-width: 100%;
+}
+
+.container-outer {
+  padding: 16px 24px !important;
+  max-width: 100%;
+}
+
+#content.margin-active {
+  margin-left: 0px;
+}
+
+/* main common section CSS */
+.col-container {
+  display: flex;
+  overflow: hidden !important;
+  border-radius: 16px;
+}
+
+.container-white-bg {
+  display: block;
+  overflow: hidden !important;
+  border-radius: 16px;
+  background: #fff;
+  padding: 15px;
+}
+
+.container-white-bg-with-border {
+  display: block;
+  border-radius: 16px;
+  background: #fff;
+  padding: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.detail-page-text {
+  font-size: 0.75rem;
+}
+
+.detail-page-text-bold {
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.muted-label-heading {
+  font: normal normal normal 16px/32px Noto Sans;
+  letter-spacing: 0px;
+  color: #3c3c3c;
+  /* font-size: 16px;
+  font-weight: normal;
+  font-family: Poppins; */
+  /* font: 400 14px / 20px Roboto, "Helvetica Neue", sans-serif; */
+}
+
+/* ==================== Global start Custom Component Parent CSS ==================  */
+
+.col-container .left-section {
+  background: #ffffff;
+  padding: 15px 20px;
+}
+
+/* ==================== Global start form CSS =============================== */
+
+/* .form-control {
+  background: #f6f6f9;
+  border: 1px solid #dcdcdc;
+} */
+
+.form-control:disabled {
+  background: #f6f6f9;
+  border: 1px solid #dcdcdc;
+}
+
+.form-control[readonly].mat-datepicker-input {
+  background: #fff;
+  border: 1px solid #ced4da;
+}
+
+.form-control-file:focus {
+  border: 1px solid #ecf4ff;
+}
+
+.form-control:focus {
+  /* box-shadow: none;
+  border: 1px solid #ecf4ff; */
+  border: 1px solid #66afe9;
+  outline: 0;
+  box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 8px rgb(102 175 233 / 60%);
+}
+
+/* ==================== Global start Material form CSS =============================== */
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.material-icons {
+  cursor: pointer;
+  vertical-align: text-bottom;
+}
+
+/* ==================== Global start mandatory filed CSS =============================== */
+
+.mandatory-field {
+  color: #fd0808;
+  margin-left: 4px;
+}
+
+/* radio button section */
+#search-section {
+  margin-bottom: 10px;
+  padding: 0px 15px;
+}
+
+#search-section .searchby-label-black {
+  margin-right: 16px;
+  font-size: 14px;
+  font-weight: normal;
+  color: #212529;
+}
+
+#search-section .form-check-input {
+  vertical-align: middle;
+}
+
+/* card outline */
+.card {
+  border: 1px solid #beccd1;
+  border-radius: 8px;
+}
+
+/* search chips section start */
+#input-search .search-chip-list {
+  width: 100%;
+}
+
+#input-search .mat-form-field-appearance-legacy .mat-form-field-underline {
+  display: none !important;
+}
+
+#input-search .mat-form-field-appearance-legacy .mat-form-field-wrapper {
+  padding-bottom: 0 !important;
+}
+
+.mat-chip-list-wrapper {
+  background: #f6f6f9;
+  border: 1px solid #dcdcdc;
+  border-radius: 0.25rem;
+}
+
+/* search chips section end*/
+
+/* drop down chips section start*/
+.user-regform-detail .drop-chip-list .mat-chip-list-wrapper {
+  margin: 0 !important;
+}
+
+/* drop down chips section end*/
+/*=============Global start stepper css==========================  */
+
+.mat-horizontal-content-container {
+  padding: 15px 0px !important;
+}
+
+.mat-horizontal-stepper-header {
+  height: 40px !important;
+  padding: 0 !important;
+}
+
+.mat-step-icon {
+  display: none !important;
+}
+
+.mat-stepper-horizontal-line {
+  border-top-width: 2px !important;
+  border-top-style: solid;
+  flex: none !important;
+  height: 0;
+  margin: 0 5px !important;
+  min-width: 32px;
+}
+
+.mat-step-label {
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 0px;
+  color: #185b85;
+  opacity: 0.45;
+}
+
+.mat-step-label.mat-step-label-active.mat-step-label-selected {
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 0px;
+  color: #185b85;
+  opacity: 1;
+}
+
+.mat-step-header .mat-step-label.mat-step-label-active {
+  color: #185b85 !important;
+}
+
+.mat-step-header .mat-step-header-ripple {
+  background-color: transparent !important;
+}
+
+.mat-step-header:hover,
+.mat-step-header.cdk-program-focused,
+.mat-step-header.cdk-mouse-focused,
+.mat-step-header.cdk-focused {
+  background-color: transparent !important;
+}
+
+/* ===============Global start back-section css ========================*/
+.back-section {
+  cursor: pointer;
+  color: #555b6d;
+}
+
+/* mat-expansion-panel */
+/*===================Global start css mat-expansion-panel=============  */
+.custom-expansion-panel .mat-expansion-panel-body {
+  padding: 16px 24px 16px;
+}
+
+.custom-expansion-panel .mat-expansion-panel-header,
+.custom-expansion-panel .mat-expansion-panel-header.mat-expanded {
+  height: 40px;
+  background-color: #f8f8f8;
+}
+
+.custom-expansion-panel .mat-expansion-panel-header.mat-expanded:focus,
+.custom-expansion-panel .mat-expansion-panel-header.mat-expanded:hover {
+  background-color: #f8f8f8;
+}
+
+/*============== Global start  mat-table css========================= */
+
+.table-view table.mat-table {
+  border: 1px solid #beccd1cc;
+}
+
+.table-view table th.mat-header-cell {
+  font-family: Noto Sans;
+  font-size: 14px;
+  font-weight: bold;
+  color: #3c3c3c;
+}
+
+tr.mat-header-row {
+  height: 48px !important;
+}
+
+.table-view table tr.mat-header-row {
+  background-color: #edf3f5;
+}
+
+.table-view table tr:nth-child(even) {
+  background: #f6f6f9;
+}
+
+.mat-row,
+mat-header-row,
+mat-footer-row {
+  border-bottom-width: 0px !important;
+}
+
+/* media query */
+@media (max-width: 768px) {
+  #sidebar {
+    margin-left: -250px;
+  }
+
+  #content {
+    margin-left: 0px;
+  }
+}
+
+/* ================== Global start common-tabs css ==================== */
+.tabs-nav-list .nav-pills .nav-link.active {
+  color: #929292;
+  background-color: #fff !important;
+  border-bottom: 3px solid #929292;
+  opacity: 1;
+}
+
+.tabs-nav-list .nav-pills .nav-link {
+  border-radius: 0 !important;
+  color: #929292;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.tabs-nav-list .nav-pills .nav-link:hover {
+  color: #929292;
+  border-bottom: 3px solid #929292;
+  opacity: 1;
+}
+
+/* ================== Global start muliti select css ==================== */
+
+.custom.ng-select .ng-value {
+  display: flex;
+}
+
+.custom.ng-select .ng-value,
+.custom.ng-select .ng-value .ng-value-icon:hover {
+  background-color: #dcdcdc !important;
+}
+
+.custom.ng-select .ng-value .ng-value-icon.left {
+  border-right: 1px solid #dcdcdc !important;
+  order: 1;
+}
+
+.custom.ng-select .ng-arrow-wrapper .ng-arrow {
+  display: none;
+}
+
+.custom.ng-select .ng-arrow-wrapper:before {
+  content: "\f107";
+  display: inline-block;
+  font: normal normal bold 16px/1 FontAwesome;
+  /* font-size: inherit; */
+  text-rendering: auto;
+}
+
+.custom.ng-select.ng-select-opened
+  > .ng-select-container
+  .ng-arrow-wrapper:before {
+  content: "\f106";
+}
+
+.custom.ng-select .ng-select-container .ng-value-container .ng-placeholder {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057 !important;
+}
+
+/* check background */
+.form-check-input {
+  accent-color: #125178;
+}
+
+.filed-outerbox {
+  background: #929292;
+  padding: 15px;
+}
+
+/* ================== Global start mat-chip custom ==================== */
+
+.mat-select-outer .mat-standard-chip .mat-chip-remove.mat-icon,
+.mat-standard-chip .mat-chip-remove .mat-icon {
+  width: 14px;
+  height: 14px;
+  font-size: 14px;
+}
+
+.mat-select-outer .mat-standard-chip.mat-chip-with-trailing-icon {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-right: 8px;
+  padding-left: 12px;
+}
+
+.mat-select-outer .mat-chip {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.mat-select-outer .mat-select-trigger {
+  height: 38px;
+  min-height: 38px;
+  border: 1px solid #dcdcdc;
+  background: #f6f6f9;
+  padding: 2px;
+}
+
+/* ==================  Globalstart Message CSS ==================== */
+
+.validation-error-message,
+.alert-message {
+  color: #f44336;
+  width: 100%;
+  font-size: 0.75rem;
+}
+
+.success-msg {
+  width: 100%;
+  margin-top: 0.25rem;
+  color: #28a745;
+}
+
+.green-snackbar {
+  background: #2ec971 0% 0% no-repeat padding-box !important;
+  box-shadow: 0px 0px 6px #00000029 !important;
+  border-radius: 7px !important;
+  text-align: left !important;
+  color: #fff !important;
+}
+
+.mat-simple-snackbar {
+  font-size: 12px;
+}
+
+.link-font {
+  font-size: 14px;
+}
+
+.green-snackbar button {
+  color: #fff !important;
+  border: none !important;
+}
+
+.red-snackbar {
+  background: #bf433a !important;
+  color: #fff !important;
+}
+
+.red-snackbar button {
+  color: #fff !important;
+  border: none !important;
+}
+
+.info-snackbar {
+  background: #185b85bf !important;
+  color: #fff !important;
+  /* margin-top: 70px !important; */
+}
+
+.project-snackbar-style {
+  transform: scale(1) translateX(-50%) !important;
+  opacity: 1 !important;
+  position: fixed !important;
+  top: 70px !important;
+  margin: 0px !important;
+}
+
+.owner-name .icon-verified {
+  height: 20px;
+  width: 20px;
+}
+
+.icon-pointer {
+  cursor: pointer;
+}
+
+span.material-icons.green-color {
+  color: green;
+  font-size: 13px;
+  position: relative;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+span.material-icons.gray-color {
+  color: #ccc;
+  font-size: 13px;
+  position: relative;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+/* ================== Global start Datepicker CSS ==================== */
+.datepicker-margin {
+  margin-bottom: -1.25em;
+}
+
+/* .select-dropdown .ng-select-container {
+  background-color: #f6f6f9 !important;
+} */
+/* ================== Global start Material Spinner CSS ==================== */
+mat-spinner {
+  margin: 0 auto;
+}
+
+.overlay {
+  height: 100vh;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.286);
+  z-index: 10;
+  top: 0;
+  left: 0;
+  position: fixed;
+}
+
+mat-spinner {
+  margin: 0 auto;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
+}
+
+/* ================== Global right dialog box CSS ==================== */
+
+.custom-dialog-container .mat-dialog-container {
+  border-radius: 0px !important;
+  padding: 0px !important;
+  overflow-y: hidden;
+}
+
+/* =======Ellipsis for bigger name character length =======*/
+
+.ellips-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+/* input.ng-touched  {
+  border-color: #185b85;
+}
+
+textarea.ng-touched{
+  border-color: #185b85;
+}
+select.ng-touched{
+  border-color: #185b85;
+} */
+
+/* ======= Animal List Server Side Pagination =======*/
+
+.paginator-outer-container {
+  display: flex;
+}
+
+.paginator-inner-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 8px;
+  flex-wrap: wrap-reverse;
+  width: 100%;
+}
+
+.paginator-page-size {
+  display: flex;
+  align-items: baseline;
+  margin-right: 8px;
+}
+
+.paginator-page-size--label {
+  margin: 0 4px;
+}
+
+.module-icon {
+  width: 22px;
+  height: 22px;
+}
+
+/* ======= Default BackGround color tooltips change  ======= */
+
+.tooltip-inner {
+  background-color: #124c60 !important;
+  color: #fff;
+}
+
+.bs-tooltip-auto[x-placement^="top"] .arrow::before,
+.bs-tooltip-top .arrow::before {
+  border-top-color: #124c60 !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

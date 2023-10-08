@@ -1,0 +1,529 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            {{ "animalDetails.home" | translate }}
+          </li>
+          <li class="breadcrumb-item active">
+            {{ "organization.Admin_Management" | translate }}
+          </li>
+          <li class="breadcrumb-item current">
+            {{ "user.user_Management" | translate }}
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<section *ngIf="fullName">
+  <div class="row p-0 view-animal-detail mb-3">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card mb-4">
+            <div class="card-header view-animal-info">
+              <div class="row">
+                <div class="col-md-10 d-flex align-items-center">
+                  <div class="img-border">
+                    <img
+                      [src]="
+                        userDetails.userPhotoUrl != ''
+                          ? userDetails.userPhotoUrl
+                          : '/assets/images/admin.jpg'
+                      "
+                      alt=""
+                      height="50"
+                      width="50"
+                      class="user-img"
+                    />
+                    <!-- <img src="/assets/images/admin.jpg" alt="" height="50" width="50" class="user-img" /> -->
+                  </div>
+                  <div class="info-details">
+                    <div id="animal-detail">
+                      <ul>
+                        <li>{{ fullName | titlecase }}</li>
+                      </ul>
+                    </div>
+                    <div id="animal-unique-detail" class="d-flex mb-1">
+                      <ul>
+                        <li>
+                          <span class="ticket-no"
+                            ><b>{{ "user.userId" | translate }}:</b>
+                            {{ userDetails?.userId }}
+                            | <b>{{ "common.gender" | translate }}:</b>
+                            {{ userDetails?.gender }} |
+                            <b>{{ "common.dob" | translate }}:</b>
+                            {{ userDetails.dateOfBirth | customDateFormatter }}
+                            | <b>{{ "common.mobile" | translate }}:</b>
+                            {{ userDetails?.mobileNo }} |
+                            <b>{{ "common.status" | translate }}:</b>
+                            {{ userDetails?.userStatusDesc }}</span
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  *ngIf="
+                    !isProfile ||
+                    (isProfile == 'false' &&
+                      (isLivestackAdmin ||
+                        (!isLivestackAdmin && userOrgId == userDetails?.orgId)))
+                  "
+                  class="col-md-2 d-flex justify-content-end"
+                  appPermission
+                  [permissionType]="masterConfig.isModify"
+                >
+                  <!-- <span class="form-group"  *ngIf="true"> -->
+                  <!-- <label for="status" class="form-label">User Status</label> -->
+                  <!-- <select type="text" class="form-control" id="status" formControlName="userStatus">
+                      <option selected >Select</option>
+                      <option value="">Active</option>
+                      <option value="">Deactive</option> -->
+
+                  <!-- <option *ngFor="let data of userStatus" [value]="data.cd">{{data.value}}</option> -->
+                  <!-- </select> -->
+                  <!-- </span> -->
+
+                  <img
+                    src="/assets/images/edit.svg"
+                    class="icon-edit"
+                    alt="icon-edit"
+                    (click)="onEditUser(userDetails?.userId)"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <!-- professional and allocated role row -->
+              <div class="row animal-bio-info mb-3">
+                <div class="col-md-6 basic-details">
+                  <p class="details-heading">
+                    {{ "user.professionalDetails" | translate }}
+                  </p>
+                  <div class="d-flex">
+                    <div class="col-md-6 info-label text-break">
+                      {{ "user.loginId" | translate }}
+                    </div>
+                    <div class="col-md-6 info-data text-break">
+                      {{
+                        userDetails.loginId != null ? userDetails.loginId : "--"
+                      }}
+                    </div>
+                  </div>
+                  <div class="d-flex">
+                    <div class="col-md-6 info-label text-break">
+                      {{ "user.organizationName" | translate }}
+                    </div>
+                    <div class="col-md-6 info-data text-break">
+                      {{ userDetails?.orgName }}
+                    </div>
+                  </div>
+                  <div class="d-flex">
+                    <div class="col-md-6 info-label text-break">
+                      {{ "user.usertype" | translate }}
+                    </div>
+                    <div class="col-md-6 info-data text-break">
+                      {{ userDetails?.userTypeDesc }}
+                    </div>
+                  </div>
+                  <div class="d-flex">
+                    <div class="col-md-6 info-label text-break">
+                      {{ "user.aiCenter" | translate }}/
+                      {{ "user.hospital" | translate }}
+                    </div>
+                    <div class="col-md-6 info-data text-break">
+                      {{ userDetails?.aiCenterName[0] }}
+                      <span *ngIf="userDetails?.aiCenterName?.length > 1"
+                        >,</span
+                      >
+                      <a
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="click here to all AI center!"
+                        href="javascript:void(0)"
+                        placement="bottom"
+                        ngbPopover="{{ userDetails?.aiCenterName }}"
+                        popoverTitle="All AI Center/Hospital"
+                        *ngIf="userDetails?.aiCenterName?.length > 1"
+                      >
+                        View More</a
+                      >
+                    </div>
+                  </div>
+                  <div class="d-flex">
+                    <div class="col-md-6 info-label text-break">
+                      {{ "user.registrationNumber" | translate }}
+                    </div>
+                    <div class="col-md-6 info-data text-break">
+                      {{
+                        userDetails?.registrationNo != "null" &&
+                        userDetails?.registrationNo != ""
+                          ? userDetails?.registrationNo
+                          : "--"
+                      }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 basic-details" *ngIf="true">
+                  <p class="details-heading">
+                    {{ "user.allocatedRoles" | translate }}
+                  </p>
+                  <div
+                    class="table-responsive"
+                    *ngIf="
+                      userDetails?.userAdditonalRoleAllocations.length > 0 ||
+                      userDetails?.defaultRole
+                    "
+                  >
+                    <table class="table table-bordered">
+                      <thead class="rolebody">
+                        <tr>
+                          <th>{{ "user.role" | translate }}</th>
+                          <th>{{ "project.Start_Date" | translate }}</th>
+                          <th>{{ "project.End_Date" | translate }}</th>
+                          <!-- <th>Village</th> -->
+                        </tr>
+                      </thead>
+                      <tbody class="rolebody">
+                        <tr>
+                          <td>{{ userDetails.defaultRole.roleDesc }}</td>
+                          <td>
+                            {{
+                              userDetails.defaultRole.userAllocationStartDate
+                                | customDateFormatter
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              userDetails.defaultRole.userAllocationEndDate
+                                | customDateFormatter
+                            }}
+                          </td>
+                        </tr>
+                        <tr
+                          *ngFor="
+                            let data of userDetails?.userAdditonalRoleAllocations
+                          "
+                        >
+                          <td>{{ data?.roleDesc }}</td>
+                          <td>
+                            {{
+                              data?.userAllocationStartDate
+                                | customDateFormatter
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              data?.userAllocationEndDate | customDateFormatter
+                            }}
+                          </td>
+                          <!-- <td>{{data.villageName}}</td> -->
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- allocated area and project row -->
+              <div class="row animal-bio-info mb-3">
+                <div class="col-md-6 family-details">
+                  <p class="details-heading">
+                    {{ "user.additionalAreaAllocation" | translate }}
+                  </p>
+                  <p class="mb-2">
+                    <b>{{ "user.baseDetails" | translate }}</b>
+                  </p>
+                  <div class="table-responsive mb-3">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>{{ "animalDetails.state" | translate }}</th>
+                          <th>{{ "animalDetails.district" | translate }}</th>
+                          <th>{{ "user.tehsil" | translate }}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>{{ userDetails?.baseLocation?.stateName }}</td>
+                          <td>{{ userDetails?.baseLocation?.districtName }}</td>
+                          <td>
+                            <a
+                              data-toggle="tooltip"
+                              data-placement="top"
+                              title="click me for villages!"
+                              href="javascript:void(0)"
+                              placement="bottom"
+                              ngbPopover="{{
+                                userDetails?.baseLocation?.villageName
+                              }}"
+                              popoverTitle="Villages"
+                            >
+                              {{ userDetails?.baseLocation?.tehsilName }}
+                            </a>
+                            <!-- {{ userDetails?.baseLocation?.tehsilName }}</td>
+                          <td>{{ userDetails?.baseLocation?.villageName }}</td> -->
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <p class="mb-2">
+                    <b>{{
+                      "performanceRecording.additional_details" | translate
+                    }}</b>
+                  </p>
+
+                  <div
+                    class="table-responsive"
+                    *ngIf="userDetails?.nonbaseLocation.length > 0"
+                  >
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>{{ "animalDetails.state" | translate }}</th>
+                          <th>{{ "animalDetails.district" | translate }}</th>
+                          <th>{{ "user.tehsil" | translate }}</th>
+                          <!-- <th>Village</th> -->
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let data of userDetails?.nonbaseLocation">
+                          <td>{{ data?.stateName }}</td>
+                          <td>{{ data?.districtName }}</td>
+                          <!-- <td>{{data?.tehsilName}}</td> -->
+                          <td>
+                            <!-- <a href="javascript:void(0)"></a> -->
+
+                            <a
+                              data-toggle="tooltip"
+                              data-placement="top"
+                              title="click me for villages!"
+                              href="javascript:void(0)"
+                              placement="bottom"
+                              ngbPopover="{{ data?.villageName }}"
+                              popoverTitle="Villages"
+                            >
+                              {{ data?.tehsilName }}
+                            </a>
+                          </td>
+                          <!-- <td>{{data?.villageName}}</td> -->
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="col-md-6 basic-details">
+                  <p class="details-heading">
+                    {{ "user.allocated_project" | translate }}
+                  </p>
+                  <div
+                    class="table-responsive"
+                    *ngIf="userDetails?.userProjectAllocation.length > 0"
+                  >
+                    <table class="table table-bordered">
+                      <thead class="rolebody">
+                        <tr>
+                          <th>{{ "user.project" | translate }}</th>
+                          <th>
+                            {{ "user.allocation_start_date" | translate }}
+                          </th>
+                          <th>{{ "user.allocation_end_date" | translate }}</th>
+                          <!-- <th>Village</th> -->
+                        </tr>
+                      </thead>
+                      <tbody class="rolebody">
+                        <tr
+                          *ngFor="
+                            let data of userDetails?.userProjectAllocation
+                          "
+                        >
+                          <td>{{ data?.projectName }}</td>
+                          <td>
+                            {{
+                              data?.userAllocationStartDate
+                                | customDateFormatter
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              data?.userAllocationEndDate | customDateFormatter
+                            }}
+                          </td>
+                          <!-- <td>{{data.villageName}}</td> -->
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- accordian personal Details row -->
+              <div class="accordion">
+                <details>
+                  <summary>
+                    <span>{{ "user.personalDetails" | translate }}</span>
+                    <span class="icon">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="9"
+                        viewBox="0 0 14 9"
+                        fill="none"
+                      >
+                        <path
+                          d="M1 1L7 7L13 1"
+                          stroke="#3c3c3c"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    </span>
+                  </summary>
+
+                  <div class="row animal-bio-info mb-3">
+                    <div class="col-md-6 basic-details">
+                      <div class="d-flex">
+                        <div class="col-md-6 info-label text-break">
+                          {{ "user.fatherName" | translate }}
+                        </div>
+                        <div class="col-md-6 info-data text-break">
+                          {{ userDetails?.fatherName }}
+                        </div>
+                      </div>
+                      <div class="d-flex">
+                        <div class="col-md-6 info-label text-break">
+                          {{ "user.category" | translate }}
+                        </div>
+                        <div class="col-md-6 info-data text-break">
+                          {{ userDetails?.categoryName }}
+                        </div>
+                      </div>
+                      <div class="d-flex">
+                        <div class="col-md-6 info-label text-break">
+                          {{ "common.Alternate_Number" | translate }}
+                        </div>
+                        <div class="col-md-6 info-data text-break">
+                          {{ userDetails?.alternateNo }}
+                        </div>
+                      </div>
+                      <div class="d-flex">
+                        <div class="col-md-6 info-label text-break">
+                          {{ "animalDetails.email" | translate }}
+                        </div>
+                        <div class="col-md-6 info-data text-break">
+                          {{ userDetails?.emailId }}
+                        </div>
+                      </div>
+                      <div class="d-flex">
+                        <div class="col-md-6 info-label text-break">
+                          {{ "user.UserValidFrom" | translate }}
+                        </div>
+                        <div class="col-md-6 info-data text-break">
+                          {{ userDetails?.userValidFrom | customDateFormatter }}
+                        </div>
+                      </div>
+                      <div class="d-flex">
+                        <div class="col-md-6 info-label text-break">
+                          {{ "user.userValidTo" | translate }}
+                        </div>
+                        <div class="col-md-6 info-data text-break">
+                          {{ userDetails?.userValidTo | customDateFormatter }}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 basic-details">
+                      <div class="d-flex">
+                        <div class="col-md-6 info-label text-break">
+                          {{ "animalDetails.address" | translate }}
+                        </div>
+                        <div class="col-md-6 info-data text-break">
+                          {{ userDetails?.permAddress }}
+                        </div>
+                      </div>
+                      <div class="d-flex">
+                        <div class="col-md-6 info-label text-break">
+                          {{ "animalDetails.state" | translate }}
+                        </div>
+                        <div class="col-md-6 info-data text-break">
+                          {{ userDetails?.stateName }}
+                        </div>
+                      </div>
+                      <div class="d-flex">
+                        <div class="col-md-6 info-label text-break">
+                          {{ "animalDetails.district" | translate }}
+                        </div>
+                        <div class="col-md-6 info-data text-break">
+                          {{ userDetails?.districtName }}
+                        </div>
+                      </div>
+                      <div class="d-flex">
+                        <div class="col-md-6 info-label text-break">
+                          {{ "animalDetails.pincode" | translate }}
+                        </div>
+                        <div class="col-md-6 info-data text-break">
+                          {{ userDetails?.pinCd }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12 text-right">
+              <button
+                *ngIf="
+                  !isProfile ||
+                  (isProfile == 'false' &&
+                    (isLivestackAdmin ||
+                      (!isLivestackAdmin && userOrgId == userDetails?.orgId)))
+                "
+                class="btn btn-primary mr-2"
+                (click)="projectAllocation()"
+              >
+                Project Allocation
+              </button>
+              <button
+                *ngIf="!isProfile || isProfile == 'false'"
+                class="btn btn-outline-primary"
+                [routerLink]="['..', 'list']"
+              >
+                Back
+              </button>
+              <button
+                *ngIf="isProfile == 'true'"
+                class="btn btn-outline-primary"
+                routerLink="/dashboard"
+              >
+                Back
+              </button>
+              <!-- <button type="submit" class="btn btn-light mr-2" [routerLink]="['..', 'add-new-user']">
+                Close
+              </button>
+              <button class="btn btn-primary" (click)="openDialog()">
+                Add Role
+              </button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,149 @@
+<div class="custom-dialog">
+    <!-- header -->
+    <div class="custom-dialog-header">
+        <div class="heading">
+            <span>{{ "performanceRecording.view_report" | translate }}</span>
+        </div>
+        <div class="cross-icon">
+            <mat-icon mat-dialog-close>clear</mat-icon>
+        </div>
+    </div>
+    <!-- conntent container -->
+    <div class="h-divider">
+        <div class="shadow"></div>
+    </div>
+    <div class="dialog-main-content">
+
+        <!-- reportsID Column -->
+        <div class="row">
+            <div class="col-md-12">
+                <p class="section-title">{{ "intimation.reported_id" | translate }}:<span class="reported-id">
+                        {{data.intimationReport.intimationId}}</span></p>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <p class="label-header">{{ "fir.date_of_first_intimation" | translate }}</p>
+                <p>
+                    {{formatDate(data.intimationReport.firstIntimationDate)}}
+                </p>
+            </div>
+            <div class="col-md-6">
+                <p class="label-header">{{ "common.village_name" | translate }}</p>
+                <p>
+                    <span *ngFor="let village of villages;let l =last">
+                        {{village}}<i *ngIf="!l">,</i>
+                    </span>
+                </p>
+            </div>
+            <div class="col-md-6">
+                <p class="label-header">{{ "user.tehsil" | translate }}</p>
+                <p>
+                    <span *ngFor="let tehsil of tehsils;let l =last">
+                        {{tehsil}}<i *ngIf="!l">,</i>
+                    </span>
+                </p>
+            </div>
+            <div class="col-md-6">
+                <p class="label-header">{{ "animalTreatmentSurgery.district" | translate }}</p>
+                <p>
+                    <span *ngFor="let district of districts;let l =last">
+                        {{district}}<i *ngIf="!l">,</i>
+                    </span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Symptoms & Disease Column -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <p class="section-title">{{ "fir.symptoms_disease" | translate }}</p>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <p class="label-header">{{ "fir.notable_clinical_signs" | translate }}</p>
+                <p>
+                    <span *ngFor="let symptom of data.intimationReportSymptomDetails; let l = last">
+                        {{symptom.symptomDesc}} <i *ngIf="!l">,</i>
+                    </span>
+                </p>
+            </div>
+            <div class="col-md-6">
+                <p class="label-header">{{ "animalTreatmentSurgery.disease_suspected" | translate }}</p>
+                <p *ngIf="data.intimationReportDiseaseDetails.length; else noData ">
+                    <span *ngFor="let disease of data.intimationReportDiseaseDetails; let l = last">
+                        {{disease.diseaseDesc}} <i *ngIf="!l">,</i>
+                    </span>
+                </p>
+            </div>
+        </div>
+        <!-- Affected Animals Details Column -->
+        <ng-container>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <p class="section-title">{{ "intimation.affected_animals_details" | translate }}</p>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12 table-responsive table-view text-nowrap">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>{{ "fir.affected_species" | translate }}</th>
+                                <th>{{ "fir.no_of_animals_affected" | translate }}</th>
+                                <th>{{ "fir.no_of_animals_died" | translate }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let animal of speciesImpacted">
+                                <td>{{animal.speciesName}}</td>
+                                <td>{{animal.noOfAnimals ?? 'NA'}}</td>
+                                <td>{{animal.noOfAnimalsDied ?? 'NA'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- Animal Tag Column -->
+        <ng-container *ngIf="data.affectedAnimals.length ">
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <p class="section-title">{{ "diseaseTesting.animal_tag_id" | translate }}</p>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-12">
+
+                    <span *ngFor="let animal of data.affectedAnimals; let l = last">
+                        {{animal.tagId}} <i *ngIf="!l">,</i>
+                    </span>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- Remarks Column -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <p class="section-title">{{ "diseaseTesting.remarks" | translate }}</p>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-12">
+                <p *ngIf="data.intimationReport.remarks; else noData ">
+                    {{data.intimationReport.remarks}}
+                </p>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="h-divider">
+        <div class="shadow"></div>
+    </div>
+</div>
+
+<ng-template #noData>NA</ng-template>

@@ -1,0 +1,17 @@
+.dialog-container {
+  padding: 1rem;
+  position: relative;
+  min-width: 300px;
+}
+
+.close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 0.9rem;
+  color: black;
+}
+
+.demo-inline-calendar-card {
+  width: 300px;
+}

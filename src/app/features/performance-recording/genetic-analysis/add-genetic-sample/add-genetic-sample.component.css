@@ -1,0 +1,200 @@
+.animal-table thead th,
+.animal-table td {
+  border-top: none;
+  border-bottom: none;
+  padding: 0.2rem 0.4rem !important;
+}
+
+.owner-details-section .owner-detail-table {
+  background-color: #eaf0f2;
+  padding: 12px 12px 12px 30px;
+  position: relative;
+}
+
+.owner-details-section .owner-detail-table .back-arrow {
+  position: absolute;
+  top: 20px;
+  left: 12px;
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.example-element-diagram {
+  min-width: 80px;
+  border: 2px solid black;
+  padding: 8px;
+  font-weight: lighter;
+  margin: 8px 0;
+  height: 104px;
+}
+
+.example-element-symbol {
+  font-weight: bold;
+  font-size: 40px;
+  line-height: normal;
+}
+
+.example-element-description {
+  padding: 16px;
+}
+
+.example-element-description-attribution {
+  opacity: 0.5;
+}
+
+/*  */
+
+.follow-up-table thead,
+.follow-up-table tr,
+.follow-up-table th,
+.follow-up-table td {
+  border: none;
+}
+
+.follow-up-table .parent-row,
+.follow-up-table .footer-row,
+.follow-up-table .child-row {
+  border: 1px solid #b4b9bb;
+}
+
+.follow-up-table .parent-row,
+.follow-up-table .footer-row {
+  background-color: #eaf0f2;
+}
+
+a {
+  cursor: pointer;
+}
+
+.icon-input {
+  position: relative;
+}
+
+.icon-input .calender-icon {
+  position: absolute;
+  top: 28px;
+  right: 0px;
+}
+.custom-viewexpandable-table {
+  background-color: #eeecec;
+}
+
+/* table design */
+
+.custom-view-table {
+  box-shadow: none !important;
+  border-collapse: inherit;
+}
+
+.custom-view-table td.mat-cell,
+.custom-view-table th.mat-header-cell {
+  padding: 0px 5px !important;
+  white-space: nowrap;
+}
+
+.custom-view-table td.mat-cell {
+  border: 1px solid #dcdcdc;
+}
+
+.custom-view-table .table-input {
+  border: transparent;
+  background-color: #fff;
+  padding: 0px;
+}
+
+.custom-view-table tr.mat-row,
+.custom-view-table tr.mat-header-row {
+  height: 40px;
+}
+
+.custom-view-table tr.mat-header-row th {
+  background: #f8f7fa;
+  height: 38px;
+}
+
+.custom-view-table ::ng-deep.mat-sort-header-arrow {
+  position: absolute;
+  left: -20px !important;
+}
+
+.custom-view-table .status-highlight {
+  padding: 4px 10px;
+  border-radius: 16px;
+  background: #929292;
+  font-weight: bold;
+  opacity: 0.5;
+}
+
+/* /.custom-view-table .cell-width {
+  width: 15%;
+} */
+
+.custom-view-table tr.mat-header-row th:nth-child(1) {
+  min-width: 100px;
+}
+
+.custom-view-table tr.mat-header-row th:nth-child(2),
+.custom-view-table tr.mat-header-row th:nth-child(3) {
+  min-width: 120px;
+}
+
+.custom-view-table tr.mat-header-row th:nth-child(5) {
+  min-width: 70px;
+}
+.custom-view-table tr.mat-header-row th:nth-child(10) {
+  min-width: 10px;
+}
+
+.custom-view-table tr.mat-header-row th:nth-child(4),
+.custom-view-table tr.mat-header-row th:nth-child(6),
+.custom-view-table tr.mat-header-row th:nth-child(7) {
+  min-width: 10%;
+}
+
+.custom-view-table tr.mat-header-row th:nth-child(8) {
+  min-width: 10%;
+}
+.custom-view-table tr.mat-header-row th:nth-child(9) {
+  min-width: 2%;
+}
+
+.add-row {
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.delete-row-btn {
+  position: relative;
+}
+
+.delete-row-btn i {
+  cursor: pointer;
+  position: absolute;
+  top: 40px;
+  font-size: 1.2rem;
+}
+
+.add-genetic-analysis td:has(input.table-input:disabled),
+.add-genetic-analysis input.table-input:disabled {
+  background-color: #f6f6f9 !important;
+}

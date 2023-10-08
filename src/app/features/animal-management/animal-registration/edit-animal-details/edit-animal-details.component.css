@@ -1,0 +1,99 @@
+.mat-form-field {
+  display: block;
+}
+
+.edit-animal-dialog .cross-icon {
+  text-align: right;
+}
+
+.edit-animal-dialog .edit-animal-msg {
+  text-align: left;
+}
+
+.edit-animal-dialog .edit-animal-msg .farmer-id {
+  font-size: 10px;
+  font-weight: normal;
+  letter-spacing: 0px;
+  color: #333333;
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+
+.edit-animal-dialog .edit-animal-msg .succes-msg {
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 0px;
+  color: #333333;
+  opacity: 1;
+  padding-top: 0%;
+}
+
+.edit-animal-dialog .edit-animal-msg .succes-msg-desc {
+  font-size: 16px;
+  font-weight: normal;
+  letter-spacing: 0px;
+  color: #333333;
+  opacity: 0.8;
+  line-height: 1.25;
+  margin-bottom: 20px !important;
+}
+
+.edit-animal-dialog .add-more {
+  font-weight: bold;
+  font-family: Noto Sans;
+  font-size: 14px;
+  color: #185b85;
+}
+
+.edit-animal-dialog .delete-icon {
+  align-self: center;
+  cursor: pointer;
+}
+
+.edit-animal-dialog .sub-button {
+  text-align: right;
+}
+
+.edit-animal-dialog .sub-button .verify-btn {
+  margin-left: 0.75rem;
+  font-size: 14px;
+  font-weight: bold;
+  width: 20%;
+}
+.edit-animal-dialog .edit-animal-fields .field-chip {
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 0px;
+  color: #333333;
+  line-height: 1.25;
+  margin-bottom: 30px;
+}
+
+.edit-animal-dialog .edit-animal-fields {
+  margin-left: 0.3rem;
+}
+
+.date-pickers {
+  position: relative;
+  margin-bottom: -29px;
+  float: right;
+  bottom: 40px;
+}
+
+.status .timeAndDate {
+  display: flex;
+  justify-content: space-between;
+}
+
+.scan-btn {
+  margin: 0px 10px;
+  padding: 6px 6px;
+  border: 1px solid #dcdcdc;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.division-style {
+  padding: 0;
+}

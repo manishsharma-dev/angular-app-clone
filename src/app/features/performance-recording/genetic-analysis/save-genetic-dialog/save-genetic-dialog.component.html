@@ -1,0 +1,36 @@
+<div class="campaign-dialog">
+  <div class="campaign-msg mb-4">
+    <img src="/assets/images/checkbox-circle-line.svg" alt="checkbox-circle-line" />
+
+    <p>{{'performanceRecording.transaction_id' | translate}}: {{data[0].transactionId}}</p>
+    <h2 class="succes-msg">{{'performanceRecording.sampling_saved_successfully' |translate}}</h2>
+
+    <div class="table-section">
+      <ng-container *ngIf="data.length">
+        <b class="table-title">{{'performanceRecording.sample(s)_collected' | translate}}: {{data.length}}</b>
+        <table class="table table-bordered">
+          <thead class="thead-default">
+            <tr>
+              <th>{{'performanceRecording.sample_id' | translate}}</th>
+              <th>{{'performanceRecording.sample_type' | translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let value of data">
+
+              <td>{{ value.sampleId }}</td>
+              <td>{{ value.breedingSampleType }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+    </div>
+
+  </div>
+
+  <div class="close-button">
+    <button type="submit" class="btn btn-primary" mat-dialog-close>
+      {{'animalDetails.close' | translate}}
+    </button>
+  </div>
+</div>

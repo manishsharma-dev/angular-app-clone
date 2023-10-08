@@ -1,0 +1,282 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            <a href="javascript:void(0)" routerLink="/dashboard">{{
+              "common.breadcrumb_home" | translate
+            }}</a>
+          </li>
+          <li class="breadcrumb-item active">
+            <label>{{ "animalDetails.animal_management" | translate }}</label>
+          </li>
+          <li class="breadcrumb-item current">
+            <label>{{ "animalDetails.latest_tag" | translate }}</label>
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+<section class="animalRegistration owner-reg">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <!-- Search By -->
+          <form [formGroup]="searchForm">
+            <div id="search-section" class="row">
+              <span class="searchby-label-black"
+                >{{ "animalDetails.search_old_tag" | translate }} :</span
+              >
+            </div>
+            <div class="form-row">
+              <div class="col-md-8 search-by">
+                <img
+                  src="/assets/images/search.svg"
+                  class="input-icon-left"
+                  alt="icon-search"
+                />
+                <input
+                  type="text"
+                  class="form-control input input-section"
+                  id="search-by"
+                  placeholder="{{
+                    'intimation.search_animal_tag_id' | translate
+                  }}"
+                  formControlName="searchValue"
+                  [maxLength]="12"
+                />
+                <div
+                  *ngIf="
+                    (!searchInfo.searchValue.pristine &&
+                      searchInfo.searchValue.invalid) ||
+                    searchInfo.searchValue.touched
+                  "
+                  class="alert-message"
+                >
+                  <div *ngIf="searchInfo.searchValue.errors?.required">
+                    {{ "errorMsg.no_tagg_no" | translate }}
+                  </div>
+                  <div *ngIf="searchInfo.searchValue.errors?.pattern">
+                    {{
+                      "performanceRecording.please_enter_valid_tag_id"
+                        | translate
+                    }}
+                  </div>
+                </div>
+                <a class="input-clear" (click)="resetValue()">
+                  {{ "common.clear" | translate }}
+                </a>
+              </div>
+
+              <div class="col-auto btn-mobile-view">
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  (click)="
+                    searchResults(this.searchForm.get('searchValue')?.value)
+                  "
+                >
+                  {{ "animalDetails.search" | translate }}
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row p-0 mb-3" *ngIf="isTagDetailsVisible">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body position-relative">
+          <span class="floating-filedset fildset-bg-blue">
+            <span class="float-label">{{ "Latest Tag" }}</span>
+          </span>
+          <div class="row align-items-center mb-1 mt-3">
+            <div class="col-md-6 col-sm-12">
+              <span class="custmer-label d-flex"
+                >The Latest Tag-Id is :- {{ newtagResp?.latestTag }}</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Orgs Tab -->
+
+  <div class="row p-0 mb-3" *ngIf="newtagResp?.ownerDetails?.orgId">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body position-relative">
+          <span class="floating-filedset fildset-bg-green">
+            <span class="float-label">{{
+              "animalDetails.organisation_details" | translate
+            }}</span>
+          </span>
+          <div class="row align-items-center mb-1 mt-3">
+            <div class="col-md-6 col-sm-12">
+              <div class="org-name">
+                <h3>
+                  <strong
+                    >{{ ownerDetailsByID?.orgName }},
+                    {{ ownerDetailsByID?.orgAddress }},
+                    {{ ownerDetailsByID?.orgPin }}</strong
+                  >
+                </h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div id="owner-detail" class="col-md-12">
+              <ul>
+                <li>
+                  {{ "common.reg_no" | translate }}:-
+                  {{ ownerDetailsByID?.orgRegistrationNo }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Owner Tab -->
+
+  <div
+    class="row p-0 mb-3"
+    *ngIf="
+      newtagResp?.ownerDetails?.ownerTypeCd === 1 ||
+      newtagResp?.ownerDetails?.ownerTypeCd === 2
+    "
+  >
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body position-relative">
+          <span class="floating-filedset fildset-bg-green">
+            <span class="float-label">{{
+              "common.owner_details" | translate
+            }}</span>
+          </span>
+          <div class="row align-items-center mb-1 mt-3">
+            <div class="col-md-6 col-sm-12">
+              <span class="custmer-label d-flex">
+                <p
+                  class="owner-name ellips-text mr-1"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="{{ ownerDetailsByID.ownerName }}"
+                >
+                  {{ ownerDetailsByID.ownerName }}
+                </p>
+                <span>({{ ownerDetailsByID.ownerId }})</span>
+                <span *ngIf="ownerDetailsByID.registrationStatus == '3'">
+                  <div
+                    class="alert-message reregister-owner link-font ellips-text ml-2"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="{{ 'common.reregisterAadhaar' | translate }}"
+                  >
+                    <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                    {{ "common.reregisterOwner" | translate }}
+                  </div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div id="owner-detail" class="owner-name col-md-12">
+              <ul class="custmer-label d-flex">
+                <li
+                  class="ellips-text"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="{{ ownerDetailsByID.fatherName }}"
+                  *ngIf="ownerDetailsByID.ownerTypeCd == 1"
+                >
+                  {{ "common.care_of" | translate }}
+                  {{ ownerDetailsByID.fatherName }}
+                </li>
+                <li
+                  *ngIf="ownerDetailsByID.ownerTypeCd == 2"
+                  [ngClass]="
+                    ownerDetailsByID?.ownerTypeCategory?.length > 10
+                      ? 'ellips-text'
+                      : ''
+                  "
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="{{ ownerDetailsByID?.ownerTypeCategory }}"
+                >
+                  {{ "animalDetails.nonIndividualType" | translate }}:
+                  {{ ownerDetailsByID?.ownerTypeCategory }}
+                </li>
+
+                <li
+                  [ngClass]="
+                    ownerDetailsByID?.ownerVillageName?.length > 30
+                      ? 'ellips-text'
+                      : ''
+                  "
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="{{ ownerDetailsByID?.ownerVillageName }}"
+                >
+                  {{ "common.village" | translate }}:
+                  {{ ownerDetailsByID?.ownerVillageName }}
+                </li>
+                <li>
+                  {{ "common.mobile" | translate }}:
+                  {{ ownerDetailsByID.ownerMobileNo }}
+                  <span *ngIf="ownerDetailsByID.registrationStatus != '3'">
+                    <img
+                      *ngIf="
+                        ownerDetailsByID.isOwnerMobileVerified;
+                        else elseBlock
+                      "
+                      src="/assets/images/verified.svg"
+                      class="icon-verified"
+                      alt="icon-verified"
+                    />
+                    <ng-template #elseBlock>
+                      <a
+                        href="javascript:void(0)"
+                        class="alert-message link-font"
+                        [ngClass]="isOwnerActive ? '' : 'ellips-text'"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{
+                          isOwnerActive
+                            ? 'Not-Verified'
+                            : 'Please verify Owner Mobile Number for renewal of services.'
+                        }}"
+                        ><i
+                          class="fa fa-exclamation-circle"
+                          aria-hidden="true"
+                        ></i>
+                        {{ isOwnerActive ? "Not Verified" : "Inactive" }}</a
+                      >
+                    </ng-template>
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

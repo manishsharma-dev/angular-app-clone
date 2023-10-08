@@ -1,0 +1,108 @@
+<div class="d-flex mt-3 mb-2 px-3">
+  <button class="ml-auto btn btn-primary" (click)="addLactation()">Add Lactation</button>
+
+</div>
+
+<button class="scroll-btn scroll-left-btn" (click)="onLeftScrollButtonClick('left')" *ngIf="getLactations('standardYield').length > 1"><i class="fa fa-angle-left"></i></button>
+<button class="scroll-btn scroll-right-btn" (click)="onLeftScrollButtonClick('right')" *ngIf="getLactations('standardYield').length > 1"><i class="fa fa-angle-right"></i></button>
+<div class="bull-details-parameters mx-2" #parameters>
+
+  <table class="table" [formGroup]="childFormGroup">
+    <thead>
+      <tr>
+        <th>Parameters</th>
+        <th *ngFor="let lact of getLactations('standardYield'); let i = index;">
+          <p class="table-heading">
+            <span> Absolute Value for Lact: {{i+1}} </span>
+            <i class="fa fa-trash-o" (click)="deleteLactation(i)"></i>
+          </p>
+        </th>
+        <th>Breeding Value</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr formGroupName="standardYield">
+        <th><span>Standard Yield (ltrs)</span></th>
+        <td *ngFor="let lact of getLactations('standardYield'); let i = index" formArrayName="lactations">
+          <input type="text" class="form-control" [formControlName]="i">
+        </td>
+        <td>
+          <input type="text" class="form-control" formControlName="breedingValue">
+        </td>
+      </tr>
+      <tr formGroupName="fatPercentage">
+        <th><span>Fat %</span> </th>
+        <td *ngFor="let lact of getLactations('fatPercentage'); let i = index" formArrayName="lactations">
+          <input type="text" class="form-control" [formControlName]="i">
+        </td>
+        <td>
+          <input type="text" class="form-control" formControlName="breedingValue" formArrayName="lactations">
+        </td>
+      </tr>
+      <tr formGroupName="fatYield">
+        <th><span> Fat Yield (Kg)</span></th>
+        <td *ngFor="let lact of getLactations('fatYield'); let i = index" formArrayName="lactations">
+          <input type="text" class="form-control" [formControlName]="i">
+        </td>
+        <td>
+          <input type="text" class="form-control" formControlName="breedingValue">
+        </td>
+      </tr>
+      <tr formGroupName="proteinPercentage">
+        <th><span>Protein %</span></th>
+        <td *ngFor="let lact of getLactations('proteinPercentage'); let i = index" formArrayName="lactations">
+          <input type="text" class="form-control" [formControlName]="i">
+        </td>
+        <td>
+          <input type="text" class="form-control" formControlName="breedingValue">
+        </td>
+      </tr>
+      <tr formGroupName="proteinYield">
+        <th><span>Protein Yield (kg)</span></th>
+        <td *ngFor="let lact of getLactations('proteinYield'); let i = index" formArrayName="lactations">
+          <input type="text" class="form-control" [formControlName]="i">
+        </td>
+        <td>
+          <input type="text" class="form-control" formControlName="breedingValue">
+        </td>
+      </tr>
+      <tr formGroupName="lactosePercentage">
+        <th><span>Lactose %</span></th>
+        <td *ngFor="let lact of getLactations('lactosePercentage'); let i = index" formArrayName="lactations">
+          <input type="text" class="form-control" [formControlName]="i">
+        </td>
+        <td>
+          <input type="text" class="form-control" formControlName="breedingValue">
+        </td>
+      </tr>
+      <tr formGroupName="lactoseYield">
+        <th><span>Lactose Yield (kg)</span></th>
+        <td *ngFor="let lact of getLactations('lactoseYield'); let i = index" formArrayName="lactations">
+          <input type="text" class="form-control" [formControlName]="i">
+        </td>
+        <td>
+          <input type="text" class="form-control" formControlName="breedingValue">
+        </td>
+      </tr>
+      <tr formGroupName="scc">
+        <th><span>SCC</span></th>
+        <td *ngFor="let lact of getLactations('scc'); let i = index" formArrayName="lactations">
+          <input type="text" class="form-control" [formControlName]="i">
+        </td>
+        <td>
+          <input type="text" class="form-control" formControlName="breedingValue">
+        </td>
+      </tr>
+      <tr formGroupName="mun">
+        <th><span>MUN</span></th>
+        <td *ngFor="let lact of getLactations('mun'); let i = index" formArrayName="lactations">
+          <input type="text" class="form-control" [formControlName]="i">
+        </td>
+        <td>
+          <input type="text" class="form-control" formControlName="breedingValue">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

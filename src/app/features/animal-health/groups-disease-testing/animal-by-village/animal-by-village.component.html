@@ -1,0 +1,612 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="row">
+
+  <div class="col-md-5">
+    <form [formGroup]="searchForm">
+      <div class="form-row">
+        <div class="col-md-9 search-by">
+          <img src="/assets/images/search.svg" class="input-icon-left" alt="icon-search" />
+          <ng-select class="custom" appendTo="body" [items]="villageMaster" bindLabel="villageName"
+            [selectableGroup]="true" [minTermLength]="3" [selectableGroupAsModel]="false"
+            placeholder="{{'diseaseTesting.search_village' | translate}}" [closeOnSelect]="true"
+            formControlName="searchValue" (clear)="clearVillageName()">
+            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+              <div class="d-flex justify-content-between">
+                <span>{{ item.villageName }}</span>
+              </div>
+            </ng-template>
+          </ng-select>
+          <span class="alert-message" *ngIf="
+              (formControls.searchValue.touched &&
+                formControls.searchValue.invalid)
+            ">
+            <span class="alert-message" *ngIf="formControls.searchValue.hasError('required')">
+              {{ validationMsg.villageRequired | translate }}
+            </span>
+          </span>
+        </div>
+        <div class="col-auto btn-mobile-view">
+          <button type="submit" class="btn btn-primary" (click)="searchResults()">
+            {{'animalDetails.search' | translate}}
+          </button>
+        </div>
+      </div>
+      <ng-container *ngIf="!firFlag && groupCheckFlag && !isPool">
+        <div class="row my-3">
+          <div class="col-md-12">
+            <div class="form-group">
+              <input type="checkbox" [formControl]="GroupCheck" />
+              {{'diseaseTesting.view_groups_from_selected_village' | translate}}
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </form>
+  </div>
+
+  <div class="col-md-1 or-section"><span> {{'diseaseTesting.or' | translate}} </span></div>
+
+  <div class="col-md-6">
+    <form [formGroup]="searchTagForm">
+      <div id="search-section" class="row">
+        <span class="searchby-label-black">{{ "animalDetails.search_by" | translate }}:</span>
+        <div class="search-mobile-view">
+          <div class="form-check-inline">
+            <input type="radio" class="form-check-input" name="optRadio" value="individual"
+              (change)="onSelectingSearchBy($event)" formControlName="optRadio" />
+            <label class="form-check-label">{{
+              "animalDetails.individual" | translate
+              }}</label>
+          </div>
+          <div class="form-check-inline">
+            <input type="radio" class="form-check-input" name="optRadio" value="nonIndividual"
+              (change)="onSelectingSearchBy($event)" formControlName="optRadio" />
+            <label class="form-check-label">{{
+              "animalDetails.nonIndividual" | translate
+              }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-row" *ngIf="searchBy == 'individual'">
+        <div class="col-md-9 search-by">
+          <img src="/assets/images/search.svg" class="input-icon-left" alt="icon-search" />
+          <input type="text" placeholder="{{'diseaseTesting.disease_testing_search_placeholder' | translate}}"
+            class="form-control input-search-section" formControlName="searchGrouporTag">
+          <span class="input-clear" (click)="resetValue()"> {{'diseaseTesting.clear' | translate}} </span>
+          <div class="alert-message" *ngIf="errorMessage">
+            {{ errorMessage }}
+          </div>
+        </div>
+        <div class="col-auto btn-mobile-view">
+          <button type="submit" class="btn btn-primary" (click)="searchGrouporTag()">
+            {{'animalDetails.search' | translate}}
+          </button>
+        </div>
+      </div>
+
+      <!-- Individual/non Individual  Search Starts -->
+      <div class="form-row" *ngIf="searchBy == 'nonIndividual'">
+        <div class="col-md-9 search-by">
+          <img src="/assets/images/search.svg" class="input-icon-left" alt="icon-search" />
+          <input type="text" class="form-control input input-section" id="search-by"
+            placeholder="{{'firstAid.search_placeholder' | translate}}" formControlName="searchValue" maxlength="15" />
+          <span class="input-clear" (click)="resetValue()"> {{ "common.clear" | translate }} </span>
+        </div>
+
+        <div class="col-auto btn-mobile-view">
+          <button type="submit" class="btn btn-primary" (click)="
+          searchGrouporTag(false)
+            ">
+            {{ "animalDetails.search" | translate }}
+          </button>
+        </div>
+        <div class="alert-message" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+      </div>
+      <!-- Individual/non Individual  Search Ends -->
+      <ng-container *ngIf="!firFlag && groupTagCheckFlag && !isPool">
+        <div class="row my-3">
+          <div class="col-md-12">
+            <div class="form-group">
+              <input type="checkbox" [formControl]="TagCheck" />
+              {{'diseaseTesting.view_groups_from_selected_tag_id' | translate}}
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </form>
+  </div>
+
+</div>
+
+<ng-container>
+  <ng-container *ngIf="noDataFound">
+    <p class="no-animal alert-message">{{'diseaseTesting.no_animals_registered' | translate}}</p>
+  </ng-container>
+  <ng-container *ngIf="isGroupVisible">
+    <div class="row selectAnimalTable table-view mt-4">
+      <div class="col-md-12">
+        <div class="table-responsive mb-3">
+          <table mat-table [dataSource]="groupDataSource" class="mat-elevation-z8">
+            <ng-container matColumnDef="groupId">
+              <th mat-header-cell *matHeaderCellDef>{{'diseaseTesting.group_id' | translate}}</th>
+              <td mat-cell *matCellDef="let element; let i = index" class="cell-width">
+                <a (click)="getAnimalForGroup(element)" class="link">{{ element.groupId }}</a>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="testingDate">
+              <th mat-header-cell *matHeaderCellDef>{{'diseaseTesting.date_of_testing' | translate}}</th>
+              <td mat-cell *matCellDef="let element" class="cell-width">
+                {{ element.testingDate ? (element.testingDate | customDateFormatter) : element.testingDate }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="villageDesc">
+              <th mat-header-cell *matHeaderCellDef>{{'common.village' | translate}}</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.villageDesc }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="noOfAnimals">
+              <th mat-header-cell *matHeaderCellDef>{{'diseaseTesting.date_of_testing' | translate}}</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.noOfAnimals }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="diseaseDesc">
+              <th mat-header-cell *matHeaderCellDef>{{'diseaseTesting.disease' | translate}}</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.diseaseDesc }}
+              </td>
+            </ng-container>
+            <tr class="action-link table-head" mat-header-row *matHeaderRowDef="groupDisplayedColumns">
+            </tr>
+            <tr class="action-link table-head" mat-row *matRowDef="let row; columns: groupDisplayedColumns"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell text-center" [attr.colspan]="groupDisplayedColumns.length">
+                {{'diseaseTesting.no_data_available' | translate}}
+              </td>
+            </tr>
+          </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons #groupPaginator
+          aria-label="Select page of periodic elements">
+        </mat-paginator>
+      </div>
+    </div>
+
+  </ng-container>
+  <ng-container *ngIf="isTableVisible && !this.GroupCheck.value">
+    <div class="gd-1-animal-list ">
+      <div class="h-divider ">
+        <div class="shadow"></div>
+      </div>
+      <div class="mt-2">
+        <h3>{{'diseaseTesting.list_of_animals' | translate}}</h3>
+      </div>
+      <div class="my-3">
+        <form>
+          <div class="form-row">
+            <div class="filter-by">
+              <img src="/assets/images/search.svg" class="input-icon-left" alt="icon-search" />
+              <input type="text" class="form-control input input-search-section" autocomplete="off" id="filter-by-name"
+                placeholder="{{'animalTreatmentSurgery.search_by_keywords' | translate}}"
+                (keyup)="searchInTable($event,'village')" />
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="row selectAnimalTable table-view">
+        <div class="col-md-12">
+          <form [formGroup]="tableForm">
+            <div class="table-responsive mb-3">
+              <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8 village-animal-list">
+                <ng-container matColumnDef="checkbox">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <input type="checkbox" class="check-input" name="selectAll" id="selectHeader" [value]="" [checked]="animalDetail.length &&
+                                              animalDetail.length === noOfActiveAnimals
+                                            " (change)="checkAllBoxes($event,'village')" appPermission
+                      [permissionType]="masterConfig.isAdd" />
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    <input type="checkbox" class="check-input" name="rowcheck" id="selectrow" [value]=""
+                      [checked]="checkIfInSelectedList(element)" [disabled]="!element.animalStatus.includes('Active')"
+                      (change)="onCheckboxChange($event, element)" appPermission
+                      [permissionType]="masterConfig.isAdd" />
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="sr_no">
+                  <th mat-header-cell *matHeaderCellDef>{{'common.sno' | translate}}</th>
+                  <td mat-cell *matCellDef="let element; let i = index" class="cell-width">
+                    {{ (animalPaginator.pageIndex * animalPaginator.pageSize) + (i + 1) }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="tagId">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'animalDetails.tag_id' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    {{ element.tagId }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="village">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'common.village' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.village }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="species">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{'animalDetails.fillAnimalDetails.category_species' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    {{ element.speciesDesc ?? element.species }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="animalCategory">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{'animalDetails.category' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    {{ element.animalCategory }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="sex">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'common.sex' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.sex }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="dateOfBirth">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'common.dob' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    {{ element.dateOfBirth | customDateFormatter }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="ageInMonths">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'common.age' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.ageInMonths}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="breedAndExoticLevels">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'animalDetails.breed' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.breedDesc ?? element.breedAndExoticLevels}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="pregnancyStatus">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{'animalDetails.fillAnimalDetails.pregnancy_status' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.pregnancyStatus}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="animalStatus">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'common.status' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.animalStatus}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="previousResults">
+                  <th mat-header-cell *matHeaderCellDef>{{'diseaseTesting.previous_results' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    <a class="health-history" (click)="seePreviousResults(element)"> {{'diseaseTesting.view' |
+                      translate}}</a>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="health_history">
+                  <th mat-header-cell *matHeaderCellDef>{{'diseaseTesting.health_history' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    <a class="health-history" (click)="viewAnimalHistory(element)"> {{'diseaseTesting.view' |
+                      translate}}</a>
+                  </td>
+                </ng-container>
+                <tr class="action-link table-head" mat-header-row *matHeaderRowDef="displayedColumns">
+                </tr>
+                <tr class="action-link table-head" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                    {{'diseaseTesting.no_data_available' | translate}}
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <mat-paginator #animalPaginator [pageSizeOptions]="[5, 10, 20]"
+              aria-label="Select page of periodic elements" [pageSize]="animalPageSize" [pageIndex]="animalPageIndex"
+              [length]="animalsCount" (page)="onPageAnimalPageChange($event)">
+            </mat-paginator>
+            <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons #c
+              aria-label="Select page of periodic elements">
+            </mat-paginator> -->
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="isGroupAnimalTableVisible">
+    <div class="gd-2-animal-list ">
+      <div class="h-divider ">
+        <div class="shadow"></div>
+      </div>
+      <div class="mt-2">
+        <h3>{{'diseaseTesting.list_of_animals_in_group' | translate}} ({{selectedGroupID}})</h3>
+      </div>
+      <div class="my-3">
+        <form>
+          <div class="form-row">
+            <div class="filter-by">
+              <img src="/assets/images/search.svg" class="input-icon-left" alt="icon-search" />
+              <input type="text" class="form-control input input-search-section" autocomplete="off" id="filter-by-name"
+                placeholder="{{'animalTreatmentSurgery.search_by_keywords' | translate}}"
+                (keyup)="searchInTable($event,'group')" />
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="row selectAnimalTable table-view">
+        <div class="col-md-12">
+          <form>
+            <div class="table-responsive mb-3">
+              <table mat-table matSort [dataSource]="groupAnimalDataSource" class="mat-elevation-z8 group-animal-list">
+                <ng-container matColumnDef="sr_no">
+                  <th mat-header-cell *matHeaderCellDef>{{'common.sno' | translate}}</th>
+                  <td mat-cell *matCellDef="let element; let i = index" class="cell-width">
+                    {{ (groupAnimalPaginator.pageIndex * groupAnimalPaginator.pageSize) + i + 1 }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="tagId">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'animalDetails.tag_id' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    {{ element.tagId }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="village">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'common.village' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.village }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="species">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{'animalDetails.fillAnimalDetails.category_species' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    {{ element.speciesDesc ?? element.species }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="animalCategory">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{'animalDetails.category' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    {{ element.animalCategory }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="sex">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'common.sex' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.sex }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="dateOfBirth">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'common.dob' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    {{ element.dateOfBirth | customDateFormatter }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="ageInMonths">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'common.age' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.ageInMonths}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="breedAndExoticLevels">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'animalDetails.breed' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.breedAndExoticLevels}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="pregnancyStatus">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{'animalDetails.fillAnimalDetails.pregnancy_status' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.pregnancyStatus}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="animalStatus">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'common.status' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.animalStatus}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="previousResults">
+                  <th mat-header-cell *matHeaderCellDef>{{'diseaseTesting.previous_results' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    <a class="health-history" (click)="seePreviousResults(element)"> {{'diseaseTesting.view' |
+                      translate}}</a>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="health_history">
+                  <th mat-header-cell *matHeaderCellDef>{{'diseaseTesting.health_history' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    <a (click)="viewAnimalHistory(element)" class="health-history"> {{'diseaseTesting.view' |
+                      translate}}</a>
+                  </td>
+                </ng-container>
+                <tr class="action-link table-head" mat-header-row *matHeaderRowDef="displayedgroupAnimalColumns">
+                </tr>
+                <tr class="action-link table-head" mat-row *matRowDef="let row; columns: displayedgroupAnimalColumns">
+                </tr>
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell text-center" [attr.colspan]="displayedgroupAnimalColumns.length">
+                    {{'diseaseTesting.no_data_available' | translate}}
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons #groupAnimalPaginator
+              aria-label="Select page of periodic elements">
+            </mat-paginator>
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="tagTableFlag">
+    <div class="gd-3-animal-list ">
+      <div class="h-divider ">
+        <div class="shadow"></div>
+      </div>
+      <div class="mt-2">
+        <h3>{{'diseaseTesting.list_of_animals' | translate}}</h3>
+      </div>
+      <div class="my-3">
+        <form>
+          <div class="form-row">
+            <div class="filter-by">
+              <img src="/assets/images/search.svg" class="input-icon-left" alt="icon-search" />
+              <input type="text" class="form-control input input-search-section" autocomplete="off" id="filter-by-name"
+                placeholder="{{'animalTreatmentSurgery.search_by_keywords' | translate}}"
+                (keyup)="searchInTable($event,'tag')" />
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="row selectAnimalTable table-view">
+        <div class="col-md-12">
+          <form [formGroup]="tableForm">
+            <div class="table-responsive mb-3">
+              <table mat-table matSort [dataSource]="TagTableDataSource" class="mat-elevation-z8 village-animal-list">
+                <ng-container matColumnDef="checkbox">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <input type="checkbox" class="check-input" name="selectAll" id="selectHeader" [value]="" [checked]="animalDetail.length &&
+                                              TagTableDataSource.data.length &&
+                                              animalDetail.length === noOfActiveAnimals
+                                            " (change)="checkAllBoxes($event,'tag')" appPermission
+                      [permissionType]="masterConfig.isAdd" />
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    <input type="checkbox" class="check-input" name="rowcheck" id="selectrow" [value]=""
+                      [checked]="checkIfInSelectedList(element)" [disabled]="!element.animalStatus.includes('Active')"
+                      (change)="onCheckboxChange($event, element)" appPermission
+                      [permissionType]="masterConfig.isAdd" />
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="sr_no">
+                  <th mat-header-cell *matHeaderCellDef>{{'common.sno' | translate}}</th>
+                  <td mat-cell *matCellDef="let element; let i = index" class="cell-width">
+                    {{ (animalTagPaginator.pageIndex * animalTagPaginator.pageSize) + i + 1 }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="tagId">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'animalDetails.tag_id' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    {{ element.tagId }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="village">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'common.village' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.ownerDetails?.ownerVillageName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="species">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{'animalDetails.fillAnimalDetails.category_species' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    {{ element.speciesDesc ?? element.species }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="animalCategory">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{'animalDetails.category' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    {{ element.animalCategory }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="sex">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'common.sex' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.sex }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="dateOfBirth">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'common.dob' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    {{ element.dateOfBirth | customDateFormatter }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="ageInMonths">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'common.age' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.ageInMonths}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="breedAndExoticLevels">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'animalDetails.breed' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.breedAndExoticLevels}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="pregnancyStatus">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{'animalDetails.fillAnimalDetails.pregnancy_status' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.pregnancyStatus}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="animalStatus">
+                  <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'common.status' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.animalStatus}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="previousResults">
+                  <th mat-header-cell *matHeaderCellDef>{{'diseaseTesting.previous_results' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    <a class="health-history" (click)="seePreviousResults(element)"> {{'diseaseTesting.view' |
+                      translate}}</a>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="health_history">
+                  <th mat-header-cell *matHeaderCellDef>{{'diseaseTesting.health_history' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" class="cell-width">
+                    <a class="health-history" (click)="viewAnimalHistory(element)"> {{'diseaseTesting.view' |
+                      translate}}</a>
+                  </td>
+                </ng-container>
+                <tr class="action-link table-head" mat-header-row *matHeaderRowDef="displayedColumns">
+                </tr>
+                <tr class="action-link table-head" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                    {{'diseaseTesting.no_data_available' | translate}}
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons #animalTagPaginator
+              aria-label="Select page of periodic elements">
+            </mat-paginator>
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <app-common-owners-list *ngIf="
+  isOwnerListTableFlag &&
+      (ownerTypeCd == ownerType.individual ||
+        ownerTypeCd == ownerType.nonIndividual)
+    " [ownersList]="ownerDetailsRecord" (showDetail)="showOwnerDetails($event?.ownerId)"></app-common-owners-list>
+</ng-container>

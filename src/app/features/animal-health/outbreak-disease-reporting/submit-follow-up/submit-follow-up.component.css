@@ -1,0 +1,77 @@
+.mat-form-field {
+  display: block;
+}
+
+.submit-dialog {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  flex-direction: column;
+}
+
+.submit-dialog .submit-msg {
+  text-align: center;
+}
+
+.submit-dialog .submit-msg .succes-msg {
+  font-size: 17px;
+  font-weight: bold;
+  letter-spacing: 0px;
+  line-height: 1.25;
+  color: #333333;
+  opacity: 1;
+  margin-bottom: 6px !important;
+}
+
+.submit-dialog .submit-msg .succes-msg-desc {
+  font-size: 14px;
+  font-weight: normal;
+  letter-spacing: 0px;
+  color: #333333;
+  opacity: 0.8;
+  line-height: 1.25;
+  margin-bottom: 6px !important;
+}
+
+.submit-dialog .submit-id {
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 0px;
+  color: #333333;
+}
+
+.submit-dialog .close-button .close-btn {
+  color: #333333;
+  opacity: 0.8;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.submit-dialog .outbreak-status {
+  font-weight: bold;
+  margin-left: 8px;
+}
+.follow-up {
+  font-weight: normal;
+}
+
+.succes-msg-follow {
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: 0px;
+  color: #333333;
+  opacity: 1;
+  margin-bottom: 20px !important;
+}
+
+.table {
+  margin-top: 10px;
+}
+.thead-default {
+  background: #f8f8f8;
+}
+
+.thead-default tr th {
+  border: none;
+}

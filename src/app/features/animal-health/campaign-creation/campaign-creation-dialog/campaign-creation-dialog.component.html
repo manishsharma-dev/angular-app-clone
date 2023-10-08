@@ -1,0 +1,10 @@
+<div class="status-dialog">
+  <img src="/assets/images/checkbox-circle-line.svg" alt="checkbox-circle-line">
+  <p class="sd-id"> {{ "campaignCreation.Campaign_ID" | translate }}: <b>{{ data.campaignId }}</b></p>
+  <h3 class="sd-msg">{{ data.title }}</h3>
+  <p class="sd-noti-detail">{{ "campaignCreation.Campaign_Type" | translate }}: {{ data.campaignType}} </p>
+  <div class="close-btn">
+    <button type="submit" mat-dialog-close class="btn btn-primary" (click)="closeDialog()"> {{ "animalDetails.ok" |
+      translate }}</button>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<div class="submit-dialog">
+  <div class="submit-msg mb-4">
+    <img src="/assets/images/checkbox-circle-line.svg" alt="checkbox-circle-line">
+    <p class="succes-msg">
+      <span class="succes-msg-desc">{{"outBreak.outbreak_ID" | translate}}: </span>{{ data.outbreakId }}
+    </p>
+    <p class="succes-msg">{{ data.title }}</p>
+
+    <ng-container *ngIf="data.finalReport == 'Y'">
+      <p class="mt-3">
+        {{"outBreak.outbreak_status" | translate}}:<span class="outbreak-status">{{data.outbreakStatus}}</span></p>
+    </ng-container>
+    <!-- <ng-template #closedStatus>
+     
+    </ng-template> -->
+  </div>
+
+  <div class="close-button">
+    <button type="submit" class="btn btn-primary" (click)="closeDialog()" mat-dialog-close>{{"common.ok_string" |
+      translate}}</button>
+  </div>
+</div>

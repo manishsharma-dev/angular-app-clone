@@ -1,0 +1,200 @@
+<div class="medicine-dialog">
+  <!-- header -->
+  <div class="medicine-edit-header">
+    <div class="headeing">
+      <h2 class="edit-heading-label">{{"animalTreatmentSurgery.add_medicine" | translate}}</h2>
+
+      <div class="cross-icon">
+        <mat-icon mat-dialog-close>clear</mat-icon>
+      </div>
+    </div>
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+    <div class="dialog-main-search">
+
+      <form [formGroup]="searchMedicineFormGroup">
+        <div class="medicine-header">
+          <div class="row campaign-edit-search">
+            <div class="col-md-12">
+              <div class="form-row">
+                <div class="col-md-10">
+                  <div class="row no-gutters">
+                    <div class="col-3 col-sm-3 col-md-2">
+                      <div class="form-group">
+
+                        <span class="searchby-label-black">{{"animalDetails.search" | translate}}</span>
+
+                      </div>
+                    </div>
+
+                    <div class="col-9 col-sm-9 col-md-10">
+                      <div class="form-group">
+                        <ng-select class="custom" [items]="medicines | async" formControlName="medicineControl"
+                          [multiple]="false" bindLabel="medicineName" groupBy="selectedAllGroup"
+                          [selectableGroup]="true" [minTermLength]="3" [hideSelected]="true"
+                          typeToSearchText="Please enter 3 or more characters" [typeahead]="medcineInput$"
+                          [selectableGroupAsModel]="false"
+                          [placeholder]='"animalTreatmentSurgery.search_by_keywords" | translate' [closeOnSelect]="true"
+                          bindValue="id" (change)="onSelectMedicne($event)" appendTo="body">
+                          <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                            <input id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected"
+                              [ngModelOptions]="{ standalone: true }" />
+                            {{"animalTreatmentSurgery.select_all" | translate}}
+                          </ng-template>
+
+                          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                            <div class="d-flex justify-content-between">
+                              <div class="medicine-desc">
+                                <p><b>{{ item.medicineName }} ({{item.formName}} - {{item.routeName}})
+                                    &nbsp;</b></p>
+                                <p>{{item.saltDesc }} </p>
+                              </div>
+
+                              <div class="add-medicine-section">
+                                <span class="add-medicine-btn ">
+                                  <i class="fa fa-plus mr-2 " aria-hidden="true"></i>
+                                  {{"common.add" | translate}}
+                                </span>
+
+                              </div>
+                            </div>
+                          </ng-template>
+                        </ng-select>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+
+                <div class="form-group col-md-2 align-self-end">
+                  <button type="submit" class="btn btn-primary" (click)="fetchMedicines()">
+                    {{"animalDetails.search" | translate}}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <span>{{"animalTreatmentSurgery.search_result" | translate}}</span>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!--divider-->
+
+
+  <!-- contant -->
+
+
+  <div class="medicine-main-content">
+    <ng-container *ngFor="let med of toAddMedicineList">
+      <div class="row align-items-center" *ngIf="med.medicineCd != 0">
+        <div class="col-md-12">
+          <strong>{{ med.medicineName }} ({{ med.formName }} - {{med.routeName}})</strong>
+          <p>{{ med.saltDesc }}</p>
+          <div class="h-divider">
+            <div class="shadow"></div>
+          </div>
+        </div>
+        <!-- <div class="col-md-6 text-right">
+            <span class="add-medicine-btn" (click)="addToMainMedicineList(med)" *ngIf="!isMedAdded(med)"><i
+                class="fa fa-plus mr-2" aria-hidden="true"></i>Add</span>
+            <span class="add-medicine-btn" (click)="removeToMainMedicineList(med)" *ngIf="isMedAdded(med)"><i
+                class="fa fa-minus mr-2" aria-hidden="true"></i>Remove</span>
+          </div> -->
+      </div>
+
+
+    </ng-container>
+
+  </div>
+
+  <!-- footer -->
+  <div class="medicine-edit-footer">
+    <div class="medicine-footer">
+      <div class="row">
+        <div class="col-md-12 font-12 mb-2">{{"animalTreatmentSurgery.medicine_name_not_listed_in_master" | translate}}
+        </div>
+        <div class="col-md-12">
+          <form [formGroup]="searchMedicineFormGroup">
+            <div class="row align-items-baseline">
+              <div class="col-md-5">
+                <input type="text" [placeholder]='"animalTreatmentSurgery.enter_medicine_name" | translate'
+                  class="form-control input-sm-mobile font-12" formControlName="medicineName" />
+                <span class="alert-message" *ngIf="
+                      isAddOtherMedicineSubmitted &&
+                      searchMedicineFormGroup.get('medicineName')?.errors
+                        ?.required
+                    ">
+                  {{"animalTreatmentSurgery.medicine_name_is_required" | translate}}
+                </span>
+                <span class="alert-message" *ngIf="formControls.medicineName.hasError('pattern')">
+                  {{"animalTreatmentSurgery.invalid_characters_present" | translate}}
+                </span>
+                <span class="alert-message"
+                  *ngIf="!formControls.medicineName.hasError('pattern') && formControls.medicineName.hasError('maxlength')">
+                  {{"animalTreatmentSurgery.medicine_name_cannot_be_more_than_80_characters" | translate}}
+                </span>
+              </div>
+              <div class="col-md-5">
+                <input type="text" [placeholder]='"animalTreatmentSurgery.enter_remarks" | translate'
+                  class="form-control input-sm-mobile font-12" formControlName="remarks" />
+                <span class="alert-message" *ngIf="formControls.remarks.hasError('pattern')">
+                  {{"animalTreatmentSurgery.invalid_characters_present" | translate}}
+                </span>
+                <span class="alert-message"
+                  *ngIf="!formControls.remarks.hasError('pattern') && formControls.remarks.hasError('maxlength')">
+                  {{"animalTreatmentSurgery.medicine_remark_cannot_be_more_than_250_characters" | translate}}
+                </span>
+              </div>
+              <div class="col-md-2 ">
+                <span class="add-medicine-btn" (click)="addOtherMedicine()"><i class="fa fa-plus mr-2"
+                    aria-hidden="true"></i>{{"animalTreatmentSurgery.add" | translate}}</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="h-divider">
+        <div class="shadow"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <!-- <mat-chip-list class="medicine-list"> -->
+          <!-- <mat-chip class="w-20">
+              <span class="d-flex">
+                <span> Doxinate <i class="fa fa-close mx-2" aria-hidden="true"></i></span>
+              </span>
+            </mat-chip> -->
+          <!-- <mat-chip *ngFor="let med of toAddMedicineList" [ngClass]="{ other_med: med.medicineCd === 0 }">{{
+                med.medicineName }}
+                <i class="fa fa-close mx-2" aria-hidden="true" (click)="removeToMainMedicineList(med)"></i>
+              </mat-chip>
+              </mat-chip-list> -->
+          <ul class="medicine-lists">
+            <li *ngFor="let med of toAddMedicineList" class="medicine-listsitem outline"
+              [ngClass]="{ other_med: med.medicineCd === 0 }">
+              {{
+              med.medicineName }}
+              <i class="fa fa-close mx-2" aria-hidden="true" (click)="removeToMainMedicineList(med)"></i>
+            </li>
+
+          </ul>
+
+        </div>
+        <div class="col-md-4 text-right">
+          <button type="submit" class="btn btn-primary" (click)="addToMedicineList()">
+            <span class="medicine-count badge">{{ toAddMedicineList.length
+              }}</span>{{"animalTreatmentSurgery.add_to_the_list" | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

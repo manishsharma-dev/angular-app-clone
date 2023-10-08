@@ -1,0 +1,128 @@
+.dialog-container {
+  padding: 1rem;
+  position: relative;
+  max-width: 500px;
+}
+
+.close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 0.9rem;
+  color: black;
+}
+.dialog-title {
+  font-size: 18px;
+  font-weight: 600;
+  font-family: Noto Sans, Bold;
+  color: #333333;
+}
+.dialog-message {
+  font-size: 14px;
+  font-family: Noto Sans, Bold;
+  /* font-style: italic; */
+  color: #333333;
+}
+
+/* Alert msg css */
+.alert-dialog h2.dialog-title,
+.alert-dialog p.dialog-message {
+  color: #f44336 !important;
+}
+
+.verified_icon .warning_icon {
+  color: goldenrod;
+  font-size: 50px;
+}
+
+/*  */
+.campaign-edit-dialog {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.campaign-edit-header {
+  flex-grow: 0;
+  flex-shrink: 0;
+  /* background: #124c60; */
+  padding: 10px;
+  color: #3c3c3c;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.campaign-edit-header .edit-heading-label {
+  font-weight: bold;
+  font-family: Noto Sans;
+  font-size: 18px;
+  color: #3c3c3c;
+  letter-spacing: 1;
+}
+
+.dialog-main-content {
+  flex-grow: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 15px 15px;
+}
+
+.dialog-main-content .remarks-section {
+  margin-bottom: 15px;
+}
+
+.dialog-main-content .selected-animal-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 10px;
+  gap: 10px;
+}
+
+.dialog-main-content .selected-animal-list .selected-animal-listitem {
+  font-size: 12px;
+  font-family: Noto Sans;
+  font-weight: bold;
+  letter-spacing: 0.64px;
+  color: #3c3c3c;
+  padding: 2px 5px;
+  display: flex;
+  align-items: center;
+}
+
+.dialog-main-content .selected-animal-list .selected-animal-listitem.outline {
+  background: #ffffff;
+  border: 1px solid #beccd1;
+  border-radius: 4px;
+}
+
+.campaign-edit-footer {
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  /* border: 1px solid #beccd1; */
+  /* background: #eaf0f2; */
+  padding: 10px;
+}
+
+.dialog-main-content::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #fff;
+}
+
+.dialog-main-content::-webkit-scrollbar {
+  width: 5px;
+  background-color: #fff;
+  opacity: 0.8;
+}
+
+.dialog-main-content::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #5f6160;
+  opacity: 0.8;
+}

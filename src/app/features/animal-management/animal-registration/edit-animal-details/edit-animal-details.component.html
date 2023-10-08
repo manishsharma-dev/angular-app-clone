@@ -1,0 +1,577 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="edit-animal-dialog">
+  <div class="d-flex justify-content-between">
+    <div class="edit-animal-msg">
+      <h2 class="succes-msg">
+        {{ "animalDetails.editAnimalDetails.edit_animal_details" | translate }}
+      </h2>
+      <p class="succes-msg-desc">
+        {{ "animalDetails.editAnimalDetails.select_field" | translate }}
+      </p>
+    </div>
+    <mat-icon mat-dialog-close>clear</mat-icon>
+  </div>
+
+  <div>
+    <div class="form-row mb-2">
+      <div class="form-group col-md-12">
+        <label>{{
+          "animalDetails.editAnimalDetails.select_field_edit" | translate
+        }}</label>
+        <select
+          class="form-control"
+          (change)="onDropdownSelection()"
+          [(ngModel)]="selectedField"
+        >
+          <option value="" disabled>
+            {{ "animalDetails.editAnimalDetails.select_info" | translate }}
+          </option>
+          <option *ngFor="let option of editOptions" [value]="option.cd">
+            {{ option.value }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="editAnimalForm" *ngIf="selectedField">
+    <div class="form-row mb-2">
+      <div class="form-group col-md-12">
+        <label for="species" class="form-label"
+          >{{ fieldLabel }}<span class="mandatory-field">*</span></label
+        >
+
+        <!-- dropdown -->
+
+        <select
+          *ngIf="displayType === 'dropdown'"
+          id="species"
+          class="form-control"
+          formControlName="fieldNewValue"
+          (change)="onSelectingFieldNewValue($event)"
+        >
+          <option value="" selected disabled>
+            {{ fieldLabel }}
+          </option>
+          <option *ngFor="let field of dropdownValues" [value]="field.cd">
+            {{ field.value }}
+          </option>
+        </select>
+
+        <!-- textfield -->
+
+        <input
+          *ngIf="displayType === 'text'"
+          type="text"
+          class="form-control"
+          id="fieldNewValue"
+          formControlName="fieldNewValue"
+          placeholder="{{ fieldLabel }}"
+          (input)="onSelectingFieldNewValue($event)"
+          [maxlength]="maxTextLength"
+        />
+
+        <!-- datepicker -->
+        <div *ngIf="displayType === 'datepicker'">
+          <input
+            [matDatepicker]="datePick"
+            class="form-control"
+            formControlName="fieldNewValue"
+            placeholder="dd/mm/yyyy"
+            [max]="getToday()"
+            [min]="getPastDate()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="datePick"
+            class="date-pickers"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #datePick></mat-datepicker>
+        </div>
+
+        <!-- Error Messages -->
+
+        <div *ngIf="selectedField === '4' || selectedField === '11'">
+          <div
+            *ngIf="
+              (!editAnimalForm.get('fieldNewValue').pristine &&
+                editAnimalForm.get('fieldNewValue').invalid) ||
+              editAnimalForm.get('fieldNewValue').touched
+            "
+            class="alert-message"
+          >
+            <mat-error
+              *ngIf="
+                editAnimalForm.get('fieldNewValue').hasError('matDatepickerMin')
+              "
+              >{{ "common.invalid_date" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="
+                editAnimalForm
+                  .get('fieldNewValue')
+                  .hasError('matDatepickerMax') &&
+                !editAnimalForm
+                  .get('fieldNewValue')
+                  .hasError('matDatepickerMin')
+              "
+              >{{ "common.invalid_date" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="
+                editAnimalForm
+                  .get('fieldNewValue')
+                  .hasError('matDatepickerParse')
+              "
+              >{{ "common.please_enter_valid_date" | translate }}</mat-error
+            >
+
+            <div *ngIf="editAnimalForm.controls.fieldNewValue.errors?.required">
+              {{ "errorMsg.enterSelectValid" | translate }}
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="selectedField != '4' && selectedField != '11'">
+          <div
+            *ngIf="
+              (editAnimalForm.controls.fieldNewValue.invalid &&
+                !editAnimalForm.controls.fieldNewValue.pristine) ||
+              editAnimalForm.controls.fieldNewValue.touched
+            "
+            class="alert-message"
+          >
+            <div
+              *ngIf="
+                editAnimalForm.controls.fieldNewValue.errors?.required ||
+                editAnimalForm.controls.fieldNewValue.errors?.pattern
+              "
+            >
+              {{ "errorMsg.enterSelectValid" | translate }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Breed and Exotic Blood Level -->
+
+    <div class="form-row" *ngIf="isSpeciesSelected && selectedField == '1'">
+      <div class="col-md-6">
+        <label
+          >{{ "animalDetails.blood_level" | translate
+          }}<span class="mandatory-field">*</span></label
+        >
+      </div>
+    </div>
+
+    <div
+      formArrayName="breedAndExoticLevels"
+      *ngIf="isSpeciesSelected && selectedField == '1'"
+    >
+      <div
+        class="form-row"
+        *ngFor="let item of formRowTitles; let i = index"
+        [formGroupName]="i"
+      >
+        <div class="col-md-7">
+          <div class="form-group">
+            <select
+              class="form-control"
+              formControlName="breedCd"
+              (change)="onBreedSelect()"
+            >
+              <option value="" disabled>
+                {{ "animalDetails.animalAddInfo.select_breed" | translate }}
+              </option>
+              <option
+                selected
+                *ngFor="let breed of breeds"
+                [value]="breed.breedCd"
+              >
+                {{ breed.breedName }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <select class="form-control" formControlName="bloodExoticLevelCd">
+              <option value="" disabled>
+                {{ "animalDetails.animalAddInfo.select_exotic" | translate }}
+              </option>
+              <option *ngFor="let level of bloodLevels" [value]="level.cd">
+                {{ level.value }}%
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-1 align-self-center" *ngIf="rowAdd.length > 1">
+          <div class="form-group">
+            <i class="fa fa-trash" (click)="removeRow(i)"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="alert-message mb-2"
+      *ngIf="isShowBreedError && selectedField == '1'"
+    >
+      {{ isShowBreedError }}
+    </div>
+    <div class="alert-message mb-2" *ngIf="isShowError && selectedField == '1'">
+      {{ isShowError }}
+    </div>
+    <div
+      class="row mb-3"
+      *ngIf="
+        isAddMoreVisible &&
+        rowAdd?.length < 4 &&
+        isSpeciesSelected &&
+        selectedField == '1'
+      "
+    >
+      <div class="col-md-6">
+        <a href="javascript: void(0)" class="add-more" (click)="addRow()"
+          >+
+          <u>{{ "animalDetails.editAnimalDetails.add_more" | translate }}</u></a
+        >
+      </div>
+    </div>
+
+    <!-- pregMonths -->
+
+    <div
+      class="form-row"
+      *ngIf="
+        selectedField === '13' &&
+        editAnimalForm.get('fieldNewValue').value == 'Y'
+      "
+    >
+      <div class="form-group col-md-12">
+        <label for="pregStatus" class="form-label"
+          >{{ "animalDetails.fillAnimalDetails.pregnancy_month" | translate
+          }}<span class="mandatory-field">*</span></label
+        >
+        <select
+          id="pregStatus"
+          class="form-control"
+          formControlName="pregnancyMonths"
+        >
+          <option disabled value="">
+            {{ "animalDetails.select_month_placeholder" | translate }}
+          </option>
+          <option *ngFor="let obj of pregMonths" [value]="obj.cd">
+            {{ obj.value }}
+          </option>
+        </select>
+        <div
+          *ngIf="
+            (editAnimalForm.get('pregnancyMonths').invalid &&
+              !editAnimalForm.get('pregnancyMonths').pristine) ||
+            editAnimalForm.get('pregnancyMonths').touched
+          "
+          class="alert-message"
+        >
+          <div *ngIf="editAnimalForm.get('pregnancyMonths').errors?.required">
+            {{ "errorMsg.no_pregnancy_month" | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- additionalCalvingValue -->
+
+    <div
+      class="form-row"
+      *ngIf="isMilkingOrCalvingModification && selectedField === '14'"
+    >
+      <div class="form-group col-md-12">
+        <label for="species" class="form-label"
+          >{{ "animalDetails.no_of_calving" | translate
+          }}<span class="mandatory-field">*</span></label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="fieldNewValue"
+          formControlName="additionalCalvingValue"
+          placeholder="{{ 'No of Calvings' }}"
+        />
+        <div
+          *ngIf="
+            (editAnimalForm.get('additionalCalvingValue')?.invalid &&
+              !editAnimalForm.get('additionalCalvingValue')?.pristine) ||
+            editAnimalForm.get('additionalCalvingValue')?.touched
+          "
+          class="alert-message"
+        >
+          <div
+            *ngIf="
+              editAnimalForm.get('additionalCalvingValue')?.errors?.required
+            "
+          >
+            {{ "animalDetails.enter_Number_calving" | translate }}
+          </div>
+          <div
+            *ngIf="
+              editAnimalForm.get('additionalCalvingValue')?.errors?.pattern
+            "
+          >
+            {{ "errorMsg.invalid_calving" | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- additionalMilkingStatusValue -->
+
+    <div
+      class="form-row"
+      *ngIf="isMilkingOrCalvingModification && selectedField === '9'"
+    >
+      <div class="form-group col-md-12">
+        <label for="species" class="form-label"
+          >{{ "animalDetails.milking_status" | translate
+          }}<span class="mandatory-field">*</span></label
+        >
+
+        <select
+          id="species"
+          class="form-control"
+          formControlName="additionalMilkingStatusValue"
+        >
+          <option value="" selected disabled>
+            {{ "animalDetails.animalAddInfo.select_milking" | translate }}
+          </option>
+          <option
+            *ngFor="let field of filteredMilkingStatus"
+            [value]="field.cd"
+          >
+            {{ field.value }}
+          </option>
+        </select>
+        <div
+          *ngIf="
+            (editAnimalForm.get('additionalMilkingStatusValue')?.invalid &&
+              !editAnimalForm.get('additionalMilkingStatusValue')?.pristine) ||
+            editAnimalForm.get('additionalMilkingStatusValue')?.touched
+          "
+          class="alert-message"
+        >
+          <div
+            *ngIf="
+              editAnimalForm.get('additionalMilkingStatusValue')?.errors
+                ?.required
+            "
+          >
+            {{ "animalDetails.animalAddInfo.select_milking" | translate }}
+          </div>
+          <div
+            *ngIf="
+              editAnimalForm.get('additionalMilkingStatusValue')?.errors
+                ?.pattern
+            "
+          >
+            {{ "errorMsg.invalid_calving" | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- reason -->
+    <div
+      class="form-row"
+      *ngIf="isAnimalStatusDropdown && displayType === 'dropdown'"
+    >
+      <div class="form-group col-md-12">
+        <label for="species" class="form-label"
+          >{{ "animalDetails.reason" | translate
+          }}<span class="mandatory-field">*</span></label
+        >
+
+        <!-- dropdown -->
+
+        <select
+          *ngIf="displayType === 'dropdown'"
+          id="species"
+          class="form-control"
+          formControlName="reasonCd"
+        >
+          <option value="" selected disabled>
+            {{ "animalDetails.ear_tag_reason_change" | translate }}
+          </option>
+          <option *ngFor="let field of reasonDropdownValues" [value]="field.cd">
+            {{ field.value }}
+          </option>
+        </select>
+
+        <div
+          *ngIf="
+            (editAnimalForm.get('reasonCd').invalid &&
+              !editAnimalForm.get('reasonCd').pristine) ||
+            editAnimalForm.get('reasonCd').touched
+          "
+          class="alert-message"
+        >
+          <div *ngIf="editAnimalForm.get('reasonCd').errors?.required">
+            {{ "errorMsg.enterSelectValid" | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="form-row status"
+      *ngIf="
+        isAnimalStatusDropdown &&
+        displayType === 'dropdown' &&
+        (crrAnimalStatus == 1 || crrAnimalStatus == 4) &&
+        editAnimalForm?.get('fieldNewValue')?.value == '3'
+      "
+    >
+      <div class="form-group col-md-12 timeAndDate">
+        <div class="form-group division-style col-md-5">
+          <label for="animalDeathTime">{{ "Time of Death" }}</label>
+          <input
+            type="time"
+            name="animalDeathTime"
+            id="animalDeathTime"
+            formControlName="timeOfDeath"
+            class="form-control"
+            [max]="getMaxTime()"
+            (change)="checkDateAndTime()"
+          />
+          <span
+            class="validation-error-message"
+            *ngIf="
+              (editAnimalForm.get('timeOfDeath').dirty &&
+                editAnimalForm.get('timeOfDeath').invalid) ||
+              editAnimalForm.get('timeOfDeath').touched
+            "
+          >
+            <span
+              *ngIf="editAnimalForm.get('timeOfDeath').hasError('required')"
+            >
+              {{ "errorMsg.enterSelectValid" | translate }}
+            </span>
+            <span *ngIf="timeInvalidError">{{ timeInvalidError }}</span>
+          </span>
+        </div>
+        <div class="form-group division-style col-md-5">
+          <label for="animalDeathTime">{{ "Date of Death" }}</label>
+
+          <input
+            [matDatepicker]="deathDatepicker"
+            class="form-control"
+            formControlName="dateOfDeath"
+            placeholder="dd/mm/yyyy"
+            [max]="getToday()"
+            [min]="getPastDate()"
+            (dateChange)="checkDateAndTime()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="deathDatepicker"
+            class="date-pickers"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #deathDatepicker></mat-datepicker>
+          <div
+            *ngIf="
+              (!editAnimalForm.get('dateOfDeath').pristine &&
+                editAnimalForm.get('dateOfDeath').invalid) ||
+              editAnimalForm.get('dateOfDeath').touched
+            "
+            class="alert-message"
+          >
+            <mat-error
+              *ngIf="
+                editAnimalForm.get('dateOfDeath').hasError('matDatepickerMin')
+              "
+              >{{ "common.invalid_date" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="
+                editAnimalForm.get('dateOfDeath').hasError('matDatepickerMax')
+              "
+              >{{ "common.invalid_date" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="
+                editAnimalForm.get('dateOfDeath').hasError('matDatepickerParse')
+              "
+              >{{ "common.please_enter_valid_date" | translate }}</mat-error
+            >
+            <div
+              *ngIf="
+                editAnimalForm.get('dateOfDeath').errors?.required &&
+                !editAnimalForm
+                  .get('dateOfDeath')
+                  .hasError('matDatepickerParse')
+              "
+            >
+              <!-- Please select the tagging date -->
+              {{ "common.select_date" | translate }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- remarks -->
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label for="remarks" class="form-label"
+          >{{ "notification.remarks_lbl" | translate }}
+          <span class="mandatory-field">*</span></label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="fieldNewValue"
+          formControlName="remarks"
+          placeholder="{{ 'notification.remarks_lbl' | translate }}"
+          [maxlength]="50"
+        />
+        <div
+          *ngIf="
+            (editAnimalForm.controls.remarks.invalid &&
+              !editAnimalForm.controls.remarks.pristine) ||
+            editAnimalForm.controls.remarks.touched
+          "
+          class="alert-message"
+        >
+          <div
+            *ngIf="
+              editAnimalForm.controls.remarks.errors?.required ||
+              editAnimalForm.controls.remarks.errors?.pattern
+            "
+          >
+            {{ "notification.enter_remarks" | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sub-button">
+      <button
+        type="reset"
+        class="btn btn-outline-primary verify-btn"
+        mat-dialog-close
+      >
+        {{ "common.cancel" | translate }}
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary verify-btn"
+        (click)="onModifyingDetails(editAnimalForm)"
+      >
+        {{ "common.submit" | translate }}
+      </button>
+    </div>
+  </form>
+</div>

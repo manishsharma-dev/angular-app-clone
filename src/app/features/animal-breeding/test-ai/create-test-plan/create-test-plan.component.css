@@ -1,0 +1,332 @@
+/*  sample collect*/
+.radio-action > span {
+  margin-right: 16px;
+  font-size: 14px;
+  font-family: Noto Sans;
+  font-weight: bold;
+  color: #707070;
+}
+
+.form-check-label {
+  font-size: 14px;
+  font-family: Noto Sans;
+  font-weight: normal;
+  color: #212529;
+}
+
+/* table */
+table th.mat-header-cell {
+  font-family: Noto Sans;
+  font-size: 14px;
+  font-weight: bold;
+  color: black;
+  /* text-align: center; */
+}
+
+table tr.mat-head {
+  background-color: #edf3f5;
+}
+
+.mat-cell {
+  padding-right: 40px;
+}
+
+table tr:nth-child(even) {
+  background: #f6f6f9;
+}
+
+.table-view .table th,
+.table td {
+  border-top: none;
+}
+
+.table-view .view-link {
+  cursor: pointer;
+}
+
+.selectAnimalTable {
+  box-shadow: none !important;
+  /* border: 1px solid #929292; */
+  border-collapse: inherit;
+}
+
+.selectAnimalTable td.mat-cell,
+.selectAnimalTable th.mat-header-cell {
+  padding: 0px 5px !important;
+  white-space: nowrap;
+}
+
+.selectAnimalTable td.mat-cell {
+  border: none;
+}
+
+.selectAnimalTable input.check-input {
+  vertical-align: inherit;
+}
+
+.selectAnimalTable tr.mat-row,
+.selectAnimalTable tr.mat-header-row {
+  height: 40px;
+}
+
+.selectAnimalTable tr.mat-header-row th {
+  background: transparent;
+  color: #3c3c3c;
+  font-weight: bold;
+  height: 38px;
+}
+
+.selectAnimalTable ::ng-deep.mat-sort-header-arrow {
+  position: absolute;
+  left: -20px !important;
+}
+
+.selectAnimalTable .status-highlight {
+  padding: 4px 10px;
+  border-radius: 16px;
+  background: #929292;
+  font-weight: bold;
+  opacity: 0.5;
+}
+
+.expansion-infoEdit {
+  display: flex !important;
+  flex-wrap: wrap;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+}
+.separator .line {
+  height: 1px;
+  flex: 1;
+  background-color: #dcdcdc;
+}
+
+.outer-box {
+  background: #f9f9f9;
+  padding: 15px;
+}
+
+.demoClass {
+  height: 48px !important;
+}
+@media screen and (max-width: 320px) {
+  .demoClass {
+    height: 60px !important;
+  }
+}
+
+@media screen and (max-width: 370px) {
+  .mobile-view {
+    display: grid;
+  }
+}
+.mar-10 {
+  margin-top: 10px;
+}
+.mat-row {
+  background-color: #eaf0f2;
+}
+/* :host::ng-deep button.mat-icon-button { */
+  /* bottom: 38px;
+  left: 50em; */
+  /* bottom: 42px;
+  left: 9em; */
+/* } */
+.add-row .add-row--btn {
+  cursor: pointer;
+}
+
+.add-row .add-row--icon {
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background: #dcdcdc;
+}
+.add-row .add-row--icon {
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background: #dcdcdc;
+  margin-top: 5px;
+  margin-left: 10px;
+}
+.delete-icon-position {
+  padding-top: 38px;
+  padding-left: 25px;
+}
+
+/* mat expansion panel */
+.mat-expansion-panel-header-title {
+  flex-grow: 3 !important;
+}
+
+.mat-expansion-panel-header-description {
+  flex-grow: 1 !important;
+}
+
+.custom-panel-title {
+  flex-direction: column;
+  width: 100%;
+}
+
+.create-test-plan .mat-expansion-panel {
+  margin-bottom: 14px;
+}
+
+.create-test-plan .mat-expansion-panel-header {
+  height: 38px;
+}
+
+.create-test-plan .mat-expansion-panel-header.mat-expanded {
+  height: 48px;
+  background-color: #124c60;
+}
+
+.create-test-plan
+  .mat-expansion-panel-header.mat-expanded
+  .mat-expansion-panel-header-title {
+  color: #fff;
+}
+
+.create-test-plan
+  .mat-expansion-panel-header.mat-expanded
+  .mat-expansion-indicator::after {
+  color: #fff;
+}
+
+.create-test-plan .mat-expansion-panel-body {
+  padding: 16px 24px;
+}
+
+.create-test-plan .mat-expansion-panel-header.mat-expanded:hover,
+.create-test-plan .mat-expansion-panel-header.mat-expanded:focus {
+  background-color: #125178 !important;
+}
+
+.create-test-plan .mat-expansion-panel:not([class*="mat-elevation-z"]) {
+  box-shadow: none;
+}
+
+.create-test-plan
+  .mat-expansion-panel-header.mat-expanded
+  .mat-expansion-indicator::after {
+  color: white !important;
+}
+/* mat expansion panel */
+
+::ng-deep .inner-table table {
+  width: 100%;
+}
+
+::ng-deep .outer-table table thead {
+  background-color: #edf3f5 !important;
+}
+
+::ng-deep .outer-table table tbody tr:nth-child(even) {
+  background: #f6f6f9 !important;
+}
+
+::ng-deep .outer-table table tbody tr:nth-child(odd) {
+  background: #fff !important;
+}
+
+.input-section {
+  position: relative;
+}
+
+.input-section .add-btn {
+  position: absolute;
+  top: 37px;
+  right: 9px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.hidden-row {
+  display: none;
+}
+.bull-list .org-name {
+  font-size: 14px;
+  font-weight: bold;
+  font-family: Noto Sans;
+  letter-spacing: 0px;
+  color: #333333;
+}
+
+.bull-list .add-member > .view-details {
+  text-decoration: underline;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: Noto Sans;
+  letter-spacing: 0px;
+}
+.mat-paginator .mat-button-wrapper {
+  padding-top:46px
+}
+/* .table-container {
+  display: inline-table
+} */
+.search-by .input-section {
+  border: 1px solid #dcdcdc;
+  padding-left: 35px;
+  padding-right: 60px;
+}
+
+.filter-by .input-section {
+  border: 1px solid #dcdcdc;
+  padding-left: 30px;
+}
+
+.search-by .input-section::placeholder {
+  font-size: 12px;
+}
+
+.filter-by .input-section::placeholder {
+  font-size: 14px;
+}
+
+.search-by .input-clear {
+  position: absolute;
+  right: 15px;
+  bottom: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 14px;
+  font-weight: normal;
+  font-family: Noto Sans;
+  letter-spacing: 0px;
+  color: #545454;
+}
+
+/* ::ng-deep .mat-paginator-container {
+  display: flex;
+  justify-content: normal !important;
+  padding: 0 8px;
+
+}
+::ng-deep .mat-paginator-navigation-previous{
+  padding-top: 40px !important;
+}
+::ng-deep .mat-paginator-navigation-next{
+  padding-top: 40px !important;
+}
+::ng-deep .mat-paginator-range-label{
+  display: none !important;
+} */
+ .calender-icon {
+  position: absolute;
+  top: 27px;
+  right: 0px;
+}
+::ng-deep .mat-paginator-range-label{
+  display: none !important;
+}
+

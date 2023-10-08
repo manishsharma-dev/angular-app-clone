@@ -1,0 +1,26 @@
+<div class="status-dialog" *ngIf="data?.res?.data.transactionId; else errorDialog">
+    <img src="/assets/images/checkbox-circle-line.svg" alt="checkbox-circle-line">
+    <p class="sd-id">{{'animalDetails.transaction_id' | translate}}: <b>{{data?.res?.data.transactionId}}</b></p>
+    <h3 class="sd-msg">{{data?.res?.msg.msgDesc}}</h3>
+    <p class="sd-noti-detail">{{data?.vaccName}}</p>
+    <p class="sd-noti">{{'deworming.total_animal_dewormed' | translate}}: {{data?.count}}</p>
+    <h3 class="sd-msg" *ngIf="data?.res?.data.supervisorName">{{"animalTreatmentSurgery.notification_send_to" |
+        translate}}
+        {{ data?.res?.data.supervisorName }}</h3>
+    <div class="close-btn">
+        <button type="submit" mat-dialog-close class="btn btn-primary" (click)="closeDialog()">{{'common.ok_string' |
+            translate}}</button>
+    </div>
+</div>
+<ng-template #errorDialog>
+    <div class="status-dialog">
+        <img src="/assets/images/checkbox-circle-line.svg" alt="checkbox-circle-line">
+        <div class="sd-content my-3">
+            <p class="sd-msg">{{data?.res?.msg.msgDesc}}</p>
+        </div>
+        <div class="close-btn">
+            <button type="submit" mat-dialog-close class="btn btn-primary" (click)="closeDialog()">{{'common.ok_string'
+                | translate}}</button>
+        </div>
+    </div>
+</ng-template>

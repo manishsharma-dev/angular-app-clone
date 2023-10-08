@@ -1,0 +1,35 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+    <div class="center">
+        <mat-spinner class="center"></mat-spinner>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col mt-2">
+        <h3>{{"hierarchy.Preview_Hierarchy" |translate}}</h3>
+    </div>
+    <div class="col">
+        <button mat-dialog-close class="close close-btn">&#x2715;</button>
+    </div>
+</div>
+<mat-dialog-content *ngIf="getHierarchyDetail">
+
+    <div class="row mt-3" *ngIf="data">
+        <div class="col-md-12 form-group">
+            <h5 class="mb-3">{{getHierarchyDetail['stateName']}} : {{getHierarchyDetail['hierarchyName']}}</h5>
+            <div class="form-check" *ngFor="let role of getHierarchyDetail['levelsInfo']">
+
+                <span class="dot"></span>
+                <label class="form-check-label" for="check1"><span class="level-text">{{"hierarchy.level" | translate}}
+                        {{role.level}}</span><br>{{role.roleDesc}} - {{role.roleAreaValue}}</label>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-dialog-close type="reset" class="btn btn-outline-primary">
+        {{"animalDetails.ok" | translate}}
+    </button>
+
+</mat-dialog-actions>

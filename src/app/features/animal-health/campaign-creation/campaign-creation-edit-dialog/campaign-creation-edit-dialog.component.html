@@ -1,0 +1,741 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="edit-dialog" *ngIf="isFormLoaded">
+  <div class="edit-section-header">
+    <div class="edit-heading">
+      <h3>{{ "campaignCreation.modify_campaign" | translate }}</h3>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+  <!-- deworming Response starts -->
+  <div class="edit-container" *ngIf="dewormingRes">
+    <div class="row mt-4 section-title">
+      <div class="col-md-12">
+        <p class="">{{ "campaignCreation.Campaign_Name" | translate
+          }}:{{prescriptionRes?.viewCampaignDetailDto?.campaignName}} </p>
+      </div>
+
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{ "campaignCreation.Campaign_Type" | translate }} : </h4>
+        <p> {{prescriptionRes?.viewCampaignDetailDto?.campaignType}} </p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{ "deworming.De-wormer_Name" | translate }}: </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.medicineName}} </p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{ "deworming.De-wormer_Content" | translate}}: </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.saltDesc}} </p>
+
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{ 'campaignCreation.manufacturer' | translate}} : </h4>
+        <p> {{prescriptionRes?.viewCampaignDetailDto?.manufacturer}} </p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"campaignCreation.campaign_select_project" | translate}}: </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.projectName}} </p>
+      </div>
+    </div>
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+
+
+    <form class="mb-3" [formGroup]="itemForm" (ngSubmit)="editCampaignSubmit()" *ngIf="isFormLoaded">
+
+      <ng-container [ngTemplateOutlet]="areaDropdowns"></ng-container>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="campaignSD" class="form-label">{{ "campaignCreation.campaign_start_date" |
+            translate }}<span class="mandatory-field">*</span></label>
+          <input type="text" class="form-control vaccDate" formControlName="campaignSD" [max]="campMaxStartDate"
+            placeholder="Select Start Date" #campaignSD />
+          <span class="alert-message" *ngIf="
+            (itemForm.get('campaignSD').dirty &&
+            itemForm.get('campaignSD').invalid) ||
+            itemForm.get('campaignSD').touched
+          ">
+            <span *ngIf="itemForm.get('campaignSD').hasError('matDatepickerMin')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignSD').hasError('matDatepickerMax')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignSD').hasError('matDatepickerParse')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span
+              *ngIf="itemForm.get('campaignSD').hasError('required') && !itemForm.get('campaignSD').hasError('matDatepickerParse')">
+              {{ 'animalHealthValidations.treatmentList.required' | translate }}
+            </span>
+          </span>
+          <!-- <mat-datepicker-toggle matSuffix [for]="campaignSD" class="picker"></mat-datepicker-toggle>
+        <mat-datepicker #campaignSD></mat-datepicker> -->
+
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="campaignEndDate" class="form-label">{{'vaccination.CampaignEndDate' | translate}}<span
+              class="mandatory-field">*</span></label>
+          <input class="form-control vaccDate" id="campaignEndDate" (dateInput)="campaignEndDateChange($event.value)"
+            [min]="campMinEndDate" [max]="campMaxEndDate" [matDatepicker]="campaignEndDate"
+            formControlName="campaignEndDate" placeholder="{{ 'common.select_date' | translate }}" />
+          <mat-datepicker-toggle matSuffix [for]="campaignEndDate" class="picker"></mat-datepicker-toggle>
+          <mat-datepicker #campaignEndDate></mat-datepicker>
+          <span class="alert-message" *ngIf="
+            (itemForm.get('campaignEndDate').dirty &&
+            itemForm.get('campaignEndDate').invalid) ||
+            itemForm.get('campaignEndDate').touched
+          ">
+            <span *ngIf="itemForm.get('campaignEndDate').hasError('matDatepickerMin')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignEndDate').hasError('matDatepickerMax')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignEndDate').hasError('matDatepickerParse')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span
+              *ngIf="itemForm.get('campaignEndDate').hasError('required') && !itemForm.get('campaignEndDate').hasError('matDatepickerParse')">
+              {{ 'animalHealthValidations.treatmentList.required' | translate }}
+            </span>
+          </span>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="campaignRD" class="form-label">{{'campaignCreation.campaign_entry_end_date'
+            | translate}}<span class="mandatory-field">*</span></label>
+          <input class="form-control vaccDate" id="campaignRD" (dateInput)="campaignEntryEndDateChange($event.value)"
+            [matDatepicker]="campaignRD" [min]="campMinEntryEndDate" [max]="campMaxEntryEndDate"
+            formControlName="campaignRD" placeholder="{{ 'common.select_date' | translate }}" />
+          <mat-datepicker-toggle matSuffix [for]="campaignRD" class="picker">
+          </mat-datepicker-toggle>
+          <mat-datepicker #campaignRD></mat-datepicker>
+          <span class="alert-message" *ngIf="
+            (itemForm.get('campaignRD').dirty &&
+            itemForm.get('campaignRD').invalid) ||
+            itemForm.get('campaignRD').touched
+          ">
+            <span *ngIf="itemForm.get('campaignRD').hasError('matDatepickerMin')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignRD').hasError('matDatepickerMax')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignRD').hasError('matDatepickerParse')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span
+              *ngIf="itemForm.get('campaignRD').hasError('required') && !itemForm.get('campaignRD').hasError('matDatepickerParse')">
+              {{ 'animalHealthValidations.treatmentList.required' | translate }}
+            </span>
+          </span>
+        </div>
+
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="campaignStatus" class="form-label">{{ "campaignCreation.Campaign_Status" | translate}}:</label>
+          <select id="campaignStatus" class="form-control" formControlName="campaignStatus">
+
+            <option value="null">
+              {{"campaignCreation.select_campaign_status" | translate}}
+            </option>
+            <option *ngFor="let data of campaignStatusData" [value]="data.cd">
+              {{ data.value }}
+            </option>
+          </select>
+          <!-- <div class="switch">
+            <input type="checkbox" class="toggle" id="rounded">
+            <label for="rounded" data-checked="open" class="rounded" data-unchecked="close"></label>
+        </div> -->
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="remarks" class="form-label">{{"animalHealthHistory.remarks" | translate}}</label>
+          <textarea name="" class="form-control" id="remarks"
+            placeholder="{{ 'animalTreatmentSurgery.enter_reason_details' | translate}}" formControlName="remarks"
+            cols="30" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="h-divider">
+        <div class="shadow"></div>
+      </div>
+
+      <div class="edit-footer">
+        <button type="button" class="btn btn-outline-primary mr-2" mat-dialog-close>
+          {{ "animalDetails.cancel" | translate }}
+        </button>
+        <button type="submit" class="btn btn-primary">
+          {{ "campaignCreation.save_exit" | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+  <!-- deworming Response ends -->
+
+  <!-- treatment Response starts -->
+  <div class="edit-container" *ngIf="treatmentRes">
+    <div class="row mt-4 section-title">
+      <div class="col-md-12">
+        <p class="">{{ "campaignCreation.Campaign_Name" | translate
+          }}:{{prescriptionRes?.viewCampaignDetailDto?.campaignName}} </p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"campaignCreation.Campaign_Type" | translate}} : </h4>
+        <p> {{prescriptionRes?.viewCampaignDetailDto?.campaignType}} </p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"campaignCreation.campaign_select_project" | translate}}: </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.projectName}} </p>
+      </div>
+    </div>
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+
+
+    <form class="mb-3" [formGroup]="itemForm" (ngSubmit)="editCampaignSubmit()" *ngIf="isFormLoaded">
+      <ng-container [ngTemplateOutlet]="areaDropdowns"></ng-container>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="campaignSD" class="form-label">{{ "campaignCreation.campaign_start_date" |
+            translate }}<span class="mandatory-field">*</span></label>
+          <input type="text" class="form-control vaccDate" formControlName="campaignSD" [max]="campMaxStartDate"
+            placeholder="Select Start Date" #campaignSD />
+          <span class="alert-message" *ngIf="
+            (itemForm.get('campaignSD').dirty &&
+            itemForm.get('campaignSD').invalid) ||
+            itemForm.get('campaignSD').touched
+          ">
+            <span *ngIf="itemForm.get('campaignSD').hasError('matDatepickerMin')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignSD').hasError('matDatepickerMax')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignSD').hasError('matDatepickerParse')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span
+              *ngIf="itemForm.get('campaignSD').hasError('required') && !itemForm.get('campaignSD').hasError('matDatepickerParse')">
+              {{ 'animalHealthValidations.treatmentList.required' | translate }}
+            </span>
+          </span>
+          <!-- <mat-datepicker-toggle matSuffix [for]="campaignSD" class="picker"></mat-datepicker-toggle>
+        <mat-datepicker #campaignSD></mat-datepicker> -->
+
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="campaignEndDate" class="form-label">{{'vaccination.CampaignEndDate' | translate}}<span
+              class="mandatory-field">*</span></label>
+          <input class="form-control vaccDate" id="campaignEndDate" (dateInput)="campaignEndDateChange($event.value)"
+            [min]="campMinEndDate" [max]="campMaxEndDate" [matDatepicker]="campaignEndDate"
+            formControlName="campaignEndDate" placeholder="{{ 'common.select_date' | translate }}" />
+          <mat-datepicker-toggle matSuffix [for]="campaignEndDate" class="picker"></mat-datepicker-toggle>
+          <mat-datepicker #campaignEndDate></mat-datepicker>
+          <span class="alert-message" *ngIf="
+            (itemForm.get('campaignEndDate').dirty &&
+            itemForm.get('campaignEndDate').invalid) ||
+            itemForm.get('campaignEndDate').touched
+          ">
+            <span *ngIf="itemForm.get('campaignEndDate').hasError('matDatepickerMin')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignEndDate').hasError('matDatepickerMax')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignEndDate').hasError('matDatepickerParse')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span
+              *ngIf="itemForm.get('campaignEndDate').hasError('required') && !itemForm.get('campaignEndDate').hasError('matDatepickerParse')">
+              {{ 'animalHealthValidations.treatmentList.required' | translate }}
+            </span>
+          </span>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="campaignRD" class="form-label">{{'campaignCreation.campaign_entry_end_date'
+            | translate}}<span class="mandatory-field">*</span></label>
+          <input class="form-control vaccDate" id="campaignRD" [matDatepicker]="campaignRD" [min]="campMinEntryEndDate"
+            formControlName="campaignRD" placeholder="{{ 'common.select_date' | translate }}" />
+          <mat-datepicker-toggle matSuffix [for]="campaignRD" class="picker">
+          </mat-datepicker-toggle>
+          <mat-datepicker #campaignRD></mat-datepicker>
+          <span class="alert-message" *ngIf="
+            (itemForm.get('campaignRD').dirty &&
+            itemForm.get('campaignRD').invalid) ||
+            itemForm.get('campaignRD').touched
+          ">
+            <span *ngIf="itemForm.get('campaignRD').hasError('matDatepickerMin')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignRD').hasError('matDatepickerMax')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignRD').hasError('matDatepickerParse')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span
+              *ngIf="itemForm.get('campaignRD').hasError('required') && !itemForm.get('campaignRD').hasError('matDatepickerParse')">
+              {{ 'animalHealthValidations.treatmentList.required' | translate }}
+            </span>
+          </span>
+        </div>
+
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="campaignStatus" class="form-label">{{"campaignCreation.Campaign_Status" | translate}}:</label>
+          <select id="campaignStatus" class="form-control" formControlName="campaignStatus">
+
+            <option value="null">
+              {{"campaignCreation.select_campaign_status" | translate}}
+            </option>
+            <option *ngFor="let data of campaignStatusData" [value]="data.cd">
+              {{ data.value }}
+            </option>
+          </select>
+          <!-- <div class="switch">
+            <input type="checkbox" class="toggle" id="rounded">
+            <label for="rounded" data-checked="open" class="rounded" data-unchecked="close"></label>
+        </div> -->
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="remarks" class="form-label"> {{"animalHealthHistory.remarks" | translate}}</label>
+          <textarea name="" class="form-control" id="remarks"
+            placeholder="{{ 'animalTreatmentSurgery.enter_reason_details' | translate}}" formControlName="remarks"
+            cols="30" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="h-divider">
+        <div class="shadow"></div>
+      </div>
+      <div class="edit-footer">
+        <button type="button" class="btn btn-outline-primary mr-2" mat-dialog-close>
+          {{ "animalDetails.cancel" | translate }}
+        </button>
+        <button type="submit" class="btn btn-primary">
+          {{ "campaignCreation.save_exit" | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+  <!-- treatment Response ends -->
+
+
+  <!-- Vaccination Response starts -->
+  <div class="edit-container" *ngIf="vaccinationRes">
+    <div class="row mt-4 section-title">
+      <div class="col-md-12">
+        <p class="">{{ "campaignCreation.Campaign_Name" | translate
+          }}:{{prescriptionRes?.viewCampaignDetailDto?.campaignName}} </p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{ "campaignCreation.Campaign_Type" | translate }} : </h4>
+        <p> {{prescriptionRes?.viewCampaignDetailDto?.campaignType}} </p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"common.species" | translate}}: </h4>
+        <p>{{ newStringSpecies ?? "null" }} </p>
+        <p *ngIf="newStringSpecies?.length == 0">Null</p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"campaignCreation.campaign_select_project" | translate}}: </h4>
+        <p>{{ prescriptionRes?.viewCampaignDetailDto?.projectName }} </p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{'campaignCreation.vaccination_For' | translate}}: </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.diseaseDesc}} </p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"campaignCreation.vaccine_name" | translate}} : </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.vaccineName}}</p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{ 'vaccination.select_vaccine_type' | translate }} : </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.vaccineType}}</p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{'campaignCreation.vaccine_subtype' |translate}}: </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.vaccineSubtypeName}} </p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{'vaccination.vaccinationType' | translate}} : </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.vaccinationType}}</p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{'vaccination.BatchNumber' | translate}} : </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.batchNumber}}</p>
+      </div>
+    </div>
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+
+
+    <form class="mb-3" [formGroup]="itemForm" (ngSubmit)="editCampaignSubmit()">
+
+      <!-- Species Details section -->
+      <div class="form-row" *ngIf="itemForm.get('speciesImpactedEntity')">
+        <div class="col-12">
+          <div class="mobile-title-heading">
+            <div class="separator">
+              <div>{{"campaignCreation.species_details" | translate}}</div>
+              <div class="line"></div>
+            </div>
+          </div>
+          <div class="row symt-details">
+            <div class="form-group col-lg-12 col-md-12">
+              <div class="table-responsive mb-3">
+                <table mat-table [dataSource]="affectedAnimalDataSource" formArrayName="speciesImpactedEntity"
+                  class="symt-details-table mat-elevation-z8">
+                  <ng-container matColumnDef="species">
+                    <th mat-header-cell *matHeaderCellDef>
+                      {{"common.species" | translate}}<span class="mandatory-field">*</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index"
+                      class="cell-width">
+                      <mat-select formControlName="speciesCd" (selectionChange)="onSpeciesSelected($event,index)">
+                        <mat-option *ngFor="let species of speciesTypeList" [value]="species.speciesCd">
+                          {{ species.speciesName }}</mat-option>
+                      </mat-select>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="form">
+                    <th mat-header-cell *matHeaderCellDef>
+                      {{"deworming.Form" | translate}}<span class="mandatory-field">*</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index"
+                      class="cell-width">
+                      <span>{{element.value.form}}</span>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="route">
+                    <th mat-header-cell *matHeaderCellDef>
+                      {{"deworming.route" | translate}}<span class="mandatory-field">*</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index"
+                      class="cell-width">
+                      <span>{{element.value.route}}</span>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="dose">
+                    <th mat-header-cell *matHeaderCellDef>
+                      {{"deworming.Dose" | translate}}<span class="mandatory-field">*</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index"
+                      class="cell-width">
+                      <span>{{element.value.dosage}}</span>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="unit">
+                    <th mat-header-cell *matHeaderCellDef>
+                      {{"deworming.Unit" | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index"
+                      class="cell-width">
+                      <span>{{element.value.unit}}</span>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef>{{"common.action" | translate}}</th>
+                    <td mat-cell *matCellDef="let element; let index = index">
+                      <i aria-hidden="true" class="fa fa-trash-o icon-pointer" *ngIf="element.value.isNew"
+                        (click)="removeAffectedAnimalElement(index)"></i>
+                    </td>
+                  </ng-container>
+
+                  <tr class="action-link table-head" mat-header-row *matHeaderRowDef="
+                  affectedAnimalDisplayedColumns
+                "></tr>
+                  <tr class="action-link table-head" mat-row *matRowDef="
+                  let row;
+                  columns: affectedAnimalDisplayedColumns
+                "></tr>
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell text-center" [attr.colspan]="
+                    affectedAnimalDisplayedColumns.length
+                  ">
+                      {{"campaignCreation.no_data_matching_the_filter" | translate}}
+
+                    </td>
+                  </tr>
+                </table>
+                <div class="alert-message" *ngIf="
+                itemForm.get('speciesImpactedEntity').invalid &&
+                  (itemForm.get('speciesImpactedEntity').dirty || itemForm.get('speciesImpactedEntity').touched)
+                ">
+                  <div *ngIf="itemForm.get('speciesImpactedEntity').invalid">
+                    {{ "campaignCreation.species_select_error" | translate }}
+                  </div>
+                </div>
+
+              </div>
+              <span class="validation-error-message" *ngIf="isShowError">
+                <!-- Role Name already exist. please select another Role ! -->
+                {{ isShowError }}
+              </span>
+              <div class="add-row">
+                <span class="add-row--btn" (click)="addAffectedAnimalRow()">
+                  <i aria-hidden="true" class="fa fa-plus add-row--icon"></i><b class="">
+                    {{"campaignCreation.add_row" | translate}}</b>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="h-divider">
+        <div class="shadow"></div>
+      </div>
+      <ng-container [ngTemplateOutlet]="areaDropdowns"></ng-container>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="campaignSD" class="form-label">{{ "campaignCreation.campaign_start_date" |
+            translate }}<span class="mandatory-field">*</span></label>
+          <input type="text" class="form-control vaccDate" formControlName="campaignSD" [max]="campMaxStartDate"
+            placeholder="Select Start Date" #campaignSD />
+          <span class="alert-message" *ngIf="
+            (itemForm.get('campaignSD').dirty &&
+            itemForm.get('campaignSD').invalid) ||
+            itemForm.get('campaignSD').touched
+          ">
+            <span *ngIf="itemForm.get('campaignSD').hasError('matDatepickerMin')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignSD').hasError('matDatepickerMax')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignSD').hasError('matDatepickerParse')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span
+              *ngIf="itemForm.get('campaignSD').hasError('required') && !itemForm.get('campaignSD').hasError('matDatepickerParse')">
+              {{ 'animalHealthValidations.treatmentList.required' | translate }}
+            </span>
+          </span>
+
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="campaignEndDate" class="form-label">{{'vaccination.CampaignEndDate' | translate}}<span
+              class="mandatory-field">*</span></label>
+          <input class="form-control vaccDate" id="campaignEndDate" (dateInput)="campaignEndDateChange($event.value)"
+            [min]="campMinEndDate" [max]="campMaxEndDate" [matDatepicker]="campaignEndDate"
+            formControlName="campaignEndDate" placeholder="{{ 'common.select_date' | translate }}" />
+          <mat-datepicker-toggle matSuffix [for]="campaignEndDate" class="picker"></mat-datepicker-toggle>
+          <mat-datepicker #campaignEndDate></mat-datepicker>
+          <span class="alert-message" *ngIf="
+            (itemForm.get('campaignEndDate').dirty &&
+            itemForm.get('campaignEndDate').invalid) ||
+            itemForm.get('campaignEndDate').touched
+          ">
+            <span *ngIf="itemForm.get('campaignEndDate').hasError('matDatepickerMin')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignEndDate').hasError('matDatepickerMax')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignEndDate').hasError('matDatepickerParse')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span
+              *ngIf="itemForm.get('campaignEndDate').hasError('required') && !itemForm.get('campaignEndDate').hasError('matDatepickerParse')">
+              {{ 'animalHealthValidations.treatmentList.required' | translate }}
+            </span>
+          </span>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="campaignRD" class="form-label">{{'campaignCreation.campaign_entry_end_date'
+            | translate}}<span class="mandatory-field">*</span></label>
+          <input class="form-control vaccDate" id="campaignRD" [matDatepicker]="campaignRD" [min]="campMinEntryEndDate"
+            formControlName="campaignRD" placeholder="{{ 'common.select_date' | translate }}" />
+          <mat-datepicker-toggle matSuffix [for]="campaignRD" class="picker">
+          </mat-datepicker-toggle>
+          <mat-datepicker #campaignRD></mat-datepicker>
+          <span class="alert-message" *ngIf="
+            (itemForm.get('campaignRD').dirty &&
+            itemForm.get('campaignRD').invalid) ||
+            itemForm.get('campaignRD').touched
+          ">
+            <span *ngIf="itemForm.get('campaignRD').hasError('matDatepickerMin')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignRD').hasError('matDatepickerMax')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="itemForm.get('campaignRD').hasError('matDatepickerParse')">
+              {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+            </span>
+            <span
+              *ngIf="itemForm.get('campaignRD').hasError('required') && !itemForm.get('campaignRD').hasError('matDatepickerParse')">
+              {{ 'animalHealthValidations.treatmentList.required' | translate }}
+            </span>
+          </span>
+        </div>
+
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="campaignStatus" class="form-label">{{"campaignCreation.Campaign_Status" | translate}}:</label>
+          <select id="campaignStatus" class="form-control" formControlName="campaignStatus">
+
+            <option value="null">
+              {{"campaignCreation.select_campaign_status" | translate}}
+            </option>
+            <option *ngFor="let data of campaignStatusData" [value]="data.cd">
+              {{ data.value }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="remarks" class="form-label">{{"animalHealthHistory.remarks" | translate}}</label>
+          <textarea name="" class="form-control" id="remarks"
+            placeholder="{{ 'animalTreatmentSurgery.enter_reason_details' | translate}}" formControlName="remarks"
+            cols="30" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="h-divider">
+        <div class="shadow"></div>
+      </div>
+      <div class="edit-footer">
+        <button type="button" class="btn btn-outline-primary mr-2" mat-dialog-close>
+          {{ "animalDetails.cancel" | translate }}
+        </button>
+        <button type="submit" class="btn btn-primary">
+          {{ "campaignCreation.save_exit" | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+  <!-- Vaccination Response ends -->
+
+</div>
+
+<ng-container>
+  <ng-template #areaDropdowns [formGroup]="itemForm">
+    <!-- <div class="form-row">
+
+      <div class="form-group col-12">
+        <label for="selectedDistrict" class="form-label">{{"campaignCreation.campaign_select_district" | translate
+          }}<span class="mandatory-field">*</span></label>
+        <ng-select id="selectedDistrict" class="custom" [items]="districtMaster" [multiple]="true"
+          [closeOnSelect]="false" (change)="onAreaChange($event, 'district')" bindLabel="districtName"
+          [clearable]="false" [searchable]="false" formControlName="selectedDistrict"
+          placeholder="{{ 'campaignCreation.campaign_select_district'  | translate}}">
+          <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+            {{"campaignCreation.select_all" | translate}}
+          </ng-template>
+
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <input class="mr-2" id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />{{
+            item.districtName }}
+          </ng-template>
+        </ng-select>
+        <span class="alert-message" *ngIf="
+                    (formControls.selectedDistrict.dirty && formControls.selectedDistrict.invalid) ||
+                    formControls.selectedDistrict.touched
+                  ">
+          <span *ngIf="formControls.selectedDistrict.hasError('required')">
+            {{ "errorMsg.no_district" | translate }}
+          </span>
+        </span>
+      </div>
+
+
+      <div class="form-group col-12">
+        <label for="selectedTehsil" class="form-label">{{"campaignCreation.campaign_select_tehsil" | translate }}<span
+            class="mandatory-field">*</span></label>
+        <ng-select class="custom" [items]="tehsilMaster" [multiple]="true" bindLabel="tehsilName"
+          [closeOnSelect]="false" (change)="onAreaChange($event, 'tehsil')" formControlName="selectedTehsil"
+          placeholder="{{ 'campaignCreation.campaign_select_tehsil'  | translate}}">
+          <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+            {{"campaignCreation.select_all" | translate}}
+          </ng-template>
+
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <input class="mr-2" id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />{{
+            item.tehsilName }}
+          </ng-template>
+        </ng-select>
+        <span class="alert-message" *ngIf="
+                    (formControls.selectedTehsil.dirty && formControls.selectedTehsil.invalid) ||
+                    formControls.selectedTehsil.touched
+                  ">
+          <span *ngIf="formControls.selectedTehsil.hasError('required')">
+            {{ "errorMsg.no_tehsil" | translate }}
+          </span>
+        </span>
+      </div>
+
+
+      <div class="form-group col-12">
+        <label for="selectVillage" class="form-label">{{"campaignCreation.campaign_select_village" | translate }}<span
+            class="mandatory-field">*</span></label>
+        <ng-select class="custom" [items]="village" [multiple]="true" bindLabel="villageName" groupBy="selectedAllGroup"
+          (change)="onAreaChange($event, 'village')" [selectableGroup]="true" [selectableGroupAsModel]="false"
+          [closeOnSelect]="false" formControlName="selectedVillage"
+          placeholder="{{ 'campaignCreation.campaign_select_village'  | translate}}">
+          <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+            {{"campaignCreation.select_all" | translate}}
+          </ng-template>
+
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <input class="mr-2" id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />{{
+            item.villageName }}
+          </ng-template>
+        </ng-select>
+        <span class="alert-message" *ngIf="
+                    (formControls.selectedVillage.dirty && formControls.selectedVillage.invalid) ||
+                    formControls.selectedVillage.touched
+                  ">
+          <span *ngIf="formControls.selectedVillage.hasError('required')">
+            {{ "errorMsg.no_village" | translate }}
+          </span>
+        </span>
+      </div>
+    </div> -->
+    <app-location-mapping-view #locationMapping
+      [locationDetailsResponseDto]="prescriptionRes?.locationDetailsResponseDto"></app-location-mapping-view>
+  </ng-template>
+</ng-container>

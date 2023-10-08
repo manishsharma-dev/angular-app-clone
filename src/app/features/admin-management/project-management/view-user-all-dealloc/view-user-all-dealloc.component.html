@@ -1,0 +1,37 @@
+<div class="common-info">
+    <div class="common-info-header">
+
+        <img [src]="data.icon" class="custom-icon" alt="icon-verified" />
+        <p class="header-desc">{{data.title | translate}}</p>
+
+    </div>
+
+    <div class="common-info-body">
+        <mat-dialog-content>
+            <ul class="userAllcationLists">
+                <li>
+                    <span *ngFor="let item of this.data['selectedItem']">
+
+                        {{
+                        item.loginId}}</span>
+                </li>
+
+            </ul>
+
+        </mat-dialog-content>
+
+    </div>
+
+
+
+    <div class="common-info-footer">
+
+
+        <button mat-dialog-close class="btn btn-primary" [mat-dialog-close]="true">
+
+            {{ data.primaryBtnText | translate }}
+
+        </button>
+    </div>
+
+</div>

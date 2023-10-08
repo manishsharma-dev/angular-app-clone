@@ -1,0 +1,62 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="wrapper">
+  <app-sidenav></app-sidenav>
+
+  <!-- Page Content  -->
+  <div id="content">
+    <div class="container p-0">
+      <app-header></app-header>
+
+      <!-- section breadcum -->
+      <!-- <div class="container">
+        <div class="row breadcum align-items-center py-2">
+          <div class="col-lg-5 col-md-5 col-sm-12">
+            <div class="breadcum-heading">
+              <h3 class="heading">
+                {{ "registration.Owner Registration" | translate }}
+              </h3>
+            </div>
+          </div>
+          <div class="col-lg-7 col-md-7 col-sm-12">
+            <div class="breadcrumb-list text-md-right">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb m-0">
+                  <li class="breadcrumb-item active">
+                    <a>{{ "registration.breadcrumb.first" | translate }} </a>
+                  </li>
+                  <li class="breadcrumb-item current">
+                    <a href="javascript:void(0)">{{ "registration.breadcrumb.second" | translate }}
+                    </a>
+                  </li>
+                  <li class="breadcrumb-item current">
+                    <a href="javascript:void(0)">{{ "registration.breadcrumb.third" | translate }}
+                    </a>
+                  </li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <!-- section breadcum -->
+
+      <div class="main-contant-container">
+        <div class="row no-gutters">
+          <div class="col-md-12">
+            <router-outlet></router-outlet>
+          </div>
+          <!-- <div class="col-md-3">
+            <app-right-sidebar></app-right-sidebar>
+          </div> -->
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>

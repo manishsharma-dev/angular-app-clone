@@ -1,0 +1,25 @@
+.selected-area-name {
+  background: #ffffff;
+  border: 1px solid #beccd1;
+  border-radius: 4px;
+}
+
+.selected-area {
+  margin-bottom: 5px;
+}
+
+.selected-area-name {
+  font-size: 0.9em;
+  margin-bottom: 5px;
+  color: #333;
+  background-color: #ebf5ff;
+  border-radius: 2px;
+  margin-right: 5px;
+  padding: 6px;
+  border: 1px solid #beccd1;
+}
+
+.custom-height {
+  height: 60px;
+  max-height: 60px;
+}

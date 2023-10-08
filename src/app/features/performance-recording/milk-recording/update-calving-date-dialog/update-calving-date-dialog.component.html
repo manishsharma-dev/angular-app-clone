@@ -1,0 +1,51 @@
+<div class="dry-off">
+  <div class="dry-off-header">
+    <p class="header-desc">{{'performanceRecording.enter_calving_date' | translate}}</p>
+  </div>
+
+  <div class="dry-off-body">
+    <form [formGroup]="form">
+      <div class="form-row">
+
+        <div class="form-group col-md-12 input-icon">
+          <label for="" class="form-label">{{'performanceRecording.calving_date' | translate}}</label>
+          <input class="form-control" type="text" [min]="minDate" [max]="today" [matDatepicker]="pickerDate"
+            formControlName="calvingDate" placeholder="dd/mm/yyyy" />
+          <mat-datepicker-toggle matSuffix [for]="pickerDate" class="calender-icon"></mat-datepicker-toggle>
+          <mat-datepicker #pickerDate></mat-datepicker>
+
+          <span class="alert-message" *ngIf="
+                    (form.get('calvingDate').dirty &&
+                      form.get('calvingDate').invalid) ||
+                    form.get('calvingDate').touched
+                    ">
+            <span *ngIf="form.get('calvingDate').hasError('matDatepickerMin')">
+              {{'common.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="form.get('calvingDate').hasError('matDatepickerMax')">
+              {{'common.please_enter_valid_date' | translate}}
+            </span>
+            <span *ngIf="form.get('calvingDate').hasError('matDatepickerParse')">
+              {{'common.please_enter_valid_date' | translate}}
+            </span>
+            <span
+              *ngIf="form.get('calvingDate').hasError('required') && !form.get('calvingDate').hasError('matDatepickerParse')">
+              {{cmnValidation.required|translate}}
+            </span>
+          </span>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="dry-off-footer">
+    <button [mat-dialog-close]="null" class="btn btn-outline-primary mr-2 px-4">
+      {{'animalDetails.cancel' | translate}}
+    </button>
+
+    <button class="btn btn-primary" (click)="onSubmit()">
+      {{'common.submit' | translate}}
+    </button>
+  </div>
+
+</div>

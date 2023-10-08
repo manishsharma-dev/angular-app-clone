@@ -1,0 +1,60 @@
+.selected-animal-list {
+  display: flex;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: auto;
+}
+
+.selected-animal-listitem {
+  font-size: 12px;
+  font-family: Noto Sans;
+  font-weight: bold;
+  letter-spacing: 0.64px;
+  color: #3c3c3c;
+  padding: 2px 5px;
+  /* margin-right: 10px;
+    margin-bottom: 8px; */
+  display: flex;
+  align-items: center;
+}
+
+.selected-animal-listitem.outline {
+  background: #ffffff;
+  border: 1px solid #beccd1;
+  border-radius: 4px;
+}
+
+.animal-listitem-cross {
+  cursor: pointer;
+  margin-left: 6px;
+}
+
+/* view-more */
+.selected-viewMore .viewMore-text {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #007bff;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.group-disease-testing .st-label {
+  color: #4e4e4e;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.group-disease-testing .button-section {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.select-id {
+  position: absolute;
+  bottom: 0;
+}
+.card-body{
+  min-height: 50vh;
+}

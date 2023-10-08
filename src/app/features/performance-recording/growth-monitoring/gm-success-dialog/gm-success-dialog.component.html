@@ -1,0 +1,37 @@
+<div class="campaign-dialog">
+  <img src="/assets/images/verified.svg" class="icon-verified" alt="icon-verified" />
+  <div class="campaign-msg">
+    <h1 class="succes-msg">
+      <span class="succes-msg-desc" *ngIf="data.transaction_id">{{'performanceRecording.transaction_id' |translate}}:</span><span
+        class="succes-msg-desc">{{
+        data.transaction_id }}</span>
+
+    </h1>
+    <h1 class="succes-msg">{{ data.title }}</h1>
+  </div>
+  <div class="growth-details">
+    <div><span>{{'performanceRecording.current_growth_rate'|translate}}</span><span>{{data.currentGrowthRate}}</span></div>
+    <div>
+      <span>{{'performanceRecording.time_taken_to_reach_target_breeding_weight'|translate}}</span><span>{{data.targetedWeeks}}</span>
+    </div>
+    <div *ngIf="data?.targetedGrowthRate18Months">
+      <span>{{'performanceRecording.growth_rate_required_for_reaching_target_weight_18_months'|translate}}</span><span>{{data?.targetedGrowthRate18Months}}
+        <i class="fa fa-info-circle text-info" *ngIf="data?.targetedGrowthRate18Months==='N/A'"
+          [matTooltip]="('performanceRecording.first_growth_monitoring' | translate) + '/' +('performanceRecording.18_months_time_period_has_passed' | translate)"
+          matTooltipClass="tooltip-custom"></i>
+      </span>
+    </div>
+    <div *ngIf="data?.targetedGrowthRate24Months">
+      <span>{{'performanceRecording.growth_rate_required_for_reaching_target_weight_24_months'|translate}}</span><span>{{data?.targetedGrowthRate24Months}}
+        <i class="fa fa-info-circle text-info" *ngIf="data?.targetedGrowthRate24Months==='N/A'"
+          [matTooltip]="('performanceRecording.first_growth_monitoring' | translate) + '/' +('performanceRecording.24_months_time_period_has_passed' | translate)"
+          matTooltipClass="tooltip-custom"></i>
+      </span>
+    </div>
+  </div>
+  <div class="close-button">
+    <button type="submit" class="btn btn-primary" (click)="closeDialog()" mat-dialog-close>
+      {{'animalDetails.close' | translate}}
+    </button>
+  </div>
+</div>

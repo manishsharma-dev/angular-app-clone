@@ -1,0 +1,23 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+    <div class="center">
+        <mat-spinner class="center"></mat-spinner>
+    </div>
+</div>
+<div class="status-dialog">
+    <img src="/assets/images/checkbox-circle-line.svg" alt="checkbox-circle-line">
+    <p class="sd-id">{{'animalDetails.transaction_id' | translate}}: <b>{{ data.transactionId }}</b></p>
+    <h3 class="sd-msg">{{ data.title }}</h3>
+    <!-- <div class="close-btn">
+        <button type="submit" mat-dialog-close class="btn btn-primary"  (click)="closeDialog()">{{'common.ok_string' | translate}}</button>
+        <button type="submit" mat-dialog-close class="btn btn-primary"  (click)="viewReport(data.transactionId)">{{'animalTreatmentSurgery.download_report' | translate}}</button>
+    </div> -->
+
+    <div class="row my-2">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-outline-primary mr-2" (click)="closeDialog()">{{'common.ok_string' | translate}}</button>
+                <button type="submit" class="btn btn-primary"  (click)="viewReport(data.transactionId)">{{'animalTreatmentSurgery.download_report' | translate}}</button>
+            </div>
+        </div>
+    </div>
+</div>

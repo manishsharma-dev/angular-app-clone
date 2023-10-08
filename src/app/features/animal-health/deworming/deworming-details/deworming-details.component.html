@@ -1,0 +1,272 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="campaign-edit-dialog">
+  <!-- header -->
+  <div class="campaign-edit-header">
+    <div class="headeing">
+      <h2 class="edit-heading-label">{{ "deworming.deworming_details" | translate }}</h2>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+  <!-- contant -->
+  <div class="dialog-main-content">
+    <div class="selected-campaign-detail">
+      <div class="row p-0 mb-3">
+        <div class="col-12">
+          <div class="camp-detail row mb-md-2">
+            <div class="col-lg-5">
+              <div class="label-section">
+                <span class="ls-label" *ngIf="!withOutCampaign">{{ "vaccination.selected_campaign_details" | translate
+                  }}:</span>
+                <span class="ls-label" *ngIf="withOutCampaign">{{ "deworming.selected_dewormer_details" | translate
+                  }}:</span>
+                <span class="ls-info" *ngIf="!withOutCampaign">{{ dewormingCampaign?.dewormerName }}</span>
+                <span class="ls-info" *ngIf="withOutCampaign">
+                  {{medicine.medicineName}}
+                </span>
+              </div>
+            </div>
+
+            <div class="col-lg-7" *ngIf="!withOutCampaign">
+              <div class="date-section d-flex justify-content-lg-end">
+                <ul>
+                  <li>
+                    <span class="ds-label">{{ "project.Start_Date" | translate }}:</span>
+                    <span class="ds-info">{{ startDate }}</span>
+                  </li>
+                  <li>
+                    <span class="ds-label">{{ "project.End_Date" | translate }}:</span>
+                    <span class="ds-info">{{endDate }}</span>
+                  </li>
+                  <li>
+                    <span class="ds-label">{{ "project.Data_Entry_End_Date" | translate }}:</span>
+                    <span class="ds-info">{{dewormingCampaign?.campaignDataEntryEndDate | date:'dd/MM/YYY' }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="h-divider">
+        <div class="shadow"></div>
+      </div>
+      <form [formGroup]="dewormingDateForm">
+
+        <div class="row p-0 mt-3">
+          <div class="col-12">
+            <div class="form-row">
+              <div class="col-md-4  form-group ">
+                <label for="dewormingRecordDate" class="form-label">{{ "deworming.deworming_data_entry_date" | translate
+                  }}<span class="mandatory-field">*</span></label>
+                <input class="form-control " type="text" formControlName="dewormingRecordDate" />
+                <div *ngIf="
+                        (!formControl.dewormingRecordDate.pristine &&
+                        formControl.dewormingRecordDate.invalid) ||
+                        formControl.dewormingRecordDate.touched
+                      " class="alert-message">
+                  <div *ngIf="formControl.dewormingRecordDate.errors?.required">
+                    {{ "deworming.deworming_data_entry_date_required" | translate }}
+                  </div>
+                  <div *ngIf="formControl.dewormingRecordDate.errors?.pattern">
+                    {{ "deworming.deworming_data_entry_date_required" | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 form-group  input-section">
+                <label for="dewormingDate" class="form-label">{{ "deworming.deworming_date" | translate }}<span
+                    class="mandatory-field">*</span></label>
+                <input class="form-control" [min]="minDate" [max]="maxDate" [matDatepicker]="pickerDate"
+                  formControlName="dewormingDate" placeholder="DD/MM/YYYY" />
+                <mat-datepicker-toggle matSuffix [for]="pickerDate" class="input-icon"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDate></mat-datepicker>
+
+
+                <span class="alert-message" *ngIf="
+                  (formControl.dewormingDate.dirty &&
+                    formControl.dewormingDate.invalid) ||
+                  formControl.dewormingDate.touched
+                ">
+                  <span *ngIf="formControl.dewormingDate.hasError('matDatepickerMin')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span *ngIf="formControl.dewormingDate.hasError('matDatepickerMax')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span *ngIf="formControl.dewormingDate.hasError('matDatepickerParse')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span
+                    *ngIf="formControl.dewormingDate.hasError('required') && !formControl.dewormingDate.hasError('matDatepickerParse')">
+                    {{ validationMsg.required | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="h-divider">
+          <div class="shadow"></div>
+        </div>
+
+        <div class="row p-0 mt-3">
+          <div class="col-12">
+
+            <div class="selected-tag mb-2">
+              <p class="st-heading">{{data1.data?.length}} {{ "diseaseTesting.selected_tag_id" | translate }}</p>
+            </div>
+            <div class="row selected-tag-table table-view">
+              <div class="col-12">
+                <div class="table-responsive mb-3">
+                  <table mat-table matSort [dataSource]="data1" class="mat-elevation-z8"
+                    formArrayName="selected_tagId_details">
+                    <ng-container matColumnDef="sr_no">
+                      <th mat-header-cell *matHeaderCellDef>{{ "common.sno" | translate }}</th>
+                      <td mat-cell *matCellDef="let element; let i = index" class="cell-width">
+                        {{ (paginator.pageIndex * paginator.pageSize) + i + 1 }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="tagId">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "animalDetails.tag_id" | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index"
+                        class="cell-width">
+                        {{ element?.tagId }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="lastDewormingDate">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        {{ "deworming.last_deworming_date" | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index"
+                        class="cell-width">
+                        {{ element?.lastDewormingDate ?? "N/A" }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="taggingDate">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        {{ "animalDetails.fillAnimalDetails.tagging_date" | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index"
+                        class="cell-width">
+                        {{dateFormatChange( element?.taggingDate )}}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="sex">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "common.sex" | translate }}</th>
+                      <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                        {{ element?.sex }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="age">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "common.age" | translate }}</th>
+                      <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                        {{ element?.animalAge }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="speciesName">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "deworming.species_name" | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                        {{ element?.speciesName ?? "N/A" }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="routeName">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "deworming.route" | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                        {{ element?.routeName ?? data.routeName}}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="formName">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "deworming.Form" | translate }}</th>
+                      <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                        {{ element?.formName ?? data.formName }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="dosage">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "deworming.Dose" | translate }}</th>
+                      <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                        <input type="text" class="form-control" formControlName="dosage">
+                        <div class=" alert-message"
+                          *ngIf="(tableRowsControl.at(index).get('dosage').dirty || tableRowsControl.at(index).get('dosage').touched) && tableRowsControl.at(index).get('dosage').invalid">
+                          <span *ngIf="tableRowsControl.at(index).get('dosage').hasError('required')">
+                            {{validationMsg.required | translate}}
+                          </span>
+                          <span class="alert-message" *ngIf="
+                        tableRowsControl.at(index).get('dosage').hasError('invalidDecimalNo')
+                          ">
+                            {{"animalTreatmentSurgery.dosage_cannot_be_more_than_4_characters" |
+                            translate}}
+                          </span>
+                        </div>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="unitDesc">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "deworming.Unit" | translate }}</th>
+                      <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                        {{ element?.unitDesc ?? data.unitName }}
+                      </td>
+                    </ng-container>
+
+
+
+
+
+
+                    <ng-container matColumnDef="delete">
+                      <th mat-header-cell *matHeaderCellDef></th>
+                      <td mat-cell *matCellDef="let element;let i = index" class="cell-width" (click)="removeRow(i)">
+                        <mat-icon>highlight_off</mat-icon>
+                      </td>
+                    </ng-container>
+                    <tr class="action-link table-head" mat-header-row *matHeaderRowDef="spotTestingDisplayedColumns">
+                    </tr>
+                    <tr class="action-link table-head" mat-row
+                      *matRowDef="let row; columns: spotTestingDisplayedColumns"></tr>
+                    <tr class="mat-row" *matNoDataRow>
+                      <td class="mat-cell text-center" [attr.colspan]="spotTestingDisplayedColumns.length">
+                        {{"diseaseTesting.no_data_available" | translate}}
+                      </td>
+                    </tr>
+                  </table>
+
+                </div>
+                <mat-paginator [pageSizeOptions]="[5, 10, 20]" #paginator>
+                </mat-paginator>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </form>
+    </div>
+
+  </div>
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+  <!-- footer -->
+  <div class="campaign-edit-footer">
+    <button mat-dialog-close type="button" class="btn btn-outline-primary mr-2 ml-auto" (click)="onReset()"> {{
+      "animalDetails.cancel" | translate }}</button>
+    <button type="submit" class="btn btn-primary" (click)="onSubmit()" [disabled]="preventSubmit"> {{ "common.submit" |
+      translate }}</button>
+  </div>
+
+</div>

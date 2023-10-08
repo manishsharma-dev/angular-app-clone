@@ -1,0 +1,203 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+    <div class="center">
+        <mat-spinner class="center"></mat-spinner>
+    </div>
+</div>
+<div class="container">
+    <div class="row breadcum align-items-center py-2">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="breadcrumb-list text-md-left">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item active">
+                            <a>{{'animalDetails.home' | translate}}</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <a href="javascript:void(0)">{{'animalBreeding.breeding_module'|translate}} </a>
+                        </li>
+                        <li class="breadcrumb-item current">
+                            <a href="javascript:void(0)">{{'animalBreeding.pregnancy_diagnosis'|translate}}</a>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<app-breeding-history [historyDetail]="historyDetail" (getBreedingDetails)='getBreedingHistoryDetail($event)'
+    (ownerDetail)="getOwnerId($event)"> </app-breeding-history>
+
+
+<section class="new-case margin-10" dynamicHeight="true">
+    <div class="row no-gutters col-container">
+        <div class="col-md-12 col-h left-section">
+            <div class="row mb-3 justify-content-between margin-10">
+                <div class="title-section">
+                    <div class="title-heading">
+                        <b>{{'animalBreeding.pd_info'|translate}}</b>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="h-divider">
+                <div class="shadow"></div>
+            </div>
+
+            <form [formGroup]="addPDForm" (ngSubmit)="submitPregnancyDiagnosis()">
+                <div class="main-section">
+                    <div class="form-row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="PD Record Date">{{'animalBreeding.data_entry_date'|translate}}<span
+                                        class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text" [max]="today" [matDatepicker]="RecordDate"
+                                    formControlName="pdRecordDate" placeholder="dd-mm-yyyy" />
+                                <mat-datepicker-toggle matSuffix [for]="RecordDate" class="calender-icon">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #RecordDate></mat-datepicker>
+                            </div>
+                        </div>
+
+                        <div class="col-md-1"></div>
+                        <div class="col-md-2">
+                            <div class="form-group input-icon">
+                                <label for="Treatment Date">{{'animalBreeding.pd'|translate}}
+                                    {{'common.date'|translate}}<span class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text" [min]="breedingMinDate" [max]="today"
+                                    [matDatepicker]="pickerDate" formControlName="pdDate" placeholder="dd-mm-yyyy"
+                                  (change)="getServiceType()"  />
+                                <mat-datepicker-toggle matSuffix [for]="pickerDate" class="calender-icon">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #pickerDate></mat-datepicker>
+                                <span class="alert-message" *ngIf="
+                                (formControls?.pdDate.dirty &&
+                                formControls?.pdDate.invalid) ||
+                                formControls?.pdDate.touched
+                            ">
+                            <span *ngIf="formControls?.pdDate.hasError('matDatepickerMin')">
+                                {{'common.please_enter_valid_date' | translate}}
+                            </span>
+                            <span *ngIf="formControls?.pdDate.hasError('matDatepickerMax')">
+                                {{'common.please_enter_valid_date' | translate}}
+                            </span>
+                            <span *ngIf="formControls?.pdDate.hasError('matDatepickerParse')">
+                                {{'common.please_enter_valid_date' | translate}}
+                            </span>
+                            <span
+                                *ngIf="formControls?.pdDate.hasError('required') && !formControls?.pdDate.hasError('matDatepickerParse')">
+                                {{'errorMsg.field_mandatory' | translate}}
+                            </span>
+                        </span>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="Treatment Date">{{'animalBreeding.pd_result'|translate}}<span
+                                        class="mandatory-field">*</span></label>
+                                <select class="form-control" name="selectpdResult" formControlName="pdResult"
+                                    [ngClass]="{ 'is-invalid': formControls?.pdResult?.errors?.required && (formControls?.pdResult?.touched ||formControls?.pdResult?.dirty) }"
+                                    (change)="checkPregnencyMonth()" >
+                                    <option [value]="null" disabled> {{'animalDetails.select' | translate}} </option>
+                                    <option [value]="type?.cd" *ngFor="let type of pdResults">{{type?.value}}</option>
+                                </select>
+                                <div class="alert-message"
+                                    *ngIf="formControls?.pdResult?.errors?.required && (formControls?.pdResult?.touched ||formControls?.pdResult?.dirty)">
+                                    {{'errorMsg.field_mandatory' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="Treatment Date">{{'animalBreeding.service_type'|translate}}<span
+                                        class="mandatory-field">*</span></label>
+                                <select class="form-control" name="selectServiceType" formControlName="serviceType"
+                                    [ngClass]="{ 'is-invalid': formControls?.serviceType?.errors?.required && (formControls?.serviceType?.touched ||formControls?.serviceType?.dirty) }">
+                                    <option [value]="null" disabled>{{'animalDetails.select' | translate}}</option>
+                                    <option [value]="type?.cd" *ngFor="let type of serviceType">{{type?.value}} </option>
+                                </select>
+                                <div class="alert-message"
+                                    *ngIf="formControls?.serviceType?.errors?.required && (formControls?.serviceType?.touched ||formControls?.serviceType?.dirty)">
+                                    {{'errorMsg.field_mandatory' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+
+                    <div class="form-row additional-info" *ngIf="formControls?.serviceType?.value && formControls?.serviceType?.value != 1">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="Treatment Date">{{'animalBreeding.pd_month'|translate}}<span
+                                        class="mandatory-field" *ngIf="formControls?.serviceType?.value != 1">*</span></label>
+                                <select class="form-control" name="selectPrgnancyMonth" formControlName="pregnancyMonth"
+                                    [ngClass]="{ 'is-invalid': formControls?.pregnancyMonth?.errors?.required && (formControls?.pregnancyMonth?.touched ||formControls?.pregnancyMonth?.dirty) }">
+                                    <option [value]="null" disabled>{{'animalDetails.select' | translate}}</option>
+                                    <option [value]="0" *ngIf="pregnancyFailed">0</option>
+                                    <option [value]="i+1" *ngFor="let month of ' '.repeat(10).split(''), let i = index">
+                                        {{i+1}}</option>
+                                </select>
+                                <div class="alert-message"
+                                    *ngIf="formControls?.pregnancyMonth?.errors?.required &&  (formControls?.pregnancyMonth?.touched ||formControls?.pregnancyMonth?.dirty)">
+                                    {{'errorMsg.field_mandatory' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-2" *ngIf="formControls?.serviceType?.value == 2 || formControls?.serviceType?.value == 4">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.sire_tag_id'|translate}}<span
+                                        class="mandatory-field" *ngIf="formControls?.serviceType?.value == 2">*</span></label>
+                                <input class="form-control" type="text" formControlName="sireTagId"
+                                    (change)="verifySireId($event)"
+                                    [ngClass]="{ 'is-invalid': this.addPDForm.get('sireTagId')?.touched && this.addPDForm.get('sireTagId')?.errors }" />
+                                <div class="alert-message"
+                                    *ngIf="this.addPDForm.get('sireTagId')?.errors?.required && (this.addPDForm.get('sireTagId')?.touched ||this.addPDForm.get('sireTagId')?.dirty)">
+                                    {{'errorMsg.field_mandatory' | translate}}
+                                </div>
+                                <div class="alert-message"
+                                    *ngIf="(formControls?.sireTagId?.hasError('minlength') || formControls?.sireTagId?.hasError('maxlength')) && (formControls?.sireTagId?.touched ||formControls?.sireTagId?.dirty) ">
+                                    {{'errorMsg.sire_tag_validation'|translate}}
+                                </div>
+                                <div class="alert-message"
+                                    *ngIf="formControls?.sireTagId?.hasError('pattern')  && (formControls?.sireTagId?.touched ||formControls?.sireTagId?.dirty) ">
+                                    {{'errorMsg.invalid_input'|translate}}
+                                </div>
+                                <!-- <span *ngIf="formControls.get('orgName').errors?.['pattern']" class="validation-error-message">
+                                {{"validationMessage.Invalid_Message" | translate }}
+                              </span> -->
+                            </div>
+                        </div>
+                        <div class="col-md-2" *ngIf="formControls?.serviceType?.value == 3">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.bull_id'|translate}}</label>
+                                <input class="form-control" type="text" formControlName="bullId" (keyup)="addPDForm.patchValue({bullId: $event.target['value'].toUpperCase()})"
+                                    (change)="verifyBullID()"
+                                    [ngClass]="{ 'is-invalid': formControls?.bullId.touched && formControls?.bullId?.errors }" />
+
+                                <div class="alert-message"
+                                    *ngIf="(formControls?.bullId?.hasError('minlength') || formControls?.bullId?.hasError('maxlength')) && (formControls?.bullId?.touched ||formControls?.bullId?.dirty) ">
+                                    {{'errorMsg.bull_id_valid'|translate}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="h-divider additional-info">
+                    <div class="shadow"></div>
+                </div>
+
+                <!-- Form Buttons -->
+                <div class="footer d-flex">
+                    <button type="button" class="btn btn-light mr-2 ml-auto" (click)="goBack()">
+                        {{'animalDetails.cancel'|translate}}
+                    </button>
+                    <button type="submit" class="btn btn-primary" [disabled]="isFormSubmit">{{'common.submit'|translate}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

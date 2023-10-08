@@ -1,0 +1,109 @@
+.access-list {
+  border: 1px solid #BECCD1;
+  border-radius: 5px;
+}
+
+.header-row {
+  background: #EDF3F5;
+  border-radius: 5px 5px 0px 0px;
+}
+
+.access-body{
+  background: #ffff;
+  border-radius: 0px 0px 5px 5px;
+  font-family: Noto Sans !important;
+}
+
+input.mat-chip-list-input {
+  border: none;
+  background-color: #f6f6f9;
+}
+
+.mat-accordion .mat-expansion-panel:first-of-type {
+  margin-top: 5px !important;
+}
+
+
+.mat-expansion-panel-spacing {
+  margin: 0px !important;
+}
+
+.examination-expansion-panel {
+  box-shadow: none !important;
+}
+
+.mat-expansion-panel:not([class*="examination-expansion-panel"]) {
+  box-shadow: none !important;
+}
+
+.examination-expansion-panel .mat-expansion-panel-header.mat-expanded:hover {
+  background-color: none !important;
+}
+
+.examination-expansion-panel .mat-expansion-panel-header-title {
+  margin-right: 0px !important;
+}
+
+.examination-expansion-panel .mat-expansion-panel-header,
+.examination-expansion-panel .mat-expansion-panel-header.mat-expanded {
+  height: 40px;
+  background-color: none !important;
+}
+
+.examination-expansion-panel .mat-expansion-panel-header .mat-content {
+  order: 1 !important;
+  margin-left: 5px;
+}
+
+.examination-expansion-panel .mat-expansion-indicator {
+  position: relative;
+  left: 4px;
+  bottom: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 10px;
+}
+
+.examination-expansion-panel .mat-expansion-panel-header.mat-expanded .mat-expansion-indicator {
+  position: relative;
+  left: 4px;
+  bottom: -2px;
+  padding: 0px 10px;
+}
+
+.examination-expansion-panel .mat-expansion-panel-body {
+  margin-left: 10px;
+}
+
+.mat-expansion-indicator::after {
+  transform: rotate(-45deg) !important;
+}
+
+.mat-expanded .mat-expansion-indicator {
+  transform: rotate(90deg) !important;
+}
+
+
+.ng-select .ng-select-container {
+  background: #f6f6f9;
+  border: 1px solid #dcdcdc;
+  display: block;
+  width: 100%;
+  height: calc(1.5em + 0.75rem + 2px);
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+.dark-label-heading {
+  
+  font-weight: bold;
+ 
+  
+}

@@ -1,0 +1,277 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+    <div class="center">
+        <mat-spinner class="center"></mat-spinner>
+    </div>
+</div>
+
+<app-common-breadcrumb [breadcrumbKeys]="[ 'performanceRecording.pr', 'performanceRecording.addMr']">
+</app-common-breadcrumb>
+
+<app-breeding-history-mr [historyDetail]="historyDetail"> </app-breeding-history-mr>
+
+<section class="add-mr margin-10">
+    <div class="row no-gutters col-container">
+        <div class="col-md-12 col-h left-section">
+            <div class="row mb-3 justify-content-between margin-10">
+                <div class="title-section">
+                    <div class="title-heading">
+                        {{'performanceRecording.mrInformation' | translate}}
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="h-divider">
+                <div class="shadow"></div>
+            </div>
+
+            <form [formGroup]="addMilkRecordingForm" (ngSubmit)="submitMilkRecording()">
+                <div class="main-section">
+                    <div class="form-row">
+                        <div class="form-row  divide-section">
+                            <!-- <div class="col-md-3">
+                                <div class="form-group input-icon">
+                                    <label for="Case Status"> {{'performanceRecording.port_number' | translate}}
+                                    </label>
+                                    <input class="form-control" type="text" formControlName="swsPortNumber"
+                                        (change)="verifyPortNumber($event)" />
+                                    <span *ngIf="addMilkRecordingForm.get('swsPortNumber').hasError('pattern')">
+                                        {{'diseaseTesting.invalid_characters_present' | translate}}
+                                    </span>
+                                    <i class="fa fa-bluetooth-b bt-icon"></i>
+                                </div>
+
+                            </div> -->
+
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="Case Status">{{'performanceRecording.data_entry_date' |
+                                        translate}}</label>
+                                    <input class="form-control" type="text" formControlName="mrRecordDate"
+                                        placeholder="dd-mm-yyyy" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group input-icon">
+                                    <label for="Case Status">{{'performanceRecording.mr_date' | translate}}<span
+                                            class="mandatory-field">*</span></label>
+                                    <input class="form-control" type="text" [min]="minDate" [max]="today"
+                                        [matDatepicker]="pickerDate" formControlName="mrDate"
+                                        placeholder="dd-mm-yyyy" />
+                                    <mat-datepicker-toggle matSuffix [for]="pickerDate" class="calender-icon">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #pickerDate></mat-datepicker>
+                                    <span class="alert-message" *ngIf="
+                                            (addMilkRecordingForm.get('mrDate').dirty &&
+                                                addMilkRecordingForm.get('mrDate').invalid) ||
+                                            addMilkRecordingForm.get('mrDate').touched
+                                        ">
+                                        <span *ngIf="addMilkRecordingForm.get('mrDate').hasError('matDatepickerMin')">
+                                            {{'common.please_enter_valid_date' | translate}}
+                                        </span>
+                                        <span *ngIf="addMilkRecordingForm.get('mrDate').hasError('matDatepickerMax')">
+                                            {{'common.please_enter_valid_date' | translate}}
+                                        </span>
+                                        <span *ngIf="addMilkRecordingForm.get('mrDate').hasError('matDatepickerParse')">
+                                            {{'common.please_enter_valid_date' | translate}}
+                                        </span>
+                                        <span
+                                            *ngIf="addMilkRecordingForm.get('mrDate').hasError('required') && !addMilkRecordingForm.get('mrDate').hasError('matDatepickerParse')">
+                                            {{cmnValidation.required|translate}}
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="Case Status">{{'performanceRecording.time' | translate}}<span
+                                            class="mandatory-field">*</span></label>
+                                    <input class="form-control" type="time" formControlName="mrTime"
+                                        [max]="currentTime" />
+                                    <div class="alert-message"
+                                        *ngIf="addMilkRecordingForm.get('mrTime').hasError('required') && (addMilkRecordingForm.get('mrTime').touched || addMilkRecordingForm.get('mrTime').dirty)">
+                                        {{cmnValidation.required|translate}}
+
+                                    </div>
+                                    <div class="alert-message"
+                                        *ngIf="addMilkRecordingForm.hasError('greaterThanCurrentTime')">
+                                        {{'common.please_enter_valid_time'|translate}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="Case Status">{{'performanceRecording.recording_slot' | translate}}<span
+                                            class="mandatory-field">*</span></label>
+                                    <select class="form-control" name="recordingPeriod"
+                                        formControlName="recordingPeriod">
+                                        <option [ngValue]="null">Select</option>
+                                        <option [ngValue]="period?.cd" *ngFor="let period of recordingDetails">
+                                            {{period?.value}}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="Case Status">{{'performanceRecording.milk_volume' | translate}}<span
+                                            class="mandatory-field">*</span></label>
+                                    <div class="time-stamp-class">
+                                        <input class="form-control" type="text" formControlName="milkVolume" />
+                                        <select class="form-control" name="standingToMounted"
+                                            (change)="changeWeightType($event)">
+                                            <option [value]="'Kg'" [selected]="selectedWeightType == 'Kg'">Kg</option>
+                                            <option [value]="'Lt'" [selected]="selectedWeightType == 'Lt'">Lt </option>
+                                        </select>
+                                    </div>
+                                    <div class="alert-message"
+                                        *ngIf="addMilkRecordingForm.get('milkVolume').invalid && addMilkRecordingForm.get('milkVolume').touched">
+                                        <div *ngIf="addMilkRecordingForm.get('milkVolume').hasError('required')">
+                                            {{cmnValidation.required|translate}}
+                                        </div>
+                                        <div
+                                            *ngIf="addMilkRecordingForm.get('milkVolume').hasError('invalidDecimalNo')">
+                                            {{cmnValidation.decimalValidation|translate}}
+                                        </div>
+                                        <div
+                                            *ngIf="addMilkRecordingForm.get('milkVolume').hasError('pattern') && !addMilkRecordingForm.get('milkVolume').hasError('min')">
+                                            {{cmnValidation.number|translate}}
+                                        </div>
+                                        <div *ngIf="addMilkRecordingForm.get('milkVolume').hasError('min')">
+                                            {{cmnValidation.negativeValue|translate}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class=" col-md-3">
+                                <div class="form-group">
+                                    <label for="Case Status">{{'performanceRecording.gps_cordinates' | translate}}
+                                    </label>
+                                    <input class="form-control" type="text" formControlName="gpsCordinates" />
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="h-divider">
+                    <div class="shadow"></div>
+                </div>
+                <div class="form-row additional-info"
+                    *ngIf="getAdditionalDetailsPermission && getAdditionalDetailsPermission?.length > 0 && getAdditionalDetailsPermission[0]?.parameterValue == 'Yes' ? true : false">
+                    <div class="col-md-3" (click)="showAdditionalInfo=!showAdditionalInfo">
+                        <i class="fa fa-caret-right mr-2 back-section" *ngIf="!showAdditionalInfo"></i>
+                        <i class="fa fa-caret-down mr-2 back-section" *ngIf="showAdditionalInfo"></i>
+                        <span class="title-heading">{{'performanceRecording.additional_details' | translate}}</span>
+                    </div>
+                    <div class="col-md-10">
+
+                    </div>
+                </div>
+                <div class="form-row additional-info" *ngIf="showAdditionalInfo">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="Case Status">{{'performanceRecording.body_condition_score' | translate}}</label>
+                            <select class="form-control" name="standingToMounted" formControlName="bodyConditionScore">
+                                <option [value]="null">Select</option>
+                                <option [value]="type" *ngFor="let type of bodyConditionScore">{{type}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="Case Status">{{'performanceRecording.number_of_teats_functional' |
+                                translate}}</label>
+                            <input class="form-control" type="text" formControlName="teatsFunctionalNo" />
+                            <div class="alert-message"
+                                *ngIf="(addMilkRecordingForm.get('teatsFunctionalNo').hasError('maxlength') || addMilkRecordingForm.get('teatsFunctionalNo').hasError('pattern')) && (addMilkRecordingForm.get('teatsFunctionalNo').touched || addMilkRecordingForm.get('teatsFunctionalNo').dirty)">
+                                {{cmnValidation.minMax|translate}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5"></div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="Case Status">{{'performanceRecording.treated_for_mastitis_last_month' |
+                                translate}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="mastitisTreated" id="mastitisYes"
+                                    [value]="'Y'" formControlName="mastitisTreated" />
+                                <label class="form-check-label" for="Yes">{{'common.yes'|translate}}</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="mastitisTreated" id="mastitisNo"
+                                    [value]="'N'" formControlName="mastitisTreated" />
+                                <label class="form-check-label" for="No">{{'common.no'|translate}}</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="mastitisTreated"
+                                    id="mastitisResponse" [value]="'NA'" formControlName="mastitisTreated" />
+                                <label class="form-check-label" for="No">{{'performanceRecording.no_response'
+                                    |translate}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5"></div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="Case Status">{{'performanceRecording.calf_sucking' |
+                                translate}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="calfSuckling" id="calfSuckingYes"
+                                    [value]="'Y'" formControlName="calfSuckling" />
+                                <label class="form-check-label" for="Yes">{{'common.yes'|translate}}</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="calfSuckling" id="calfSuckingNo"
+                                    [value]="'N'" formControlName="calfSuckling" />
+                                <label class="form-check-label" for="No">{{'common.no'|translate}}</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="calfSuckling"
+                                    id="calfSuckingResponse" [value]="'NA'" formControlName="calfSuckling" />
+                                <label class="form-check-label" for="No">{{'performanceRecording.no_response'
+                                    |translate}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5"></div>
+                </div>
+
+                <div class="h-divider additional-info">
+                    <div class="shadow"></div>
+                </div>
+
+                <!-- Form Buttons -->
+                <div class="footer d-flex">
+                    <button type="button" (click)="goBack()" class="btn btn-outline-primary mr-2 ml-auto">
+                        {{'animalDetails.cancel'|translate}}
+                    </button>
+                    <button type="button" (click)="onReset()" class="btn btn-outline-primary mr-2">
+                        {{'animalDetails.reset'|translate}}
+                    </button>
+                    <button type="submit" class="btn btn-primary">{{'common.submit'|translate}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

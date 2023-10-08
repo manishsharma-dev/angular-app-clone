@@ -1,0 +1,544 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="add-diagnostics-dialog">
+  <div class="add-diagnostics-header">
+    <div class="headeing">
+      <p class="diagnostics-heading-label">{{"animalDetails.additional_details"| translate}}</p>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+
+  <div #dialogBody class="dialog-main-content">
+    <mat-tab-group [(selectedIndex)]="currentTab" (selectedIndexChange)="changeTab($event)">
+      <!-- Bull Semen Details Start -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span>Bull/Semen Details</span>
+          &nbsp;
+          <i class="fa fa-check-circle-o" *ngIf="submitStatus[0]"></i>
+        </ng-template>
+
+
+        <form [formGroup]="form">
+          <!-- <ng-container > -->
+          <app-date-section [parentForm]="dateGroup" [labels]="{labelOne: 'Bull Id', labelTwo: 'Sire Id'}"
+            [bullDetails]="data"></app-date-section>
+          <!-- </ng-container> -->
+          <mat-accordion class="examination-expansion-panel">
+            <!-- Semen Details Panel -->
+            <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" (afterExpand)="onPanelExpand()">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <div class="separator">
+                    <div>{{"Semen Details" | translate}}</div>
+                    <div class="line"></div>
+                  </div>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <app-sire-details [bullDetails]="data" [isParent]="false" [parentForm]="form"
+                formGroupNameString="semenDetails"></app-sire-details>
+            </mat-expansion-panel>
+            <!-- Semen Details Panel -->
+
+            <!-- Bull Details Panel -->
+            <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" (afterExpand)="onPanelExpand()">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <div class="separator">
+                    <div>{{"Bull Details" | translate}}</div>
+                    <div class="line"></div>
+                  </div>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="bull-details-parameters">
+                <div class="parameter-header form-row">
+                  <div class="col-3 font-weight-bold">Parameters</div>
+                  <div class="col-3 font-weight-bold">Avg. Absolute Value</div>
+                  <div class="col-3 font-weight-bold">Breeding Value</div>
+                  <div class="col-3 font-weight-bold">Reliability (%)</div>
+                </div>
+                <div class="parameter-body" formGroupName="parameters">
+                  <div class="form-row my-2">
+                    <div class="col-3 mt-2">Stature</div>
+                    <div class="col-3 form-group">
+                      <select class="form-control" formControlName="stature">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                      </select>
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="statureBreeding" />
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="statureReliability" />
+                    </div>
+                  </div>
+
+                  <div class="form-row my-2">
+                    <div class="col-3 mt-2">Chest Width</div>
+                    <div class="col-3 form-group">
+                      <select class="form-control" formControlName="chestWidth">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                      </select>
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="chestWidthBreeding" />
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="chestWidthReliability" />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div class="col-3 mt-2">Body Depth</div>
+                    <div class="col-3 form-group">
+                      <select class="form-control" formControlName="bodyDepth">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                      </select>
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="bodyDepthBreeding" />
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="bodyDepthReliability" />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div class="col-3 mt-2">Angularity</div>
+                    <div class="col-3 form-group">
+                      <select class="form-control" formControlName="angularity">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                      </select>
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="angularityBreeding" />
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="angularityReliability" />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div class="col-3 mt-2">Rump Angle</div>
+                    <div class="col-3 form-group">
+                      <select class="form-control" formControlName="rumpAngle">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                      </select>
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="rumpAngleBreeding" />
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="rumpAngleReliability" />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div class="col-3 mt-2">Rump Width</div>
+                    <div class="col-3 form-group">
+                      <select class="form-control" formControlName="rumpWidth">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                      </select>
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="rumpWidthBreeding" />
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="rumpWidthReliability" />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div class="col-3 mt-2">Rear Legs Set</div>
+                    <div class="col-3 form-group">
+                      <select class="form-control" formControlName="rearLegsSet">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                      </select>
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="rearLegsSetBreeding" />
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="rearLegsSetReliability" />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div class="col-3 mt-2">Rear Legs Rear View</div>
+                    <div class="col-3 form-group">
+                      <select class="form-control" formControlName="rearLegsRearView">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                      </select>
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="rearLegsRearViewBreeding" />
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="rearLegsRearViewReliability" />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div class="col-3 mt-2">Foot Angle</div>
+                    <div class="col-3 form-group">
+                      <select class="form-control" formControlName="footAngle">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                      </select>
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="footAngleBreeding" />
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="footAngleReliability" />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div class="col-3 mt-2">Fore UdderAttachment</div>
+                    <div class="col-3 form-group">
+                      <select class="form-control" formControlName="foreUdderAttachment">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                      </select>
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="foreUdderAttachmentBreeding" />
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="foreUdderAttachmentReliability" />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div class="col-3 mt-2">Rear Udder Attachment</div>
+                    <div class="col-3 form-group">
+                      <select class="form-control" formControlName="rearUdderAttachment">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                      </select>
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="rearUdderAttachmentBreeding" />
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="rearUdderAttachmentReliability" />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div class="col-3 mt-2">Rear Udder Height</div>
+                    <div class="col-3 form-group">
+                      <select class="form-control" formControlName="rearUdderHeight">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                      </select>
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="rearUdderHeightBreeding" />
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="rearUdderHeightReliability" />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div class="col-3 mt-2">Central Ligament</div>
+                    <div class="col-3 form-group">
+                      <select class="form-control" formControlName="centralLigament">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                      </select>
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="centralLigamentBreeding" />
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="centralLigamentReliability" />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div class="col-3 mt-2">Udder Depth</div>
+                    <div class="col-3 form-group">
+                      <select class="form-control" formControlName="udderDepth">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                      </select>
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="udderDepthBreeding" />
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="udderDepthReliability" />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div class="col-3 mt-2">Teat Placement Rear View</div>
+                    <div class="col-3 form-group">
+                      <select class="form-control" formControlName="teatPlacementRearView">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                      </select>
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="teatPlacementRearViewBreeding" />
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="teatPlacementRearViewReliability" />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div class="col-3 mt-2">Teat Length</div>
+                    <div class="col-3 form-group">
+                      <select class="form-control" formControlName="teatLength">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                      </select>
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="teatLengthBreeding" />
+                    </div>
+                    <div class="col-3 form-group">
+                      <input class="form-control" formControlName="teatLengthReliability" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </mat-expansion-panel>
+            <!-- Bull Details Panel -->
+
+          </mat-accordion>
+        </form>
+
+
+
+      </mat-tab>
+      <!-- Bull Semen Details End -->
+
+      <!-- Sire Details Start-->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span>Sire Details</span>
+          &nbsp;
+          <i class="fa fa-check-circle-o" *ngIf="submitStatus[1]"></i>
+        </ng-template>
+        <app-date-section [parentForm]="dateGroup"
+          [labels]="{labelOne: 'Bull Id', labelTwo: 'Sire Id'}"></app-date-section>
+
+        <app-sire-details [bullDetails]="data" formGroupNameString="sireDetails" [parentForm]="form"></app-sire-details>
+
+      </mat-tab>
+      <!-- Sire Details End-->
+
+
+      <!-- Dam Details Start-->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span>Dam Details</span>
+          &nbsp;
+          <i class="fa fa-check-circle-o" *ngIf="submitStatus[2]"></i>
+        </ng-template>
+        <app-date-section [isSire]="false" [parentForm]="dateGroup"
+          [labels]="{labelOne: 'Bull Id', labelTwo: 'Dam Id'}"></app-date-section>
+
+        <app-dam-details [bullDetails]="data" formGroupNameString="damDetails" [parentForm]="form"></app-dam-details>
+
+
+      </mat-tab>
+      <!-- Dam Details End-->
+
+      <!-- Sire's Sire Details Start-->
+      <mat-tab [disabled]="!data.sireSireId || data.sireSireId=='null'">
+        <ng-template mat-tab-label>
+          <span>Sire's Sire Details</span>
+          &nbsp;
+          <i class="fa fa-check-circle-o" *ngIf="submitStatus[3]"></i>
+        </ng-template>
+        <app-date-section [parentForm]="dateGroup"
+          [labels]="{labelOne: 'Sire Id', labelTwo: 'Sire\'s Sire Id'}"></app-date-section>
+
+        <app-sire-details [bullDetails]="data" formGroupNameString="sireSireDetails"
+          [parentForm]="form"></app-sire-details>
+
+      </mat-tab>
+      <!-- Sire's Sire Details End-->
+
+      <!-- Sire Dam Details Start -->
+      <mat-tab [disabled]="!data.sireDamId || data.sireDamId == 'null'">
+        <ng-template mat-tab-label>
+          <span>Sire's Dam Details</span>
+          &nbsp;
+          <i class="fa fa-check-circle-o" *ngIf="submitStatus[4]"></i>
+        </ng-template>
+        <app-date-section [labels]="{labelOne: 'Sire Id', labelTwo: 'Sire\'s Dam Id'}" [isSire]="false"
+          [parentForm]="dateGroup"></app-date-section>
+
+        <app-dam-details [bullDetails]="data" formGroupNameString="sireDamDetails"
+          [parentForm]="form"></app-dam-details>
+
+      </mat-tab>
+      <!-- Sire Dam Details End -->
+
+      <!-- Dam's Sire Details Start -->
+      <mat-tab [disabled]="!data.damSireId || data.damSireId == 'null'">
+        <ng-template mat-tab-label>
+          <span>Dam's Sire Details</span>
+          &nbsp;
+          <i class="fa fa-check-circle-o" *ngIf="submitStatus[6]"></i>
+        </ng-template>
+        <app-date-section [parentForm]="dateGroup"
+          [labels]="{labelOne: 'Dam Id', labelTwo: 'Dam\'s Sire Id'}"></app-date-section>
+
+        <app-sire-details [bullDetails]="data" formGroupNameString="damSireDetails"
+          [parentForm]="form"></app-sire-details>
+
+      </mat-tab>
+      <!-- Dam's Sire Details End -->
+
+      <!-- Dam's Dam Details Start -->
+      <mat-tab [disabled]="!data.damDamId || data.damDamId=='null'" >
+        <ng-template mat-tab-label>
+          <span>Dam's Dam Details</span>
+          &nbsp;
+          <i class="fa fa-check-circle-o" *ngIf="submitStatus[7]"></i>
+        </ng-template>
+        <app-date-section [isSire]="false" [parentForm]="dateGroup"
+          [labels]="{labelOne: 'Dam Id', labelTwo: 'Dam\'s Dam Id'}"></app-date-section>
+
+        <app-dam-details [bullDetails]="data" formGroupNameString="damDamDetails" [parentForm]="form"></app-dam-details>
+
+      </mat-tab>
+      <!-- Dam's Dam Details Start -->
+
+    </mat-tab-group>
+  </div>
+
+  <div class="add-diagnostics-footer">
+    <button type="reset" class="btn btn-outline-primary mr-2" (click)="skipTab()" *ngIf="showSkipButton">
+      {{'animalDetails.skip'| translate}}
+    </button>
+    <button type="reset" class="btn ml-auto btn-outline-primary mr-2" mat-dialog-close>
+      {{'animalDetails.cancel'| translate}}
+    </button>
+    <button type="button" class="btn btn-primary" (click)="saveTab()">
+      {{ (showSkipButton ? 'common.saveAndNext': 'common.save') | translate }}
+    </button>
+
+  </div>
+</div>

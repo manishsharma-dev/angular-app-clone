@@ -1,0 +1,94 @@
+.add-diagnostics-dialog {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-diagnostics-header {
+  flex-grow: 0;
+  flex-shrink: 0;
+  background: #124c60;
+  padding: 15px;
+  color: #fff;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-diagnostics-header .diagnostics-heading-label {
+  font-weight: bold;
+  font-family: Noto Sans;
+  font-size: 18px;
+  color: #fff;
+}
+
+.dialog-main-content {
+  flex-grow: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 10px 20px;
+}
+
+.add-diagnostics-footer {
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border: 1px solid #beccd1;
+  background: #eaf0f2;
+  padding: 15px;
+}
+
+.dialog-main-content::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #fff;
+}
+
+.dialog-main-content::-webkit-scrollbar {
+  width: 5px;
+  background-color: #fff;
+  opacity: 0.8;
+}
+
+.dialog-main-content::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  box-shadow: inset 0 0 6px #fff;
+  -webkit-box-shadow: inset 0 0 6px #fff;
+  background-color: #5f6160;
+  opacity: 0.8;
+}
+
+.treatment-information .tabs-nav-list {
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.table-outebox {
+  background: #f9f9f9;
+  padding: 15px;
+}
+
+.label-header {
+  margin-bottom: 8px !important;
+  color: #9a9a9a;
+}
+
+.input-icon {
+  position: relative;
+}
+
+.input-icon input {
+  padding-right: 50px;
+}
+
+.calender-icon {
+  position: absolute;
+  top: 27px;
+  right: 0px;
+}
+
+.report-dialog-heading {
+  font-weight: bold;
+}

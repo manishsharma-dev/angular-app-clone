@@ -1,0 +1,1125 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="edit-dialog owner-reg">
+  <div class="edit-section-header">
+    <div class="edit-heading">
+      <h2 class="edit-heading-label">
+        {{ "common.owner_details" | translate }}
+      </h2>
+      <p class="edit-heading-desc">
+        {{
+          ("animalDetails.you_can" | translate) +
+            (isViewOnly
+              ? ("animalDetails.view" | translate)
+              : ("animalDetails.edit" | translate)) +
+            ("animalDetails.information" | translate)
+        }}
+      </p>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+
+  <!--edit owner info details -->
+  <div class="user-infoedit">
+    <div class="row mb-2">
+      <div class="col-md-12">
+        <div class="text-msg">
+          <span class="custmer-label d-flex">
+            <p
+              class="owner-name mr-1"
+              [ngClass]="ownerInfo.ownerName.length > 10 ? 'ellips-text' : ''"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="{{ ownerInfo.ownerName }}"
+            >
+              {{ ownerInfo.ownerName }}
+            </p>
+            <span>({{ ownerInfo.ownerId }})</span>
+            <img
+              *ngIf="ownerInfo.isOwnerMobileVerified; else elseBlock"
+              src="/assets/images/verified.svg"
+              class="icon-verified"
+              alt="icon-verified"
+            />
+            <ng-template #elseBlock>
+              <p class="alert-message ml-2">
+                <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Not
+                Verified
+              </p>
+            </ng-template>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div id="owner-detail" class="col-md-12">
+        <ul class="custmer-label d-flex">
+          <li
+            *ngIf="data.isIndividual"
+            [ngClass]="ownerInfo.fatherName.length > 10 ? 'ellips-text' : ''"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="{{ ownerInfo.fatherName }}"
+          >
+            {{ "common.care_of" | translate }} {{ ownerInfo.fatherName }}
+          </li>
+
+          <!-- <li *ngIf="!data.isIndividual"
+            title="{{ data.panNumber }}"
+          >
+            {{ "animalDetails.pancard_Number" | translate }} {{ data.panNumber }}
+          </li> -->
+          <li
+            *ngIf="ownerInfo.ownerTypeCd == 2"
+            [ngClass]="
+              ownerInfo?.ownerTypeCategory?.length > 10 ? 'ellips-text' : ''
+            "
+            data-toggle="tooltip"
+            data-placement="top"
+            title="{{ ownerInfo?.ownerTypeCategory }}"
+          >
+            {{ "animalDetails.nonIndividualType" | translate }}:
+            {{ ownerInfo?.ownerTypeCategory }}
+          </li>
+          <li
+            data-toggle="tooltip"
+            data-placement="top"
+            [ngClass]="
+              ownerInfo.ownerVillageName.length > 10 ? 'ellips-text' : ''
+            "
+            title="{{ ownerInfo.ownerVillageName }}"
+          >
+            {{ "common.village" | translate }}: {{ ownerInfo.ownerVillageName }}
+          </li>
+          <li *ngIf="data.isIndividual">
+            {{ "common.dob" | translate }}:
+            {{ dateFormatChange(ownerInfo.ownerDateOfbirth) }}
+          </li>
+          <!-- <li *ngIf="!data.isIndividual">
+            {{ "common.doi" | translate }}:
+            {{ dateFormatChange(ownerInfo.dateOfIncorporation) }}
+          </li> -->
+          <li *ngIf="!data.isIndividual">
+            {{ "common.doi" | translate }}:
+            {{ dateFormatChange(ownerInfo.ownerDateOfbirth) }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="edit-container">
+    <form [formGroup]="ownerDetailsForm">
+      <!-- field added start -->
+      <div class="form-row">
+        <div class="form-group col-md-6" *ngIf="isIndividual">
+          <label for="panNumber" class="form-label">
+            <!-- {{ "animalDetails.aadhaar_card" | translate
+          }} -->
+            <!-- Pan Number -->
+            {{ "animalDetails.pancard_Number" | translate }}
+            <span class="mandatory-field">*</span>
+          </label>
+          <input
+            type="text"
+            class="form-control form-input-section"
+            id="panNumber"
+            uppercase
+            maxLength="10"
+            placeholder="{{ 'animalDetails.pan_placeholder' | translate }}"
+            formControlName="panNumber"
+            (keydown)="spaceRestict($event)"
+            oninput="this.value = this.value.toUpperCase()"
+            (input)="validatePAN($event)"
+          />
+          <div
+            *ngIf="
+              (!ownerDetails.panNumber.pristine &&
+                ownerDetails.panNumber.invalid) ||
+              ownerDetails.panNumber.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="ownerDetails.panNumber.errors?.required">
+              {{ "errorMsg.pan_required" | translate }}
+            </div>
+            <div
+              *ngIf="ownerDetails.panNumber.errors?.pattern && !panErrorMessage"
+            >
+              {{ "errorMsg.pan_digit_rule" | translate }}
+            </div>
+          </div>
+          <div *ngIf="panErrorMessage" class="alert-message">
+            {{ panErrorMessage }}
+          </div>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="ownerName" class="form-label"
+            >{{ "animalDetails.owner_name" | translate
+            }}<span class="mandatory-field">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="ownerName"
+            placeholder="{{ 'common.owner_name_lbl' | translate }}"
+            formControlName="ownerName"
+            (input)="countCharacters(ownerDetails.ownerName.value, 'ownerName')"
+            [maxLength]="ownerName?.rangeUpperValue"
+          />
+          <div
+            *ngIf="
+              (!ownerDetails.ownerName.pristine &&
+                ownerDetails.ownerName.invalid) ||
+              ownerDetails.ownerName.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="ownerDetails.ownerName.errors?.required">
+              {{ "errorMsg.owner_name_req" | translate }}
+            </div>
+            <div *ngIf="ownerDetails.ownerName.errors?.pattern">
+              {{ "errorMsg.owner_invalid" | translate }}
+            </div>
+          </div>
+          <div
+            *ngIf="
+              !ownerDetails.ownerName.pristine || ownerDetails.ownerName.touched
+            "
+            class="alert-message"
+          >
+            <div
+              *ngIf="
+                ownerNameLength < ownerName?.rangeLowerValue &&
+                !ownerDetails.ownerName.errors?.pattern &&
+                !ownerDetails.ownerName.errors?.required
+              "
+            >
+              {{ "errorMsg.owner_name_length" | translate }}
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-md-6" *ngIf="data.isIndividual">
+          <label for="fatherName" class="form-label"
+            >{{ "animalDetails.father_name" | translate }}
+            <span class="mandatory-field">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="fatherName"
+            placeholder="{{ 'animalDetails.father_name' | translate }}"
+            formControlName="fatherName"
+            (input)="
+              countCharacters(ownerDetails.fatherName.value, 'fatherName')
+            "
+            [maxLength]="ownerName?.rangeUpperValue"
+          />
+          <div
+            *ngIf="
+              (!ownerDetails.fatherName.pristine &&
+                ownerDetails.fatherName.invalid) ||
+              ownerDetails.fatherName.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="ownerDetails.fatherName.errors?.required">
+              {{ "errorMsg.husband/father_name_req" | translate }}
+            </div>
+            <div *ngIf="ownerDetails.fatherName.errors?.pattern">
+              {{ "errorMsg.husband/father_name_invalid" | translate }}
+            </div>
+          </div>
+
+          <div
+            *ngIf="
+              !ownerDetails.fatherName.pristine ||
+              ownerDetails.fatherName.touched
+            "
+            class="alert-message"
+          >
+            <div
+              *ngIf="
+                fatherNameLength < ownerName?.rangeLowerValue &&
+                !ownerDetails.fatherName.errors?.pattern &&
+                !ownerDetails.fatherName.errors?.required
+              "
+            >
+              {{ "errorMsg.husband/father_name_length" | translate }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="ownerMobileNo" class="form-label"
+            >{{ "common.mobile" | translate }}
+            <span class="mandatory-field">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="ownerMobileNo"
+            placeholder="{{ 'animalDetails.mobile_placeholder' | translate }}"
+            formControlName="ownerMobileNo"
+            [maxLength]="10"
+            (keypress)="avoidSpecialChar($event)"
+          />
+          <div
+            *ngIf="
+              (!ownerDetails.ownerMobileNo.pristine &&
+                ownerDetails.ownerMobileNo.invalid) ||
+              ownerDetails.ownerMobileNo.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="ownerDetails.ownerMobileNo.errors?.required">
+              {{ "errorMsg.MobileMessage1" | translate }}
+            </div>
+            <div *ngIf="ownerDetails.ownerMobileNo.errors?.pattern">
+              {{ "errorMsg.MobileMessage2" | translate }}
+            </div>
+          </div>
+          <div *ngIf="isMobileNumberNotEdited && !isViewOnly">
+            <a href="javascript:void(0)" (click)="enableEditMobile()">{{
+              "animalDetails.edit_mobile_lbl" | translate
+            }}</a>
+          </div>
+          <div *ngIf="!isMobileNumberNotEdited">
+            <a
+              href="javascript:void(0)"
+              (click)="openOtpDialog(ownerDetails.ownerMobileNo.value)"
+              >{{ "animalDetails.verify_mobile_number" | translate }}</a
+            >
+          </div>
+        </div>
+        <div class="form-group col-md-6" *ngIf="data.isIndividual">
+          <label for="alternateMobileNo" class="form-label">{{
+            "animalDetails.alternative_mobile_no" | translate
+          }}</label>
+          <input
+            type="text"
+            class="form-control"
+            id="altNumber"
+            placeholder="{{ 'animalDetails.mobile_placeholder' | translate }}"
+            formControlName="alternateMobileNo"
+            [maxLength]="10"
+            (keypress)="avoidSpecialChar($event)"
+          />
+          <div
+            *ngIf="
+              ownerDetails.alternateMobileNo.invalid &&
+              ownerDetails.alternateMobileNo.errors?.pattern
+            "
+            class="alert-message"
+          >
+            <span>{{ "errorMsg.MobileMessage2" | translate }} </span>
+          </div>
+        </div>
+        <div class="form-group col-md-6" *ngIf="!data.isIndividual">
+          <label for="dateOfIncorporation" class="form-label"
+            >{{ "animalDetails.date_of_incorporation" | translate
+            }}<span class="mandatory-field">*</span></label
+          >
+
+          <input
+            [readonly]="data.isView ? !isViewOnly : isViewOnly"
+            [matDatepicker]="picker"
+            class="form-control"
+            formControlName="dateOfIncorporation"
+            placeholder="{{
+              'animalDetails.owner_dob_placeholder' | translate
+            }}"
+            [max]="getPastDate(0)"
+            [min]="getPastDate(ownerAge?.rangeUpperValue)"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+            class="date-picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <div
+            *ngIf="
+              ownerDetails.dateOfIncorporation.invalid &&
+              ownerDetails.dateOfIncorporation.touched &&
+              !ownerDetails.dateOfIncorporation.pristine
+            "
+            class="alert-message"
+          >
+            <mat-error
+              *ngIf="
+                ownerDetailsForm
+                  .get('dateOfIncorporation')
+                  .hasError('matDatepickerMin')
+              "
+              >{{ "common.invalid_date" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="
+                ownerDetailsForm
+                  .get('dateOfIncorporation')
+                  .hasError('matDatepickerMax')
+              "
+              >{{ "common.invalid_date" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="
+                ownerDetailsForm
+                  .get('dateOfIncorporation')
+                  .hasError('matDatepickerParse')
+              "
+              >{{ "common.please_enter_valid_date" | translate }}</mat-error
+            >
+            <div
+              *ngIf="
+                ownerDetails.dateOfIncorporation.errors?.required &&
+                !ownerDetailsForm
+                  .get('dateOfIncorporation')
+                  .hasError('matDatepickerParse')
+              "
+            >
+              <span>
+                {{ "errorMsg.no_date_of_incorporation" | translate }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="emailId" class="form-label">{{
+            "animalDetails.email" | translate
+          }}</label>
+          <input
+            type="email"
+            class="form-control"
+            id="emailId"
+            placeholder="{{ 'animalDetails.emailHint' | translate }}"
+            formControlName="emailId"
+          />
+          <div
+            *ngIf="
+              ownerDetails.emailId.invalid &&
+              ownerDetails.emailId.errors?.pattern
+            "
+            class="alert-message"
+          >
+            <span>{{ "animalDetails.invalid_email" | translate }}</span>
+          </div>
+        </div>
+        <div class="form-group col-md-6" *ngIf="data.isIndividual">
+          <label for="ownerGender" class="form-label d-block"
+            >{{ "common.gender" | translate
+            }}<span class="mandatory-field">*</span>
+          </label>
+          <select id="state" class="form-control" formControlName="ownerGender">
+            <option value="" selected disabled>
+              {{ "animalDetails.selectGender" | translate }}
+            </option>
+            <option value="M">{{ "animalDetails.male" | translate }}</option>
+            <option value="F">{{ "animalDetails.female" | translate }}</option>
+            <option value="O">{{ "animalDetails.others" | translate }}</option>
+          </select>
+          <div
+            *ngIf="
+              !ownerDetails.ownerGender.pristine &&
+              ownerDetails.ownerGender.invalid &&
+              ownerDetails.ownerGender.errors?.required
+            "
+            class="alert-message"
+          >
+            <span>{{ "errorMsg.no_gender" | translate }}</span>
+          </div>
+        </div>
+        <div class="form-group col-md-6" *ngIf="isIndividual">
+          <label for="ownerTypeCategoryCd" class="form-label"
+            >{{ "animalDetails.nonIndividualType" | translate
+            }}<span class="mandatory-field">*</span></label
+          >
+          <select
+            id="type"
+            class="form-control"
+            formControlName="ownerTypeCategoryCd"
+            (change)="onSelectingTypeCategory($event)"
+          >
+            <option value="" disabled>
+              {{ "animalDetails.nonIndividualType_placeolder" | translate }}
+            </option>
+            <option
+              *ngFor="let category of ownerTypeCategory"
+              [value]="category.cd"
+            >
+              {{ category.value }}
+            </option>
+          </select>
+          <div
+            *ngIf="
+              (!ownerDetails.ownerTypeCategoryCd.pristine &&
+                ownerDetails.ownerTypeCategoryCd.invalid) ||
+              ownerDetails.ownerTypeCategoryCd.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="ownerDetails.ownerTypeCategoryCd.errors?.required">
+              <span>{{
+                "animalDetails.nonIndividualType_lbl" | translate
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- <div class="form-group col-md-6"> -->
+        <!-- <label for="aadhaarNumber" class="form-label"
+            >Aadhar No.<span class="mandatory-field">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="aadhaarNumber"
+            placeholder="Aadhar No."
+            formControlName="aadhaarNumber"
+            [maxLength]="12"
+          />
+          <div
+            *ngIf="
+              (!ownerDetails.aadhaarNumber.pristine &&
+                ownerDetails.aadhaarNumber.invalid) ||
+              ownerDetails.aadhaarNumber.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="ownerDetails.aadhaarNumber.errors?.required">
+              Please Enter Aadhar No.
+            </div>
+            <div *ngIf="ownerDetails.aadhaarNumber.errors?.pattern">
+              Aadhar  Number Must be 12 digit & shouldn't start with 0 .
+            </div>
+          </div> -->
+        <!-- </div> -->
+        <div class="form-group col-md-6" *ngIf="data.isIndividual">
+          <label for="ownerDateOfBirth" class="form-label"
+            >{{ "animalDetails.date_of_birth" | translate
+            }}<span class="mandatory-field">*</span></label
+          >
+
+          <input
+            [readonly]="data.isView ? !isViewOnly : isViewOnly"
+            [matDatepicker]="picker"
+            class="form-control"
+            formControlName="ownerDateOfBirth"
+            placeholder="{{
+              'animalDetails.owner_dob_placeholder' | translate
+            }}"
+            [max]="getPastDate(ownerAge?.rangeLowerValue)"
+            [min]="getPastDate(ownerAge?.rangeUpperValue)"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+            class="date-picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <div
+            *ngIf="
+              ownerDetails.ownerDateOfBirth.invalid &&
+              ownerDetails.ownerDateOfBirth.touched &&
+              !ownerDetails.ownerDateOfBirth.pristine
+            "
+            class="alert-message"
+          >
+            <mat-error
+              *ngIf="
+                ownerDetailsForm
+                  .get('ownerDateOfBirth')
+                  .hasError('matDatepickerMin')
+              "
+              >{{ "errorMsg.age_limit" | translate }}
+              {{ ownerAge?.rangeUpperValue }}
+              {{ "common.year" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="
+                ownerDetailsForm
+                  .get('ownerDateOfBirth')
+                  .hasError('matDatepickerMax')
+              "
+              >{{ "errorMsg.age_less_than" | translate }}
+              {{ ownerAge?.rangeLowerValue }}
+              {{ "common.year" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="
+                ownerDetailsForm
+                  .get('ownerDateOfBirth')
+                  .hasError('matDatepickerParse')
+              "
+              >{{ "common.please_enter_valid_date" | translate }}</mat-error
+            >
+            <div
+              *ngIf="
+                ownerDetails.ownerDateOfBirth.errors?.required &&
+                !ownerDetailsForm
+                  .get('ownerDateOfBirth')
+                  .hasError('matDatepickerParse')
+              "
+            >
+              <span> {{ "errorMsg.no_date_birth" | translate }} </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12 col-sm-offset-3">
+          <label for="affiliatedAgencyUnionOrPc" class="form-label d-block"
+            >{{ "animalDetails.affiliated" | translate
+            }}<span class="mandatory-field">*</span>
+          </label>
+          <label class="radio-inline mr-3">
+            <input
+              type="radio"
+              name="affiliatedAgencyUnionOrPc"
+              value="true"
+              formControlName="affiliatedAgencyUnionOrPc"
+              (change)="onSelectingRadioButton($event)"
+            />
+            {{ "common.yes" | translate }}
+          </label>
+          <label class="radio-inline">
+            <input
+              type="radio"
+              name="affiliatedAgencyUnionOrPc"
+              value="false"
+              (change)="onSelectingRadioButton($event)"
+              formControlName="affiliatedAgencyUnionOrPc"
+            />
+            {{ "common.no" | translate }}
+          </label>
+        </div>
+
+        <div
+          class="form-row"
+          *ngIf="
+            ownerDetailsForm.controls.affiliatedAgencyUnionOrPc.value == 'true'
+          "
+        >
+          <div class="form-group col-md-6">
+            <label for="villageinstitutiontype" class="form-label"
+              >{{ "animalDetails.vill_institute_type" | translate
+              }}<span class="mandatory-field">*</span></label
+            >
+            <select
+              id="villageinstitutiontype"
+              class="form-control"
+              formControlName="villageInstitutionType"
+              (change)="populateVillageInstName($event)"
+            >
+              <option value="" selected disabled>
+                {{
+                  "animalDetails.owner_village/institution_placeholder"
+                    | translate
+                }}
+              </option>
+              <option *ngFor="let type of institutionList" [value]="type.cd">
+                {{ type.value }}
+              </option>
+            </select>
+            <div
+              *ngIf="
+                (!ownerDetails.villageInstitutionType.pristine &&
+                  ownerDetails.villageInstitutionType.invalid) ||
+                ownerDetails.villageInstitutionType.touched
+              "
+              class="alert-message"
+            >
+              <div *ngIf="ownerDetails.villageInstitutionType.errors?.required">
+                <span>{{
+                  "errorMsg.no_village_institute_type" | translate
+                }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="villageInstitutionCode" class="form-label"
+              >{{ "animalDetails.vill_institute_name" | translate
+              }}<span class="mandatory-field">*</span></label
+            >
+            <ng-select
+              class="select-dropdown"
+              [items]="villageInstitutionNames"
+              formControlName="villageInstitutionCode"
+              placeholder="{{
+                'animalDetails.owner_village/institution_name_placeholder'
+                  | translate
+              }}"
+              bindLabel="villageInstitutionName"
+              bindValue="villageInstitutionCd"
+              (change)="onSelectingVillageInstName($event, 'patchAgency')"
+            >
+            </ng-select>
+            <div
+              *ngIf="
+                (!ownerDetails.villageInstitutionCode.pristine &&
+                  ownerDetails.villageInstitutionCode.invalid) ||
+                ownerDetails.villageInstitutionCode.touched
+              "
+              class="alert-message"
+            >
+              <div *ngIf="ownerDetails.villageInstitutionCode.errors?.required">
+                <span>{{
+                  "errorMsg.no_village_institute_name" | translate
+                }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-md-12">
+            <label for="agencyName" class="form-label"
+              >{{ "animalDetails.agency_name" | translate
+              }}<span class="mandatory-field"></span
+            ></label>
+            <select class="form-control" formControlName="agencyName">
+              <option value="" selected disabled>
+                {{ "animalDetails.owner_agency_name_placeholder" | translate }}
+              </option>
+              <option *ngFor="let agency of agencyList" [value]="agency.cd">
+                {{ agency.value }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="membershipNumber" class="form-label"
+              >{{ "animalDetails.membership_number" | translate
+              }}<span class="mandatory-field">*</span></label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="membershipNumber"
+              placeholder="{{
+                'animalDetails.owner_membership_number_placeholder' | translate
+              }}"
+              formControlName="membershipNumber"
+              [maxlength]="100"
+            />
+            <div
+              *ngIf="
+                (!ownerDetails.membershipNumber.pristine &&
+                  ownerDetails.membershipNumber.invalid) ||
+                ownerDetails.membershipNumber.touched
+              "
+              class="alert-message"
+            >
+              <div *ngIf="ownerDetails.membershipNumber.errors?.required">
+                {{ "errorMsg.no_membership_no" | translate }}
+              </div>
+              <div *ngIf="ownerDetails.membershipNumber.errors?.pattern">
+                {{ "errorMsg.no_membership_no_valid" | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Address Section -->
+
+      <div class="form-row">
+        <div class="col-md-12">
+          <h3><strong>Residential Details</strong></h3>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="ownerAddress" class="form-label">{{
+            "animalDetails.address" | translate
+          }}</label>
+          <textarea
+            class="form-control"
+            placeholder="{{
+              'animalDetails.edit_owner_address_placeholder' | translate
+            }}"
+            id="address"
+            [maxLength]="ownerAddress?.rangeUpperValue"
+            formControlName="ownerAddress"
+          ></textarea>
+
+          <div
+            *ngIf="
+              ownerDetails.ownerAddress.invalid &&
+              ownerDetails.ownerAddress.errors?.pattern
+            "
+            class="alert-message"
+          >
+            <span> Please enter correct address </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row" *ngIf="isViewOnly">
+        <div class="form-group col-md-6">
+          <label class="form-label"
+            >{{ "common.village" | translate
+            }}<span class="mandatory-field">*</span></label
+          >
+          <input
+            type="text"
+            [disabled]="true"
+            class="form-control"
+            [value]="ownerInfo.ownerVillageName || '--'"
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label class="form-label"
+            >{{ "animalDetails.tehsil" | translate
+            }}<span class="mandatory-field">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            [value]="ownerInfo.ownerTehsilName || '--'"
+            [disabled]="true"
+          />
+        </div>
+      </div>
+
+      <div class="form-row" *ngIf="!isViewOnly">
+        <div class="form-group col-md-6">
+          <label for="ownerAddressCityVillageCd" class="form-label"
+            >{{ "common.village" | translate
+            }}<span class="mandatory-field">*</span></label
+          >
+          <ng-select
+            class="select-dropdown"
+            [items]="villageList"
+            formControlName="ownerAddressCityVillageCd"
+            placeholder="{{
+              'animalDetails.owner_village/ward_placeholder' | translate
+            }}"
+            bindLabel="villageName"
+            bindValue="villageCode"
+            (change)="onSelectingVillage($event)"
+          >
+          </ng-select>
+          <div
+            *ngIf="
+              (!ownerDetails.ownerAddressCityVillageCd.pristine &&
+                ownerDetails.ownerAddressCityVillageCd.invalid) ||
+              ownerDetails.ownerAddressCityVillageCd.touched
+            "
+            class="alert-message"
+          >
+            <div
+              *ngIf="ownerDetails.ownerAddressCityVillageCd.errors?.required"
+            >
+              <span>{{ "errorMsg.no_village/ward" | translate }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="ownerAddressTehsilCd" class="form-label"
+            >{{ "animalDetails.tehsil" | translate
+            }}<span class="mandatory-field">*</span></label
+          >
+          <select
+            id="tehsil"
+            class="form-control"
+            formControlName="ownerAddressTehsilCd"
+          >
+            <option value="" disabled>Select Tehsil/ULB</option>
+            <option
+              *ngFor="let tehsil of tehsilList"
+              [value]="tehsil.tehsilCode"
+            >
+              {{ tehsil.tehsilName }}
+            </option>
+          </select>
+          <div
+            *ngIf="
+              !(
+                ownerDetails.ownerAddressTehsilCd.pristine &&
+                ownerDetails.ownerAddressTehsilCd.invalid
+              ) || ownerDetails.ownerAddressTehsilCd.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="ownerDetails.ownerAddressTehsilCd.errors?.required">
+              <span>Please select Tehsil/ULB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row" *ngIf="isViewOnly">
+        <div class="form-group col-md-6">
+          <label class="form-label"
+            >{{ "animalDetails.district" | translate
+            }}<span class="mandatory-field">*</span></label
+          >
+          <input
+            type="text"
+            [disabled]="true"
+            class="form-control"
+            [value]="ownerInfo.ownerDistrictName || '--'"
+            [disabled]="true"
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label class="form-label"
+            >{{ "animalDetails.state" | translate
+            }}<span class="mandatory-field">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            [value]="ownerInfo.ownerStateName || '--'"
+            [disabled]="true"
+          />
+        </div>
+      </div>
+
+      <div class="form-row" *ngIf="!isViewOnly">
+        <div class="form-group col-md-6">
+          <label for="ownerAddressDistrictCd" class="form-label"
+            >{{ "animalDetails.district" | translate
+            }}<span class="mandatory-field">*</span></label
+          >
+          <select
+            id="district"
+            class="form-control"
+            formControlName="ownerAddressDistrictCd"
+          >
+            <option value="" disabled>
+              {{ "registration.DistrictOption" | translate }}
+            </option>
+            <option
+              *ngFor="let district of districtList"
+              [value]="district.districtCode"
+            >
+              {{ district.districtName }}
+            </option>
+          </select>
+          <div
+            *ngIf="
+              (!ownerDetails.ownerAddressDistrictCd.pristine &&
+                ownerDetails.ownerAddressDistrictCd.invalid) ||
+              ownerDetails.ownerAddressDistrictCd.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="ownerDetails.ownerAddressDistrictCd.errors?.required">
+              <span>Please select District</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="ownerAddressStateCd" class="form-label"
+            >{{ "animalDetails.state" | translate
+            }}<span class="mandatory-field">*</span></label
+          >
+          <select
+            id="state"
+            class="form-control"
+            formControlName="ownerAddressStateCd"
+          >
+            <option value="" selected disabled>
+              {{ "registration.StateOption" | translate }}
+            </option>
+            <option *ngFor="let state of stateList" [value]="state.stateCode">
+              {{ state.stateName }}
+            </option>
+          </select>
+          <div
+            *ngIf="
+              (!ownerDetails.ownerAddressStateCd.pristine &&
+                ownerDetails.ownerAddressStateCd.invalid) ||
+              ownerDetails.ownerAddressStateCd.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="ownerDetails.ownerAddressStateCd.errors?.required">
+              <span>Please select State</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="ownerAddressPincode" class="form-label">{{
+            "animalDetails.pincode" | translate
+          }}</label>
+          <input
+            type="text"
+            formControlName="ownerAddressPincode"
+            id="pincode"
+            class="form-control"
+            placeholder="{{ 'animalDetails.pincode_placeholder' | translate }}"
+            [maxLength]="6"
+          />
+          <div
+            *ngIf="
+              !ownerDetails.ownerAddressPincode.pristine &&
+              ownerDetails.ownerAddressPincode.invalid
+            "
+            class="alert-message"
+          >
+            <div *ngIf="ownerDetails.ownerAddressPincode.errors?.pattern">
+              Invalid Pincode
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other Details -->
+
+      <div class="form-row">
+        <div class="col-md-12">
+          <h3><strong>Other Details</strong></h3>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="ownerLandHoldingCd" class="form-label">{{
+            "animalDetails.land_holding" | translate
+          }}</label>
+          <select
+            id="landholding"
+            class="form-control"
+            formControlName="ownerLandHoldingCd"
+          >
+            <option value="">
+              {{ "errorMsg.select_land_holding" | translate }}
+            </option>
+            <option *ngFor="let holding of landHoldings" [ngValue]="holding.cd">
+              {{ holding.value }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="hhid" class="form-label">{{
+            "animalDetails.HHID" | translate
+          }}</label>
+          <input
+            type="text"
+            id="hhid"
+            class="form-control"
+            placeholder="{{ 'errorMsg.no_hhid' | translate }}"
+            formControlName="hhid"
+            [maxLength]="50"
+          />
+          <div
+            *ngIf="!ownerDetails.hhid.pristine && ownerDetails.hhid.invalid"
+            class="alert-message"
+          >
+            <div *ngIf="ownerDetails.hhid.errors?.pattern">
+              {{ "errorMsg.enter_valid_hhid" | translate }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row" *ngIf="data.isIndividual">
+        <div class="form-group col-md-6">
+          <label for="ownerCastCategoryCd" class="form-label"
+            >{{ "animalDetails.category" | translate
+            }}<span class="mandatory-field">*</span></label
+          >
+          <select
+            id="category"
+            class="form-control"
+            formControlName="ownerCastCategoryCd"
+          >
+            <option value="" disabled>
+              {{ "animalDetails.owner_category_placeholder" | translate }}
+            </option>
+            <option
+              *ngFor="let category of ownerCategory"
+              [ngValue]="category.cd"
+            >
+              {{ category.value }}
+            </option>
+          </select>
+          <div
+            *ngIf="
+              (!ownerDetails.ownerCastCategoryCd.pristine &&
+                ownerDetails.ownerCastCategoryCd.invalid) ||
+              ownerDetails.ownerCastCategoryCd.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="ownerDetails.ownerCastCategoryCd.errors?.required">
+              <span>{{ "errorMsg.no_category" | translate }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkbox-group">
+        <div class="form-row" *ngIf="data.isIndividual">
+          <div class="form-group col-md-12">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="catverification"
+              formControlName="isCategoryVerified"
+            />
+            <label class="form-check-label" for="isCategoryVerified">
+              {{ "animalDetails.category_verified" | translate }}
+            </label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="pourermember"
+              formControlName="isPourerMember"
+            />
+            <label class="form-check-label" for="isPourerMember">
+              {{ "animalDetails.pourer_member" | translate }}
+            </label>
+          </div>
+        </div>
+        <div class="form-row" *ngIf="data.isIndividual">
+          <div class="form-group col-md-12">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="bpl"
+              formControlName="isOwnerBelowPovertyLine"
+            />
+            <label class="form-check-label" for="isOwnerBelowPovertyLine">
+              {{ "animalDetails.below_poverty" | translate }}
+            </label>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="edit-footer">
+    <button type="button" class="btn btn-outline-primary mr-2" mat-dialog-close>
+      {{ "animalDetails.cancel" | translate }}
+    </button>
+    <button
+      type="submit"
+      class="btn btn-primary"
+      id="editFormSave"
+      (click)="onSubmitEditForm()"
+      [disabled]="isViewOnly"
+    >
+      {{ "animalDetails.save" | translate }}
+    </button>
+  </div>
+</div>

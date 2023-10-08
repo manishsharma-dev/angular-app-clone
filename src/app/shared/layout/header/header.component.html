@@ -1,0 +1,356 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<nav class="navbar navbar-expand-lg navbar-light">
+  <div class="container-fluid mobile-container">
+    <div class="collapse-section">
+      <div class="header-collapse-icon mr-2" id="sidebarCollapse" data-menu="13">
+        <svg id="Group_4471" data-name="Group 4471" width="20" height="20" viewBox="0 0 24 24">
+          <path id="Path_5188" data-name="Path 5188" d="M0,0H24V24H0Z" fill="none" />
+          <path id="Path_5189" data-name="Path 5189" d="M3,4H21V6H3Zm0,7H15v2H3Zm0,7H21v2H3Z" fill="#124c60" />
+        </svg>
+      </div>
+
+      <div class="header-heading-section">
+        <h3 class="mt-1">{{ getTitle() | translate }}</h3>
+        <!-- <div class="breadcrumb-list text-md-right">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb m-0">
+              <li class="breadcrumb-item active"><a>Home </a></li>
+              <li class="breadcrumb-item active"><a href="javascript:void(0)">Animal Management </a></li>
+              <li class="breadcrumb-item current"><a href="javascript:void(0)">Owner Registration </a></li>
+            </ol>
+          </nav>
+        </div> -->
+      </div>
+
+      <!-- <div class="form-group has-search mb-0">
+  <div class="material-icons form-control-feedback mr-2">
+    <mat-icon class="search-icon">search</mat-icon>
+  </div>
+  <input type="text" class="form-control search-box" placeholder="Search">
+</div> -->
+    </div>
+
+    <a class="navbar-toggler collapsed align-self-baseline" type="button" data-toggle="collapse"
+      data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span> </span>
+      <span> </span>
+      <span> </span>
+    </a>
+
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav ml-auto standard-nav align-items-center">
+        <!-- <li class="nav-item active">
+  <mat-form-field class="mat-selectlang ">
+    <mat-select name="languageString" value="selectedLanguage" placeholder="Language" class="p-0" (change)="useLanguage($event)">
+      <mat-option value="'GB'">English</mat-option>
+      <mat-option value="'hi'">Hindi</mat-option>
+    </mat-select>
+  </mat-form-field>
+  </li> -->
+
+        <!-- <li class="nav-item ">
+
+    <mat-form-field appearance="fill">
+      <mat-label>Select an option</mat-label>
+      <mat-select [(value)]="selected">
+        <mat-option>None</mat-option>
+        <mat-option value="option1">Option 1</mat-option>
+        <mat-option value="option2">Option 2</mat-option>
+        <mat-option value="option3">Option 3</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
+
+
+  </li> -->
+        <li class="nav-item" *ngIf="userProjects && userProjects.length == 0">
+          <h5>No Project Allocated</h5>
+        </li>
+        <li class="nav-item" *ngIf="userProjects && userProjects.length > 0">
+          <select id="project" class="form-control custom-select" [(ngModel)]="selectedOption"
+            (change)="getSelectedProject($event)">
+            <option [value]="'0'">Please Select Project</option>
+            <option [value]="userProject['projectId']" *ngFor="let userProject of userProjects">
+              {{ userProject["projectName"] }}
+            </option>
+          </select>
+        </li>
+        <!-- <li>
+          <div class="headerDivider"></div>
+        </li> -->
+
+        <!-- <li class="nav-item">
+          <div
+            mat-button
+            [matMenuTriggerFor]="location"
+            class="profile-section d-flex"
+          >
+            <div>
+              <img src="assets/images/location.png" alt="Lauren Marsano" />
+            </div>
+            
+            <div class="ml-2">
+              <span *ngIf="userData" class="nav-item--text" id="role"
+              >
+             Area Allocated
+             </span>
+            </div>
+            
+            <div>
+              <svg
+                id="Group_3110"
+                data-name="Group 3110"
+                class="header-svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  id="Path_4953"
+                  data-name="Path 4953"
+                  d="M0,0H24V24H0Z"
+                  fill="none"
+                />
+                <path
+                  id="Path_4954"
+                  data-name="Path 4954"
+                  d="M12,13.172l4.95-4.95,1.414,1.414L12,16,5.636,9.636,7.05,8.222Z"
+                  fill="#757575"
+                />
+              </svg>
+            </div>
+          </div>
+          <mat-menu #location="matMenu" class="custom_css_for_dropdown">
+            <ng-container>
+              <div class="ml-2">
+                <span *ngIf="userData" class="nav-item--text area_allcated_state" id="role"
+              >{{ userData["baseLocation"].stateName }}
+            </span>
+              </div>
+             
+              <ul *ngFor="let location of userData['nonBaseLocation']" class="area_allocation">
+                
+                <li>
+                  {{ location.districtName }} <mat-icon class="icon_keyboard">keyboard_arrow_right</mat-icon>
+                    {{ location.tehsilName }} <mat-icon class="icon_keyboard">keyboard_arrow_right</mat-icon> 
+                    
+                     {{ location.villageName }}
+               
+                </li>
+              
+              </ul>
+            
+           
+            </ng-container>
+          </mat-menu>
+          
+        </li> -->
+        <!-- <li>
+          <div class="headerDivider"></div>
+        </li> -->
+        <!-- <li class="nav-item ">
+          <svg id="Group_4435" data-name="Group 4435" class="header-svg"  width="24" height="24"
+            viewBox="0 0 24 24">
+            <path id="Path_4955" data-name="Path 4955" d="M0,0H24V24H0Z" fill="none" />
+            <path id="Path_4956" data-name="Path 4956"
+              d="M17.72,16.333l4.2,4.2L20.532,21.92l-4.2-4.2a8.827,8.827,0,1,1,1.387-1.387Zm-1.967-.728a6.861,6.861,0,1,0-.147.147Z"
+              transform="translate(0.214 0.214)" fill="#124c60" />
+          </svg>
+        </li> -->
+        <li>
+          <div class="headerDivider"></div>
+        </li>
+
+        <li class="nav-item">
+          <div mat-button [matMenuTriggerFor]="menufontsize" class="profile-section d-flex">
+            <div class="mr-2">
+              <span class="nav-item--text"> A </span>
+            </div>
+            <div>
+              <svg id="Group_3110" data-name="Group 3110" class="header-svg" width="24" height="24" viewBox="0 0 24 24">
+                <path id="Path_4953" data-name="Path 4953" d="M0,0H24V24H0Z" fill="none" />
+                <path id="Path_4954" data-name="Path 4954"
+                  d="M12,13.172l4.95-4.95,1.414,1.414L12,16,5.636,9.636,7.05,8.222Z" fill="#757575" />
+              </svg>
+            </div>
+          </div>
+          <mat-menu #menufontsize="matMenu">
+            <button mat-menu-item (click)="increaseFontSize()">A+</button>
+            <button mat-menu-item (click)="decreaseFontSize()">A-</button>
+          </mat-menu>
+
+          <!-- <div class="dropdown select-wrapper">
+
+            <svg id="Group_3110" class="arrow " data-name="Group 3110"
+              width="24" height="24" viewBox="0 0 24 24">
+              <path id="Path_4953" data-name="Path 4953" d="M0,0H24V24H0Z" fill="none" />
+              <path id="Path_4954" data-name="Path 4954"
+                d="M12,13.172l4.95-4.95,1.414,1.414L12,16,5.636,9.636,7.05,8.222Z" fill="#757575" />
+            </svg>
+
+            <button class="btn-drop dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              A
+            </button>
+            <div class="dropdown-menu form-select" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="#">A+</a>
+              <a class="dropdown-item" href="#">A-</a>
+            </div>
+          </div> -->
+        </li>
+
+        <li>
+          <div class="headerDivider"></div>
+        </li>
+
+        <!-- <li class="nav-item ">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text remcls">
+                <svg id="Group_3105" class="input-icon-right header-svg" data-name="Group 3105"
+                   width="28" height="28" viewBox="0 0 28 28">
+                  <path id="Path_4951" data-name="Path 4951" d="M0,0H28V28H0Z" fill="none" />
+                  <path id="Path_4952" data-name="Path 4952"
+                    d="M21.25,11.333l5.133,12.833H23.869l-1.4-3.5H17.7l-1.4,3.5H13.784l5.132-12.833ZM11.333,2V4.333h7V6.667h-2.3a21.259,21.259,0,0,1-4.223,7.351,17.342,17.342,0,0,0,2.725,1.992L13.663,18.2a19.851,19.851,0,0,1-3.5-2.521,19.455,19.455,0,0,1-7.235,4.139l-.625-2.25a17.15,17.15,0,0,0,6.215-3.549A21.091,21.091,0,0,1,5.228,9H7.841a18.7,18.7,0,0,0,2.325,3.356,18.859,18.859,0,0,0,3.395-5.689H2V4.333H9V2Zm8.75,12.7-1.455,3.634h2.907Z"
+                    transform="translate(0.333 0.333)" fill="#124c60" />
+                </svg>
+              </span>
+            </div>
+            <select data-selectprod-id="" class="form-control selectlang form-input-section form-select"
+              (change)="useLanguage($event)">
+              <option selected value="en">Eng</option>
+              <option value="hi">Hindi</option>
+            </select>
+          </div>
+          <input type="text" class="form-control form-input-section" id="aadhaarNumber" placeholder="eg. 1234-5678-9011"  formControlName="aadhaarNumber"/>
+
+          <svg class="input-icon-right" width="17.14" height="17.14" viewBox="0 0 17.14 17.14">
+            <path id="qrcode" d="M0,39.346H7.346V32H0Zm2.449-4.9H4.9V36.9H2.449ZM9.794,32v7.346H17.14V32Zm4.9,4.9H12.243V34.449h2.449ZM0,49.14H7.346V41.794H0Zm2.449-4.9H4.9v2.449H2.449Zm13.467-2.449H17.14v4.9H13.467V45.467H12.243V49.14H9.794V41.794h3.673v1.224h2.449Zm0,6.121H17.14V49.14H15.916Zm-2.449,0h1.224V49.14H13.467Z" transform="translate(0 -32)" fill="#545454"/>
+          </svg>
+          <select data-selectprod-id="" class="form-control selectlang" (change)="useLanguage($event)">
+            <option selected value="en">English</option>
+            <option value="hi">Hindi</option>
+          </select>
+        </li> -->
+
+        <li class="nav-item">
+          <div mat-button [matMenuTriggerFor]="menulanguage" class="profile-section d-flex">
+            <div>
+              <svg id="Group_3105" class="laguage-icon header-svg" data-name="Group 3105" width="28" height="28"
+                viewBox="0 0 28 28">
+                <path id="Path_4951" data-name="Path 4951" d="M0,0H28V28H0Z" fill="none" />
+                <path id="Path_4952" data-name="Path 4952"
+                  d="M21.25,11.333l5.133,12.833H23.869l-1.4-3.5H17.7l-1.4,3.5H13.784l5.132-12.833ZM11.333,2V4.333h7V6.667h-2.3a21.259,21.259,0,0,1-4.223,7.351,17.342,17.342,0,0,0,2.725,1.992L13.663,18.2a19.851,19.851,0,0,1-3.5-2.521,19.455,19.455,0,0,1-7.235,4.139l-.625-2.25a17.15,17.15,0,0,0,6.215-3.549A21.091,21.091,0,0,1,5.228,9H7.841a18.7,18.7,0,0,0,2.325,3.356,18.859,18.859,0,0,0,3.395-5.689H2V4.333H9V2Zm8.75,12.7-1.455,3.634h2.907Z"
+                  transform="translate(0.333 0.333)" fill="#124c60" />
+              </svg>
+            </div>
+            <div class="ml-2">
+              <span class="nav-item--text">{{ getLan }}</span>
+            </div>
+          </div>
+          <mat-menu #menulanguage="matMenu">
+            <!-- <select #langSelect (change)="translate.use(langSelect.value)">
+              <option *ngFor="let lang of translate.getLangs()" [value]="lang"
+              [selected]="lang === translate.currentLang">{{ lang }}</option>
+            </select> -->
+            <button mat-menu-item value="fav_HTML" *ngFor="let lang of languageLists" (click)="useLanguage(lang)">
+              {{ lang.value | translate }}
+            </button>
+            <!-- <button mat-menu-item>Eng</button>
+            <button mat-menu-item>Hindi</button> -->
+          </mat-menu>
+        </li>
+
+        <li>
+          <div class="headerDivider"></div>
+        </li>
+
+        <li class="nav-item notification" [matMenuTriggerFor]="menuNotification2">
+          <span><svg id="Group_3102" data-name="Group 3102" class="header-svg" width="28" height="28"
+              viewBox="0 0 28 28">
+              <path id="Path_4949" data-name="Path 4949" d="M0,0H28V28H0Z" fill="none" />
+              <path id="Path_4950" data-name="Path 4950"
+                d="M23,19.5h2.333v2.333H2V19.5H4.333V11.333a9.333,9.333,0,0,1,18.667,0ZM10.167,24.167h7V26.5h-7Z"
+                transform="translate(0.333 0.333)" fill="#124c60" />
+            </svg>
+          </span>
+          <span class="badge">{{ notificationCount }}</span>
+          <mat-menu #menuNotification2="matMenu" [class]="'notification-pannel'">
+            <div class="notif-item">
+              <p class="notif-list-heading ml-2 mb-2">
+                {{ "notification.notification_lbl" | translate }}
+              </p>
+              <ul class="notif-list">
+                <div class="img mr-3" *ngIf="recentDashboardListData?.length == 0">
+                  <p class="mb-1 ml-2 label-desc">
+                    {{ "notification.no_notification" | translate }}
+                  </p>
+                </div>
+                <ng-container *ngFor="
+                    let notifList of recentDashboardListData;
+                    let i = index
+                  ">
+                  <li *ngIf="i < 5">
+                    <div class="list-item">
+                      <div class="list-details">
+                        <p class="notif-desc notif-desc-style">
+                          {{ notifList.message }}
+                        </p>
+                        <p class="notif-time">
+                          {{ dateFormatChange(notifList.generatedTmstmp) }}
+                          {{ notifList.generatedTmstmp.substring(11, 16) }}
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                </ng-container>
+              </ul>
+            </div>
+            <div class="h-divider"></div>
+            <div class="notif-footer ml-2">
+              <!-- <p class="mark-all" *ngIf="recentDashboardListData.length>0">Mark all as read</p> -->
+              <a class="view-all" href="/dashboard/notification">
+                {{ "notification.view_all" | translate }}
+              </a>
+            </div>
+          </mat-menu>
+        </li>
+
+        <li>
+          <div class="headerDivider"></div>
+        </li>
+        <li class="nav-item">
+          <div mat-button [matMenuTriggerFor]="menu" class="profile-section d-flex">
+            <div *ngIf="userData && !userData['userImageUrl']">
+              <i class="fa fa-user fa-2x" aria-hidden="true"></i>
+            </div>
+            <div *ngIf="userData && userData['userImageUrl']">
+              <img src="{{ userData['userImageUrl'] }}" alt="Lauren Marsano" class="user-profile" loading="lazy" />
+            </div>
+            <div class="ml-2">
+              <span class="nav-item--text">{{ userData?.firstName }} </span><br />
+              <span class="nav-item--text" id="role">{{ userDataDesc }} </span><br />
+            </div>
+          </div>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="onUserDetails()">Profile</button>
+            <button mat-menu-item (click)="onResetPassword()">
+              Reset Password
+            </button>
+
+            <button mat-menu-item (click)="getMobileNumberVerfyPopup()">
+              Update Mobile
+            </button>
+            <button mat-menu-item (click)="onLogout()">Logout</button>
+          </mat-menu>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

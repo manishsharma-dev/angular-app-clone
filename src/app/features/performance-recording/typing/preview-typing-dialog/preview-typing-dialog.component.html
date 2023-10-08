@@ -1,0 +1,39 @@
+<h1 mat-dialog-title>{{'performanceRecording.preview_typing_details' | translate}}</h1>
+<div class="dialog-content">
+  <div class="left-section-content">
+    <div>
+      <span>{{'animalDetails.lactation' | translate}}:</span>
+      <span>{{ data.currentLactationNo ?? "--" }}</span>
+    </div>
+    <div>
+      <span>{{'performanceRecording.typing_date' | translate}}:</span>
+      <span>{{ data.typingDate | date : "dd/MM/YYYY" ?? "--" }}</span>
+    </div>
+    <div *ngFor="
+        let trait of data.animalTypingTraitsList
+          | slice : 0 : data.animalTypingTraitsList.length / 2
+      ">
+      <span>{{ trait.label }} [{{trait.measurementUnitDesc}}]:</span>
+      <span>{{ trait.typingTraitValue ?? "--" }}</span>
+    </div>
+  </div>
+  <div class="right-section-content">
+    <div>
+      <span>{{'performanceRecording.data_entry_date' | translate}}:</span>
+      <span>{{ data.typingRecordDate | date: "dd/MM/YYYY" ?? "--" }}</span>
+    </div>
+    <div *ngFor="
+        let trait of data.animalTypingTraitsList
+          | slice : data.animalTypingTraitsList.length / 2
+      ">
+      <span>{{ trait.label }} [{{trait.measurementUnitDesc}}]:</span>
+      <span>{{ trait.typingTraitValue ?? "--" }}</span>
+    </div>
+  </div>
+</div>
+<div class="d-flex justify-content-end">
+  <button class="btn btn-secondary mr-2" (click)="onClose(false)">
+    {{ "animalDetails.cancel" | translate }}
+  </button>
+  <button class="btn btn-primary" (click)="onClose(true)">{{ "animalDetails.save" | translate }}</button>
+</div>

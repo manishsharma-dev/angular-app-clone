@@ -1,0 +1,193 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            <a>{{'animalDetails.home' | translate}}</a>
+          </li>
+          <li class="breadcrumb-item active">
+            <a href="javascript:void(0)">{{'animalBreeding.breeding_module'|translate}} </a>
+          </li>
+          <li class="breadcrumb-item current">
+            <a href="javascript:void(0)">{{'animalBreeding.et'|translate}} -
+              {{'animalBreeding.embryo_master'|translate}}</a>
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="row p-0 view-animal-detail mb-3">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="row animal-bio-info">
+              <div class="col-md-6 basic-details">
+                <h3 class="details-heading">{{'animalBreeding.basic_details'|translate}}</h3>
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">{{'animalBreeding.laboratory'|translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{ embryoDetails?.labName || "--" }}
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">{{'animalBreeding.et'|translate}}
+                    {{'animalBreeding.production_type'|translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{getKeyValue(embryoDetails?.embryoProductionType,'embryo_production_type')}}
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">
+                    {{'animalBreeding.opu'|translate}}/{{'animalBreeding.flushing_date'|translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{ embryoDetails?.opuDate}}
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">{{'animalBreeding.donor_id'|translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{ embryoDetails?.donorTagId }}
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">{{'animalBreeding.donor_species'|translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{ embryoDetails?.donorSpecies }}
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">{{'animalBreeding.donor_breed'|translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{ embryoDetails?.donorBreed }}
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">{{'animalDetails.sire_Id'| translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{ embryoDetails?.sireId }}
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">{{'animalBreeding.sire_species'|translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{ embryoDetails?.sireSpecies }}
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">{{'animalBreeding.sire_breed'|translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{ embryoDetails?.sireBreed }}
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">{{'animalBreeding.semen_type'|translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{ getKeyValue(embryoDetails?.semenType,'semen_type') }}
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">{{'animalBreeding.sexed_semen'|translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{ getKeyValue(embryoDetails?.embryoStage,'sexed_semen') }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 family-details">
+                <h3 class="details-heading">{{'animalBreeding.embryo_details'|translate}}</h3>
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">{{'animalBreeding.embryo_id'|translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{ embryoDetails?.embryoId || "--" }}
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">{{'animalBreeding.stage'|translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{getKeyValue(embryoDetails?.embryoStage,'embryo_stage')}}
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">{{'animalBreeding.grade'|translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{getKeyValue(embryoDetails?.embryoGrade,'embryo_grade')}}
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">{{'animalBreeding.age_in_days'|translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{ embryoDetails?.embryoAge || "--" }}
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">{{'animalBreeding.embryo_type'|translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{ getKeyValue(embryoDetails?.embryoType,'embryo_type')}}
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">{{'animalBreeding.freezing_rate'|translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{ embryoDetails?.freezingRate || "--"}}
+                  </div>
+                </div>
+
+                <h3 class="details-heading">{{'animalBreeding.allocation_details'|translate}}</h3>
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">{{'animalBreeding.allocated_to'|translate}}</div>
+                  <div class="flex-custom-right info-data">
+                    {{ getKeyValue(embryoDetails?.allocatedTo,'allocated_to')}}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-start mb-2">
+          <button type="button" class="btn btn-outline-primary mr-2" (click)="goBack()">
+            {{'animalDetails.back'|translate}}
+          </button>
+          <button type="submit" class="btn btn-outline-primary mr-2" (click)="openEditEmbryoDialog()" appPermission
+            [permissionType]="masterConfig.isModify">
+            {{'common.edit'|translate}}
+          </button>
+          <button type="submit" class="btn btn-primary mr-2" *ngIf="embryoDetails?.allocatedTo"
+            (click)="deallocateEmbryo()">
+            {{'animalBreeding.deallocate'|translate}}
+          </button>
+          <button type="submit" class="btn btn-primary mr-2" (click)="deleteRow('Discarded')">
+            {{'animalBreeding.discard'|translate}}
+          </button>
+          <button type="submit" class="btn btn-primary mr-2" (click)="deleteRow('Deleted')" appPermission
+            [permissionType]="masterConfig.isDelete">
+            {{'animalBreeding.delete'|translate}}
+          </button>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>

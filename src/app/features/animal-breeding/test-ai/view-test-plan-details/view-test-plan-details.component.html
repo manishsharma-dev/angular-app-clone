@@ -1,0 +1,125 @@
+<div class="view-test-plan-dialog">
+  <div class="dialog-header">
+    <div class="headeing">
+      <h2 class="edit-heading-label">{{data.testPlanName}}</h2>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+  <div class="dialog-body">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <p>
+          <span class="label-header">Test Plan ID:</span>
+          <span> 000078547</span>
+        </p>
+      </div>
+      <div class="col-md-6 date-section">
+        <p>
+          <span class="label-header">From Date: </span>
+          <span>01-06-2022</span>
+        </p>
+        <p>
+          <span class="label-header">To Date: </span>
+          <span>30-06-2022</span>
+        </p>
+      </div>
+    </div>
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+
+    <div class="row my-3">
+      <div class="col-md-4">
+        <p class="label-header">Organization:</p>
+        <p>{{ 'Organization Name' }}</p>
+      </div>
+      <div class="col-md-4">
+        <p class="label-header">Project:</p>
+        <p>{{ 'Project Name 1' }}</p>
+      </div>
+      <div class="col-md-4">
+        <p class="label-header">Date of Creation:</p>
+        <p>{{ '20-05-2022' }}</p>
+      </div>
+    </div>
+
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <a role="button" data-parent="#accordion" [attr.aria-expanded]="step===0" (click)="setStep(0)"
+              aria-controls="collapseOne" data-toggle="collapse" class="panel-header">
+              Tehsil and Village
+            </a>
+          </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse " role="tabpanel" aria-labelledby="headingOne"
+          [ngClass]="{show: step === 0,in: step===1}">
+          <div class="panel-body">
+
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingTwo">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-parent="#accordion" [attr.aria-expanded]="step===1"
+              aria-controls="collapseTwo" data-toggle="collapse" (click)="setStep(1)" class="panel-header">
+              Selected Bull ID's [24]
+            </a>
+          </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo"
+          [ngClass]="{show: step === 1, in: step===1}">
+          <div class="panel-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Bull ID</th>
+                    <th>Tag ID</th>
+                    <th>Semen Station</th>
+                    <th>Breed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container>
+                    <tr class="parent-row">
+                      <td>
+                        <mat-icon *ngIf="true">keyboard_arrow_down</mat-icon>
+                        <mat-icon *ngIf="false">keyboard_arrow_up</mat-icon>
+                      </td>
+                      <td>SAG-HFS-888</td>
+                      <td>833451188892</td>
+                      <td>Sabarmati Ashram Gaushala</td>
+                      <td>Murrah</td>
+                    </tr>
+                    <tr class="child-row">
+                      <td>
+
+                      </td>
+                      <td>SAG-HFS-888</td>
+                      <td>833451188892</td>
+                      <td>Sabarmati Ashram Gaushala</td>
+                      <td>Murrah</td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

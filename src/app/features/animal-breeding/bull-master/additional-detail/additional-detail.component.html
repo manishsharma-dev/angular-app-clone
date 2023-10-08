@@ -1,0 +1,88 @@
+<div class="add-diagnostics-dialog">
+    <div class="add-diagnostics-header">
+      <div class="headeing">
+        <h2>{{'animalDetails.additional_details'| translate}}</h2>
+      </div>
+      <div class="cross-icon">
+        <mat-icon mat-dialog-close>clear</mat-icon>
+      </div>
+    </div>
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+    <div class="row mt-4">
+        <div class="tabs-nav-list d-flex justify-content-md-start dialog-main-content-n " >
+            <ul class="nav nav-pills mainlist-item" id="pills-tab" role="tablist" 
+            >
+                <li class="nav-item" *ngFor="let additional of additionalParameter" >
+                    <a class="nav-link" id="pills-{{additional}}"
+                        [ngClass]="{ active: activeTab == additional}"
+                        data-bs-toggle="pill" [attr.data-bs-target]="'#pills-reports'"
+                        (click)="fetchAdditionalRecord(additional)" role="tab"
+                        aria-controls="pills-reports" aria-selected="true" >{{additional}}</a>
+                </li>
+            </ul>
+        </div>
+       
+  
+    </div>
+    <!-- <div class="dialog-main-content" >
+       
+      <div class="row mt-4 section-title">
+        <div class="col-md-6">
+          <p class="">Outbreak ID : <b>dddd</b></p>
+        </div>
+        <div class="col-md-6 d-flex justify-content-end">
+          <span class="">Case Status : <b>dddddd</b></span>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-4">
+          <h4 class="font-weight-bold label-header">Date of First Incidence </h4>
+          <p> ddddddd </p>
+        </div>
+        <div class="col-md-4">
+          <h4 class="font-weight-bold label-header">Disease Confirmed </h4>
+          <p> ddddddd</p>
+        </div>
+        <div class="col-md-4">
+          <h4 class="font-weight-bold label-header">Probable Source of Infection </h4>
+          <p> dddddd</p>
+        </div>
+      </div>
+      <div class="row mt-4 section-title">
+        <div class="col-md-12">
+          <p class="">Outbreak Locations</p>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-4">
+          <h4 class="font-weight-bold label-header">Village </h4>
+          <p> dddddddd </p>
+        </div>
+        <div class="col-md-4">
+          <h4 class="font-weight-bold label-header">Tehsil </h4>
+          <p> ddddddddd </p>
+        </div>
+        <div class="col-md-4">
+          <h4 class="font-weight-bold label-header">District </h4>
+          <p> dddddddddd </p>
+        </div>
+      </div>
+      <div class="h-divider">
+        <div class="shadow"></div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-12">
+       
+        </div>
+      </div>
+    </div> -->
+  
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+  
+  </div>
+
+ 

@@ -1,0 +1,64 @@
+<div class="common-info">
+    <div class="common-info-header">
+
+        <img [src]="data.icon" class="custom-icon" alt="icon-verified" />
+        <p class="header-desc">{{data.title}}</p>
+
+    </div>
+
+    <div class="common-info-body">
+        <form [formGroup]="mobileNumberVerfyForm" autocomplete="off">
+            <div class="form-group">
+                <label for="MobileNumber" class="label-color">Verify/Update Your Mobile Number.<span
+                        class="mandatory-field">*</span></label>
+                <input type="text" class="form-control" id="mobileNo" placeholder="Enter Mobile Number" name="mobileNo"
+                    formControlName="mobileNo" minlength="10" maxlength="10" />
+                <mat-error>
+                    <span
+                        *ngIf="mobileNumberVerfyForm.get('mobileNo').invalid && !mobileNumberVerfyForm.get('mobileNo').pristine|| mobileNumberVerfyForm.get('mobileNo').touched"
+                        class="validation-error-message">
+                        <span *ngIf="mobileNumberVerfyForm.get('mobileNo').errors?.['required']"
+                            class="validation-error-message">
+                            Please enter a valid Mobile Number.
+                        </span>
+                        <span *ngIf="mobileNumberVerfyForm.get('mobileNo').errors?.['pattern']"
+                            class="validation-error-message">
+                            Please enter a valid Mobile Number.
+                        </span>
+                        <span *ngIf="mobileNumberVerfyForm.get('mobileNo').errors?.['minlength']"
+                            class="validation-error-message">
+                            Mobile Number should be 10 digits.
+                        </span>
+
+
+                        <!-- <span *ngIf="mobileNumberVerfyForm.get('mobileNo').value?.length>=10"
+                            class="validation-error-message">
+                            Mobile Number should be 10 digits.
+                        </span> -->
+
+                    </span>
+                </mat-error>
+
+            </div>
+
+
+
+
+        </form>
+    </div>
+
+    <div class="common-info-footer">
+        <button mat-dialog-close class="btn btn-outline-primary mr-2 px-4">
+
+            {{ data.secondaryBtnText }}
+
+        </button>
+
+        <button class="btn btn-primary" [disabled]="mobileNumberVerfyForm.invalid" (click)="onSubmit()">
+
+            {{ data.primaryBtnText}}
+
+        </button>
+    </div>
+
+</div>

@@ -1,0 +1,50 @@
+<div class="sample-table">
+  <div class="sample-table-row">
+    <div class="sample-header">
+      {{ "performanceRecording.fat" | translate }} %
+    </div>
+    <div class="sample-data" *ngIf="sample.fatPercentage != null; else nullValue">{{ sample.fatPercentage }}
+      %</div>
+  </div>
+  <div class="sample-table-row">
+    <div class="sample-header">
+      {{ "performanceRecording.protein" | translate }} %
+    </div>
+    <div class="sample-data" *ngIf="sample.proteinPercentage != null; else nullValue">{{
+      sample.proteinPercentage }} %</div>
+  </div>
+  <div class="sample-table-row">
+    <div class="sample-header">
+      {{ "performanceRecording.snf" | translate }} %
+    </div>
+    <div class="sample-data" *ngIf="sample.snfPercentage != null; else nullValue">{{ sample.snfPercentage }}
+      %</div>
+  </div>
+  <div class="sample-table-row">
+    <div class="sample-header">
+      {{ "performanceRecording.lactose" | translate }} %
+    </div>
+    <div class="sample-data" *ngIf="sample.lactosePercentage != null; else nullValue">{{
+      sample.lactosePercentage }} %</div>
+  </div>
+  <div class="sample-table-row">
+    <div class="sample-header">
+      {{ "performanceRecording.somatic_cell_count" | translate }}
+    </div>
+    <div class="sample-data" *ngIf="sample.somaticCellCount != null; else nullValue">{{
+      sample.somaticCellCount }}</div>
+  </div>
+  <div class="sample-table-row">
+    <div class="sample-header">
+      {{ "performanceRecording.milk_urea_nitrogen" | translate }}
+    </div>
+    <div class="sample-data" *ngIf="sample.milkUreaNitrogen != null; else nullValue">
+      {{ sample.milkUreaNitrogen }} Mg/ 100g
+    </div>
+  </div>
+</div>
+<ng-template #nullValue>
+  <div class="sampleData">
+    --
+  </div>
+</ng-template>

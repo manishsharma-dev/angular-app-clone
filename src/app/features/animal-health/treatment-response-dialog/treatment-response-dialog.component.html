@@ -1,0 +1,56 @@
+<!-- <div class="text-center">
+  <div class="verified_icon">
+
+    <img src="/assets/images/info-icon.svg" class="icon-verified" alt="icon-verified" *ngIf="!data.icon" />
+
+    <img [src]="data.icon" class="icon-verified" alt="icon-verified" *ngIf="data.icon" />
+
+  </div>
+  <h3 class="py-2 px-2">{{ data.title }}</h3>
+
+  <mat-dialog-content>
+    {{ data.message }}
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="justify-content-end">
+
+    <button mat-dialog-close class="btn btn-outline-primary mr-2 px-4" *ngIf="data.secondaryBtnText"
+      (click)="onSubmit(false)">
+      {{ data.secondaryBtnText }}
+    </button>
+
+    <button mat-dialog-close class="btn btn-primary" (click)="onSubmit(true)">
+      {{ data.primaryBtnText }}
+    </button>
+
+
+  </mat-dialog-actions>
+</div> -->
+
+
+
+<div class="common-info">
+  <div class="common-info-header">
+
+    <img [src]="data.icon" class="custom-icon" alt="icon-verified"/>
+    <p class="header-desc">{{data.title}}</p>
+
+  </div>
+
+  <div class="common-info-body">
+    <p>{{data.id}}</p>
+    <p>{{ data.message }}</p>
+  </div>
+
+  <div class="common-info-footer">
+    <button mat-dialog-close class="btn btn-outline-primary mr-2 px-4" *ngIf="data.secondaryBtnText"
+    (click)="onSubmit(false)">
+    {{ data.secondaryBtnText }}
+  </button>
+
+  <button mat-dialog-close class="btn btn-primary" (click)="onSubmit(true)">
+    {{ data.primaryBtnText }}
+  </button>
+  </div>
+
+</div>

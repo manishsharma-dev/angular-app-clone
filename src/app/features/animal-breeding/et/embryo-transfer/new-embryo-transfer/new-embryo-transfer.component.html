@@ -1,0 +1,327 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+    <div class="center">
+        <mat-spinner class="center"></mat-spinner>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row breadcum align-items-center py-2">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="breadcrumb-list text-md-left">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item active">
+                            <a>{{'animalDetails.home' | translate}}</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <a href="javascript:void(0)">{{'animalBreeding.breeding_module'|translate}} </a>
+                        </li>
+                        <li class="breadcrumb-item current">
+                            <a href="javascript:void(0)">{{'animalBreeding.et'|translate}} -
+                                {{'animalBreeding.embryo_transfer'|translate}}</a>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<app-breeding-history [historyDetail]="historyDetail" (ownerDetail)="getOwnerId($event)"> </app-breeding-history>
+
+<section class="new-case margin-10">
+    <div class="row no-gutters col-container">
+        <div class="col-md-12 col-h left-section">
+            <div class="row mb-3 justify-content-between margin-10">
+                <div class="title-section">
+                    <div class="title-heading">
+                        {{'animalBreeding.et'| translate}} {{'common.info'| translate}}
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="h-divider">
+                <div class="shadow"></div>
+            </div>
+
+            <form [formGroup]="addEmbryoTransferForm" (ngSubmit)="submitHeatTransaction()">
+                <div class="main-section">
+                    <div class="form-row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="Treatment Record Date">{{'animalBreeding.data_entry_date'| translate}}<span
+                                        class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text" [max]="today" [matDatepicker]="RecordDate"
+                                    formControlName="etRecordDate" placeholder="dd-mm-yyyy" />
+                                <mat-datepicker-toggle matSuffix [for]="RecordDate" class="calender-icon">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #RecordDate></mat-datepicker>
+                            </div>
+                        </div>
+
+                        <div class="col-md-1"></div>
+                        <div class="col-md-2">
+                            <div class="form-group input-icon">
+                                <label for="Treatment Date">ET Date<span class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text" [min]="breedingMinDate" [max]="today"
+                                    [matDatepicker]="pickerDate" formControlName="etDate" placeholder="dd-mm-yyyy" />
+                                <mat-datepicker-toggle matSuffix [for]="pickerDate" class="calender-icon">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #pickerDate></mat-datepicker>
+                                <span class="alert-message" *ngIf="
+                                (formControls?.etDate.dirty &&
+                                formControls?.etDate.invalid) ||
+                                formControls?.etDate.touched
+                            ">
+                                    <span *ngIf="formControls?.etDate.hasError('matDatepickerMin')">
+                                        {{'common.please_enter_valid_date' | translate}}
+                                    </span>
+                                    <span *ngIf="formControls?.etDate.hasError('matDatepickerMax')">
+                                        {{'common.please_enter_valid_date' | translate}}
+                                    </span>
+                                    <span *ngIf="formControls?.etDate.hasError('matDatepickerParse')">
+                                        {{'common.please_enter_valid_date' | translate}}
+                                    </span>
+                                    <span
+                                        *ngIf="formControls?.etDate.hasError('required') && !formControls?.etDate.hasError('matDatepickerParse')">
+                                        {{'errorMsg.field_mandatory' | translate}}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-7"></div>
+
+                        <div class="form-row mat-row divide-section">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="Case Status">{{'animalBreeding.embryo_id'| translate}}<span
+                                            class="mandatory-field">*</span></label>
+                                    <ng-select type="text" formControlName="embryoId" [items]="embryoList"
+                                        (change)="verifyIds($event)"
+                                        [ngClass]="{ 'is-invalid': formControls?.embryoId?.touched && formControls?.embryoId?.errors }">
+
+                                    </ng-select>
+                                    <div class="alert-message"
+                                        *ngIf="formControls?.embryoId?.errors?.required && formControls?.embryoId?.touched">
+                                        {{'errorMsg.field_mandatory'|translate}}
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-1"></div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="Case Status">{{'animalDetails.breed'| translate}}</label>
+                                    <input class="form-control" type="text" formControlName="breed" />
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="Case Status">{{'animalDetails.sire_Id'| translate}}</label>
+                                    <input class="form-control" type="text" formControlName="sireId" />
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="Case Status">{{'animalBreeding.donor_id'| translate}}</label>
+                                    <input class="form-control" type="text" formControlName="donorTagId" />
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="Case Status">{{'animalBreeding.embryo_type'| translate}}</label>
+                                    <select class="form-control" name="embryoType" formControlName="embryoType">
+                                        <option [value]="null">{{'animalDetails.select'| translate}}
+                                            {{'animalBreeding.embryo_type'| translate}}</option>
+
+                                        <option [value]="grade?.cd"
+                                            *ngFor="let grade of getCommonMasterDetail['embryo_type']">
+                                            {{grade?.value}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="Case Status">{{'animalBreeding.embryo'| translate}}
+                                        {{'animalBreeding.stage'| translate}}</label>
+                                    <select class="form-control" name="embryoStage" formControlName="embryoStage">
+                                        <option [value]="null">{{'animalDetails.select'| translate}}
+                                            {{'animalBreeding.embryo'| translate}} {{'animalBreeding.stage'| translate}}
+                                        </option>
+
+                                        <option [value]="stage?.cd"
+                                            *ngFor="let stage of getCommonMasterDetail['embryo_stage']">
+                                            {{stage?.value}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="Case Status">{{'animalBreeding.embryo'| translate}}
+                                        {{'animalBreeding.grade'| translate}}</label>
+                                    <select class="form-control" name="embryoGrade" formControlName="embryoGrade">
+                                        <option [value]="null">{{'animalDetails.select'| translate}}
+                                            {{'animalBreeding.embryo'| translate}} {{'animalBreeding.grade'| translate}}
+                                        </option>
+
+                                        <option [value]="grade?.cd"
+                                            *ngFor="let grade of getCommonMasterDetail['embryo_grade']">
+                                            {{grade?.value}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="Case Status">{{'animalBreeding.embryo'| translate}} {{'common.age'|
+                                        translate}}</label>
+                                    <input class="form-control" type="text" formControlName="embryoAge" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.recipient_grade'|translate}}<span
+                                        class="mandatory-field">*</span></label>
+                                <select class="form-control" name="recipientGrade" formControlName="recipientGrade"
+                                    [ngClass]="{ 'is-invalid': formControls?.recipientGrade?.touched && formControls?.recipientGrade?.errors }">
+                                    <option [value]="null">{{'animalDetails.select'| translate}}
+                                        {{'animalBreeding.recipient_grade'|translate}}</option>
+
+                                    <option [value]="grade?.cd"
+                                        *ngFor="let grade of getCommonMasterDetail['recipient_grade']">
+                                        {{grade?.value}}
+                                    </option>
+                                </select>
+                                <div class="alert-message"
+                                    *ngIf="formControls?.recipientGrade?.errors?.required && formControls?.recipientGrade?.touched">
+                                    {{'errorMsg.field_mandatory'|translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.cl_type'| translate}}<span
+                                        class="mandatory-field">*</span></label>
+                                <select class="form-control" name="clGrade" formControlName="clGrade"
+                                    [ngClass]="{ 'is-invalid': formControls?.clGrade?.touched && formControls?.clGrade?.errors }">
+                                    <option [value]="null">{{'animalDetails.select'| translate}}
+                                        {{'animalBreeding.cl_type'| translate}}</option>
+
+                                    <option [value]="grade?.cd" *ngFor="let grade of getCommonMasterDetail['cl_grade']">
+                                        {{grade?.value}}
+                                    </option>
+                                </select>
+                                <div class="alert-message"
+                                    *ngIf="formControls?.clGrade?.errors?.required && formControls?.clGrade?.touched">
+                                    {{'errorMsg.field_mandatory'|translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.transfer_horn'|translate}}<span
+                                        class="mandatory-field">*</span></label>
+                                <select class="form-control" name="transferHorn" formControlName="transferHorn"
+                                    [ngClass]="{ 'is-invalid': formControls?.transferHorn?.touched && formControls?.transferHorn?.errors }">
+                                    <option [value]="null">{{'animalDetails.select'| translate}}
+                                        {{'animalBreeding.transfer_horn'|translate}}</option>
+
+                                    <option [value]="horn?.cd"
+                                        *ngFor="let horn of getCommonMasterDetail['transfer_horn']">
+                                        {{horn?.value}}
+                                    </option>
+                                </select>
+                                <div class="alert-message"
+                                    *ngIf="formControls?.transferHorn?.errors?.required && formControls?.transferHorn?.touched">
+                                    {{'errorMsg.field_mandatory'|translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.transfer_horn_site'|translate}}<span
+                                        class="mandatory-field">*</span></label>
+                                <select class="form-control" name="transferHornSite" formControlName="transferHornSite"
+                                    [ngClass]="{ 'is-invalid': formControls?.transferHornSite?.touched && formControls?.transferHornSite?.errors }">
+                                    <option [value]="null">{{'animalDetails.select'| translate}}
+                                        {{'animalBreeding.transfer_horn_site'|translate}}</option>
+
+                                    <option [value]="horn?.cd"
+                                        *ngFor="let horn of getCommonMasterDetail['transfer_horn_site']">
+                                        {{horn?.value}}
+                                    </option>
+                                </select>
+                                <div class="alert-message"
+                                    *ngIf="formControls?.transferHornSite?.errors?.required && formControls?.transferHornSite?.touched">
+                                    {{'errorMsg.field_mandatory'|translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.transfer_grade'| translate}} <span
+                                        class="mandatory-field">*</span></label>
+                                <select class="form-control" name="transferGrade" formControlName="transferGrade"
+                                    [ngClass]="{ 'is-invalid': formControls?.transferGrade?.touched && formControls?.transferGrade?.errors }">
+                                    <option [value]="null">{{'animalDetails.select'| translate}}
+                                        {{'animalBreeding.transfer_grade'| translate}}</option>
+
+                                    <option [value]="grade?.cd"
+                                        *ngFor="let grade of getCommonMasterDetail['transfer_grade']">
+                                        {{grade?.value}}
+                                    </option>
+                                </select>
+                                <div class="alert-message"
+                                    *ngIf="formControls?.transferGrade?.errors?.required && formControls?.transferGrade?.touched">
+                                    {{'errorMsg.field_mandatory'|translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.remarks'| translate}}</label>
+                                <textarea class="form-control" type="text" formControlName="remarks"></textarea>
+                                <span class="alert-message" *ngIf="formControls.remarks.hasError('pattern')">
+                                    {{'errorMsg.invalid_char'|translate}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="h-divider additional-info">
+                    <div class="shadow"></div>
+                </div>
+
+                <!-- Form Buttons -->
+                <div class="footer d-flex">
+                    <button type="button" class="btn btn-light mr-2 ml-auto" (click)="goBack()">
+                        {{'animalDetails.cancel'|translate}}
+                    </button>
+                    <button type="submit" class="btn btn-primary">{{'common.submit'|translate}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

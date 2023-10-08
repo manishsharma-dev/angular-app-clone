@@ -1,0 +1,527 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<app-common-breadcrumb [breadcrumbKeys]="[ 'performanceRecording.pr', 'performanceRecording.milk_sampling']">
+</app-common-breadcrumb>
+
+<section class="add-milk-sample">
+  <div class="row no-gutters col-container">
+    <div class="col-md-12 col-h left-section">
+      <div class="treatment-header">
+        <div class="back-arrow">
+          <i class="fa fa-chevron-left mr-2 back-section" (click)="goBack()"></i>
+        </div>
+
+        <div class="title-section">
+          <div class="title-heading">
+            <span class="muted-label-heading"> </span>
+          </div>
+        </div>
+
+        <div class="ticket-section" *ngIf="animal">
+          <span class="mr-2">
+            {{ "animalDetails.previewAnimalDetails.tagId" | translate }}:
+            <b>{{ animal.tagId }} </b>
+          </span>
+          <span class="mr-2">
+            {{ "common.species" | translate }}:
+            <b>{{ animal.species }} </b>
+          </span>
+          <span class="mr-2">
+            {{ "animalDetails.fillAnimalDetails.age" | translate }}:
+            <b>
+              {{ animal ? getAnimalAge(animal.ageInMonths) : "" }}
+            </b>
+          </span>
+          <span class="mr-2">
+            {{ "common.sex" | translate }}: <b>{{ animal.sex }} </b>
+          </span>
+          <!-- <span class=""> Ticket Number : <b>1234567890</b></span> -->
+        </div>
+      </div>
+
+      <div class="h-divider">
+        <div class="shadow"></div>
+      </div>
+
+      <form [formGroup]="addSampleForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="sampleCollectionDate">{{ "performanceRecording.sample_collection_date" | translate
+              }}<span class="mandatory-field">*</span></label>
+            <input class="form-control" type="text" [min]="minDate" [max]="today" [matDatepicker]="pickerDate"
+              formControlName="sampleCollectionDate" placeholder="dd/mm/yyyy" />
+            <mat-datepicker-toggle matSuffix style="display: none" [for]="pickerDate"
+              class="calender-icon"></mat-datepicker-toggle>
+            <mat-datepicker #pickerDate style="display: none"></mat-datepicker>
+            <span class="alert-message" *ngIf="
+                      (addSampleForm.get('sampleCollectionDate').dirty &&
+                        addSampleForm.get('sampleCollectionDate').invalid) ||
+                      addSampleForm.get('sampleCollectionDate').touched
+                      ">
+              <span *ngIf="addSampleForm.get('sampleCollectionDate').hasError('matDatepickerMin')">
+                {{'common.please_enter_valid_date' | translate}}
+              </span>
+              <span *ngIf="addSampleForm.get('sampleCollectionDate').hasError('matDatepickerMax')">
+                {{'common.please_enter_valid_date' | translate}}
+              </span>
+              <span *ngIf="addSampleForm.get('sampleCollectionDate').hasError('matDatepickerParse')">
+                {{'common.please_enter_valid_date' | translate}}
+              </span>
+              <span
+                *ngIf="addSampleForm.get('sampleCollectionDate').hasError('required') && !addSampleForm.get('sampleCollectionDate').hasError('matDatepickerParse')">
+                {{cmnValidation.required|translate}}
+              </span>
+            </span>
+
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="recordingPeriod" class="form-label">{{'performanceRecording.recording_slot' | translate}} <span
+                class="mandatory-field">*</span> </label>
+            <select class="form-control" id="recordingPeriod" formControlName="recordingPeriod">
+              <option *ngFor="let period of recordingPeriods" [ngValue]="period.cd">
+                {{period.value}}
+              </option>
+            </select>
+            <div class="alert-message" *ngIf="addSampleForm.get('recordingPeriod').invalid &&
+             (addSampleForm.get('recordingPeriod').touched ||
+              addSampleForm.get('recordingPeriod').dirty)">
+              <span *ngIf=" addSampleForm.get('recordingPeriod').hasError('required')">
+                {{cmnValidation.required | translate}}
+              </span>
+            </div>
+          </div>
+
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="sampleType" class="form-label">{{
+              "performanceRecording.sample_type" | translate
+              }}</label><input type="text" formControlName="sampleType" class="form-control" />
+          </div>
+          <div class="form-group col-md-3">
+            <label for="examinationType" class="form-label">{{
+              "performanceRecording.examination_type" | translate
+              }}</label><input type="text" formControlName="examinationType" class="form-control" />
+          </div>
+          <div class="form-group col-md-3">
+            <label for="examinationSubType" class="form-label">{{
+              "performanceRecording.sub_examination_type" | translate
+              }}</label><input type="text" formControlName="examinationSubType" class="form-control" />
+          </div>
+        </div>
+        <div class="sample-labCd--testing mb-3">
+          <div class="separator mb-2">
+            <div>
+              <span class="mr-2"><b>{{
+                  "performanceRecording.sample_testing_in_lab" | translate
+                  }}</b></span>
+              <div class="form-check-inline">
+                <label class="form-check-label">
+                  <input type="radio" class="form-check-input" formControlName="sampleTestingInLab" value="yes" />{{
+                  "common.yes" | translate }}
+                </label>
+              </div>
+              <div class="form-check-inline">
+                <input type="radio" class="form-check-input" formControlName="sampleTestingInLab" value="no" />
+                <label class="form-check-label">{{
+                  "common.no" | translate
+                  }}</label>
+              </div>
+            </div>
+            <div class="line"></div>
+          </div>
+          <div class="table-outebox mb-3" *ngIf="addSampleForm.get('sampleTestingInLab')?.value == 'yes'">
+            <div class="medicine-list mb-3" formGroupName="sampleTesting">
+              <!-- <div class="medicine-list-heading mb-3">
+                Sample Collection Details
+              </div> -->
+              <!-- <app-lab-testing-sample [diseaseRequiredFlag]="false" [SampleStatusFlags]="['A','B','D','O']"
+                [diagnosticsForm]="diagnosticsForm" [sampleData]="data.sampleData" [isDraft]="data.isDraft">
+              </app-lab-testing-sample> -->
+              <div class="form-row">
+                <div class="form-group col-md-3">
+                  <label for="sampleId" class="form-label">{{ "performanceRecording.sample_id" | translate }}
+                    <span class="mandatory-field">*</span></label>
+                  <input type="text" class="form-control" formControlName="sampleId" />
+                  <a href="javascript:void(0)" (click)="generateSampleId()">Generate Sample Id</a>
+                  <div class="alert-message" *ngIf="
+                      (addSampleForm.get('sampleTesting.sampleId').invalid &&
+                        addSampleForm.get('sampleTesting.sampleId').dirty) ||
+                      addSampleForm.get('sampleTesting.sampleId').touched
+                    ">
+                    <span *ngIf="
+                        addSampleForm
+                          .get('sampleTesting.sampleId')
+                          .hasError('required')
+                      ">
+                      {{ cmnValidation.required |translate}}
+                    </span>
+                    <span *ngIf="addSampleForm.get('sampleTesting.sampleId').hasError('pattern')">
+                      {{'diseaseTesting.invalid_characters_present' | translate}}
+                    </span>
+                    <span *ngIf="
+                        addSampleForm
+                          .get('sampleTesting.sampleId')
+                          .hasError('maxlength')
+                      ">
+                      {{ validationMsg.sampleIdLength |translate}}
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="labCd" class="form-label">{{ "performanceRecording.lab_name" | translate
+                    }}<span class="mandatory-field">*</span></label>
+                  <ng-select class="custom" formControlName="labCd" appendTo="body" (change)="onLabChange($event)">
+                    <ng-option *ngFor="let lab of labMaster" [value]="lab.subOrgId">{{ lab.subOrgName }}</ng-option>
+                    <ng-option [value]="0" *ngIf="!showAllLabs"><a href="javascript:void(0)">Show All
+                        Labs</a></ng-option>
+                  </ng-select>
+                  <div class="alert-message" *ngIf="
+                      (addSampleForm.get('sampleTesting.labCd').invalid &&
+                        addSampleForm.get('sampleTesting.labCd').dirty) ||
+                      addSampleForm.get('sampleTesting.labCd').touched
+                    ">
+                    <span *ngIf="
+                        addSampleForm
+                          .get('sampleTesting.labCd')
+                          .hasError('required')
+                      ">
+                      {{ cmnValidation.required |translate}}
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="testCharges" class="form-label">{{
+                    "performanceRecording.testing_charges" | translate
+                    }}</label>
+                  <input type="text" class="form-control" formControlName="testCharges" />
+                  <div class="alert-message" *ngIf="
+                      (addSampleForm.get('sampleTesting.testCharges').invalid &&
+                        addSampleForm.get('sampleTesting.testCharges').dirty) ||
+                      addSampleForm.get('sampleTesting.testCharges').touched
+                    ">
+                    <span *ngIf="
+                        addSampleForm
+                          .get('sampleTesting.testCharges')
+                          .hasError('invalidDecimalNo')
+                      ">
+                      {{"performanceRecording.invalid_value" | translate}}
+                    </span>
+                    <span *ngIf="
+                        addSampleForm
+                          .get('sampleTesting.testCharges')
+                          .hasError('min')
+                      ">
+                      {{ cmnValidation.minMax |translate}}
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="receiptNo" class="form-label">{{ "performanceRecording.receipt_no" | translate }}
+                  </label>
+                  <input type="text" class="form-control" formControlName="receiptNo" />
+                  <span *ngIf="addSampleForm.get('sampleTesting.receiptNo').hasError('pattern')">
+                    {{'diseaseTesting.invalid_characters_present' | translate}}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sample-labCd--testing mb-3">
+          <div class="separator mb-2">
+            <div>
+              <span class="mr-2"><b>{{
+                  "performanceRecording.on-spot_testing" | translate
+                  }}</b></span>
+              <div class="form-check-inline">
+                <label class="form-check-label">
+                  <input type="radio" class="form-check-input" formControlName="onSpot" value="yes" />{{ "common.yes" |
+                  translate }}
+                </label>
+              </div>
+              <div class="form-check-inline">
+                <input type="radio" class="form-check-input" formControlName="onSpot" value="no" />
+                <label class="form-check-label">{{
+                  "common.no" | translate
+                  }}</label>
+              </div>
+            </div>
+            <div class="line"></div>
+          </div>
+          <div class="table-outebox mb-3" *ngIf="addSampleForm.get('onSpot')?.value == 'yes'">
+            <div class="medicine-list mb-3" formGroupName="onSpotTesting">
+              <!-- <div class="medicine-list-heading mb-3">
+                Sample Collection Details
+              </div> -->
+              <!-- <app-lab-testing-sample [diseaseRequiredFlag]="false" [SampleStatusFlags]="['A','B','D','O']"
+                [diagnosticsForm]="diagnosticsForm" [sampleData]="data.sampleData" [isDraft]="data.isDraft">
+              </app-lab-testing-sample> -->
+              <div class="form-row">
+                <div class="medicine-list-heading mb-3 col-12">
+                  {{ "performanceRecording.result" | translate }}
+                </div>
+                <div class="form-group col-md-2">
+                  <label for="fat" class="form-label">{{ "performanceRecording.fat" | translate }} %
+                    <span class="mandatory-field">*</span></label>
+                  <input type="text" class="form-control" formControlName="fatPercentage" />
+                  <div class="alert-message" *ngIf="
+                      (addSampleForm.get('onSpotTesting.fatPercentage')
+                        .invalid &&
+                        addSampleForm.get('onSpotTesting.fatPercentage')
+                          .dirty) ||
+                      addSampleForm.get('onSpotTesting.fatPercentage').touched
+                    ">
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.fatPercentage')
+                          .hasError('required')
+                      ">
+                      {{ cmnValidation.required |translate}}
+                    </span>
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.fatPercentage')
+                          .hasError('pattern')
+                      ">
+                      {{ cmnValidation.decimalValidation |translate}}
+                    </span>
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.fatPercentage')
+                          .hasError('max') ||
+                        addSampleForm
+                          .get('onSpotTesting.fatPercentage')
+                          .hasError('min')
+                      ">
+                      {{ cmnValidation.minMax |translate}}
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group col-md-2">
+                  <label for="protein" class="form-label">{{ "performanceRecording.protein" | translate }} %
+                    <!-- <span class="mandatory-field">*</span> -->
+                  </label>
+                  <input type="text" class="form-control" formControlName="proteinPercentage" />
+                  <div class="alert-message" *ngIf="
+                      (addSampleForm.get('onSpotTesting.proteinPercentage')
+                        .invalid &&
+                        addSampleForm.get('onSpotTesting.proteinPercentage')
+                          .dirty) ||
+                      addSampleForm.get('onSpotTesting.proteinPercentage')
+                        .touched
+                    ">
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.proteinPercentage')
+                          .hasError('required')
+                      ">
+                      {{ cmnValidation.required |translate}}
+                    </span>
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.proteinPercentage')
+                          .hasError('pattern')
+                      ">
+                      {{ cmnValidation.decimalValidation |translate}}
+                    </span>
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.proteinPercentage')
+                          .hasError('max') ||
+                        addSampleForm
+                          .get('onSpotTesting.proteinPercentage')
+                          .hasError('min')
+                      ">
+                      {{ cmnValidation.minMax |translate}}
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group col-md-2">
+                  <label for="snf" class="form-label">{{ "performanceRecording.snf" | translate }} %
+                    <!-- <span class="mandatory-field">*</span> -->
+                  </label>
+                  <input type="text" class="form-control" formControlName="snfPercentage" />
+                  <div class="alert-message" *ngIf="
+                      (addSampleForm.get('onSpotTesting.snfPercentage')
+                        .invalid &&
+                        addSampleForm.get('onSpotTesting.snfPercentage')
+                          .dirty) ||
+                      addSampleForm.get('onSpotTesting.snfPercentage').touched
+                    ">
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.snfPercentage')
+                          .hasError('required')
+                      ">
+                      {{ cmnValidation.required |translate}}
+                    </span>
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.snfPercentage')
+                          .hasError('pattern')
+                      ">
+                      {{ cmnValidation.decimalValidation |translate}}
+                    </span>
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.snfPercentage')
+                          .hasError('max') ||
+                        addSampleForm
+                          .get('onSpotTesting.snfPercentage')
+                          .hasError('min')
+                      ">
+                      {{ cmnValidation.minMax |translate}}
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group col-md-2">
+                  <label for="lactose" class="form-label">{{ "performanceRecording.lactose" | translate }} %
+                    <!-- <span class="mandatory-field">*</span> -->
+                  </label>
+                  <input type="text" class="form-control" formControlName="lactosePercentage" />
+                  <div class="alert-message" *ngIf="
+                      (addSampleForm.get('onSpotTesting.lactosePercentage')
+                        .invalid &&
+                        addSampleForm.get('onSpotTesting.lactosePercentage')
+                          .dirty) ||
+                      addSampleForm.get('onSpotTesting.lactosePercentage')
+                        .touched
+                    ">
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.lactosePercentage')
+                          .hasError('required')
+                      ">
+                      {{ cmnValidation.required |translate}}
+                    </span>
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.lactosePercentage')
+                          .hasError('pattern')
+                      ">
+                      {{ cmnValidation.decimalValidation |translate}}
+                    </span>
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.lactosePercentage')
+                          .hasError('max') ||
+                        addSampleForm
+                          .get('onSpotTesting.lactosePercentage')
+                          .hasError('min')
+                      ">
+                      {{ cmnValidation.minMax |translate}}
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group col-md-2">
+                  <label for="somaticCellCount" class="form-label">{{
+                    "performanceRecording.somatic_cell_count" | translate
+                    }}
+                    <!-- <span class="mandatory-field">*</span> -->
+                  </label>
+                  <input type="text" class="form-control" formControlName="somaticCellCount" />
+                  <div class="alert-message" *ngIf="
+                      (addSampleForm.get('onSpotTesting.somaticCellCount')
+                        .invalid &&
+                        addSampleForm.get('onSpotTesting.somaticCellCount')
+                          .dirty) ||
+                      addSampleForm.get('onSpotTesting.somaticCellCount')
+                        .touched
+                    ">
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.somaticCellCount')
+                          .hasError('required')
+                      ">
+                      {{ cmnValidation.required |translate}}
+                    </span>
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.somaticCellCount')
+                          .hasError('invalidDecimalNo')
+                      ">
+                      {{"performanceRecording.invalid_value" | translate}}
+                    </span>
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.somaticCellCount')
+                          .hasError('max') ||
+                        addSampleForm
+                          .get('onSpotTesting.somaticCellCount')
+                          .hasError('min')
+                      ">
+                      {{ cmnValidation.minMax |translate}}
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group col-md-2 position-relative">
+                  <label for="milkUreaNitrogen" class="form-label">{{
+                    "performanceRecording.milk_urea_nitrogen" | translate
+                    }} (mg/100gm)
+                    <!-- <span class="mandatory-field">*</span> -->
+                  </label>
+                  <input type="text" class="form-control mun-input" formControlName="milkUreaNitrogen" />
+                  <!-- <span class="mun-unit">mg/100gm</span> -->
+                  <div class="alert-message" *ngIf="
+                      (addSampleForm.get('onSpotTesting.milkUreaNitrogen')
+                        .invalid &&
+                        addSampleForm.get('onSpotTesting.milkUreaNitrogen')
+                          .dirty) ||
+                      addSampleForm.get('onSpotTesting.milkUreaNitrogen')
+                        .touched
+                    ">
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.milkUreaNitrogen')
+                          .hasError('required')
+                      ">
+                      {{ cmnValidation.required |translate}}
+                    </span>
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.milkUreaNitrogen')
+                          .hasError('invalidDecimalNo')
+                      ">
+                      {{"performanceRecording.invalid_value" | translate}}
+                    </span>
+                    <span *ngIf="
+                        addSampleForm
+                          .get('onSpotTesting.milkUreaNitrogen')
+                          .hasError('max') ||
+                        addSampleForm
+                          .get('onSpotTesting.milkUreaNitrogen')
+                          .hasError('min')
+                      ">
+                      {{ cmnValidation.minMax |translate}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="h-divider">
+          <div class="shadow"></div>
+        </div>
+
+        <div class="footer d-flex">
+          <button type="button" (click)="goBack()" class="btn btn-outline-primary mr-2 ml-auto">
+            {{ "animalDetails.cancel" | translate }}
+          </button>
+          <button type="button" (click)="onReset()" class="btn btn-outline-primary mr-2">
+            {{ "animalDetails.reset" | translate }}
+          </button>
+          <button type="submit" class="btn btn-primary">
+            {{ "common.submit" | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

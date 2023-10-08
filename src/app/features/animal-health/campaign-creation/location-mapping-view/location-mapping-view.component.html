@@ -1,0 +1,107 @@
+<div class="form-row">
+  <div class="form-group col-md-12">
+    <label class="form-label">{{ "animalDetails.state" | translate }}<span class="mandatory-field">*</span></label>
+    <div class="col-md-12 border p-2 d-flex justify-content-between custom-height">
+      <span class="span" *ngIf="selectedState && selectedState.length; else noStateSelected">
+        <span class="border p-1 mr-1 selected-area-name outline" *ngFor="let state of selectedState | slice : 0 : 3">
+          <span [title]="state.stateName">{{state?.stateName?.length > 10 ? (state?.stateName | slice:0:10) + '...' :
+            state.stateName}}</span>
+        </span>
+        <span *ngIf="selectedState.length>3"> + {{selectedState.length -3}} more </span>
+      </span>
+      <ng-template #noStateSelected>
+        <span class="span">
+          No State Selected
+        </span>
+      </ng-template>
+      <!-- <span class="span float-right">
+        <a (click)="manageAreaAllocation('state')"><svg xmlns="http://www.w3.role/2000/svg" width="16" height="16"
+            viewBox="0 0 16 16">
+            <path id="pencil-alt"
+              d="M15.583,4.513,14.142,5.954a.375.375,0,0,1-.531,0L10.142,2.485a.375.375,0,0,1,0-.531L11.583.513a1.5,1.5,0,0,1,2.122,0l1.878,1.878A1.5,1.5,0,0,1,15.583,4.513ZM8.9,3.192.7,11.4.035,15.2a.751.751,0,0,0,.869.869L4.7,15.4l8.207-8.207a.375.375,0,0,0,0-.531L9.439,3.192a.379.379,0,0,0-.534,0Zm-5,7.5a.436.436,0,0,1,0-.619L8.714,5.263a.438.438,0,0,1,.619.619L4.52,10.695a.436.436,0,0,1-.619,0ZM2.773,13.323h1.5v1.134l-2.016.353-.972-.972.353-2.016H2.773Z"
+              transform="translate(-0.024 -0.075)" fill="#185b85" />
+          </svg>
+        </a>
+      </span> -->
+    </div>
+  </div>
+  <div class="form-group col-md-12">
+    <label class="form-label">{{ "animalDetails.district" | translate }}<span class="mandatory-field">*</span></label>
+    <div class="col-md-12 border p-2 d-flex justify-content-between custom-height">
+      <span class="span" *ngIf="selectedDistrict && selectedDistrict.length; else noDistrictSelected">
+        <span class="border p-1 mr-1 selected-area-name outline" *ngFor="let dist of selectedDistrict | slice : 0 : 3">
+          <span [title]="dist.districtName">{{dist.districtName?.length > 10 ? (dist.districtName | slice:0:10) + '...'
+            :
+            dist.districtName}}</span>
+        </span>
+        <span *ngIf="selectedDistrict.length>3"> + {{selectedDistrict.length -3}} more </span>
+      </span>
+      <ng-template #noDistrictSelected>
+        <span class="span">
+          No district Selected
+        </span>
+      </ng-template>
+      <span class="span float-right ">
+        <a (click)="manageAreaAllocation('district')"><svg xmlns="http://www.w3.role/2000/svg" width="16" height="16"
+            viewBox="0 0 16 16">
+            <path id="pencil-alt"
+              d="M15.583,4.513,14.142,5.954a.375.375,0,0,1-.531,0L10.142,2.485a.375.375,0,0,1,0-.531L11.583.513a1.5,1.5,0,0,1,2.122,0l1.878,1.878A1.5,1.5,0,0,1,15.583,4.513ZM8.9,3.192.7,11.4.035,15.2a.751.751,0,0,0,.869.869L4.7,15.4l8.207-8.207a.375.375,0,0,0,0-.531L9.439,3.192a.379.379,0,0,0-.534,0Zm-5,7.5a.436.436,0,0,1,0-.619L8.714,5.263a.438.438,0,0,1,.619.619L4.52,10.695a.436.436,0,0,1-.619,0ZM2.773,13.323h1.5v1.134l-2.016.353-.972-.972.353-2.016H2.773Z"
+              transform="translate(-0.024 -0.075)" fill="#185b85" />
+          </svg>
+        </a>
+      </span>
+    </div>
+  </div>
+  <div class="form-group col-md-12">
+    <label class="form-label">{{ "user.tehsil" | translate }}<span class="mandatory-field">*</span></label>
+    <div class="col-md-12 border p-2 d-flex justify-content-between custom-height">
+      <span class="span" *ngIf="selectedTehsil && selectedTehsil.length; else noTehsilSelected">
+        <span class="border p-1 mr-1 selected-area-name outline" *ngFor="let teh of selectedTehsil | slice : 0 : 3">
+          <span [title]="teh.tehsilName">{{teh.tehsilName?.length > 10 ? (teh.tehsilName | slice:0:10) + '...' :
+            teh.tehsilName}}</span>
+        </span>
+        <span *ngIf="selectedTehsil.length>3"> + {{selectedTehsil.length -3}} more </span>
+      </span>
+      <ng-template #noTehsilSelected>
+        <span class="span">
+          No Tehsil Selected
+        </span>
+      </ng-template>
+      <span class="span float-right">
+        <a (click)="manageAreaAllocation('tehsil')"><svg xmlns="http://www.w3.role/2000/svg" width="16" height="16"
+            viewBox="0 0 16 16">
+            <path id="pencil-alt"
+              d="M15.583,4.513,14.142,5.954a.375.375,0,0,1-.531,0L10.142,2.485a.375.375,0,0,1,0-.531L11.583.513a1.5,1.5,0,0,1,2.122,0l1.878,1.878A1.5,1.5,0,0,1,15.583,4.513ZM8.9,3.192.7,11.4.035,15.2a.751.751,0,0,0,.869.869L4.7,15.4l8.207-8.207a.375.375,0,0,0,0-.531L9.439,3.192a.379.379,0,0,0-.534,0Zm-5,7.5a.436.436,0,0,1,0-.619L8.714,5.263a.438.438,0,0,1,.619.619L4.52,10.695a.436.436,0,0,1-.619,0ZM2.773,13.323h1.5v1.134l-2.016.353-.972-.972.353-2.016H2.773Z"
+              transform="translate(-0.024 -0.075)" fill="#185b85" />
+          </svg>
+        </a>
+      </span>
+    </div>
+  </div>
+  <div class="form-group col-md-12">
+    <label class="form-label">{{ "user.village" | translate }}<span class="mandatory-field">*</span></label>
+    <div class="col-md-12 border p-2 d-flex justify-content-between custom-height">
+      <span class="span" *ngIf="selectedVillage && selectedVillage.length; else noVillageSelected">
+        <span class="border p-1 mr-1 selected-area-name outline" *ngFor="let vill of selectedVillage | slice : 0 : 3">
+          <span [title]="vill.villageName">{{vill.villageName?.length > 10 ? (vill.villageName | slice:0:10) + '...' :
+            vill.villageName}}</span>
+        </span>
+        <span *ngIf="selectedVillage.length>3"> + {{selectedVillage.length - 3}} more </span>
+      </span>
+      <ng-template #noVillageSelected>
+        <span class="span">
+          No Village Selected
+        </span>
+      </ng-template>
+      <span class="span float-right">
+        <a (click)="manageAreaAllocation('village')"><svg xmlns="http://www.w3.role/2000/svg" width="16" height="16"
+            viewBox="0 0 16 16">
+            <path id="pencil-alt"
+              d="M15.583,4.513,14.142,5.954a.375.375,0,0,1-.531,0L10.142,2.485a.375.375,0,0,1,0-.531L11.583.513a1.5,1.5,0,0,1,2.122,0l1.878,1.878A1.5,1.5,0,0,1,15.583,4.513ZM8.9,3.192.7,11.4.035,15.2a.751.751,0,0,0,.869.869L4.7,15.4l8.207-8.207a.375.375,0,0,0,0-.531L9.439,3.192a.379.379,0,0,0-.534,0Zm-5,7.5a.436.436,0,0,1,0-.619L8.714,5.263a.438.438,0,0,1,.619.619L4.52,10.695a.436.436,0,0,1-.619,0ZM2.773,13.323h1.5v1.134l-2.016.353-.972-.972.353-2.016H2.773Z"
+              transform="translate(-0.024 -0.075)" fill="#185b85" />
+          </svg>
+        </a>
+      </span>
+    </div>
+  </div>
+</div>

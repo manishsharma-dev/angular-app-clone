@@ -1,0 +1,275 @@
+/*common css  */
+.form-label {
+    font-size: 14px;
+    font-weight: normal;
+    color: #212529;
+  }
+  /*common css end */
+  /*Animal reg. css */
+  /* .input{
+      width: 25em;
+    } */
+  
+  .red-alert {
+    color: #dc3545;
+    margin-top: 0.25rem;
+    width: 100%;
+    font-size: 90%;
+    position: absolute;
+  }
+  
+  .no-data-section {
+    background-color: #fff;
+    border: 1px solid #fff;
+    border-radius: 4px;
+    display: flex;
+  }
+  
+  .no-data-available-custom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .or_center {
+    color: #5f6160;
+    font-size: 14px;
+    font-weight: normal;
+    opacity: 0.8;
+  }
+  
+  .table-view .table th,
+  .table td {
+    border-top: none;
+  }
+  
+  .table-view .view-link {
+    cursor: pointer;
+  }
+  
+  .user-detail {
+    font-size: 14px;
+    font-weight: bold;
+    font-family: Poppins;
+    letter-spacing: 0px;
+    color: #757575;
+    opacity: 1;
+  }
+  
+  .search-by .input-section {
+    border: 1px solid #dcdcdc;
+    padding-left: 35px;
+    padding-right: 60px;
+  }
+  
+  .filter-by .input-section {
+    border: 1px solid #dcdcdc;
+    padding-left: 30px;
+  }
+  
+  .search-by .input-section::placeholder {
+    font-size: 12px;
+  }
+  
+  .filter-by .input-section::placeholder {
+    font-size: 14px;
+  }
+  
+  .input-icon-left {
+    position: absolute;
+    left: 15px;
+    bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  .search-by .input-clear {
+    position: absolute;
+    right: 15px;
+    top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 14px;
+    font-weight: normal;
+    font-family: Noto Sans;
+    letter-spacing: 0px;
+    color: #545454;
+  }
+  
+  .owner-reg .owner-name {
+    font-size: 14px;
+    font-weight: bold;
+    font-family: Noto Sans;
+    letter-spacing: 0px;
+    color: #333333;
+  }
+  
+  .owner-reg .add-member > .view-details {
+    text-decoration: underline;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: Noto Sans;
+    letter-spacing: 0px;
+  }
+  
+  #owner-detail ul li {
+    list-style-type: none;
+    display: inline;
+    font-weight: normal;
+    font-family: Noto Sans;
+    font-size: 14px;
+    letter-spacing: 0px;
+    color: #3c3c3c;
+  }
+  
+  #owner-detail li:not(:first-child):before {
+    content: " | ";
+  }
+  
+  .floating-filedset {
+    padding: 4px 15px;
+    border-radius: 0px 0px 8px 8px;
+    position: absolute;
+    top: 0;
+  }
+  
+  .floating-filedset.fildset-bg-green {
+    background-color: #01c5d3;
+  }
+  
+  .floating-filedset.fildset-bg-blue {
+    background-color: #3ba2e2;
+  }
+  
+  .floating-filedset .float-label {
+    font-size: 12px;
+    font-weight: bold;
+    font-family: Noto Sans;
+    letter-spacing: 0px;
+    color: #ffffff;
+  }
+  
+  .owner-reg .additional-info {
+    letter-spacing: 0px;
+    color: #333333;
+  }
+  
+  .loaned-icon {
+    height: 15px;
+    width: 15px;
+    cursor: pointer;
+  }
+  
+  @media screen and (max-width: 760px) {
+    .user-detail,
+    .edit-detail {
+      margin-top: 10px;
+    }
+  }
+  
+  @media screen and (max-width: 760px) {
+    .btn {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+  }
+  
+  @media screen and (max-width: 760px) {
+    .or_center {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+    .add-member {
+      margin-top: 8px;
+    }
+  }
+  .input-icon-left {
+    position: absolute;
+    left: 15px;
+    top: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 20px;
+    width: 20px;
+    filter: grayscale(100%);
+    opacity: 0.7;
+  }
+  
+  .icon-edit {
+    height: 26px;
+    width: 26px;
+    cursor: pointer;
+  }
+  
+  .mat-cell {
+    padding-right: 50px;
+  }
+  
+  input[type="checkbox"] {
+    height: 18px;
+    width: 18px;
+  }
+  
+  .icon-right-arrow {
+    cursor: pointer;
+    transform: rotate(-90deg);
+  }
+
+  .user-infoedit {
+    padding: 15px;
+    background-color: #f0f5f8;
+  }
+  
+  .user-infoedit .selected-animal {
+    font-size: 12px;
+    font-family: Noto Sans;
+    font-weight: bold;
+    letter-spacing: 0px;
+    color: #333333;
+  }
+  
+  .user-infoedit .selected-animal-list {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    overflow-y: auto;
+    max-height: 130px;
+  }
+  
+  .user-infoedit .selected-animal-listitem {
+    font-size: 12px;
+    font-family: Noto Sans;
+    font-weight: bold;
+    letter-spacing: 0.64px;
+    color: #3c3c3c;
+    padding: 2px 5px;
+    margin-right: 10px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-infoedit .selected-animal-listitem.outline {
+    background: #ffffff;
+    border: 1px solid #beccd1;
+    border-radius: 16px;
+  }
+  
+  .user-infoedit .selected-animal-listitem .animal-listitem-cross {
+    cursor: pointer;
+    margin-left: 8px;
+  }
+
+  .content-style {
+    display: contents;
+  }
+  

@@ -1,0 +1,306 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<app-common-breadcrumb [breadcrumbKeys]="['performanceRecording.pr', 'performanceRecording.dryOff']">
+</app-common-breadcrumb>
+
+<section class="owner-reg">
+  <app-common-search-box [searchProject]="true" [searchOrganization]="true" (reset)="resetValue()"
+    [(ownerTypeCd)]="ownerTypeCd" (search)="searchResults($event)" [orgId]="orgId"
+    (projectChange)="onProjectChange($event)"></app-common-search-box>
+
+  <app-common-owners-list *ngIf="isTableVisible" [ownersList]="ownerDataSource?.data"
+    (showDetail)="showOwnerDetails($event)"></app-common-owners-list>
+
+  <div class="row p-0 mb-3" *ngIf="ownerDetailsSection">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body position-relative">
+          <span class="floating-filedset fildset-bg-green">
+            <span class="float-label">{{
+              "animalTreatmentSurgery.owner_details" | translate
+              }}</span>
+          </span>
+          <div class="row align-items-center mb-1 mt-3">
+            <div class="col-md-6 col-sm-12">
+              <span class="custmer-label d-flex">
+                <p class="owner-name ellips-text mr-1" data-toggle="tooltip" data-placement="top"
+                  [title]="ownerDetailsByID.ownerName">
+                  {{
+                  ownerDetailsByID.orgName
+                  ? ownerDetailsByID.orgName
+                  : ownerDetailsByID.ownerName
+                  }}
+                </p>
+                <span>
+                  ({{
+                  ownerDetailsByID.orgId
+                  ? ownerDetailsByID.orgId
+                  : ownerDetailsByID.ownerId
+                  }})</span>
+              </span>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <div class="add-member float-md-right float-sm-left">
+                <a href="javascript: void(0)" *ngIf="ownerDetailsByID.orgId" class="view-details"
+                  (click)="viewOrgDetailsDialog()">View details</a>
+                <a href="javascript: void(0)" *ngIf="!ownerDetailsByID.orgId" class="view-details"
+                  (click)="editOwnerDialog(true)">View details</a>
+                <!-- <img src="/assets/images/edit.svg" class="icon-edit ml-3" (click)="editOwnerDialog()" alt="icon-edit" /> -->
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div id="owner-detail" class="owner-name col-md-12">
+              <ul class="custmer-label d-flex">
+                <li class="ellips-text" data-toggle="tooltip" data-placement="top" *ngIf="ownerDetailsByID.fatherName"
+                  title="{{ ownerDetailsByID.fatherName }}">
+                  {{ "animalTreatmentSurgery.care_of" | translate
+                  }}{{ ownerDetailsByID.fatherName }}
+                </li>
+                <li *ngIf="ownerDetailsByID.orgId">
+                  {{
+                  ownerDetailsByID.orgAddress
+                  ? ownerDetailsByID.orgAddress
+                  : ownerDetailsByID?.ownerVillageName
+                  }}
+                </li>
+                <li *ngIf="!ownerDetailsByID.orgId">
+                  {{ "animalTreatmentSurgery.village" | translate }}:
+                  {{
+                  ownerDetailsByID.orgAddress
+                  ? ownerDetailsByID.orgAddress
+                  : ownerDetailsByID?.ownerVillageName
+                  }}
+                </li>
+                <li *ngIf="ownerDetailsByID.orgId">
+                  {{ "animalTreatmentSurgery.reg_no" | translate }}:- {{ ownerDetailsByID.orgRegistrationNo }}
+                </li>
+                <li *ngIf="!ownerDetailsByID.orgId">
+                  {{ "animalTreatmentSurgery.mobile_number" | translate }}
+                  {{
+                  ownerDetailsByID.orgMobileNo
+                  ? ownerDetailsByID.orgMobileNo
+                  : ownerDetailsByID.ownerMobileNo
+                  }}
+                  <ng-container *ngIf="!ownerDetailsByID.orgId">
+                    <img *ngIf="
+                        ownerDetailsByID.isOwnerMobileVerified;
+                        else elseBlock
+                      " src="/assets/images/verified.svg" class="icon-verified" alt="icon-verified" />
+                    <ng-template #elseBlock>
+                      <a href="javascript:void(0)" class="alert-message link-font"
+                        (click)="openOtpDialog('verification')">
+                        <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                        {{
+                        "animalTreatmentSurgery.not_verified" | translate
+                        }}</a>
+                    </ng-template>
+                  </ng-container>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row p-0 mb-3" *ngIf="animalDetailsSection">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body position-relative">
+          <span class="floating-filedset fildset-bg-blue">
+            <span class="float-label">{{'performanceRecording.femaleList' | translate}}</span>
+          </span>
+          <div class="row align-items-center mt-4" *ngIf="tableDataSource.data.length || isAnimalTabVisible">
+            <div class="col-lg-4 col-md-4 col-sm-12">
+              <div class="title-heading">
+                <form>
+                  <div class="form-row">
+                    <div class="filter-by">
+                      <img src="/assets/images/search.svg" class="input-icon-left" alt="icon-search" />
+                      <input type="text" class="form-control input input-search-section" id="filter-by"
+                        placeholder="Search by keywords" (keyup)="searchInTable($event)" />
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-12">
+              <div class="add-member float-md-right float-sm-left">
+                <button class="btn mr-2 btn-primary" appPermission [permissionType]="masterConfig.isAdd" (click)="
+                    selectedAnimals.length === 1 ? onDryOff() : onMassDryOff()
+                  " [disabled]="isDryOffDisabled()">
+                  {{'performanceRecording.dryOff' | translate}}
+                </button>
+                <button class="btn btn-primary mr-2 modify-btn" [disabled]="isModifyDetailsDisabled()"
+                  (click)="addAnimalAdditionalDetails()">
+                  {{'performanceRecording.modify_animal_details' | translate}}
+                </button>
+                <button class="btn btn-primary  modify-btn"
+                  *ngIf="!isTableVisible && animalDetailsSection  && ownerDataSource.data && ownerDataSource.data?.length > 1"
+                  (click)="backToOwnerListing()">
+                  {{'animalDetails.back' | translate}}
+                </button>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!tableDataSource.data.length && !isAnimalTabVisible" class="mt-3 title-heading">
+            <h3>{{'diseaseTesting.no_animals_registered' | translate}}</h3>
+          </div>
+          <div class="table-view mt-4" *ngIf="tableDataSource.data.length || isAnimalTabVisible">
+            <div class="table-responsive">
+              <table mat-table matSort [dataSource]="tableDataSource" class="mat-elevation-z8">
+                <ng-container matColumnDef="radio">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <div class="form-check form-check-inline">
+                      <input type="checkbox" name="selectedTagId" class="form-check-input"
+                        (change)="onSelectAll($event)" [checked]="isAllSelected()" />
+                    </div>
+                  </th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    <div class="form-check form-check-inline">
+                      <input type="checkbox" name="selectedTagId" class="form-check-input"
+                        (change)="animalSelected($event, element)" [value]="element.animalId"
+                        [checked]="isAnimalSelected(element)" />
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="#">
+                  <th mat-header-cell *matHeaderCellDef>{{'performanceRecording.sno' | translate}}</th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{
+                    animalPaginator.pageIndex * animalPaginator.pageSize + (i + 1)
+                    }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="tagId">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'animalDetails.tag_id' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.tagId }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="species">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'common.species'|translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.species }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="animalCategory">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'animalDetails.category'|translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.animalCategory ?? '--' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="breedDesc">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'animalDetails.breed'|translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.breedDesc }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ageInMonths">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'common.age' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.ageInMonths ?? element.ageInDays }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="milkingStatus">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'animalDetails.milking_status'|translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.milkingStatus ?? "--" }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dryOffDate">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'performanceRecording.dry_off_date' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{
+                    element.dryOffDate
+                    ? (element.dryOffDate | date : "dd/MM/YYYY")
+                    : "--"
+                    }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="currentLactationNo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+
+                    {{'performanceRecording.current_lactation_no' | translate}}
+
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.currentLactationNo ?? "--" }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="elite">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'performanceRecording.elite' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ (element.isElite ? "common.yes" : "common.no") | translate }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>{{'common.action' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    <ng-container>
+                      <a #editBtn appPermission [permissionType]="masterConfig.isModify" [ngClass]="{
+                          'link-primary': isAnimalDriedOff(element),
+                          'link-primary disabled': !isAnimalDriedOff(element)
+                        }" (click)="
+                          isAnimalDriedOff(element) ? onEdit(element) : null
+                        ">{{'performanceRecording.edit' | translate}}</a>
+                      <span *ngIf="checkPermission()">&nbsp; | &nbsp;</span>
+                      <!-- <span>&nbsp; | &nbsp;</span> -->
+                      <a #deleteBtn appPermission [permissionType]="masterConfig.isDelete" [ngClass]="{
+                          'link-primary': isAnimalDriedOff(element),
+                          'link-primary disabled': !isAnimalDriedOff(element)
+                        }" (click)="
+                          isAnimalDriedOff(element) ? onDelete(element) : null
+                        ">{{'animalDetails.reset' | translate}}
+                      </a>
+                    </ng-container>
+
+                    <ng-template #noAction>--</ng-template>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+              </table>
+              <mat-paginator #animalPaginator [length]="totalRows" [pageIndex]="currentPage" [pageSize]="pageSize"
+              [pageSizeOptions]="pageSizeOptions" (page)="pageChanged($event)"  aria-label="Select page of users">
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

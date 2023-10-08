@@ -1,0 +1,22 @@
+.project-mgmt li{
+    display: inline;
+    list-style-type: none;
+    margin: 0px 0px 0px 8px;
+  }
+
+  .ng-select .ng-clear-wrapper {
+    cursor: pointer;
+    position: absolute;
+    top: 30%;
+    right: 2%;
+    width: 17px;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* .ng-value-label{
+  width: 90px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+} */

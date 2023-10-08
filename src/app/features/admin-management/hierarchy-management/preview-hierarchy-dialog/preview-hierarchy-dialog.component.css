@@ -1,0 +1,37 @@
+
+
+.form-check{
+    padding: 5px 0px;
+}
+
+.form-check::before {
+    border: 1px dashed #cac4c4;
+    content: '';
+    min-height: 35px;
+    top: 52%;
+    left: 2.5%;
+    position: absolute;
+    
+}
+
+.form-check:last-child::before{
+    border: none !important;
+}
+
+
+.form-check-label{
+    padding-left:1.5rem;
+}
+
+.level-text{
+    font-size:12px;
+    color:#989898;
+}
+.dot {
+    height: 25px;
+    width: 25px;
+    background-color: #45c9a5;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: top;
+  }

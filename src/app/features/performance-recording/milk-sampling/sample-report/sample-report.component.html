@@ -1,0 +1,198 @@
+<div class="add-diagnostics-dialog">
+  <div class="add-diagnostics-header">
+    <div class="headeing">
+      <p class="diagnostics-heading-label">
+        {{ "performanceRecording.result" | translate }}
+      </p>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+
+  <div class="dialog-main-content">
+    <div class="row">
+      <div class="align-items-center treatment-information col-md-12">
+        <div class="tabs-nav-list d-flex justify-content-md-start">
+          <ul class="nav nav-pills" id="pills-tab" role="tablist">
+            <li class="nav-item" *ngFor="let tab of tabs">
+              <a class="nav-link" [ngClass]="{ active: activeTab == tab.key }" id="pills-allCampaigns-tab"
+                data-bs-toggle="pill" [attr.data-bs-target]="'#pills-allCampaigns'" role="tab"
+                aria-controls="pills-allCampaigns" (click)="activeTab = tab.key" aria-selected="true">{{ tab.label
+                }}</a>
+            </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link" id="pills-open-tab" [ngClass]="{ active: activeTab == 'lab' }" data-bs-toggle="pill"
+                [attr.data-bs-target]="'#pills-open'" (click)="activeTab = 'lab'" role="tab" aria-controls="pills-open"
+                aria-selected="false">Lab Testing</a>
+            </li> -->
+          </ul>
+        </div>
+        <!-- on spot section -->
+        <div class="col-12 mt-3 px-0" *ngIf="activeTab == 'on_spot'">
+          <div class="mb-4" *ngFor="let sample of onSpotDetails; let i = index">
+            <div class="row">
+              <div class="col-md-12">
+                <h3 class="muted-label-heading">
+                  {{ "performanceRecording.sample" | translate }} {{ i + 1 }}
+                </h3>
+                &nbsp;
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <span class="font-weight-bold">{{ "performanceRecording.sample_id" | translate }}:</span>
+                &nbsp;
+                <span>{{ sample.sampleId }}</span>
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <div class="col-md-4">
+                <p class="font-weight-bold">
+                  {{ "performanceRecording.test_date" | translate }}:
+                </p>
+                &nbsp;
+                <p>{{ sample.sampleCollectionDate | date : "dd/MM/YYYY" }}</p>
+                &nbsp;
+              </div>
+              <div class="col-md-4">
+                <p class="font-weight-bold">
+                  {{ "performanceRecording.recording_slot" | translate }}:
+                </p>
+                &nbsp;
+                <p>{{ getRecordingSlotName(sample.recordingPeriod) }}</p>
+                &nbsp;
+              </div>
+              <div class="col-md-4">
+                <p class="font-weight-bold">
+                  {{ "performanceRecording.examination_type" | translate }}:
+                </p>
+                &nbsp;
+                <p>Milk Analysis</p>
+                &nbsp;
+              </div>
+              <div class="col-md-4">
+                <p class="font-weight-bold">
+                  {{ "performanceRecording.sub_examination_type" | translate }}:
+                </p>
+                &nbsp;
+                <p>Milk Component Analysis</p>
+                &nbsp;
+              </div>
+            </div>
+            <!-- <div class="row mb-3">
+              <div class="col-md-4">
+                <p>09/06/2022</p> &nbsp;
+              </div>
+              <div class="col-md-4">
+                <p>Milk Analysis</p> &nbsp;
+              </div>
+              <div class="col-md-4">
+                <p>Milk Analysis</p> &nbsp;
+              </div>
+            </div> -->
+
+            <app-sample-table [sample]="sample"></app-sample-table>
+            <div class="h-divider">
+              <div class="shadow"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- lab testing section -->
+        <div class="col-12 mt-3 px-0" *ngIf="activeTab == 'lab'">
+          <div class="mb-4" *ngFor="let sample of labTestingDetails; let i = index">
+            <div class="row">
+              <div class="col-md-12">
+                <h3 class="muted-label-heading">
+                  {{ "performanceRecording.sample" | translate }} {{ i + 1 }}
+                </h3>
+                &nbsp;
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <span class="font-weight-bold">{{ "performanceRecording.sample_id" | translate }}:</span>
+                &nbsp;
+                <span>{{ sample.sampleId }}</span>
+              </div>
+            </div>
+
+            <div class="row my-3">
+              <div class="col-md-4">
+                <p class="font-weight-bold">
+                  {{ "performanceRecording.test_date" | translate }}:
+                </p>
+                &nbsp;
+                <p>{{ sample.sampleCollectionDate | date : "dd/MM/YYYY" }}</p>
+                &nbsp;
+              </div>
+
+              <div class="col-md-4">
+                <p class="font-weight-bold">
+                  {{ "performanceRecording.recording_slot" | translate }}:
+                </p>
+                &nbsp;
+                <p>{{ getRecordingSlotName(sample.recordingPeriod) }}</p>
+                &nbsp;
+              </div>
+              <div class="col-md-4">
+                <p class="font-weight-bold">
+                  {{ "performanceRecording.examination_type" | translate }}:
+                </p>
+                &nbsp;
+                <p>Milk Analysis</p>
+                &nbsp;
+              </div>
+              <div class="col-md-4">
+                <p class="font-weight-bold">
+                  {{ "performanceRecording.sub_examination_type" | translate }}:
+                </p>
+                &nbsp;
+                <p>MCA</p>
+                &nbsp;
+              </div>
+              <div class="col-md-4">
+                <p class="font-weight-bold">
+                  {{ "performanceRecording.lab_name" | translate }}:
+                </p>
+                &nbsp;
+                <p>{{ sample.labName }}</p>
+                &nbsp;
+              </div>
+              <div class="col-md-4">
+                <p class="font-weight-bold">
+                  {{ "performanceRecording.testing_charges" | translate }}:
+                </p>
+                &nbsp;
+                <p>{{ sample.testCharges ?? "--" }}</p>
+                &nbsp;
+              </div>
+              <div class="col-md-4">
+                <p class="font-weight-bold">
+                  {{ "postMortem.sample_status" | translate }}:
+                </p>
+                &nbsp;
+                <p> {{sample.samplingStatus != null ? (sample.samplingStatus== 1? 'Pending': 'Result received') : '--'
+                  }}</p>
+                &nbsp;
+              </div>
+            </div>
+            <app-sample-table [sample]="sample" *ngIf="sample.samplingStatus === 2"></app-sample-table>
+
+            <div class="h-divider">
+              <div class="shadow"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<ng-template #nullValue>
+  <div class="sampleData">
+    --
+  </div>
+</ng-template>

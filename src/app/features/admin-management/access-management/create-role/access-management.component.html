@@ -1,0 +1,187 @@
+
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            {{"animalDetails.home" | translate}}
+          </li>
+          <li class="breadcrumb-item active">
+            {{"organization.Admin_Management" | translate}}
+          </li>
+          <li class="breadcrumb-item current">
+            {{"role.Role_Management" | translate}}
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="container-white-bg">
+  <div class="row">
+    <div class="col-md-12">
+      <h4 class="mb-3">{{"organization.basicInformation" | translate}}</h4>
+    </div>
+  </div>
+
+  <form [formGroup]="roleRegForm">
+    <div class="row">
+      <div class="col-md-6 form-group">
+        <label for="role" class="form-label">{{ "role.Role" | translate }}<span class="mandatory-field">*</span></label>
+        <input type="text" class="form-control" id="role" placeholder="" maxlength="50" minlength="3" formControlName="roleDesc" />
+        <mat-error>
+          <span
+            *ngIf="roleRegForm.get('roleDesc').errors && !roleRegForm.get('roleDesc').pristine && roleRegForm.get('roleDesc').touched"
+            class="validation-error-message">
+
+            <span *ngIf="roleRegForm.get('roleDesc').errors?.['required']" class="validation-error-message">
+              {{"validationMessage.roleDesc_required" | translate}}
+            </span>
+
+            <span *ngIf="roleRegForm.get('roleDesc').errors?.['minlength']" class="validation-error-message">
+              {{"validationMessage.roleDesc_minlength" | translate}}
+            </span>
+
+            <span *ngIf="roleRegForm.get('roleDesc').errors?.['pattern']">
+              {{'errorMsg.special_character_error'| translate}}
+            </span>
+          </span>
+        </mat-error>
+
+      </div>
+      <div class="col-md-6 form-group" *ngIf="isRolcode && type !='clone'">
+
+         <label for="role" class="form-label">{{"common.status"|translate}}</label>
+            <select class="form-control" id="role" name="role" formControlName="isActive" (ngModelChange)="getStatus($event)">
+              <option selected>Select</option>
+              <option [value]="'Y'" selected="">Active</option>
+              <option [value]="'N'">InActive</option>
+
+            </select>
+            <mat-error>
+
+            </mat-error>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-sm-3">
+        <h5 class="mb-3">{{ "role.accessList" | translate }}
+
+        </h5>
+        </div>
+        <div class="col-sm-7">
+        <span
+        *ngIf="isAccessPrivileges">
+
+        <span class="validation-error-message">{{ "role.inactive" | translate }}</span>
+      </span>
+
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="access-list">
+          <div class="header-row">
+            <div class="row py-2 px-3">
+              <div class="col-4">
+                <p class="dark-label-heading">{{ "role.submodule" | translate }}</p>
+              </div>
+              <div class="col-2 d-flex justify-content-center">
+                <p class="dark-label-heading">{{ "role.View" | translate }}</p>
+              </div>
+              <div class="col-2 d-flex justify-content-center">
+                <p class="dark-label-heading">{{ "role.Add" | translate }}</p>
+              </div>
+              <div class="col-2 d-flex justify-content-center">
+                <p class="dark-label-heading">{{ "role.Modify" | translate }}</p>
+              </div>
+              <div class="col-2 d-flex justify-content-center">
+                <p class="dark-label-heading">{{ "role.Delete" | translate }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="access-body">
+            <mat-accordion class="examination-expansion-panel mt-1"  *ngFor="let module of modules; let index=index" >
+
+              <mat-expansion-panel   multi class="mb-0"  [expanded]="step === index" (opened)="setStep(index)">
+                <mat-expansion-panel-header class="p-0">
+                  <mat-panel-title class="mobile-title-heading">
+                    <div class="row py-2">
+                      <div class="col">
+                        <p class="dark-label-heading">{{module['moduleDesc']}}</p>
+                      </div>
+                    </div>
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="row" *ngFor="let Submodule of rows.controls;let i=index" formArrayName="modules" >
+                  <ng-container [formGroupName]="i" *ngIf="module.moduleCd==Submodule.value.moduleCd">
+
+                    <div class="col-4">
+
+                      <input type="hidden" formControlName="subModuleCd"  id="disease" class="mr-2"/>
+                      <mat-checkbox formControlName="isSubModule"  [color]="'primary'" class="mr-2"></mat-checkbox>
+                      <label for="disease">{{Submodule.value.subModuleName}}</label>
+                    </div>
+                    <div class="col-2 d-flex justify-content-center">
+                      <mat-checkbox formControlName="isView" (change)="onSetAllCheck($event,Submodule)" [color]="'primary'"></mat-checkbox>
+                      <!-- <input type="checkbox" name="isView" id="isView" formControlName="isView" /> -->
+                    </div>
+                    <div class="col-2 d-flex justify-content-center">
+                      <mat-checkbox formControlName="isAdd" (change)="onSetAllCheck($event,Submodule)" [color]="'primary'"></mat-checkbox>
+                      <!-- <input type="checkbox" name="isAdd" id="isAdd" formControlName="isAdd"/> -->
+                    </div>
+                    <div class="col-2 d-flex justify-content-center">
+                      <mat-checkbox formControlName="isModify" (change)="onSetAllCheck($event,Submodule)" [color]="'primary'"></mat-checkbox>
+                      <!-- <input type="checkbox" name="isModify" id="isModify" formControlName="isModify" /> -->
+                    </div>
+                    <div class="col-2 d-flex justify-content-center">
+                      <mat-checkbox formControlName="isDelete" (change)="onSetAllCheck($event,Submodule)" [color]="'primary'"></mat-checkbox>
+                      <!-- <input type="checkbox" name="isDelete" id="isDelete" formControlName="isDelete" /> -->
+                    </div>
+                  </ng-container>
+                </div>
+
+
+
+              </mat-expansion-panel>
+
+
+
+
+            </mat-accordion>
+            <div class="row">
+              <div class="col-sm-12 py-3 text-right">
+
+                <!-- <button type="reset" class="btn btn-outline-primary mr-2" *ngIf="!isRolcode">Clear</button> -->
+                <button type="button" class="btn btn-outline-primary mr-2"  [routerLink]="['..', 'list']">{{"animalDetails.back" |translate}}</button>
+
+                <button type="submit" *ngIf="!isRolcode" class="btn btn-primary mr-2" (click)="onCreateAccessRole()">
+                  {{"common.submit" |translate}}
+                </button>
+                <button type="submit" *ngIf="isRolcode && type !='clone'" class="btn btn-primary mr-2" (click)="onCreateAccessRole()">
+                  {{"common.update" |translate}}
+                </button>
+                <button type="submit" *ngIf="type=='clone' && 'isRolcode'" class="btn btn-primary mr-2" (click)="onCreateAccessRole()">
+                  {{"common.clone" |translate}}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+
+</div>

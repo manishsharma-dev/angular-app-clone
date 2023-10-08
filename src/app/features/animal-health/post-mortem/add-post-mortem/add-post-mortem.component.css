@@ -1,0 +1,246 @@
+/* .custom-view-table {
+  box-shadow: none !important;
+  border-collapse: inherit;
+}
+
+.custom-view-table td.mat-cell,
+.custom-view-table th.mat-header-cell {
+  padding: 0px 5px !important;
+  white-space: nowrap;
+}
+
+.custom-view-table td.mat-cell {
+  border: 1px solid #dcdcdc;
+}
+
+.custom-view-table .table-input {
+  border: transparent;
+  background-color: #fff;
+  padding: 0px;
+}
+
+.custom-view-table tr.mat-row,
+.custom-view-table tr.mat-header-row {
+  height: 40px;
+}
+
+.custom-view-table tr.mat-header-row th {
+  background: #f8f7fa;
+  height: 38px;
+}
+
+.custom-view-table ::ng-deep.mat-sort-header-arrow {
+  position: absolute;
+  left: -20px !important;
+}
+
+.custom-view-table .status-highlight {
+  padding: 4px 10px;
+  border-radius: 16px;
+  background: #929292;
+  font-weight: bold;
+  opacity: 0.5;
+}
+
+.custom-view-table tr.mat-header-row th:last-child,
+.custom-view-table th:last-child,
+.custom-view-table td:last-child {
+  border: none !important;
+  background: none;
+} */
+
+.clinical-signs .tag-id {
+  margin-right: 10px;
+  width: 90%;
+}
+
+.clinical-signs .scan-btn {
+  padding: 5px 6px;
+  border: 1px solid #dcdcdc;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.add-row .add-row--btn {
+  cursor: pointer;
+}
+
+.add-row .add-row--icon {
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background: #dcdcdc;
+}
+
+.form-container {
+  background-color: #eaf0f2;
+  padding: 1rem;
+  margin-inline: 0px;
+  margin-bottom: 1rem;
+}
+
+.location-icon {
+  position: absolute;
+  top: 39px;
+  right: 12px;
+  font-size: 16px;
+  cursor: default;
+}
+
+.input-section {
+  position: relative;
+}
+
+.drag-area {
+  border: 2px dashed #929292;
+  border-radius: 5px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  cursor: pointer;
+  margin: 0;
+  padding: 2rem;
+}
+
+.drag-area.active {
+  border: 2px solid #929292;
+}
+
+.drag-area .icon {
+  font-size: 2rem;
+  color: #929292;
+}
+
+.drag-area img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.files-list {
+  margin-top: 1.5rem;
+}
+
+.files-list .single-file {
+  display: flex;
+  margin-bottom: 0.4rem;
+}
+
+.files-list .file-icon {
+  font-size: 1.5rem;
+  width: 50px;
+  color: #929292;
+}
+
+.files-list .info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.files-list .info > *:not(:last-child) {
+  margin-bottom: 0.4rem;
+}
+
+.files-list .first-row {
+  margin-inline: 0;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.files-list .first-row {
+  margin-inline: 0;
+}
+
+.files-list .third-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.files-list .delete {
+  cursor: pointer;
+  text-align: right;
+  padding: 0;
+}
+
+.add-post-mortem .input-icon {
+  position: relative;
+}
+
+.add-post-mortem .input-icon input {
+  padding-right: 25px;
+}
+
+.add-post-mortem .calender-icon {
+  position: absolute;
+  top: -1px;
+  right: 0px;
+}
+
+.add-post-mortem th:not(:last-child) {
+  min-width: 100px;
+}
+
+/* Post Mortem New Mat Expansion Panel */
+.add-post-mortem .mat-expansion-panel {
+  margin-bottom: 14px;
+}
+
+.add-post-mortem .mat-expansion-panel-header {
+  height: 38px;
+}
+
+.add-post-mortem .mat-expansion-panel-header.mat-expanded {
+  height: 48px;
+  background-color: #125178;
+}
+
+.add-post-mortem
+  .mat-expansion-panel-header.mat-expanded
+  .mat-expansion-panel-header-title {
+  color: #fff;
+}
+
+.add-post-mortem
+  .mat-expansion-panel-header.mat-expanded
+  .mat-expansion-indicator::after {
+  color: #fff;
+}
+
+.add-post-mortem .mat-expansion-panel-body {
+  padding: 16px 24px;
+}
+
+.add-post-mortem .mat-expansion-panel-header.mat-expanded:hover,
+.add-post-mortem .mat-expansion-panel-header.mat-expanded:focus {
+  background-color: #125178 !important;
+}
+
+.add-post-mortem span.mat-content {
+  align-items: center;
+}
+
+.add-post-mortem .mat-expansion-panel:not([class*="mat-elevation-z"]) {
+  box-shadow: none;
+}
+
+.add-post-mortem .panel-check-icon {
+  font-size: 1.2rem;
+}
+
+.add-medicine-btn {
+  cursor: pointer;
+  background-color: #dcdcdc;
+  padding: 5px 10px;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 3px;
+}
+
+.add-post-mortem table.custom-view-table input {
+  border: none !important;
+}

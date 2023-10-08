@@ -1,0 +1,123 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<form [formGroup]="sampleExaminationDetails">
+  <div class="form-row">
+    <div class="col-md-3 form-group">
+      <label for="Sample">{{'diseaseTesting.sample_type' | translate}}<span class="mandatory-field">*</span></label>
+      <ng-select class="custom" appendTo="body" [items]="sampleTypeMaster" bindLabel="sampleTypeDesc"
+        [selectableGroup]="true" [selectableGroupAsModel]="false" [virtualScroll]="true"
+        placeholder="{{'diseaseTesting.search_sample_type' | translate}}" [closeOnSelect]="true"
+        formControlName="sampleType">
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          <div class="d-flex justify-content-between">
+            <span>{{ item.sampleTypeDesc }}</span>
+          </div>
+        </ng-template>
+      </ng-select>
+      <span class="alert-message" *ngIf="
+      (formControls.sampleType.dirty &&
+        formControls.sampleType.invalid) ||
+      formControls.sampleType.touched
+    ">
+        <span *ngIf="formControls.sampleType.hasError('required')">
+          {{ validationMsg.required|translate }}
+        </span>
+      </span>
+    </div>
+    <div class="col-md-3 form-group">
+      <label for="exam">{{'animalTreatmentSurgery.examination_type' | translate}}<span
+          class="mandatory-field">*</span></label>
+      <ng-select class="custom" appendTo="body" [items]="sampleExamTypeMaster" bindLabel="sampleExaminationTypeDesc"
+        [selectableGroup]="true" [selectableGroupAsModel]="false" [virtualScroll]="true"
+        placeholder="{{'diseaseTesting.search_examination_type' | translate}}" [closeOnSelect]="true"
+        formControlName="sampleExaminationTypeCd">
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          <div class="d-flex justify-content-between">
+            <span>{{ item.sampleExaminationTypeDesc }}</span>
+          </div>
+        </ng-template>
+      </ng-select>
+      <span class="alert-message" *ngIf="
+                      (formControls.sampleExaminationTypeCd.dirty &&
+                        formControls.sampleExaminationTypeCd.invalid) ||
+                      formControls.sampleExaminationTypeCd.touched
+                    ">
+        <span *ngIf="formControls.sampleExaminationTypeCd.hasError('required')">
+          {{ validationMsg.required | translate }}
+        </span>
+      </span>
+    </div>
+    <div class="col-md-3 form-group">
+      <label for="exam">{{'performanceRecording.sub_examination_type' | translate}}</label>
+      <ng-select class="custom" appendTo="body" [items]="sampleSubExamTypeMaster"
+        bindLabel="sampleExaminationSubtypeDesc" [selectableGroup]="true" [selectableGroupAsModel]="false"
+        [virtualScroll]="true" placeholder="{{'diseaseTesting.search_examination_sub_type' | translate}}"
+        [closeOnSelect]="true" formControlName="sampleExaminationSubtypeCd">
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          <div class="d-flex justify-content-between">
+            <span>{{ item.sampleExaminationSubtypeDesc }}</span>
+          </div>
+        </ng-template>
+      </ng-select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-md-3 form-group">
+      <label for="exam">{{'diseaseTesting.lab' | translate}}</label>
+      <ng-select class="custom" appendTo="body" [items]="labMaster" bindLabel="subOrgName" [selectableGroup]="true"
+        [selectableGroupAsModel]="false" [virtualScroll]="true" placeholder="Search Lab" [closeOnSelect]="true"
+        formControlName="labCd">
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          <div class="d-flex justify-content-between" *ngIf="item.subOrgId !=0">
+            <span>{{ item.subOrgName }}</span>
+          </div>
+          <div class="d-flex justify-content-between anchor-select" *ngIf="item.subOrgId == 0">
+            <span>{{ item.subOrgName }}</span>
+          </div>
+        </ng-template>
+      </ng-select>
+    </div>
+    <div class="col-md-3 form-group">
+      <label for="exam">{{'diseaseTesting.lab_charges' | translate}}</label>
+      <input type="text" class="form-control" formControlName="labCharges">
+      <span class="alert-message" *ngIf="
+                      (formControls.labCharges.dirty &&
+                        formControls.labCharges.invalid) ||
+                      formControls.labCharges.touched
+                    ">
+        <div class="alert-message" *ngIf="formControls.labCharges.hasError('invalidDecimalNo')">
+          {{"performanceRecording.invalid_value" | translate}}
+        </div>
+      </span>
+    </div>
+    <div class="col-md-3 form-group">
+      <label for="exam">{{'diseaseTesting.receipt_no' | translate}}</label>
+      <input type="text" class="form-control" formControlName="receiptNo">
+      <span class="alert-message" *ngIf="
+                      (formControls.receiptNo.dirty &&
+                        formControls.receiptNo.invalid) ||
+                      formControls.receiptNo.touched
+                    ">
+        <span *ngIf="formControls.receiptNo.hasError('maxlength')">
+          {{'diseaseTesting.receipt_no_cannot_be_more_than_10_characters' | translate}}
+        </span>
+        <span *ngIf="formControls.receiptNo.hasError('pattern')">
+          {{'performanceRecording.invalid_value' | translate}}
+        </span>
+      </span>
+    </div>
+    <div class="col-md-3 form-group">
+      <label for="exam">{{'diseaseTesting.mode_of_transport' | translate}}</label>
+      <select class="form-control" formControlName="modeOfTransport">
+        <option value="null">{{'diseaseTesting.select_mode_of_transport' | translate}}</option>
+        <option [value]="mode.cd" *ngFor="let mode of modeOfTransports">
+          {{mode.value}}
+        </option>
+      </select>
+    </div>
+  </div>
+</form>

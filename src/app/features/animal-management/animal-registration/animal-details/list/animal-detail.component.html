@@ -1,0 +1,584 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            <a routerLink="/dashboard">Home</a>
+          </li>
+          <li class="breadcrumb-item active">
+            <label>Animal Management </label>
+          </li>
+          <li class="breadcrumb-item current">
+            <label>Animal Registration </label>
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<section class="animal-deatail" *ngIf="dateToday">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-4">
+            <div class="col-lg-12 col-md-12">
+              <img
+                src="/assets/images/back.svg"
+                class="icon-back"
+                (click)="redirectToAnimalReg()"
+                alt="icon-back"
+              />
+              <span class="title-heading">{{
+                "animalDetails.animalAddInfo.enter_details" | translate
+              }}</span>
+              <!-- {{animalInfoFormGroup.taggingDate < animalInfoFormGroup.dateOfBirth}}  -->
+              <!-- {{animalInfoFormGroup.controls['taggingDate'].value < animalInfoFormGroup.controls['dateOfBirth'].value}} -->
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="details-list">
+                <form
+                  class="basic-information"
+                  [formGroup]="animalInfoFormGroup"
+                >
+                  <div class="form-row">
+                    <div class="form-group col-md-3">
+                      <label for="tagId" class="form-label"
+                        >{{
+                          "animalDetails.fillAnimalDetails.ear_tag_no"
+                            | translate
+                        }}<span class="mandatory-field">*</span></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control form-input-section"
+                        id="tagId"
+                        placeholder="{{
+                          'animalDetails.ear_tag_placeholder' | translate
+                        }}"
+                        formControlName="tagId"
+                        [maxLength]="12"
+                      />
+                      <img
+                        src="/assets/images/scanner.svg"
+                        class="input-icon-right"
+                        alt="icon-verified"
+                      />
+
+                      <div
+                        *ngIf="
+                          (!animalInfo.tagId.pristine &&
+                            animalInfo.tagId.invalid) ||
+                          animalInfo.tagId.touched
+                        "
+                        class="alert-message"
+                      >
+                        <div *ngIf="animalInfo.tagId.errors?.required">
+                          {{ "errorMsg.no_tagg_no" | translate }}
+                        </div>
+                        <div *ngIf="animalInfo.tagId.errors?.pattern">
+                          {{ "errorMsg.tag_digit" | translate }}
+                        </div>
+                        <span
+                          *ngIf="animalInfo.tagId.errors?.['tagExists']"
+                          class="alert-message"
+                        >
+                          {{ "errorMsg.invalid_ear_tag" | translate }}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="form-group col-md-3 datepicker-margin">
+                      <label for="registrationDate" class="form-label"
+                        >{{
+                          "animalDetails.fillAnimalDetails.regg_date"
+                            | translate
+                        }}<span class="mandatory-field">*</span></label
+                      >
+                      <input
+                        [matDatepicker]="regDate"
+                        placeholder="dd/mm/yyyy"
+                        class="form-control"
+                        formControlName="registrationDate"
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        disabled
+                        [for]="taggingDate"
+                        class="mat-custom-datepicker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #regDate></mat-datepicker>
+                    </div>
+                  </div>
+                  <div class="form-row mb-2">
+                    <div class="form-group col-md-3 datepicker-margin">
+                      <label for="taggingDate" class="form-label"
+                        >{{
+                          "animalDetails.fillAnimalDetails.tagging_date"
+                            | translate
+                        }}<span class="mandatory-field">*</span></label
+                      >
+                      <input
+                        [matDatepicker]="taggingDate"
+                        placeholder="dd/mm/yyyy"
+                        class="form-control"
+                        formControlName="taggingDate"
+                        (dateChange)="onTaggingDateChange($event)"
+                        [max]="dateToday"
+                        [min]="tagDateLimit"
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="taggingDate"
+                        class="mat-custom-datepicker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #taggingDate></mat-datepicker>
+                      <div
+                        *ngIf="
+                          (!animalInfo.taggingDate.pristine &&
+                            animalInfo.taggingDate.invalid) ||
+                          animalInfo.taggingDate.touched
+                        "
+                        class="alert-message"
+                      >
+                        <mat-error
+                          *ngIf="
+                            animalInfoFormGroup
+                              .get('taggingDate')
+                              .hasError('matDatepickerMin')
+                          "
+                          >{{ "common.invalid_date" | translate }}</mat-error
+                        >
+                        <mat-error
+                          *ngIf="
+                            animalInfoFormGroup
+                              .get('taggingDate')
+                              .hasError('matDatepickerMax')
+                          "
+                          >{{ "common.invalid_date" | translate }}</mat-error
+                        >
+                        <mat-error
+                          *ngIf="
+                            animalInfoFormGroup
+                              .get('taggingDate')
+                              .hasError('matDatepickerParse')
+                          "
+                          >{{
+                            "common.please_enter_valid_date" | translate
+                          }}</mat-error
+                        >
+                        <div
+                          *ngIf="
+                            animalInfo.taggingDate.errors?.required &&
+                            !animalInfoFormGroup
+                              .get('taggingDate')
+                              .hasError('matDatepickerParse')
+                          "
+                        >
+                          <!-- Please select the tagging date -->
+                          {{ "errorMsg.tagging_date_req" | translate }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="animalName" class="form-label">{{
+                        "animalDetails.fillAnimalDetails.name_animal"
+                          | translate
+                      }}</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="animalName"
+                        placeholder="{{
+                          'animalDetails.animal_name_placeholder' | translate
+                        }}"
+                        formControlName="animalName"
+                        style="text-transform: capitalize"
+                        [maxLength]="50"
+                      />
+                      <div
+                        *ngIf="animalInfo.animalName.invalid"
+                        class="alert-message"
+                      >
+                        <div *ngIf="animalInfo.animalName.errors?.pattern">
+                          {{ "errorMsg.invalid_animal_name" | translate }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="speciesCd" class="form-label"
+                        >{{ "common.species" | translate
+                        }}<span class="mandatory-field">*</span></label
+                      >
+                      <select
+                        id="speciesCd"
+                        class="form-control"
+                        formControlName="speciesCd"
+                        (change)="getMaxPregMonth($event)"
+                      >
+                        <option value="" selected disabled>
+                          <!-- Select Species -->
+                          {{
+                            "animalDetails.animal_species_placeholder"
+                              | translate
+                          }}
+                        </option>
+                        <option
+                          *ngFor="let specie of species"
+                          [value]="specie.cd"
+                        >
+                          {{ specie.value }}
+                        </option>
+                      </select>
+                      <div
+                        *ngIf="
+                          (animalInfo.speciesCd.invalid &&
+                            !animalInfo.speciesCd.pristine) ||
+                          animalInfo.speciesCd.touched
+                        "
+                        class="alert-message"
+                      >
+                        <div *ngIf="animalInfo.speciesCd.errors?.required">
+                          {{ "errorMsg.species_req" | translate }}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group col-md-3">
+                      <label for="sex" class="form-label d-block"
+                        >{{ "common.sex" | translate
+                        }}<span class="mandatory-field">*</span>
+                      </label>
+                      <label class="radio-inline mr-4">
+                        <input
+                          type="radio"
+                          name="sex"
+                          value="M"
+                          (change)="onSelectingGender()"
+                          formControlName="sex"
+                        />
+                        {{ "animalDetails.animal_male" | translate }}
+                      </label>
+                      <label class="radio-inline">
+                        <input
+                          type="radio"
+                          name="sex"
+                          value="F"
+                          (change)="onSelectingGender()"
+                          formControlName="sex"
+                        />
+                        {{ "animalDetails.animal_female" | translate }}
+                      </label>
+                      <div
+                        *ngIf="
+                          (!animalInfo.sex.pristine &&
+                            animalInfo.sex.invalid) ||
+                          animalInfo.sex.touched
+                        "
+                        class="alert-message"
+                      >
+                        <div *ngIf="animalInfo.sex.errors?.required">
+                          <span>{{ "errorMsg.no_gender" | translate }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group col-md-3 datepicker-margin">
+                      <label for="dateOfBirth" class="form-label"
+                        >{{ "animalDetails.date_of_birth" | translate
+                        }}<span class="mandatory-field">*</span></label
+                      >
+                      <input
+                        [matDatepicker]="picker"
+                        placeholder="dd/mm/yyyy"
+                        class="form-control dob form-input-section"
+                        formControlName="dateOfBirth"
+                        (dateChange)="sendDate($event)"
+                        [max]="animalInfoFormGroup.get('taggingDate').value"
+                        [min]="minDobLimit"
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="picker"
+                        class="mat-custom-datepicker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                      <div
+                        *ngIf="
+                          (!animalInfo.dateOfBirth.pristine &&
+                            animalInfo.dateOfBirth.invalid) ||
+                          animalInfo.dateOfBirth.touched
+                        "
+                        class="alert-message"
+                      >
+                        <mat-error
+                          *ngIf="
+                            animalInfoFormGroup
+                              .get('dateOfBirth')
+                              .hasError('matDatepickerMin')
+                          "
+                          >{{ "errorMsg.age_limit" | translate }}
+                          {{ animalDOBLimit?.defaultValue }}
+                          {{ "common.year" | translate }}</mat-error
+                        >
+                        <mat-error
+                          *ngIf="
+                            animalInfoFormGroup
+                              .get('dateOfBirth')
+                              .hasError('matDatepickerMax') &&
+                            !animalInfoFormGroup
+                              .get('dateOfBirth')
+                              .hasError('matDatepickerMin')
+                          "
+                          >{{
+                            "errorMsg.birth_date_greater" | translate
+                          }}</mat-error
+                        >
+                        <mat-error
+                          *ngIf="
+                            animalInfoFormGroup
+                              .get('dateOfBirth')
+                              .hasError('matDatepickerParse')
+                          "
+                          >{{
+                            "common.please_enter_valid_date" | translate
+                          }}</mat-error
+                        >
+                        <div
+                          *ngIf="
+                            animalInfo.dateOfBirth.errors?.required &&
+                            !animalInfoFormGroup
+                              .get('dateOfBirth')
+                              .hasError('matDatepickerParse')
+                          "
+                        >
+                          {{ "errorMsg.no_date_birth" | translate }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="year" class="form-label">{{
+                            "animalDetails.fillAnimalDetails.age" | translate
+                          }}</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="{{ 'common.year' | translate }}"
+                            [value]="displayYear"
+                            formControlName="selectedYear"
+                            [maxLength]="2"
+                            (change)="
+                              getDobByAge(
+                                animalInfoFormGroup.value.selectedMonth,
+                                animalInfoFormGroup.value.selectedYear
+                              )
+                            "
+                          />
+                          <div
+                            *ngIf="
+                              (!animalInfo.selectedYear.pristine &&
+                                animalInfo.selectedYear.invalid) ||
+                              animalInfo.selectedYear.touched
+                            "
+                            class="alert-message"
+                          >
+                            <!-- <div *ngIf="animalInfo.selectedYear.errors?.required">
+                          Please enter no. of years
+                        </div> -->
+                            <div
+                              *ngIf="animalInfo.selectedYear.errors?.pattern"
+                            >
+                              {{ "errorMsg.invalid_age" | translate }}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group col-md-6 btn-mobile-view">
+                          <label for="month" class="form-label">{{
+                            "common.months" | translate
+                          }}</label>
+                          <select
+                            id="selectedMonth"
+                            class="form-control"
+                            formControlName="selectedMonth"
+                            [value]="displayMonths"
+                            (change)="
+                              getDobByAge(
+                                animalInfoFormGroup.value.selectedMonth,
+                                animalInfoFormGroup.value.selectedYear
+                              )
+                            "
+                          >
+                            <option disabled value="">
+                              {{ "common.months" | translate }}
+                            </option>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label class="form-label"
+                        >{{
+                          "animalDetails.fillAnimalDetails.photo_of_animal"
+                            | translate
+                        }}
+                        <span class="mandatory-field">*</span>
+                      </label>
+                      <input
+                        type="file"
+                        class="form-control"
+                        id="animalPic"
+                        name="animalPic"
+                        (change)="onFileUpload($event)"
+                      />
+                      <strong>{{
+                        "animalDetails.file_type" | translate
+                      }}</strong>
+                      <div *ngIf="uploadedFileError">
+                        <span class="error-style">{{ uploadedFileError }}</span>
+                      </div>
+                      <div
+                        *ngIf="
+                          animalInfo.animalPic.errors?.required &&
+                          animalInfo.animalPic.touched
+                        "
+                      >
+                        <span id="showValidation" class="error-style">
+                          {{ "errorMsg.no_image" | translate }}
+                        </span>
+                      </div>
+                    </div>
+                    <div
+                      class="form-group col-md-3"
+                      *ngIf="checkPregnancyValidation()"
+                    >
+                      <label for="pregnancyStatus" class="form-label d-block"
+                        >{{ "animalDetails.pregnant" | translate }}
+                        <span class="mandatory-field">*</span>
+                      </label>
+                      <label class="radio-inline mr-4">
+                        <input
+                          type="radio"
+                          name="pregnancyStatus"
+                          value="Y"
+                          formControlName="pregnancyStatus"
+                        />
+                        {{ "common.yes" | translate }}
+                      </label>
+                      <label class="radio-inline">
+                        <input
+                          type="radio"
+                          name="pregnancyStatus"
+                          value="N"
+                          formControlName="pregnancyStatus"
+                          checked
+                        />
+                        {{ "common.no" | translate }}
+                      </label>
+                    </div>
+
+                    <div
+                      class="form-group col-md-3"
+                      *ngIf="
+                        animalInfoFormGroup.controls.pregnancyStatus.value ==
+                          'Y' &&
+                        animalInfoFormGroup.controls.sex.value == 'F' &&
+                        ageInMonths >= +minAgeForPregnancy?.defaultValue
+                      "
+                    >
+                      <label for="pregnancyMonth" class="form-label"
+                        >{{
+                          "animalDetails.fillAnimalDetails.pregnancy_month"
+                            | translate
+                        }}
+                        <span class="mandatory-field">*</span></label
+                      >
+                      <select
+                        id="pregnancyMonth"
+                        class="form-control"
+                        formControlName="pregnancyMonth"
+                        (change)="onSelectingPregMonth($event)"
+                      >
+                        <option disabled value="">
+                          {{
+                            "animalDetails.select_month_placeholder" | translate
+                          }}
+                        </option>
+                        <option *ngFor="let obj of pregMonths" [value]="obj.cd">
+                          {{ obj.value }}
+                        </option>
+                      </select>
+                      <div class="alert-message" *ngIf="showPregError">
+                        {{ showPregError }}
+                      </div>
+                      <div
+                        *ngIf="
+                          (!animalInfo.pregnancyMonth.pristine &&
+                            animalInfo.pregnancyMonth.invalid) ||
+                          animalInfo.pregnancyMonth.touched
+                        "
+                        class="alert-message"
+                      >
+                        <div *ngIf="animalInfo.pregnancyMonth.errors?.required">
+                          <span>
+                            {{ "common.selectPregMonths" | translate }}</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-row"></div>
+
+                  <!-- Submit and Cancel Button -->
+                  <div class="d-flex justify-content-end">
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary mr-2"
+                      (click)="resetForm()"
+                    >
+                      {{ "animalDetails.reset" | translate }}
+                    </button>
+                    <button
+                      type="submit"
+                      class="btn btn-primary"
+                      (click)="validateForm()"
+                    >
+                      {{ "common.submit" | translate }}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

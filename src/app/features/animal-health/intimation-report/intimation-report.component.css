@@ -1,0 +1,227 @@
+.margin-10 {
+  margin: 10px 0px;
+}
+
+.intimation-expansion-panel {
+  box-shadow: none !important;
+}
+
+.mat-expansion-panel:not([class*="intimation-expansion-panel"]) {
+  box-shadow: none !important;
+}
+
+.intimation-expansion-panel .mat-expansion-panel-header.mat-expanded:hover {
+  background-color: none !important;
+}
+.intimation-expansion-panel .mat-expansion-panel-header-title {
+  margin-right: 0px !important;
+}
+
+.intimation-expansion-panel .mat-expansion-panel-header,
+.intimation-expansion-panel .mat-expansion-panel-header.mat-expanded {
+  height: 40px;
+  background-color: none !important;
+}
+
+.intimation-expansion-panel .mat-expansion-panel-header .mat-content {
+  order: 1 !important;
+  margin-left: 5px;
+}
+
+.intimation-expansion-panel .mat-expansion-indicator {
+  position: relative;
+  left: 4px;
+  bottom: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.intimation-expansion-panel
+  .mat-expansion-panel-header.mat-expanded
+  .mat-expansion-indicator {
+  position: relative;
+  left: 4px;
+  bottom: -2px;
+}
+
+.intimation-expansion-panel .mat-expansion-panel-body {
+  padding: 0px 0px 0px 22px !important;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.separator .line {
+  height: 1px;
+  flex: 1;
+  background-color: #dcdcdc;
+}
+
+.separator div {
+  padding: 0 8px !important;
+}
+
+.symt-details .symt-details-left {
+  border-right: 1px solid #dee2e6;
+}
+
+.symptom-list .mat-chip-list-wrapper {
+  background: none;
+  padding: 4px;
+  margin: 0px !important;
+  border: 1px dashed #e5e3e3;
+  height: auto;
+  min-height: 50px;
+}
+
+.symptom-list .mat-chip.mat-standard-chip {
+  background-color: #a2a2a2;
+  color: white;
+  border-radius: 3px;
+}
+
+/* table */
+
+.symt-details-table {
+  box-shadow: none !important;
+  border-collapse: collapse;
+}
+
+.symt-details-table td.mat-cell {
+  padding: 0px 10px !important;
+  color: black;
+}
+.symt-details-table th.mat-header-cell {
+  padding: 0px 10px !important;
+  white-space: nowrap;
+  font-weight: bold;
+  color: black;
+}
+
+.symt-details-table tr.mat-header-row th,
+.symt-details-table td.mat-cell {
+  border: 1px solid #dcdcdc;
+}
+
+.symt-details-table .table-input {
+  border: transparent;
+  background-color: #fff;
+  padding: 0px;
+}
+
+.symt-details-table tr.mat-row,
+.symt-details-table tr.mat-header-row {
+  height: 40px;
+}
+
+.symt-details-table tr.mat-header-row th {
+  background: #f8f7fa;
+  height: 38px;
+}
+
+.symt-details-table ::ng-deep.mat-sort-header-arrow {
+  position: absolute;
+  left: -20px !important;
+}
+
+.symt-details-table .status-highlight {
+  padding: 4px 10px;
+  border-radius: 16px;
+  background: #929292;
+  font-weight: bold;
+  opacity: 0.5;
+}
+
+.symt-details-table tr.mat-header-row th:last-child,
+.symt-details-table th:last-child,
+.symt-details-table td:last-child {
+  border: none !important;
+  background: none;
+}
+
+.clinical-signs .tag-id {
+  margin-right: 10px;
+  width: 90%;
+}
+
+.clinical-signs .scan-btn {
+  padding: 6px 6px;
+  border: 1px solid #dcdcdc;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.add-row .add-row--btn {
+  cursor: pointer;
+}
+
+.add-row .add-row--icon {
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background: #dcdcdc;
+}
+
+.other-symptoms {
+  cursor: pointer;
+}
+.other-symptoms .os-desc {
+  text-decoration: underline;
+  margin-left: 4px;
+}
+
+@media screen and (max-width: 767px) {
+  .symt-details .symt-details-left {
+    border-right: 0px;
+  }
+}
+
+/*  */
+/* .ng-select.ng-select-opened .ng-select-container,.ng-dropdown-panel {
+  z-index: 1!important;
+} */
+
+.add-medicine-btn {
+  cursor: pointer;
+  background-color: #dcdcdc;
+  padding: 5px 10px;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 3px;
+}
+
+/* mate-datePicker */
+
+.input-icon {
+  position: relative;
+}
+.input-icon input {
+  padding-right: 35px;
+}
+.date-section ul li {
+  list-style-type: none;
+  display: inline;
+  font-family: Noto Sans;
+  font-size: 12px;
+  letter-spacing: 0px;
+  color: #3c3c3c;
+}
+.calender-icon {
+  position: absolute;
+  top: 29px;
+  right: 5px;
+}
+
+.intimation-report .ng-select-container {
+  z-index: 0;
+}
+
+.custom.ng-select.ng-select-disabled .ng-arrow-wrapper .ng-arrow,
+.custom.ng-select.ng-select-disabled .ng-arrow-wrapper:before {
+  display: none;
+}

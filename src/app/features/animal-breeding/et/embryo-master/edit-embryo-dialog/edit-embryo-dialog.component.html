@@ -1,0 +1,142 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+    <div class="center">
+        <mat-spinner class="center"></mat-spinner>
+    </div>
+</div>
+
+<div class="add-diagnostics-dialog">
+    <div class="add-diagnostics-header">
+      <div class="headeing">
+        <h3>{{'common.edit'|translate}} {{'animalBreeding.embryo'| translate}}</h3>
+      </div>
+      <div class="cross-icon">
+        <mat-icon mat-dialog-close>clear</mat-icon>
+      </div>
+    </div>
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+    <div class="headeing mat-row">
+        <h5>{{'animalBreeding.embryo_details'|translate}}</h5>
+      </div>
+      <div class="headeing mr-10">
+        <h5>{{'animalBreeding.embryo_id'|translate}}</h5>
+      </div>
+      <div class="headeing">
+        <h5>{{data?.embryoDetail?.embryoId}}</h5>
+      </div>
+    <div class="main-section">
+       <form [formGroup]="embryoDetails" (ngSubmit)="onSubmit()">
+        <div class="main-section">
+            <div class="row">
+                <div class="col-md-12">
+                  <div class="table-responsive custom-view-table">
+                    <!-- <form [formGroup]="form"> -->
+                      <table mat-table [dataSource]="dataSource">
+                        <!-- Row definitions -->
+                        <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+                        <tr mat-row *matRowDef="let row; let i = index; columns: displayColumns;"></tr>
+                    
+                        <ng-container matColumnDef="stage">
+                          <th mat-header-cell *matHeaderCellDef>{{'animalBreeding.stage'|translate}}</th>
+                          <td mat-cell *matCellDef="let row; let index = index" > 
+                           
+                              <select class="form-control wd-7" name="embryo_Stage"  formControlName="embryoStage">
+                                <option [value]="null" disabled>{{'animalDetails.select'|translate}} {{'animalBreeding.stage'|translate}}</option>
+                                <option [value]="type['cd']" *ngFor="let type of getCommonMasterDetail['embryo_stage']">{{type['value']}} </option>
+                            </select>
+                            <div class="alert-message"
+                            *ngIf="formControls?.embryoStage?.errors?.required && formControls?.embryoStage?.touched ">
+                            {{'errorMsg.field_mandatory' | translate}}
+                        </div>
+                            
+                           
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="grade">
+                          <th mat-header-cell *matHeaderCellDef> {{'animalBreeding.grade'|translate}} </th>
+                          <td mat-cell *matCellDef="let row; let index = index" > 
+                            <select class="form-control wd-4" name="heattype"  formControlName="embryoGrade">
+                              <option [value]="null" disabled>{{'animalDetails.select'|translate}}  {{'animalBreeding.grade'|translate}}</option>
+                                <option [value]="type['cd']" *ngFor="let type of getCommonMasterDetail['embryo_grade']">{{type['value']}} </option>
+                            </select>
+                            <div class="alert-message"
+                                    *ngIf="formControls?.embryoGrade?.errors?.required && formControls?.embryoGrade?.touched ">
+                                    {{'errorMsg.field_mandatory' | translate}}
+                                </div>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="age">
+                          <th mat-header-cell *matHeaderCellDef> {{'animalBreeding.age_in_days'|translate}} </th>
+                          <td mat-cell *matCellDef="let row; let index = index"  > 
+                            <!-- <select class="form-control" name="heattype"  formControlName="embryoAge">
+                                <option [value]="type['cd']" *ngFor="let type of commonDetail">{{type['value']}} </option>
+                            </select> -->
+                            <input class="form-control" type="text" formControlName="embryoAge" maxlength="2"
+                            />
+                            <span class="alert-message" *ngIf="formControls.embryoAge?.hasError('pattern')">
+                              {{'errorMsg.only_numeric'| translate}}
+                          </span>
+                          <div class="alert-message"
+                                    *ngIf="formControls?.embryoAge?.errors?.required && formControls?.embryoAge?.touched ">
+                                    {{'errorMsg.field_mandatory' | translate}}
+                                </div>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="embryoType">
+                            <th mat-header-cell *matHeaderCellDef> {{'animalBreeding.embryo_type'|translate}}  </th>
+                            <td mat-cell *matCellDef="let row; let index = index"  > 
+                              <select class="form-control wd-7" name="embryoType"  formControlName="embryoType">
+                                  <option [value]="type['cd']" *ngFor="let type of getCommonMasterDetail['embryo_type']">{{type['value']}} </option>
+                              </select>
+                            </td>
+                          </ng-container>
+                          <ng-container matColumnDef="freezingRate">
+                            <th mat-header-cell *matHeaderCellDef>  {{'animalBreeding.freezing_rate'|translate}}  </th>
+                            <td mat-cell *matCellDef="let row; let index = index"  > 
+                                <input class="form-control" type="text" formControlName="freezingRate" placeholder="00.00 °C"
+                                />
+                                <!-- <span class="alert-message" *ngIf="formControls.freezingRate?.hasError('pattern')">
+                                  {{'errorMsg.only_numeric'| translate}}
+                              </span> -->
+                              <div class="alert-message"
+                                    *ngIf="formControls?.freezingRate?.errors?.required && formControls?.freezingRate?.touched ">
+                                    {{'errorMsg.field_mandatory' | translate}}
+                                </div>
+                                <span class="alert-message" *ngIf="formControls?.freezingRate.hasError('invalidDecimalNo')">
+                                  {{'performanceRecording.invalid_value' | translate}}
+                                </span>
+                                <span class="alert-message"
+                                  *ngIf="formControls?.freezingRate.hasError('max')||formControls?.freezingRate.hasError('min')">
+                                  {{cmnValidation.minMax | translate}}
+                                </span>
+                            </td>
+                          </ng-container>
+                       
+                       
+                      </table>
+                    <!-- </form> -->
+                    
+                  
+                 
+                  </div>
+                  <div class="h-divider additional-info mr-top-10">
+                    <div class="shadow"></div>
+                </div>
+                <div class="footer d-flex">
+                    <button type="button" class="btn btn-light mr-2 ml-auto"
+                    mat-dialog-close >
+                    {{'animalDetails.cancel'|translate}} 
+                    </button>
+                    <button type="submit" class="btn btn-primary" 
+                        >{{'common.submit'| translate}}</button>
+                   
+                </div>
+                </div>
+              </div>
+
+        </div>
+       
+       </form>
+        
+    </div>

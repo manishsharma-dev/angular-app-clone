@@ -1,0 +1,14 @@
+.icon-input {
+  position: relative;
+}
+
+.calender-icon {
+  position: absolute;
+  top: 28px;
+  right: 0px;
+}
+
+.bg-row {
+  background-color: #F8F7FA;
+  padding: .5rem;
+}

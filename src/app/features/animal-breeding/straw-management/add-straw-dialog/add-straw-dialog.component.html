@@ -1,0 +1,111 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+    <div class="center">
+      <mat-spinner class="center"></mat-spinner>
+    </div>
+  </div>
+  
+  <div class="ear-tag-detail" >
+      <div class="tag-detail-header">
+        <div class="heading-section">
+          <h2 class="tag-detail-heading" >{{'common.import_file'|translate}}</h2>
+          <div class="h-divider">
+            <div class="shadow"></div>
+          </div>
+          <p class="edit-heading-desc">{{'animalBreeding.commonLabel.download_sample_file' | translate}}.</p>
+        <a class="history" (click)="downloadSampleTemplate()" href="javascript:void(0)" ><span class="download-report">{{'animalBreeding.download_sample' | translate}}</span> </a>
+        </div>
+      </div>
+    
+    
+    
+      <div class="tag-detail-form" >
+       
+         <div class="row">
+            <div class="col-12">
+                <div class="form-container row">
+                    <div class="form-group col-md-12" *ngIf="!fileToUpload">
+                      <!-- <label for="uploadFile" class="form-label">Upload Images</label> -->
+                      <div for="uploadFile" class="drag-area" appDragAndDrop #drop="appDragAndDrop"
+                         (click)="onFileAreaClick(fileInput)"
+                        >
+                        <div class="icon" >
+                          <i class="fa fa-cloud-upload"></i>
+                        </div>
+                        <p *ngIf="!drop.fileOver && !fileToUpload">
+                          {{'common.drag_drop'|translate}}, or <b>{{'common.browse'|translate}}</b>
+                        </p>
+                        <p *ngIf="drop.fileOver && !fileToUpload">{{'common.release_to_upload'|translate}}.</p>
+                        <!-- <p *ngIf="isUploading()">Uploading files... Please wait</p> -->
+
+                        <input  type="file" multiple id="uploadFile" hidden #fileInput
+                          (change)="onFileSelect($event.target['files'])" accept=".xlsx" [disabled]="fileToUpload"/>
+                      </div>
+                      <!-- <span class="validation-error-message" *ngIf="f.animalImages.hasError('invalidMimeType')">
+                        Only png and jpg/jpeg files are allowed
+                      </span> -->
+                    </div>
+                    <div class="col-md-12 form-group" *ngIf="fileToUpload">
+                      <div class="files-list">
+                        <div  class="mb-2">{{'common.uploading'|translate}}</div>
+                        <div class="single-file"
+                        >
+                          <div class="file-icon">
+                            <i class="fa fa-image"></i>
+                          </div>
+                          <div class="info">
+                            <div class="row first-row">
+                              <h4 class="col-6 name">
+                                {{ fileToUpload?.name }}
+                              </h4>
+                              <p class="col-4 size">
+                                {{
+                                fileToUpload?.size
+                                }}
+                              </p>
+                              <div class="col-2 delete" (click)="deleteFile()">
+                                <i class="fa fa-trash" ></i>
+                              </div>
+                            </div>
+                           
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+       
+          </div>
+
+          <div class="d-flex justify-content-left mt-3">
+            <button type="submit" class="btn btn-light mr-2 ml-auto" mat-dialog-close>
+              {{'animalDetails.cancel'| translate}}
+            </button>
+            <button type="submit" class="btn btn-primary" 
+            (click)="uploadFile()">
+              {{'common.validate' |translate}}
+            </button>
+          </div>
+      </div>
+  
+    </div>
+    <!-- <div class="common-alert" *ngIf="isAlert">
+        <div class="common-alert-header">
+      
+          <img src="assets/images/alert.svg" class="custom-icon center" alt="icon-verified"/>
+          <p class="header-desc">Alert</p>
+      
+        </div>
+      
+        <div class="common-alert-body">
+          <p>nd jks kj ksj fdkskdf ksd ksd fkdfk k d</p>
+        </div>
+      
+        <div class="common-alert-footer">
+         
+        <button mat-dialog-close class="btn btn-primary" [mat-dialog-close]="true">
+        OK
+        </button>
+        </div>
+      
+      </div>
+     -->

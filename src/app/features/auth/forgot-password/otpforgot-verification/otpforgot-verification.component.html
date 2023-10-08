@@ -1,0 +1,81 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+    <div class="center">
+      <mat-spinner class="center"></mat-spinner>
+    </div>
+  </div>
+  
+  <div class="owner-reg-verify">
+    <div class="cross-icon">
+      <mat-icon (click)="skipVerification()">clear</mat-icon>
+    </div>
+    <form [formGroup]="form">
+      <div class="owner-reg-msg">
+        <h6 class="heading">
+          Enter the OTP
+        </h6>
+        <div class="sub-heading-desc">
+          <!-- <span> {{ "animalDetails.otp_send" | translate }} </span><br />
+          <b>+91 {{ "*******" + data?.ownerMobileNo.slice(7, 10) }}</b> -->
+        </div>
+        <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">
+          <div
+            class="form-group col-sm-2"
+            *ngFor="let input of formInput; index as i"
+          >
+            <input
+              #formRow
+              type="text"
+              class="m-2 otp-inputs form-control"
+              maxlength="1"
+              formControlName="{{ input }}"
+              (keypress)="$event.keyCode != 32 ? keyUpEvent($event, i): $event.preventDefault()"
+              (keyup)="$event.keyCode != 32 ? keyUpEvent($event, i): $event.preventDefault()"
+              (input)="checkLength()"
+            />
+          </div>
+        </div>
+  
+        <div class="alert-message" *ngIf="showError">
+          <div>{{ showError }}</div>
+        </div>
+  
+        <div class="verify-number">
+          <button
+            type="submit"
+            class="btn btn-primary verify-btn"
+            (click)="onVerifyContinue()"
+            [disabled]="enteredOtpLength < 6"
+          >
+          Verify & Continue
+          </button>
+        </div>
+  
+        <!-- <div *ngIf="!formObj?.input1 || !formObj?.input2 || !formObj?.input3 || !formObj?.input4" class="alert-message">
+          <div >Enter OTP.</div>
+      </div> -->
+  
+        <div class="resend-code mb-1">
+          <span
+            >Didn't get the code?
+            <a
+              href="javascript: void(0)"
+              class="resend-link"
+              (click)="startTimer()"
+              *ngIf="showResend"
+              >Resend</a
+            >
+            <a
+              href="javascript: void(0)"
+              class="timer-link"
+              *ngIf="displayCount"
+              >{{ display }}</a
+            >
+          </span>
+        </div>
+        <div class="skip-verification">
+          <a href="javascript:void(0);" (click)="skipVerification()">Skip Verification</a>
+        </div>
+      </div>
+    </form>
+  </div>
+  

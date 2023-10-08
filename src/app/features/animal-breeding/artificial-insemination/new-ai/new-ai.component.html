@@ -1,0 +1,384 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+    <div class="center">
+        <mat-spinner class="center"></mat-spinner>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row breadcum align-items-center py-2">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="breadcrumb-list text-md-left" #topScrollAnchor>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item active">
+                            <a>{{'animalDetails.home' | translate}}</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <a href="javascript:void(0)">{{'animalBreeding.breeding_module'|translate}} </a>
+                        </li>
+                        <li class="breadcrumb-item current">
+                            <a href="javascript:void(0)">{{'animalBreeding.artificial_insemination'|translate}}</a>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-breeding-history [historyDetail]="historyDetail" (ownerDetail)="getOwnerId($event)"> </app-breeding-history>
+
+<section class="new-case margin-10">
+    <div class="row no-gutters col-container">
+        <div class="col-md-12 col-h left-section">
+            <div class="row mb-3 justify-content-between margin-10">
+                <div class="title-section">
+                    <div class="title-heading">
+                        {{'animalBreeding.new_AI_information'|translate}}
+
+                    </div>
+                </div>
+                <div class="ticket-section">
+                    <span class=""> {{'animalBreeding.ticket_no'|translate}}: <b>1234567890</b></span>
+                </div>
+            </div>
+            <div class="h-divider">
+                <div class="shadow"></div>
+            </div>
+
+            <form [formGroup]="addArtificialInseminationForm" (ngSubmit)="submitCase()">
+                <div class="main-section">
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="AI Record Date">{{'animalBreeding.data_entry_date'|translate}}<span
+                                        class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text" [max]="today" [matDatepicker]="RecordDate"
+                                    formControlName="aiRecordDate" placeholder="dd-mm-yyyy" />
+                                <mat-datepicker-toggle matSuffix [for]="RecordDate" class="calender-icon">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #RecordDate></mat-datepicker>
+                            </div>
+                        </div>
+
+                        <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <div class="form-group input-icon">
+                                <label for="Treatment Date">{{'animalBreeding.ai_date'|translate}}<span
+                                        class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text" [min]="breedingMinDate" [max]="today"
+                                    [matDatepicker]="pickerDate" formControlName="aiDate" placeholder="dd/mm/yyyy"
+                                    
+                                    [ngClass]="{ 'is-invalid': (formControls?.aiDate?.touched ||formControls?.aiDate?.dirty) && formControls?.aiDate?.errors }" />
+                                <mat-datepicker-toggle matSuffix [for]="pickerDate" class="calender-icon">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #pickerDate></mat-datepicker>
+                                <span class="alert-message" *ngIf="
+                                (formControls?.aiDate.dirty &&
+                                formControls?.aiDate.invalid) ||
+                                formControls?.aiDate.touched
+                            ">
+                            <span *ngIf="formControls?.aiDate.hasError('matDatepickerMin')">
+                                {{'common.please_enter_valid_date' | translate}}
+                            </span>
+                            <span *ngIf="formControls?.aiDate.hasError('matDatepickerMax')">
+                                {{'common.please_enter_valid_date' | translate}}
+                            </span>
+                            <span *ngIf="formControls?.aiDate.hasError('matDatepickerParse')">
+                                {{'common.please_enter_valid_date' | translate}}
+                            </span>
+                            <span
+                                *ngIf="formControls?.aiDate.hasError('required') && !formControls?.aiDate.hasError('matDatepickerParse')">
+                                {{'errorMsg.field_mandatory' | translate}}
+                            </span>
+                        </span>
+                                <div class="alert-message"
+                                    *ngIf="formControls?.aiDate?.errors?.required && (formControls?.aiDate?.touched ||formControls?.aiDate?.dirty)">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <div class="form-group ">
+                                <label for="AI Timestamp">{{'animalBreeding.ai_timestamp'|translate}}<span
+                                        class="mandatory-field">*</span></label>
+                                <input class="form-control" type="time" formControlName="aiTimestamp"
+                                    [ngClass]="{ 'is-invalid': (formControls?.aiTimestamp?.touched ||formControls?.aiTimestamp?.dirty) && formControls?.aiTimestamp?.errors }" />
+
+                                <div class="alert-message"
+                                    *ngIf="formControls?.aiTimestamp?.errors?.required && (formControls?.aiTimestamp?.touched ||formControls?.aiTimestamp?.dirty)">
+                                    {{'errorMsg.field_mandatory' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2"></div>
+                        <div class="h-divider">
+                            <div class="shadow"></div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.unique_straw_ID'|translate}}</label>
+                                <input class="form-control" type="text" formControlName="uniqueStrawId" [maxlength]="20"
+                                    (change)="getUniqueStrawIdDetails($event)" />
+                                <span class="alert-message" *ngIf="formControls.uniqueStrawId.hasError('pattern')">
+                                    {{'errorMsg.invalid_char'|translate}}
+                                </span>
+                                <div class="alert-message"
+                                    *ngIf="formControls?.uniqueStrawId?.errors?.required && (formControls?.uniqueStrawId?.touched ||formControls?.uniqueStrawId?.dirty)">
+                                    {{'errorMsg.field_mandatory' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <!-- (change)="detectBullDetails()" -->
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.bull_id'|translate}}<span
+                                        class="mandatory-field">*</span></label>
+                                <input class="form-control upper-case" type="text" formControlName="bullId"
+                                 [matAutocomplete]="auto"
+                                    [ngClass]="{ 'is-invalid': formControls?.bullId.touched && formControls?.bullId?.errors }" />
+                                <div class="alert-message"
+                                    *ngIf="formControls?.bullId?.errors?.required && (formControls?.bullId?.touched ||formControls?.bullId?.dirty)">
+                                    {{'errorMsg.field_mandatory' | translate}}
+                                </div>
+                                <!-- <div class="alert-message"
+                                    *ngIf="(formControls?.bullId?.hasError('minlength') || formControls?.bullId?.hasError('maxlength')) && (formControls?.bullId?.touched ||formControls?.bullId?.dirty) ">
+                                    {{'errorMsg.bull_id_valid' | translate}}
+                                </div> -->
+                            </div>
+
+                            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                                <mat-option class="hide-option" *ngFor="let option of filteredOptions | async"
+                                    [value]="option?.bullId" (click)="selectedBullId(option?.aiType)">
+                                    {{option?.bullId}}
+
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.batch_no'|translate}}</label>
+                                <input class="form-control" type="text" formControlName="batchNo" [maxlength]="20"
+                                    [ngClass]="{ 'is-invalid': (formControls?.batchNo?.touched ||formControls?.batchNo?.dirty) && formControls?.batchNo?.errors }"
+                                    (change)="geBatchDetail()" />
+                                <div class="alert-message" *ngIf="isbullId">
+                                    {{'errorMsg.batch_validation'| translate}}
+                                </div>
+                                <!-- <div class="alert-message"
+                                    *ngIf="formControls?.batchNo?.errors?.required && submitAIForm">
+                                    {{'errorMsg.field_mandatory' | translate}}
+                                </div> -->
+                                <span class="alert-message" *ngIf="formControls.batchNo.hasError('pattern')">
+                                    {{'errorMsg.special_character_error'| translate}}
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-"></div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Treatment Date">{{'animalBreeding.ai'|translate}}
+                                    {{'animalBreeding.type'|translate}}<span class="mandatory-field">*</span></label>
+                                <select class="form-control" name="selectCampaign" formControlName="aiType"
+                                    [ngClass]="{ 'is-invalid': (formControls?.aiType?.touched ||formControls?.aiType?.dirty) && formControls?.aiType?.errors }">
+                                    <option [value]="null" disabled>{{'animalDetails.select'| translate}}
+                                        {{'animalBreeding.type'|translate}}</option>
+                                    <option [value]="type['cd']" *ngFor="let type of aiType">{{type['value']}} </option>
+                                </select>
+                                <div class="alert-message"
+                                    *ngIf="formControls?.aiType?.errors?.required && (formControls?.aiType?.touched ||formControls?.aiType?.dirty)">
+                                    {{'errorMsg.field_mandatory' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.semen_type'| translate}}<span
+                                        class="mandatory-field">*</span></label>
+                                <select class="form-control" name="selectSemen" formControlName="semenType"
+                                    [ngClass]="{ 'is-invalid': formControls?.semenType?.touched && formControls?.semenType?.errors }">
+                                    <option [value]="null" disabled>{{'animalDetails.select'| translate}}
+                                        {{'animalBreeding.semen_type'| translate}}</option>
+                                    <option [value]="type?.cd" *ngFor="let type of commonDetail?.semenType" >
+                                        {{type?.value}} </option>
+                                </select>
+                                <!-- *ngFor="let type of getStrawDetail?.semenType" -->
+                                <div class="alert-message"
+                                    *ngIf="formControls?.semenType?.errors?.required && formControls?.semenType?.touched">
+                                    {{'errorMsg.field_mandatory' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.ai'|translate}}
+                                    {{'animalBreeding.center'|translate}}<span class="mandatory-field">*</span></label>
+
+                                <select class="form-control" name="selectCenter" formControlName="aiCenterId"
+                                    [ngClass]="{ 'is-invalid': (formControls?.aiCenterId?.touched ||formControls?.aiCenterId?.dirty) && formControls?.aiCenterId?.errors }">
+                                    <option [value]="null" disabled>{{'animalDetails.select'| translate}}
+                                        {{'animalBreeding.ai'|translate}}
+                                        {{'animalBreeding.center'|translate}}</option>
+                                    <option [value]="type?.cd" *ngFor="let type of aiCenterList">
+                                        {{type?.name}} </option>
+                                </select>
+
+                                <!-- <input class="form-control" type="text" formControlName="aiCenterId"
+                                    [ngClass]="{ 'is-invalid': submitAIForm && formControls?.aiCenterId?.errors }"
+                                    readonly /> -->
+                                <div class="alert-message"
+                                    *ngIf="formControls?.aiCenterId?.errors?.required && (formControls?.aiCenterId?.touched ||formControls?.aiCenterId?.dirty)">
+                                    {{'errorMsg.field_mandatory' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="h-divider">
+                        <div class="shadow"></div>
+                    </div>
+                    <div class="form-row additional-info"
+                        *ngIf="getHeatPermission && getHeatPermission?.length > 0 && getHeatPermission[0]?.parameterValue == 'Yes' ? true : false">
+                        <div class="col-md-2" (click)="showAdditionalInfo=!showAdditionalInfo">
+                            <i class="fa fa-caret-right mr-2 back-section" *ngIf="!showAdditionalInfo"></i>
+                            <i class="fa fa-caret-down mr-2 back-section" *ngIf="showAdditionalInfo"></i>
+                            <span class="title-heading"> {{'animalBreeding.heat_detail'|translate}}</span>
+                        </div>
+                        <div class="col-md-10">
+
+                        </div>
+                    </div>
+                    <div class="form-row additional-info" *ngIf="showAdditionalInfo">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.statnding_to_be_mounted'|translate}}</label>
+                                <select class="form-control" name="standingToMounted"
+                                    formControlName="standingToMounted">
+                                    <option [value]="null" disabled>{{'animalDetails.select'| translate}}</option>
+                                    <option [value]="type['cd']" *ngFor="let type of commonDetail?.standingMounted">
+                                        {{type['value']}} </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status">
+                                    {{'animalBreeding.mounting_on_herd_mates_or_attempt'|translate}}</label>
+                                <select class="form-control" name="mountingOnHerd" formControlName="mountingOnHerd">
+                                    <option [value]="null" disabled>{{'animalDetails.select'| translate}}</option>
+                                    <option [value]="type['cd']" *ngFor="let type of commonDetail?.mountingHerd">
+                                        {{type['value']}} </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.voc_bellowing'|translate}}</label>
+                                <select class="form-control" name="vocalization" formControlName="vocalization">
+                                    <option [value]="null" disabled>{{'animalDetails.select'| translate}}</option>
+                                    <option [value]="type['cd']" *ngFor="let type of commonDetail?.vocalization">
+                                        {{type['value']}} </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.micturition'|translate}}</label>
+                                <select class="form-control" name="micturition" formControlName="micturition">
+                                    <option [value]="null" disabled>{{'animalDetails.select'| translate}}</option>
+                                    <option [value]="type['cd']" *ngFor="let type of commonDetail?.micturition">
+                                        {{type['value']}} </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status"> {{'animalBreeding.swollen_vulva_Redness'|translate}}</label>
+                                <select class="form-control" name="swollenVulva" formControlName="swollenVulva">
+                                    <option [value]="null" disabled>{{'animalDetails.select'| translate}}</option>
+                                    <option [value]="type['cd']" *ngFor="let type of commonDetail?.swollenVulva">
+                                        {{type['value']}} </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label
+                                    for="Case Status">{{'animalBreeding.amount_cervical_mucusischarge'|translate}}</label>
+                                <select class="form-control" name="cervicalMucus" formControlName="cervicalMucus">
+                                    <option [value]="null" disabled>{{'animalDetails.select'| translate}}</option>
+                                    <option [value]="type['cd']" *ngFor="let type of commonDetail?.carvicalMucus">
+                                        {{type['value']}} </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-1">
+                            <label for="Case Status">{{'animalBreeding.doka'|translate}}</label>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" formControlName="doka"
+                                        value="Y" />{{'common.yes'|translate}}
+                                </label>
+                            </div>
+                            <div class="form-check-inline">
+                                <input type="radio" class="form-check-input" formControlName="doka" value="N" />
+                                <label class="form-check-label">{{'common.no'|translate}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="form-row additional-info">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.amount_received' |translate}}</label>
+                                <input class="form-control" type="text" formControlName="aiCharges" [maxlength]="10" />
+                                <span class="alert-message" *ngIf="formControls.aiCharges.hasError('pattern')">
+                                    {{'errorMsg.only_numeric'| translate}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.receipt_no'|translate}}.</label>
+                                <input class="form-control" type="text" formControlName="receiptNo" [maxlength]="20" />
+                                <span class="alert-message" *ngIf="formControls.receiptNo.hasError('pattern')">
+                                    {{'errorMsg.only_numeric'| translate}}
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="h-divider additional-info">
+                    <div class="shadow"></div>
+                </div>
+                <div class="footer d-flex">
+                    <button type="button" class="btn btn-light mr-2 ml-auto" (click)="goBack()">
+                        {{'animalDetails.cancel'|translate}}
+                    </button>
+                    <button type="submit" class="btn btn-primary" [disabled]="submitAIForm">{{'common.submit'|translate}}</button>
+                    <!-- [disabled]="submitAIForm" -->
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,11 @@
+
+<div class="status-dialog">
+    <img src="../../../../../assets/images/checkbox-circle-line.svg" alt="checkbox-circle-line">
+    <p class="sd-id">{{ "round.round_id" | translate }}: <b>{{ data.roundID }}</b></p>
+    <h3 class="sd-msg">{{ data.title }}</h3>
+    <p class="sd-noti-detail">{{data.message}}</p>
+    <div class="close-btn">
+        <!-- <button type="submit" class="btn btn-outline-primary mr-2">Cancel</button> -->
+        <button type="submit" class="btn btn-primary"  (click)="closeDialog()"> {{ "animalDetails.ok" | translate }}</button>
+
+</div>

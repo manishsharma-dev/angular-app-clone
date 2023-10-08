@@ -1,0 +1,139 @@
+.icon-edit {
+  height: 26px;
+  width: 26px;
+  cursor: pointer;
+}
+
+.icon-info {
+  height: 17px;
+  width: 17px;
+}
+.h-space {
+  margin-top: 20px;
+  float: left;
+  width: 100%;
+}
+#animal-detail ul li,
+#animal-unique-detail ul li {
+  list-style-type: none;
+  display: inline;
+}
+
+#animal-detail ul li {
+  font-weight: bold;
+  font-family: Noto Sans;
+  font-size: 24px;
+  letter-spacing: 0px;
+  color: #3c3c3c;
+}
+.animal-bio-info .flex-custom-left {
+  flex: 0 0 40% !important;
+  flex-wrap: wrap;
+  word-break: break-word;
+}
+.animal-bio-info .flex-custom-right {
+  flex: 0 0 60% !important;
+  flex-wrap: wrap;
+  word-break: break-word;
+}
+
+span.project_detail_view:after {
+  content: ",";
+}
+
+table thead {
+  background-color: #edf3f5;
+}
+
+table tbody tr:nth-child(even) {
+  background: #f6f6f9;
+}
+
+table tbody tr:nth-child(odd) {
+  background: #fff;
+}
+
+.project-detail {
+  list-style: none;
+  margin: 0px;
+}
+.project-detail ul li a {
+  font-weight: bold;
+  font-family: Noto Sans;
+  font-size: 12px;
+  letter-spacing: 0px;
+  color: #3c3c3c;
+}
+
+.scrollHeight {
+  height: 70px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border: 1px solid #dee2e6 !important;
+}
+
+thead,
+tbody,
+tr,
+td,
+th {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+tr:after {
+  content: " ";
+  display: block;
+  visibility: hidden;
+  clear: both;
+}
+
+tbody {
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+tbody td,
+thead th {
+  width: calc(100% / 3);
+  float: left;
+  font-size: 0.75rem;
+  font-family: Noto Sans, Regular;
+}
+
+tbody.rolebody td,
+thead.rolebody th {
+  width: calc(100% / 3);
+  float: left;
+}
+
+/* ---------------start-scroll -------------------- */
+/* width */
+::-webkit-scrollbar {
+  position: relative;
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(204, 196, 196);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(116, 110, 110);
+}
+
+/* ---------------end-scroll -------------------- */

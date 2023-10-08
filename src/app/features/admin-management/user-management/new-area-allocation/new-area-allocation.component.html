@@ -1,0 +1,106 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<form class="mb-3" [formGroup]="areaAllocationForm">
+  <div class="form-row">
+    <div class="form-group col-md-3">
+      <label for="stateName" class="form-label"> {{ "round.campaign_select_state" |
+        translate }}<span class="mandatory-field">*</span></label>
+      <ng-select class="custom" [items]="stateMaster" [multiple]="true" bindLabel="stateName" groupBy="section"
+        [selectableGroup]="true" [selectableGroupAsModel]="false" [closeOnSelect]="false" formControlName="stateCd"
+        placeholder="{{ 'round.campaign_select_state' | translate }}">
+        <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+          <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+          {{"campaignCreation.select_all" | translate}}
+        </ng-template>
+
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          <input class="mr-2" id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"
+            [ngModelOptions]="{standalone: true}" />{{item.stateName}}
+        </ng-template>
+
+      </ng-select>
+      <span class="alert-message" *ngIf="(f.stateCd.dirty && f.stateCd.invalid) || f.stateCd.touched">
+        <span *ngIf="f.stateCd.hasError('required')">
+          {{ validationMsg.required | translate }}
+        </span>
+      </span>
+    </div>
+    <div class="form-group col-md-3">
+      <label for="selectVillage" class="form-label"> {{ "campaignCreation.campaign_select_district" |
+        translate }}<span class="mandatory-field">*</span></label>
+      <ng-select class="custom" [items]="districtMaster" [multiple]="true" bindLabel="districtName" groupBy="section"
+        [selectableGroup]="true" [selectableGroupAsModel]="false" [closeOnSelect]="false"
+        formControlName="selectedDistrict" placeholder="{{ 'campaignCreation.campaign_select_district' | translate }}">
+        <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+          <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+          {{"campaignCreation.select_all" | translate}}
+        </ng-template>
+
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          <input class="mr-2" id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"
+            [ngModelOptions]="{standalone: true}" />{{item.districtName}}
+        </ng-template>
+
+      </ng-select>
+      <span class="alert-message"
+        *ngIf="(f.selectedDistrict.dirty && f.selectedDistrict.invalid) || f.selectedDistrict.touched">
+        <span *ngIf="f.selectedDistrict.hasError('required')">
+          {{ validationMsg.required | translate }}
+        </span>
+      </span>
+    </div>
+
+    <div class="form-group col-md-3">
+      <label for="selectVillage" class="form-label">{{ "campaignCreation.campaign_select_tehsil" |
+        translate}}<span class="mandatory-field">*</span></label>
+      <ng-select class="custom" [items]="tehsilMaster" [multiple]="true" bindLabel="tehsilName" groupBy="section"
+        [selectableGroup]="true" [selectableGroupAsModel]="false" [closeOnSelect]="false"
+        formControlName="selectedTehsil" placeholder="{{ 'campaignCreation.campaign_select_tehsil'  | translate}}">
+        <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+          <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+          {{ "campaignCreation.select_all" | translate}}
+        </ng-template>
+
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          <input class="mr-2" id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />{{
+          item.tehsilName }}
+        </ng-template>
+
+      </ng-select>
+      <span class="alert-message"
+        *ngIf="(f.selectedTehsil.dirty && f.selectedTehsil.invalid) || f.selectedTehsil.touched">
+        <span *ngIf="f.selectedTehsil.hasError('required')">
+          {{ validationMsg.required | translate }}
+        </span>
+      </span>
+    </div>
+
+    <div class="form-group col-md-3">
+      <label for="selectVillage" class="form-label">{{"campaignCreation.campaign_select_village" | translate
+        }}<span class="mandatory-field">*</span></label>
+      <ng-select class="custom" [items]="villageMaster" [multiple]="true" bindLabel="villageName" groupBy="section"
+        [selectableGroup]="true" [selectableGroupAsModel]="false" [closeOnSelect]="false"
+        formControlName="selectedVillage" placeholder="{{ 'campaignCreation.campaign_select_village'  | translate}}">
+        <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+          <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+          {{"campaignCreation.select_all" | translate}}
+        </ng-template>
+
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          <input class="mr-2" id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />{{
+          item.villageName }}
+        </ng-template>
+      </ng-select>
+      <span class="alert-message"
+        *ngIf="(f.selectedVillage.dirty && f.selectedVillage.invalid) || f.selectedVillage.touched">
+        <span *ngIf="f.selectedVillage.hasError('required')">
+          {{ validationMsg.required | translate}}
+        </span>
+      </span>
+    </div>
+  </div>
+</form>

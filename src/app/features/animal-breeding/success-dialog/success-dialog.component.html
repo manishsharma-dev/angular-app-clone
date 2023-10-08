@@ -1,0 +1,41 @@
+<div class="campaign-dialog">
+  <img src="/assets/images/verified.svg" class="icon-verified" alt="icon-verified" />
+  <div class="campaign-msg">
+    <h1 class="succes-msg">
+      <span class="succes-msg-desc" *ngIf="data.transaction_id">{{'animalBreeding.transaction_id'|translate}}:</span><span class="succes-msg-desc">{{
+        data.transaction_id }}</span>
+      <span class="succes-msg-desc" *ngIf="data.testPlanId">{{'animalBreeding.test_plan_id'|translate}}:</span><span class="succes-msg-desc">{{
+        data.testPlanId }}</span>
+      <span class="succes-msg-desc" *ngIf="data.lactationNo">{{'animalDetails.lactation'| translate}}:</span><span class="succes-msg-desc">{{
+        data.lactationNo }}</span>
+    </h1>
+    <h1 class="succes-msg">{{ data.title | translate }}</h1>
+    <h3 class="succes-msg" *ngIf="data.onSpotId">
+      <span class="succes-msg-desc">{{'animalBreeding.sample_id_spot'|translate}}:</span><span class="succes-msg-desc">{{
+        data.onSpotId
+        }}</span>
+    </h3>
+    <h3 class="succes-msg" *ngIf="data.sampleId">
+      <span class="succes-msg-desc">{{'animalBreeding.sample_id'|translate}}:</span><span class="succes-msg-desc">{{
+        data.sampleId
+        }}</span>
+    </h3>
+    <h3 class="succes-msg" *ngIf="data.dryOffId">
+      <span class="succes-msg-desc">{{'animalBreeding.dry_off_id'|translate}}:</span><span class="succes-msg-desc">{{
+        data.dryOffId
+        }}</span>
+    </h3>
+  </div>
+  <div class="campaign-msg mb-4" *ngIf="data?.isCalving">
+    <h1 class="succes-msg">
+      <span class="succes-msg-desc">{{'animalBreeding.temporary_id'|translate}}:</span><span class="succes-msg-desc">{{ data.temporary_id }}</span>
+    </h1>
+    <p class="success-text">{{'animalBreeding.commonLabel.complete_tag_reg'|translate}} <b>{{data?.calvingDate | date :'dd/MM/yyyy'}}</b>
+      ({{'animalBreeding.commonLabel.to_be_complete'|translate}} <b>{{'animalBreeding.commonLabel.days_limit'|translate}}</b> {{'animalBreeding.commonLabel.reg_temp_id'|translate}})</p>
+  </div>
+  <div class="close-button">
+    <button type="submit" class="btn btn-primary" (click)="closeDialog()" mat-dialog-close>
+      {{'common.ok'|translate}}
+    </button>
+  </div>
+</div>

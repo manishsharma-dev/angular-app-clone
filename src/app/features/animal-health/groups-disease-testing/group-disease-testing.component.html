@@ -1,0 +1,95 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="row breadcum align-items-center py-2" *ngIf="!firFlag">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            <a routerLink="/dashboard">{{ "vaccination.breadcrumb_vaccinationFirst" | translate }}</a>
+          </li>
+          <li class="breadcrumb-item active">
+            <label>{{'vaccination.breadcrumb_vaccinationSecond' | translate}} </label>
+          </li>
+          <li class="breadcrumb-item current">
+            <label>{{'diseaseTesting.disease_testing' | translate}}</label>
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<section class="group-disease-testing">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card border-0">
+        <div class="card-body">
+          <div class="row align-items-center ">
+            <div class="col-md-9">
+              <div class="d-flex align-items-center radio-action">
+                <span>
+                  {{'diseaseTesting.disease_testing_for' | translate}}
+                </span>
+                <div class="mobile-view d-flex" [formGroup]="diseaseTestingForm">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" formControlName="section" id="Individual" value="1"
+                      checked />
+                    <label class="form-check-label" for="Individual">{{'diseaseTesting.individual' | translate}}</label>
+                  </div>
+
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" formControlName="section" id="group" value="2" />
+                    <label class="form-check-label" for="group">{{'diseaseTesting.group' | translate}}</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" formControlName="section" id="pool" value="3" />
+                    <label class="form-check-label" for="pool">{{'diseaseTesting.pool' | translate}}</label>
+                  </div>
+                  <div class="form-check form-check-inline" *ngIf="diseaseTestingForm.get('section').value == 3">
+                    <label class="form-check-label" for="pool">{{'diseaseTesting.total_pool_animals' |
+                      translate}}:</label>
+                    <div class="number-input ml-2">
+                      <input class="form-control" type="number" formControlName="poolValue">
+                      <span class="alert-message" *ngIf="
+                      (formControls.poolValue.dirty &&
+                        formControls.poolValue.invalid) ||
+                      formControls.poolValue.touched
+                    ">
+                        <span *ngIf="formControls.poolValue.hasError('min')">
+                          {{ validationMsg.poolMinCount | translate }}
+                        </span>
+                        <span *ngIf="formControls.poolValue.hasError('max')">
+                          {{ validationMsg.poolMaxCount | translate }}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-container [ngSwitch]="diseaseTestingForm.get('section').value">
+    <section *ngSwitchCase="1">
+      <app-disease-testing [firFlag]="firFlag" (newFormSelected)="newFormGroupSelected($event)"></app-disease-testing>
+    </section>
+    <section *ngSwitchCase="2">
+      <app-disease-testing-group [firFlag]="firFlag"
+        (newFormSelected)="newFormGroupSelected($event)"></app-disease-testing-group>
+    </section>
+    <section *ngSwitchCase="3">
+      <app-pool-disease-testing [isPool]=true [firFlag]="firFlag"
+        [poolAnimalCount]="diseaseTestingForm.get('poolValue').value"></app-pool-disease-testing>
+    </section>
+  </ng-container>
+
+
+</section>

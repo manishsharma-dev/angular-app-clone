@@ -1,0 +1,230 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<app-common-breadcrumb [breadcrumbKeys]="[ 'animalTreatmentSurgery.animal_health', 'postMortem.post_mortem']">
+</app-common-breadcrumb>
+
+<section class="owner-reg">
+  <app-common-search-box (search)="onSearch($event)" (reset)="onReset()" [searchOrganization]="false"
+    [(ownerTypeCd)]="ownerTypeCd"></app-common-search-box>
+
+  <app-saved-draft-list [draftList]="draftDataSource" (openDraft)="onOpenDraft($event)"
+    *ngIf="showDraft"></app-saved-draft-list>
+
+  <app-common-owners-list *ngIf="isOwnersListVisible" [ownersList]="ownerDataSource?.data"
+    (showDetail)="showOwnerDetails($event?.ownerId)"></app-common-owners-list>
+
+
+
+  <app-common-owner-detail *ngIf="isOwnerDetailsSectionVisible"
+    [ownerDetailsByID]="ownerDetailsByID"></app-common-owner-detail>
+
+  <!-- Animal Details Section -->
+  <div class="row p-0 mb-3" *ngIf="animalDetailsSectionVisible">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body ">
+          <span class="floating-filedset fildset-bg-blue">
+            <span class="float-label">{{'animalDetails.animalDetails.animal_detail' | translate}}</span>
+          </span>
+
+
+
+          <div class="add-member d-flex mt-3" *ngIf="!isPostMortemDetails">
+            <div class="filter-by col-md-3 mx-0 px-0">
+              <img src="/assets/images/search.svg" class="input-icon-left" alt="icon-search" />
+              <input type="text" class="form-control input input-search-section" id="filter-by" [placeholder]="
+                  'animalTreatmentSurgery.search_by_keywords'
+                    | translate
+                " (keyup)="searchInTable($event)" />
+            </div>
+            <button class="btn btn-primary ml-auto float-right mb-2" (click)="navigateToAddPostMortem()" appPermission
+              [permissionType]="masterConfig.isAdd" [disabled]="!selectedAnimalId">
+              {{'postMortem.post_mortem' | translate}}
+            </button>
+            <button class="btn btn-outline-primary ml-2 float-right mb-2" *ngIf="ownerDataSource.data.length > 1"
+              (click)="backToOwnerList()">
+              {{'registration.back' | translate}}
+            </button>
+          </div>
+
+
+          <div *ngIf="!tableDataSource.data.length" class=" title-heading">
+            <h3>{{'diseaseTesting.no_animals_registered' | translate}}</h3>
+          </div>
+          <div class="table-view mt-4" *ngIf="tableDataSource.data.length">
+            <div class="table-responsive">
+              <table mat-table [dataSource]="tableDataSource" class="mat-elevation-z8">
+                <ng-container matColumnDef="radio">
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell *matCellDef="let element">
+                    <input *ngIf="!isPostMortemDetails" type="radio" [value]="element.animalId" name="animal"
+                      (change)="animalSelected($event)" />
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="tagId">
+                  <th mat-header-cell *matHeaderCellDef>{{'animalDetails.tag_id' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.tagId ?? '--'}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="category">
+                  <th mat-header-cell *matHeaderCellDef> {{'animalDetails.fillAnimalDetails.category_species' |
+                    translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.species ?? '--' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="animalCategory">
+                  <th mat-header-cell *matHeaderCellDef> {{'animalTreatmentSurgery.category' |
+                    translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.animalCategory ?? '--' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="breed">
+                  <th mat-header-cell *matHeaderCellDef>{{'animalDetails.breed' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.breedAndExoticLevels &&
+                    element.breedAndExoticLevels.length > 1
+                    ? 'Cross Breed'
+                    : element.breedAndExoticLevels &&
+                    element.breedAndExoticLevels.length
+                    ? element.breedAndExoticLevels[0].breed
+                    : 'NA'}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sex">
+                  <th mat-header-cell *matHeaderCellDef>{{'common.sex' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.sex ?? '--'}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="age">
+                  <th mat-header-cell *matHeaderCellDef>{{'common.age' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ getAnimalAge(element.ageInMonths) }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="pregnancyStatus">
+                  <th mat-header-cell *matHeaderCellDef>{{'animalDetails.fillAnimalDetails.pregnancy_status' |
+                    translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.pregnancyStatus ?? 'NA'}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="milkingStatus">
+                  <th mat-header-cell *matHeaderCellDef>{{ "animalDetails.milking_status" | translate }}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.milkingStatus ?? 'NA' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ "common.history" | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="text-link">
+                    <a href="javascript:void(0)" (click)="viewAnimalHistory(element)">{{'diseaseTesting.view' |
+                      translate}}</a>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+              </table>
+              <mat-paginator #animalPaginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"
+                [pageSize]="animalPageSize" [pageIndex]="animalPageIndex" [length]="animalsCount"
+                (page)="onPageAnimalPageChange($event)">
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Post Mortem Details Section -->
+  <div class="row p-0 mb-3" *ngIf="animalDetailsSectionVisible && isPostMortemDetails">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body position-relative">
+          <span class="floating-filedset fildset-bg-blue">
+            <span class="float-label">{{'postMortem.post_mortem_details' | translate}}</span>
+          </span>
+          <div class="table-view mt-4">
+            <div class="table-responsive">
+              <table mat-table [dataSource]="postMortemDetails" class="mat-elevation-z8">
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef>{{'postMortem.post_mortem_id' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.postmortemId }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="date">
+                  <th mat-header-cell *matHeaderCellDef>{{'postMortem.post_mortem_date' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ formatDate(element.pmCompletionEndDate) }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sample_status">
+                  <th mat-header-cell *matHeaderCellDef>{{'postMortem.sample_status' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" [ngClass]="{'text-link':element.sampleStatus === 1 }">
+                    <a (click)="element.sampleStatus === 1 ? updateLabResults(element.postmortemId): null">{{
+                      element.sampleStatusDesc ??
+                      "NA" }}</a>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="post_mortem_status">
+                  <th mat-header-cell *matHeaderCellDef>{{'postMortem.post_mortem_status' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    <a>{{ element.pmStatusDesc ?? "NA" }}</a>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="report">
+                  <th mat-header-cell *matHeaderCellDef>{{'postMortem.report' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" class="text-link">
+                    <a (click)="viewReport(element.animalId)" *ngIf="element.pmStatus === 2; else noReport">
+                      {{'diseaseTesting.view' | translate}}
+                    </a>
+                    <ng-template #noReport>--</ng-template>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="edit" class="text-link">
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell *matCellDef="let element" class="text-link">
+                    <a appPermission [permissionType]="masterConfig.isAdd" *ngIf="element.pmStatus === 1"
+                      routerLink="add-post-mortem" [queryParams]="{
+                        animalId: tableDataSource.data[0].animalId,
+                        'postmortemId': element.postmortemId
+                      }"> {{'postMortem.edit' | translate}}
+                    </a>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="postMortemColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: postMortemColumns"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</section>

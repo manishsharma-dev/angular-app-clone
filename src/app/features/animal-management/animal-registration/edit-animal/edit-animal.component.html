@@ -1,0 +1,620 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            <a href="javascript: void(0)" routerLink="/dashboard">{{
+              "common.breadcrumb_home" | translate
+            }}</a>
+          </li>
+          <li class="breadcrumb-item active">
+            <label>{{ "animalDetails.animal_management" | translate }}</label>
+          </li>
+          <li class="breadcrumb-item current">
+            <label
+              >{{
+                "animalDetails.editAnimalDetails.edit_animal_lbl" | translate
+              }}
+            </label>
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="row p-0 view-animal-detail mb-3" *ngIf="completeAnimalDetails">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="card mb-4">
+          <div class="card-header view-animal-info">
+            <div class="row">
+              <div class="col-md-10 d-flex align-items-center">
+                <div class="position-relative">
+                  <img
+                    *ngIf="!isLoading"
+                    [src]="completeAnimalDetails.imagePreviewUrl"
+                    class="animal-image mr-2"
+                    alt="Animal-img"
+                  />
+                  <i
+                    class="fa"
+                    [ngClass]="{
+                      'fa-spinner fa-spin': isLoading
+                    }"
+                  ></i>
+                </div>
+
+                <div class="info-details">
+                  <div id="animal-unique-detail" clclearass="d-flex mb-1">
+                    <svg
+                      class="mr-2"
+                      width="18.137"
+                      height="18.115"
+                      viewBox="0 0 18.137 18.115"
+                    >
+                      <path
+                        id="Path_4915"
+                        data-name="Path 4915"
+                        d="M181.9,121.785l.075-8.326h0a.712.712,0,0,0-.711-.747l-8.361.122h0a.711.711,0,0,0-.5.208l-8.352,8.351a.712.712,0,0,0,0,1.007l8.218,8.218a.712.712,0,0,0,1.007,0l8.42-8.366a.712.712,0,0,0,.208-.467Zm-2.441-6.539a1.344,1.344,0,1,1-.95-.394A1.345,1.345,0,0,1,179.457,115.246Zm-6.243,12.727a.185.185,0,0,1-.261,0l-6.262-6.261a.186.186,0,0,1,0-.262l.375-.375a.186.186,0,0,1,.261,0l6.261,6.262a.185.185,0,0,1,0,.261Zm2.547-2.547a.186.186,0,0,1-.261,0l-6.262-6.261a.185.185,0,0,1,0-.262l.375-.375h0a.185.185,0,0,1,.261,0l6.262,6.262a.185.185,0,0,1,0,.261Z"
+                        transform="translate(-163.838 -112.712)"
+                        fill="#185b85"
+                      />
+                    </svg>
+                    <ul>
+                      <li>
+                        <span class="tag-bold">{{ customTagID }}</span>
+                        <span class="ticket-no"
+                          >{{ "animalDetails.animal_id_lbl" | translate }}
+                          {{ completeAnimalDetails.animalId }}</span
+                        >
+                      </li>
+                      <li>
+                        <span
+                          *ngIf="
+                            completeAnimalDetails.ownerDetails
+                              .registrationStatus != '3'
+                          "
+                        >
+                          <img
+                            *ngIf="
+                              completeAnimalDetails.registrationStatus == '2';
+                              else elseBlock
+                            "
+                            src="/assets/images/verified.svg"
+                            class="icon-verified"
+                            alt="icon-verified"
+                          />
+                          <ng-template #elseBlock>
+                            <a
+                              href="javascript:void(0)"
+                              class="alert-message link-font"
+                              [ngClass]="isAnimalActive ? '' : 'ellips-text'"
+                              data-toggle="tooltip"
+                              data-placement="top"
+                              title="{{
+                                isAnimalActive
+                                  ? 'Not-Verified'
+                                  : completeAnimalDetails?.registrationStatus ===
+                                    '3'
+                                  ? 'Please verify Owner Mobile Number for renewal of services.'
+                                  : 'Animal Marked as Inactive.'
+                              }}"
+                              (click)="openOtpDialog()"
+                              ><i
+                                class="fa fa-exclamation-circle"
+                                aria-hidden="true"
+                              ></i>
+                              {{
+                                isAnimalActive ? "Not Verified" : "Inactive"
+                              }}</a
+                            >
+                          </ng-template>
+                        </span>
+                      </li>
+                      <li
+                        *ngIf="
+                          completeAnimalDetails.animalStatusCd == 5 &&
+                          completeAnimalDetails.ownerDetails
+                            .registrationStatus != '3'
+                        "
+                      >
+                        <a
+                          href="javascript:void(0)"
+                          class="alert-message link-font ellips-text"
+                          data-toggle="tooltip"
+                          data-placement="top"
+                          title="{{
+                            'Please verify Buyer Mobile Number for Ownership Transfer.'
+                          }}"
+                          (click)="openOwnershipDialog()"
+                          ><i
+                            class="fa fa-exclamation-circle"
+                            aria-hidden="true"
+                          ></i>
+                          {{ "Verify Ownership" }}</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                  <div id="animal-detail">
+                    <ul>
+                      <li>
+                        {{ "animalDetails.reg_date" | translate }}:
+                        {{ formatDate(completeAnimalDetails.registrationDate) }}
+                      </li>
+                      <li>
+                        {{ "common.age" | translate }}:
+                        {{ calculateAge(completeAnimalDetails.ageInMonths) }}
+                      </li>
+                      <li>
+                        {{ "animalDetails.date_of_birth" | translate }}:
+                        {{ formatDate(completeAnimalDetails.dateOfBirth) }}
+                        <span *ngIf="checkIfEditInProgress('Date of Birth')">
+                          <img
+                            src="/assets/images/info.svg"
+                            class="icon-info"
+                            alt="icon-info"
+                          />
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-md-2 d-flex justify-content-end"
+                *ngIf="
+                  !completeAnimalDetails?.fieldSubmittedforUpdate &&
+                  (completeAnimalDetails?.animalStatusCd === 1 ||
+                    completeAnimalDetails?.animalStatusCd === 4 ||
+                    (completeAnimalDetails?.animalStatusCd === 7 &&
+                      completeAnimalDetails?.registrationStatus != '3'))
+                "
+              >
+                <img
+                  src="/assets/images/edit.svg"
+                  class="icon-edit"
+                  alt="icon-edit"
+                  (click)="openEditAnimalDialog()"
+                  appRoutePermission
+                  [routeInfo]="'/animal/modifyanimal'"
+                  [permissionType]="masterConfig.isModify"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row animal-bio-info">
+              <div class="col-md-6 basic-details">
+                <h3 class="details-heading">
+                  {{ "animalDetails.basic_details" | translate }}
+                </h3>
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">
+                    {{
+                      "animalDetails.fillAnimalDetails.name_animal" | translate
+                    }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{ completeAnimalDetails.animalName || "--" }}
+                    <span *ngIf="checkIfEditInProgress('Name')">
+                      <img
+                        src="/assets/images/info.svg"
+                        class="icon-info"
+                        alt="icon-info"
+                      />
+                    </span>
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">
+                    {{
+                      "animalDetails.fillAnimalDetails.tagging_date" | translate
+                    }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{ formatDate(completeAnimalDetails.taggingDate) }}
+                    <span *ngIf="checkIfEditInProgress('Date of Tagging')">
+                      <img
+                        src="/assets/images/info.svg"
+                        class="icon-info"
+                        alt="icon-info"
+                      />
+                    </span>
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">
+                    {{ "common.sex" | translate }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{ completeAnimalDetails.sex }}
+                    <span *ngIf="checkIfEditInProgress('Sex')">
+                      <img
+                        src="/assets/images/info.svg"
+                        class="icon-info"
+                        alt="icon-info"
+                      />
+                    </span>
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">
+                    {{ "common.status" | translate }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{ completeAnimalDetails.animalStatus }}
+                    <span *ngIf="checkIfEditInProgress('Status')">
+                      <img
+                        src="/assets/images/info.svg"
+                        class="icon-info"
+                        alt="icon-info"
+                      />
+                    </span>
+                  </div>
+                </div>
+
+                <div class="d-flex" *ngIf="completeAnimalDetails.dateOfDeath">
+                  <div class="flex-custom-left info-label">
+                    {{ "common.dateOfDeath" | translate }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{ formatDateAndTime(completeAnimalDetails.dateOfDeath) }}
+                  </div>
+                </div>
+
+                <div class="d-flex" *ngIf="completeAnimalDetails.dateOfDeath">
+                  <div class="flex-custom-left info-label">
+                    {{ "common.timeOfDeath" | translate }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{ timeOfDeath }}
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">
+                    {{ "common.species" | translate }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{ completeAnimalDetails.species }}
+                    <span *ngIf="checkIfEditInProgress('Species')">
+                      <img
+                        src="/assets/images/info.svg"
+                        class="icon-info"
+                        alt="icon-info"
+                      />
+                    </span>
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">
+                    {{ "animalDetails.category" | translate }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{ completeAnimalDetails?.animalCategory || "--" }}
+                    <span *ngIf="checkIfEditInProgress('Species')">
+                      <img
+                        src="/assets/images/info.svg"
+                        class="icon-info"
+                        alt="icon-info"
+                      />
+                    </span>
+                  </div>
+                </div>
+
+                <div *ngIf="completeAnimalDetails?.breedAndExoticLevels">
+                  <div class="d-flex">
+                    <div class="flex-custom-left info-label">
+                      {{ "animalDetails.breed" | translate }}
+                    </div>
+                    <div class="flex-custom-right info-data">
+                      <ul class="info-data-list">
+                        <li
+                          *ngFor="
+                            let ele of completeAnimalDetails?.breedAndExoticLevels
+                          "
+                        >
+                          {{ ele.breed + " " }}
+                          <span *ngIf="checkIfEditInProgress('Species')">
+                            <img
+                              src="/assets/images/info.svg"
+                              class="icon-info"
+                              alt="icon-info"
+                            />
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="d-flex"
+                  *ngIf="completeAnimalDetails?.breedAndExoticLevels"
+                >
+                  <div class="flex-custom-left info-label">
+                    {{ "animalDetails.exotic_blood_level" | translate }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    <ul class="info-data-list">
+                      <li
+                        *ngFor="
+                          let ele of completeAnimalDetails?.breedAndExoticLevels
+                        "
+                      >
+                        {{ ele.breed }}-{{
+                          formatExoticLevel(ele.bloodExoticLevel) + " "
+                        }}%
+                        <span *ngIf="checkIfEditInProgress('Species')">
+                          <img
+                            src="/assets/images/info.svg"
+                            class="icon-info"
+                            alt="icon-info"
+                          />
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">
+                    {{ "animalDetails.coat_color" | translate }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{ coatColour || "--" }}
+                    <span *ngIf="checkIfEditInProgress('Coat Colour')">
+                      <img
+                        src="/assets/images/info.svg"
+                        class="icon-info"
+                        alt="icon-info"
+                      />
+                    </span>
+                  </div>
+                </div>
+
+                <div class="d-flex" *ngIf="completeAnimalDetails?.sex == 'F'">
+                  <div class="flex-custom-left info-label">
+                    {{ "animalDetails.pregnancy_status" | translate }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{ completeAnimalDetails.pregnancyStatus }}
+                    <span *ngIf="checkIfEditInProgress('Pregnancy')">
+                      <img
+                        src="/assets/images/info.svg"
+                        class="icon-info"
+                        alt="icon-info"
+                      />
+                    </span>
+                  </div>
+                </div>
+
+                <div class="d-flex" *ngIf="completeAnimalDetails?.sex == 'F'">
+                  <div class="flex-custom-left info-label">
+                    {{
+                      "animalDetails.fillAnimalDetails.pregnancy_month"
+                        | translate
+                    }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{ completeAnimalDetails.pregnancyMonth || "--" }}
+                    <span *ngIf="checkIfEditInProgress('Pregnancy')">
+                      <img
+                        src="/assets/images/info.svg"
+                        class="icon-info"
+                        alt="icon-info"
+                      />
+                    </span>
+                  </div>
+                </div>
+
+                <div class="d-flex" *ngIf="completeAnimalDetails?.sex == 'F'">
+                  <div class="flex-custom-left info-label">
+                    {{ "animalDetails.milking_status" | translate }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{ completeAnimalDetails.milkingStatus || "--" }}
+                    <span *ngIf="checkIfEditInProgress('Milking Status')">
+                      <img
+                        src="/assets/images/info.svg"
+                        class="icon-info"
+                        alt="icon-info"
+                      />
+                    </span>
+                  </div>
+                </div>
+
+                <div class="d-flex" *ngIf="completeAnimalDetails?.sex == 'F'">
+                  <div class="flex-custom-left info-label">
+                    {{ "animalDetails.no_of_calving" | translate }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{
+                      completeAnimalDetails.numberCalvings == undefined
+                        ? "--"
+                        : completeAnimalDetails.numberCalvings
+                    }}
+                    <span *ngIf="checkIfEditInProgress('No of Calvings')">
+                      <img
+                        src="/assets/images/info.svg"
+                        class="icon-info"
+                        alt="icon-info"
+                      />
+                    </span>
+                  </div>
+                </div>
+
+                <!-- <div class="d-flex" *ngIf="completeAnimalDetails?.sex == 'F'">
+                  <div class="flex-custom-left info-label">Lactation No.</div>
+                  <div class="flex-custom-right info-data">
+                    {{ completeAnimalDetails.currentLactationNo || "--" }}
+                  </div>
+                </div> -->
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">
+                    {{ "animalDetails.loaned" | translate }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{ completeAnimalDetails.isLoanOnAnimal ? "Yes" : "No" }}
+                    <span *ngIf="checkIfEditInProgress('Loaned Status')">
+                      <img
+                        src="/assets/images/info.svg"
+                        class="icon-info"
+                        alt="icon-info"
+                      />
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 family-details">
+                <h3 class="details-heading">
+                  {{ "animalDetails.family_details" | translate }}
+                </h3>
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">
+                    {{ "animalDetails.sire_Id" | translate }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{ completeAnimalDetails.sireId || "--" }}
+                    <span *ngIf="checkIfEditInProgress('Sire ID')">
+                      <img
+                        src="/assets/images/info.svg"
+                        class="icon-info"
+                        alt="icon-info"
+                      />
+                    </span>
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">
+                    {{ "animalDetails.sire_sire_id" | translate }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{ completeAnimalDetails.sireSireId || "--" }}
+                    <span *ngIf="checkIfEditInProgress('Sires Sire ID')">
+                      <img
+                        src="/assets/images/info.svg"
+                        class="icon-info"
+                        alt="icon-info"
+                      />
+                    </span>
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">
+                    {{ "animalDetails.dam_Id" | translate }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{ completeAnimalDetails.damId || "--" }}
+                    <span *ngIf="checkIfEditInProgress('Dam ID')">
+                      <img
+                        src="/assets/images/info.svg"
+                        class="icon-info"
+                        alt="icon-info"
+                      />
+                    </span>
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="flex-custom-left info-label">
+                    {{ "animalDetails.dam_Sire_Id" | translate }}
+                  </div>
+                  <div class="flex-custom-right info-data">
+                    {{ completeAnimalDetails.damSireId || "--" }}
+                    <span *ngIf="checkIfEditInProgress('Dams Sire ID')">
+                      <img
+                        src="/assets/images/info.svg"
+                        class="icon-info"
+                        alt="icon-info"
+                      />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            appRoutePermission
+            [routeInfo]="'/animal/animalsearch'"
+            [permissionType]="masterConfig.isAdd"
+            class="card-footer footer-transparent additional-info-text-align1"
+            *ngIf="
+              !completeAnimalDetails?.fieldSubmittedforUpdate &&
+              completeAnimalDetails.animalStatusCd === 1
+            "
+          >
+            <p>
+              {{ "common.additional_info" | translate }} ?
+              <a
+                href="javascript:void(0)"
+                class="additional-info-link"
+                (click)="openAddInfoDialog()"
+                >{{ "common.click_here" | translate }}</a
+              >
+            </p>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-start mb-2">
+          <button
+            type="button"
+            class="btn btn-outline-primary mr-2"
+            (click)="redirectToSearch()"
+          >
+            {{ "animalDetails.back" | translate }}
+          </button>
+          <!-- <button
+            type="submit"
+            class="btn btn-outline-primary mr-2"
+            (click)="openEditAnimalDialog()"
+            [disabled]="
+              completeAnimalDetails.fieldSubmittedforUpdate &&
+              completeAnimalDetails.animalStatus.includes('Sold')
+            "
+          >
+            Edit Details
+          </button> -->
+          <button
+            type="submit"
+            class="btn btn-primary"
+            (click)="openTransactionsDialog()"
+          >
+            {{ "animalDetails.animalDetails.view_transactions" | translate }}
+          </button>
+        </div>
+
+        <div
+          class="change-request-msg"
+          *ngIf="completeAnimalDetails?.fieldSubmittedforUpdate"
+        >
+          <img
+            src="/assets/images/info.svg"
+            class="icon-info"
+            alt="icon-info"
+          />
+          <span>{{
+            "animalDetails.editAnimalDetails.change_request_sent" | translate
+          }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

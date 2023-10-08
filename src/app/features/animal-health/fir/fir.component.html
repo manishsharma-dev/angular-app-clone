@@ -1,0 +1,459 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row breadcum align-items-center py-2">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="breadcrumb-list text-md-left">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb m-0">
+            <li routerlink="/dashboard" class="breadcrumb-item active">
+              <a href="javascript:void(0)"> {{'common.breadcrumb_home' | translate}}</a>
+            </li>
+            <li class="breadcrumb-item current">
+              <label>{{'fir.animal_health' | translate}}</label>
+            </li>
+            <li class="breadcrumb-item current">
+              <label>{{'fir.fir_incidence_report' | translate}}</label>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="fir">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card border-0">
+        <div class="card-body">
+          <!-- reporting list -->
+          <div class="row" *ngIf="isReportingTabVisible">
+            <div class="col-md-12 col-h">
+              <div class="fir-tabs">
+                <div class="tabs-nav-list d-flex justify-content-md-start">
+                  <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link" id="pills-intimation-reports" [ngClass]="{
+                          active: activeTab == 'INTIMATION-reports'
+                        }" data-bs-toggle="pill" [attr.data-bs-target]="'#pills-reports'"
+                        (click)="activeTab = 'INTIMATION-reports'" role="tab" aria-controls="pills-reports"
+                        aria-selected="true">{{'fir.intimation_reports' | translate}}</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="fir" [ngClass]="{ active: activeTab == 'fir-rep' }" data-bs-toggle="pill"
+                        [attr.data-bs-target]="'#pills-open'" (click)="activeTab = 'fir-rep'" role="tab"
+                        aria-controls="pills-open" aria-selected="false">{{'fir.fir' | translate}}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <div class="tab-content" id="pills-tabContent">
+                  <div class="tab-pane fade" [ngClass]="{
+                      active: activeTab == 'INTIMATION-reports',
+
+                      show: activeTab == 'INTIMATION-reports'
+                    }" [id]="'pills-reports'" role="tabpanel" aria-labelledby="pills-intimation-reports">
+                    <div class="row align-items-center mb-2">
+                      <div class="col-md-12">
+                        <div class="title-heading">
+                          <h3 class="muted-label-heading">
+                            {{'fir.all_intimation_reports' | translate}}
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row align-items-center">
+                      <div class="col-md-6">
+                        <div class="fir-filter-search">
+                          <div class="d-flex justify-content-start">
+                            <div class="w-75 position-relative">
+                              <img src="/assets/images/search.svg" alt="icon-search" class="input-icon-left" />
+                              <input type="text" placeholder="{{'outBreak.filter_by_village_name' | translate}}"
+                                autocomplete="off" class="form-control search-input" (keyup)="searchInTable($event)"
+                                id="fir-filter-id" />
+                            </div>
+
+                            <div class="ml-2">
+                              <button class="btn btn-light advance-filter" (click)="toggleOn = !toggleOn">
+                                <i aria-hidden="true" class="fa fa-search" alt="icon-filter"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="d-flex justify-content-end mb-2">
+                          <!-- <button type="submit" class="btn btn-primary mr-2" (click)="search()">
+                            Merge & Proceed
+                          </button> -->
+                          <button (click)="mergeSubmit('fir-details-form')" class="btn btn-primary mr-2"
+                            [disabled]="firstIncDetails.length < 2" appPermission [permissionType]="masterConfig.isAdd">
+                            {{'fir.merge_proceed' | translate}}
+                          </button>
+                          <button (click)="createSubmit('fir-details-form')" class="btn btn-primary"
+                            [disabled]="firstIncDetails.length != 1" appPermission
+                            [permissionType]="masterConfig.isAdd">
+                            {{'fir.create_fir' | translate}}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Fields Start -->
+
+                    <!-- <div class="report-content" *ngIf="!toggleOn">
+                      <div class="form-row">
+                        <div class="form-group col-lg-3 col-md-3">
+                          <label for="districtCode" class="form-label">District</label>
+                          <select class="form-control" id="districtCode">
+                            <option selected disabled>Select District</option>
+                            <option value="kurukshetra">kurukshetra</option>
+                            <option value="ambala">Ambala</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4">
+                          <label for="teshil" class="form-label">Teshil</label>
+                          <ng-select class="custom" [items]="teshil" [multiple]="true" bindLabel="name"
+                            groupBy="selectedAllGroup" [selectableGroup]="true" [selectableGroupAsModel]="false"
+                            [closeOnSelect]="false" bindValue="name" placeholder="Select Teshil">
+                            <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                              <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+                              Select All
+                            </ng-template>
+
+                            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                              <input class="mr-2" id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />{{
+                              item.name }}
+                            </ng-template>
+                          </ng-select>
+                        </div>
+                        <div class="form-group col-lg-5 col-md-5">
+                          <label for="selectVillage" class="form-label">Village</label>
+
+                          <ng-select class="custom" [items]="villages" [multiple]="true" bindLabel="name"
+                            groupBy="selectedAllGroup" [selectableGroup]="true" [selectableGroupAsModel]="false"
+                            [closeOnSelect]="false" bindValue="name" placeholder="Select Villages">
+                            <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                              <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+                              Select All
+                            </ng-template>
+
+                            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                              <input class="mr-2" id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />{{
+                              item.name }}
+                            </ng-template>
+                          </ng-select>
+                        </div>
+                      </div>
+                      <div class="form-row align-items-center">
+                        <div class="col-md-6">
+                          <span class="clear-filter">
+                            Clear all filters
+                          </span>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="d-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-outline-primary mr-2">
+                              Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                              Apply Filter
+                            </button>
+                          </div>
+                        </div>
+
+
+                      </div>
+                    </div>
+
+                    <div class="report-content-chips mt-1">
+                      <div class="chip-item mr-2">
+                        Ambe
+                        <span class="chip-cross ml-2">
+                          <img _ngcontent-dmx-c220="" src="/assets/images/cross-icon.svg" alt="icon-cross"
+                            class="cross-icon">
+                        </span>
+                      </div>
+                      <div class="chip-item mr-2">
+                        Ambe
+                        <span class="chip-cross ml-2">
+                          <img _ngcontent-dmx-c220="" src="/assets/images/cross-icon.svg" alt="icon-cross"
+                            class="cross-icon">
+                        </span>
+                      </div>
+                      <div class="chip-item mr-2">
+                        Ambe
+                        <span class="chip-cross ml-2">
+                          <img _ngcontent-dmx-c220="" src="/assets/images/cross-icon.svg" alt="icon-cross"
+                            class="cross-icon">
+                        </span>
+                      </div>
+
+                    </div> -->
+                    <!-- Fields End -->
+                    <div class="h-divider">
+                      <div class="dotted"></div>
+                    </div>
+                    <div class="fir-table table-view">
+                      <div class="table-responsive">
+                        <table mat-table matSort [dataSource]="dataSourceIntimationReports" multiTemplateDataRows
+                          class="mat-elevation-z8">
+                          <!-- Checkbox Column -->
+                          <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef>
+                              <input _ngcontent-vtt-c382="" type="checkbox" name="selectAll" id="selectHeader"
+                                class="check-input" [checked]="isAllSelected()" (change)="onSelectAll($event)" />
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="cell-width">
+                              <input type="checkbox" class="check-input" name="rowcheck" id="selectrow"
+                                [checked]="isElementSelected(element)" (change)="onElementSelected($event, element)"
+                                [value]="element" [disabled]="isElementDisabled(element)" />
+                            </td>
+                          </ng-container>
+                          <!-- FIR ID Column -->
+                          <ng-container matColumnDef="intimationId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                              {{'fir.reports_id' | translate}}
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              {{ element.intimationId }}
+                            </td>
+                          </ng-container>
+
+                          <!-- First Incidence Date Column -->
+                          <ng-container matColumnDef="firstIntimationDateDisplay">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                              {{'fir.date_of_first_intimation' | translate}}
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              {{ dateFormatChange(element.firstIntimationDate) }}
+                            </td>
+                          </ng-container>
+
+                          <!-- Symptoms Column -->
+                          <ng-container matColumnDef="symptomDetailsDesc">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'fir.symptoms' | translate}}</th>
+                            <td mat-cell *matCellDef="let element">
+                              <div class="ellips-text" data-toggle="tooltip" data-placement="top"
+                                title="{{ element.symptomDetailsDesc }}">
+                                {{ element.symptomDetailsDesc ? element.symptomDetailsDesc : 'NA' }}
+                              </div>
+                            </td>
+                          </ng-container>
+
+                          <!-- Village Column -->
+                          <ng-container matColumnDef="VillageDetailsDesc">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'common.village_name' | translate}}
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              <div class="ellips-text" data-toggle="tooltip" data-placement="top"
+                                title="{{ element.VillageDetailsDesc }}">
+                                {{ element.VillageDetailsDesc ? element.VillageDetailsDesc : 'NA' }}
+                              </div>
+                            </td>
+                          </ng-container>
+
+
+
+                          <!-- Action Column -->
+                          <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef>{{'common.action' | translate}}</th>
+                            <td mat-cell *matCellDef="let element" class="action-link">
+                              <a class="view text-link" href="javascript:void(0)"
+                                (click)="viewReportDialog(element.intimationId)">
+                                {{'performanceRecording.view' | translate}}
+                              </a>
+                            </td>
+                          </ng-container>
+
+                          <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+                          <tr mat-row *matRowDef="let element; columns: columnsToDisplay"></tr>
+                          <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell text-center" [attr.colspan]="columnsToDisplay.length">
+                              {{'diseaseTesting.no_data_available' | translate}}
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                      <mat-paginator [pageSizeOptions]="[5, 10, 20]" #paginatorRef>
+                      </mat-paginator>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- FIR TAB CONTENT STARTS -->
+                <div class="tab-content" id="fir">
+                  <div class="tab-pane fade" [ngClass]="{
+                      active: activeTab == 'fir-rep',
+
+                      show: activeTab == 'fir-rep'
+                    }" [id]="'pills-open'" role="tabpanel" aria-labelledby="fir">
+                    <div class="row align-items-center mb-2">
+                      <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="title-heading">
+                          <h3 class="muted-label-heading">
+                            {{'fir.first_incidence_report_lists' | translate}}
+                          </h3>
+                        </div>
+                      </div>
+                      <div class="col-lg-6 col-md-6">
+                        <div class="fir-filter-search">
+                          <div class="d-flex justify-content-end">
+                            <div class="w-50 position-relative">
+                              <img src="/assets/images/search.svg" alt="icon-search" class="input-icon-left" />
+                              <input type="text" placeholder="{{ 'outBreak.filter_by_village_name' | translate }}"
+                                autocomplete="off" class="form-control search-input" id="fir-filter"
+                                (keyup)="searchFIRTable($event)" />
+                            </div>
+
+                            <div class="ml-2">
+                              <button class="btn btn-light advance-filter" (click)="toggleOn = !toggleOn">
+                                <i aria-hidden="true" class="fa fa-filter filterIcon" alt="icon-filter"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="h-divider">
+                      <div class="dotted"></div>
+                    </div>
+                    <div class="fir-table table-view">
+                      <div class="table-responsive">
+                        <table mat-table matSort [dataSource]="dataSourceFIR" class="mat-elevation-z8">
+                          <!-- (matSortChange)="announceSortChange($event)" -->
+                          <!-- Position Column -->
+                          <!-- <ng-container matColumnDef="position">
+                            <th mat-header-cell *matHeaderCellDef></th>
+                            <td mat-cell *matCellDef="let element; let i = index">
+                              0{{ i + 1 }}
+                            </td>
+                          </ng-container> -->
+
+                          <!-- FIR ID Column -->
+                          <ng-container matColumnDef="firId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'fir.fir_id' | translate}}</th>
+                            <td mat-cell *matCellDef="let element">
+                              {{ element.firId }}
+                            </td>
+                          </ng-container>
+
+                          <!--  Date of First Incidence Column -->
+                          <ng-container matColumnDef="firstIncidenceDateDisplay">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                              {{'fir.date_of_first_incidence' | translate}}
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              {{ dateFormatChange(element.firstIncidenceDate) }}
+                            </td>
+                          </ng-container>
+
+                          <!-- Symptoms Column -->
+                          <ng-container matColumnDef="symptomDetails">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                              {{'fir.symptoms' | translate}}
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              <div class="ellips-text" data-toggle="tooltip" data-placement="top"
+                                title="{{ element.symptomDetails }}">
+                                {{ element.symptomDetails ? element.symptomDetails : 'NA' }}
+                              </div>
+                            </td>
+                          </ng-container>
+
+                          <!-- Disease Column -->
+                          <ng-container matColumnDef="diseaseDetails">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                              {{'diseaseTesting.disease' | translate}}
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              <div class="ellips-text" data-toggle="tooltip" data-placement="top"
+                                title="{{ element.diseaseDetails }}">
+                                {{ element.diseaseDetails ? element.diseaseDetails : 'NA' }}
+                              </div>
+                            </td>
+                          </ng-container>
+
+                          <!-- Affected Animals Column -->
+                          <ng-container matColumnDef="affectedAnimals">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                              {{'fir.affected_animals' | translate}}
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              <div class="mat-custom-column">
+                                {{ element.totalAffectedAnimals ? element.totalAffectedAnimals : 'NA' }}
+                              </div>
+                            </td>
+                          </ng-container>
+                          <!-- Village Column -->
+                          <ng-container matColumnDef="villageDetails">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                              sortActionDescription="Sort by Village">
+                              {{'common.village_name' | translate}}
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              <div class="ellips-text" data-toggle="tooltip" data-placement="top"
+                                title="{{ element.villageDetails }}">
+                                {{ element.villageDetails ? element.villageDetails : 'NA' }}
+                              </div>
+                            </td>
+                          </ng-container>
+
+                          <!-- Status Column -->
+                          <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                              {{'fir.status_outbreak_id' | translate}}
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="action-link">
+                              {{ element.status }}
+
+                              <!-- <button class="newbtn" mat-stroked-button routerLink="/dashboard/worklist">
+                              </button> -->
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                              sortActionDescription="Sort by Status">
+                              {{'common.action' | translate}}
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="action-link"
+                              (click)="viewWorkList(element.firId, element.status)">
+                              <a href="javascript:void(0)" class="health-history"> {{'performanceRecording.view' |
+                                translate}}</a>
+                            </td>
+
+                          </ng-container>
+
+                          <tr mat-header-row *matHeaderRowDef="columnsToDisplayFIR"></tr>
+                          <tr mat-row *matRowDef="let element; columns: columnsToDisplayFIR"></tr>
+                          <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell text-center" [attr.colspan]="columnsToDisplayFIR.length">
+                              {{'diseaseTesting.no_data_matching_the_filter' | translate}}
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                      <mat-paginator [pageSizeOptions]="[5, 10, 20]" #firpaginatorRef>
+                      </mat-paginator>
+                    </div>
+                  </div>
+                </div>
+                <!-- FIR TAB CONTENT ENDS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

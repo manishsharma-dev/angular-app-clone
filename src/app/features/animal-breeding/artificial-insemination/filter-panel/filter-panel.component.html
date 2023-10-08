@@ -1,0 +1,56 @@
+<section class="animal-breeding-list">
+    <div class="row no-gutters col-container filter-container">
+      <div class="col-md-12 col-h left-section">
+        <div class="form-row">
+            <div class=" col-md-6">
+                <div class="title-heading mb-3">
+                    <h3 class="muted-label-heading">Filter</h3>
+                  </div>
+            </div>
+            <div class="col-md-6">
+                <div class="title-heading mb-3 filter-mgmt">
+
+                    <a>Clear all filters</a>
+                </div>
+              
+            </div>
+            <div class="h-divider">
+                <div class="shadow"></div>
+              </div>
+        </div>
+
+        <div class="form-row">
+            <div class=" col-md-5 filter-background">
+                <mat-list>
+                    <mat-list-item *ngFor="let filter of filterList" (click)="filterType=filter"  [ngClass]="{'active': filterType===filter}"> <span class="pointer">{{filter}}</span></mat-list-item>
+                   </mat-list>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-6">
+                <div *ngIf="filterType == 'Category/Species'">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="YES" value="option1"
+                          (change)="toggleCampaign(true)"  />
+                        <label class="form-check-label" for="Yes">Yes</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="NO"
+                          value="option2" (change)="toggleCampaign(false)" />
+                        <label class="form-check-label" for="No">No</label>
+                      </div>
+
+                </div>
+   
+              
+            </div>
+            
+        </div>
+       
+        <div class="h-divider filter-margin">
+            <div class="shadow"></div>
+          </div>
+
+        </div>
+        </div>
+        </section>
+

@@ -1,0 +1,107 @@
+<form [formGroup]="labTestingRequestDtos">
+  <div class="row mb-2">
+    <div class="col-md-3">
+      <label for="test">{{'diseaseTesting.test_type' | translate}}</label>
+      <select class="form-control" formControlName="testType">
+        <option value="null">{{'diseaseTesting.select_test_type' | translate}}</option>
+        <option *ngFor="let test of sampleTestTypeMaster" [value]="test.id">{{test.value}}</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label for="test">{{'diseaseTesting.plan_id' | translate}}</label>
+      <select class="form-control" formControlName="planID">
+        <option value="null">{{'diseaseTesting.select_plan_id' | translate}}</option>
+        <option *ngFor="let plan of planIdMaster" [value]="plan.id">{{plan.value}}</option>
+      </select>
+    </div>
+  </div>
+  <ng-container *ngFor="let sample of labTestingRequestDtos.get('sampleExaminationDetails')['controls'];let i=index"
+    [formGroup]="sample">
+    <!-- horizontal-separator -->
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-md-6">
+        <h5>{{'diseaseTesting.add_sample_detail' | translate}}</h5>
+      </div>
+      <div class="col-md-6">
+        <span class="add-row--btn float-right" (click)="removeExamType(i)"><i class="fa fa-trash-o add-row--icon"
+            aria-hidden="true"></i>
+          <b>{{'diseaseTesting.remove' | translate}}</b>
+        </span>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-md-3">
+        <label for="test">{{'performanceRecording.sample_type' | translate}}</label>
+        <ng-select class="custom" appendTo="body" [items]="sampleTypeMaster" bindLabel="sampleTypeDesc"
+          (change)="getExaminationType($event,i)" [selectableGroup]="true" [selectableGroupAsModel]="false"
+          [virtualScroll]="true" placeholder="Search Sample Type" [closeOnSelect]="true" formControlName="sampleType">
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <div class="d-flex justify-content-between">
+              <span>{{ item.sampleTypeDesc }}</span>
+            </div>
+          </ng-template>
+        </ng-select>
+      </div>
+      <div class="col-md-3">
+        <label for="test">{{'performanceRecording.examination_type' | translate}}</label>
+        <select class="form-control" formControlName="sampleExaminationTypeCd"
+          (change)="getSubExaminationType($event,i)">
+          <option value="null">{{'performanceRecording.select_examination_type' | translate}}</option>
+          <option *ngFor="let sample of sampleExamTypeMaster[i]" [value]="sample.sampleExaminationTypeCd">
+            {{sample.sampleExaminationTypeDesc}}</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label for="test">{{'performanceRecording.sub_examination_type' | translate}}</label>
+        <ng-select class="custom" appendTo="body" [items]="sampleSubExamTypeMaster[i]"
+          bindLabel="sampleExaminationSubtypeDesc" [selectableGroup]="true" [selectableGroupAsModel]="false"
+          [virtualScroll]="true" placeholder="Search Sub Examination Type" [closeOnSelect]="true"
+          formControlName="sampleType">
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <div class="d-flex justify-content-between">
+              <span>{{ item.sampleExaminationSubtypeDesc }}</span>
+            </div>
+          </ng-template>
+        </ng-select>
+      </div>
+      <div class="col-md-3">
+        <label for="test">{{'diseaseTesting.lab' | translate}}</label>
+        <ng-select class="custom" appendTo="body" [items]="labMaster" bindLabel="subOrgName" [selectableGroup]="true"
+          [selectableGroupAsModel]="false" [virtualScroll]="true" placeholder="Search Lab" [closeOnSelect]="true"
+          formControlName="labCd">
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <div class="d-flex justify-content-between">
+              <span>{{ item.subOrgName }}</span>
+            </div>
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-md-3">
+        <label for="test">{{'diseaseTesting.lab_charges' | translate}}</label>
+        <input type="text" class="form-control" formControlName="labCharges">
+      </div>
+      <div class="col-md-3">
+        <label for="test">{{'diseaseTesting.receipt_no' | translate}}</label>
+        <input type="text" class="form-control" formControlName="receiptNo">
+      </div>
+      <div class="col-md-3">
+        <label for="test">{{'diseaseTesting.mode_of_transport' | translate}}</label>
+        <select class="form-control" formControlName="modeOfTransport">
+          <option value="null">{{'diseaseTesting.select_mode_of_transport' | translate}}</option>
+          <option *ngFor="let trans of modeOfTransports" [value]="trans.cd">{{trans.value}}</option>
+        </select>
+      </div>
+    </div>
+  </ng-container>
+  <div class="add-row">
+    <span class="add-row--btn" (click)="addNewSampleExaminationDetails()"><i class="fa fa-plus add-row--icon"
+        aria-hidden="true"></i>
+      <b>{{'diseaseTesting.add_sample' | translate}}</b>
+    </span>
+  </div>
+</form>

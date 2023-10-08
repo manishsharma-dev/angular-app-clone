@@ -1,0 +1,100 @@
+.user-activity .activity-header .heading {
+  font-weight: bold;
+  font-size: 16px;
+  font-family: Noto Sans;
+  letter-spacing: 0px;
+  color: #3c3c3c;
+}
+
+.user-activity .activity-header .activity-count {
+  font-weight: normal;
+  font-size: 14px;
+  font-family: Noto Sans;
+  letter-spacing: 0px;
+  color: #3c3c3c;
+}
+.download-btn{
+  margin-top: 33px;
+  margin-left: 33px;
+}
+
+/* filter-by */
+.user-activity .filter-by {
+  position: relative;
+  margin-left: 5px;
+  width: 70%;
+}
+
+.user-activity .filter-by .input-icon-left {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  height: 20px;
+  width: 20px;
+  filter: grayscale(100%);
+  opacity: 0.7;
+}
+
+.user-activity .input-search-section {
+  border: 1px solid #dcdcdc;
+  padding-left: 35px;
+}
+/* table */
+
+.activityServiceTable {
+  box-shadow: none !important;
+  /* border: 1px solid #929292; */
+  border-collapse: inherit;
+}
+
+.activityServiceTable td.mat-cell,
+.activityServiceTable th.mat-header-cell {
+  padding: 0px 10px !important;
+  white-space: nowrap;
+}
+
+.activityServiceTable td.mat-cell {
+  border: none;
+}
+
+.activityServiceTable input.check-input {
+  vertical-align: inherit;
+}
+
+.activityServiceTable tr.mat-row,
+.activityServiceTable tr.mat-header-row {
+  height: 40px;
+}
+
+.activityServiceTable tr.mat-header-row th {
+  background: transparent;
+  color: #3c3c3c;
+  font-weight: bold;
+  height: 38px;
+}
+
+/* .activityServiceTable ::ng-deep.mat-sort-header-arrow {
+  position: absolute;
+  left: -20px !important;
+} */
+
+.activityServiceTable .status-highlight {
+  padding: 4px 10px;
+  border-radius: 16px;
+  background: #929292;
+  font-weight: bold;
+  opacity: 0.5;
+}
+.dialog-main-content .form-to-date {
+  position: relative;
+}
+
+ .form-to-date .filter-picker {
+  position: absolute;
+  top: 28px;
+  right: 2px;
+}

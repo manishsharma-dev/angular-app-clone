@@ -1,0 +1,67 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<app-common-breadcrumb [breadcrumbKeys]="[ 'performanceRecording.pr', 'performanceRecording.generate_sample_ids']">
+</app-common-breadcrumb>
+
+<section class="owner-reg">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <form appPermission [permissionType]="masterConfig.isAdd" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label for="projectId" class="form-label">{{'performanceRecording.project'| translate}} </label>
+                <ng-select [items]="userProjects" bindLabel="projectName" bindValue="projectId" id="projectId"
+                  formControlName="projectId" placeholder="Select Project">
+
+                </ng-select>
+                <div class="alert-message"
+                  *ngIf="searchForm.get('projectId').invalid && (searchForm.get('projectId').touched || searchForm.get('projectId').dirty)">
+                  <span *ngIf="searchForm.get('projectId').hasError('required')">
+                    {{cmnValidations.required|translate}}
+                  </span>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="noOfIds" class="form-label">{{'performanceRecording.no_of_ids'| translate}}<span
+                    class="mandatory-field">*</span></label>
+                <input type="text" class="form-control" id="noOfIds" formControlName="noOfIds"  maxlength="3">
+                <div class="alert-message"
+                  *ngIf="searchForm.get('noOfIds').invalid && (searchForm.get('noOfIds').touched || searchForm.get('noOfIds').dirty)">
+                  <span *ngIf="searchForm.get('noOfIds').hasError('required')">
+                    {{cmnValidations.required|translate}}
+                  </span>
+                  <span *ngIf="searchForm.get('noOfIds').hasError('pattern')">
+                    {{cmnValidations.number|translate}}
+                  </span>
+                  <span *ngIf="searchForm.get('noOfIds').hasError('max')">
+                    {{validationMsg.value_must_be_less_than_or_equal_to|translate}} 1000
+                  </span>
+                  <span *ngIf="searchForm.get('noOfIds').hasError('min')">
+                    {{validationMsg.value_must_be_greater_than_or_equal_to|translate}} 1
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-4 submit-btn mb-3">
+                <button type="submit" class="btn btn-primary">{{'performanceRecording.generate_ids'|
+                  translate}}</button>
+              </div>
+            </div>
+          </form>
+          <div>
+            {{'performanceRecording.to_view_previously_generated_sample_ids'| translate}} <a
+              [routerLink]="['previous-sample-ids']">{{'common.click_here'| translate}}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-available-ids-list [sampleIDs]="sampleIDs" *ngIf="sampleIDs.length"
+  (export)="onExport($event)"></app-available-ids-list>

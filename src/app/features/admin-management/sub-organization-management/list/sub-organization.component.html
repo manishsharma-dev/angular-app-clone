@@ -1,0 +1,367 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            {{ "common.breadcrumb_home" | translate }}
+          </li>
+          <li class="breadcrumb-item active">
+            {{ "organization.Admin_Management" | translate }}
+          </li>
+          <li class="breadcrumb-item current">
+            {{ "subOrganization.subOrganizationManagement" | translate }}
+          </li>
+          <li class="breadcrumb-item current">
+            {{ "subOrganization.Sub-Organization" | translate }}
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="container-white-bg-with-border mb-3">
+  <span class="floating-filedset fildset-bg-green">
+    <span class="float-label">{{"common.search" | translate }}</span>
+  </span>
+  <div class="row search-subOrg">
+
+    <div class="col-sm-12">
+
+      <form [formGroup]="searchForm">
+        <div class="form-row">
+          <div class="form-group col-lg-3 col-md-3">
+
+            <ng-select [items]="orgLists" bindLabel="orgName" bindValue="orgId" formControlName="orgId"
+              [clearable]="true" [loading]="isLoadingSpinner" placeholder="Select Organization Name"
+              (change)="getOrgId($event)">
+
+              <ng-template ng-label-tmp let-item="item">
+                <span class="ng-value-label" placement="top" ngbTooltip="{{item.orgName}}">{{ item.orgName
+                  }}</span>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item">
+                <span class="ng-option-label" placement="top" ngbTooltip="{{item.orgName}}">{{ item.orgName }}
+
+                </span>
+              </ng-template>
+
+            </ng-select>
+            <!-- <mat-error>
+              <span
+                *ngIf="searchForm.get('orgId').invalid && !searchForm.get('orgId').invalid || searchForm.get('orgId').touched"
+                class="validation-error-message">
+
+                <span *ngIf="searchForm.get('orgId').errors?.['required']" class="validation-error-message">
+                  {{"validationMessage.please_select_org" | translate}}
+                </span>
+              </span>
+
+            </mat-error> -->
+          </div>
+
+          <div class="form-group col-lg-3 col-md-3">
+            <ng-select [items]="states" bindLabel="stateName" bindValue="stateCode" placeholder="Select State"
+              formControlName="stateCd" [loading]="isLoadingSpinner" (change)="getDistrictsMulti($event)"
+              [clearable]="true">
+            </ng-select>
+          </div>
+
+          <div class="form-group col-lg-3 col-md-3">
+            <ng-select [items]="districtListMulti" [multiple]="true" bindLabel="districtName" groupBy="selectedAllGroup"
+              [selectableGroup]="true" [selectableGroupAsModel]="false" [closeOnSelect]="false" bindValue="districtCd"
+              [clearable]="true" formControlName="districtCd" placeholder="Select Districts">
+
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                  <span class="ng-value-label">
+                    {{item['districtName']}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label" (click)="getSelectedDistrict(items)">{{items.length - 2}} more...</span>
+                </div>
+              </ng-template>
+
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [(ngModel)]="item$.selected"
+                  [ngModelOptions]="{ standalone : true }" /> Select All
+              </ng-template>
+
+              <ng-template ng-option-tmp let-item="item" let-item$="item$">
+
+                <input id="item-{{item['districtCd']}}" type="checkbox" [(ngModel)]="item$.selected"
+                  [ngModelOptions]="{ standalone : true }" /> {{item.districtName}}
+              </ng-template>
+            </ng-select>
+
+          </div>
+
+
+
+          <div class="form-group col-lg-3 col-md-3">
+
+            <ng-select [items]="getOrgTypes" bindLabel="value" bindValue="cd" placeholder="Select Type"
+              formControlName="subOrgType" [clearable]="true">
+            </ng-select>
+
+          </div>
+
+
+          <div class="col-lg-6 col-md-6">
+            <input type="text" formControlName="subOrgName" autocomplete="off" class="form-control"
+              placeholder='{{"errorMsg.enter_value" | translate}}' minlength="3">
+            <mat-error>
+              <span *ngIf="searchForm.get('subOrgName').errors?.['pattern']" class="validation-error-message">
+                {{ "validationMessage.suborg_Name_pattern" | translate }}
+              </span>
+
+              <!-- <span
+                  *ngIf="searchForm.get('subOrgName').invalid && !searchForm.get('subOrgName').invalid || searchForm.get('subOrgName').touched"
+                  class="validation-error-message">
+      
+                  <span *ngIf="searchForm.get('subOrgName').errors?.['required']" class="validation-error-message">
+                    {{"validationMessage.suborg_Name_required" | translate}}
+                  </span>
+                </span> -->
+              <!-- <span
+                *ngIf="searchForm.get('subOrgName').invalid && !searchForm.get('subOrgName').invalid || searchForm.get('subOrgName').touched"
+                class="validation-error-message">
+
+              
+              </span> -->
+              <span *ngIf="searchForm.get('subOrgName').errors?.['minlength']" class="validation-error-message">
+                Sub Org Name should not be less than 3 character.
+              </span>
+            </mat-error>
+          </div>
+          <div class="col-lg-3 col-md-3">
+            <ul class="project-mgmt-search">
+              <li>
+
+
+                <button type="button" class="btn btn-primary" [disabled]="isSearchButton" (click)=" onSearch()">
+                  {{ "common.search" | translate }}
+                </button>
+              </li>
+              <li>
+
+                <button type="button" class="btn btn-outline-primary" (click)="resetSearch()">
+                  {{ "common.clear" | translate }}
+                </button>
+              </li>
+
+
+            </ul>
+          </div>
+        </div>
+
+
+
+
+      </form>
+    </div>
+
+
+
+
+
+  </div>
+</div>
+<div class="container-white-bg-with-border">
+  <div class="row">
+    <div class="col-lg-12 col-md-12">
+      <div class="filter-set">
+        <span class="floating-filedset fildset-bg-blue">
+          <span class="float-label">
+            {{ "common.list" | translate }}
+          </span>
+        </span>
+      </div>
+
+      <div class="row">
+
+        <div class="col-md-6">
+
+          <form>
+            <div class="form-row">
+              <div class="form-group col-md-8">
+                <input type="text" autocomplete="off" (keyup)="applyFilter($event)" matInput
+                  class="form-control input-custom-border" id="search"
+                  placeholder="{{ 'common.placeholder' | translate }}" #input />
+              </div>
+              <!-- <div class="form-group col-auto align-self-end">
+                <button type="button" class="btn btn-primary">Search</button>
+              </div> -->
+            </div>
+          </form>
+        </div>
+        <div class="col-md-6">
+          <ul class="project-mgmt">
+            <li>
+              <button type="submit" class="btn btn-primary" appPermission [permissionType]="masterConfig.isAdd"
+                (click)="oncreateSubOrg()" routerLink="/dashboard/suborginazation/regform">
+                {{ "subOrganization.Add_Sub_Organization" | translate }}
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="list-of-subOrg">
+        <!-- <div class="title-heading">
+        <h3 class="muted-label-heading">List of subOrganizations</h3>
+      </div> -->
+
+        <div class="table-responsive table-view">
+          <table mat-table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="S.No.">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "common.sno" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let org; let index = index">
+                <!-- {{ index + 1 }} -->
+                {{ paginatorRef.pageIndex * paginatorRef.pageSize + (index + 1) }}
+              </td>
+
+
+            </ng-container>
+
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "subOrganization.Sub Org. ID" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let subOrg">
+                {{ subOrg.subOrgId }}
+              </td>
+            </ng-container>
+
+            <!-- subOrganization Name Column -->
+            <ng-container matColumnDef="subOrgName">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "subOrganization.Sub-Organization" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let subOrg">{{ subOrg.subOrgName }}</td>
+            </ng-container>
+
+            <!-- subOrganization Type Column -->
+            <ng-container matColumnDef="subOrganization">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "subOrganization.Sub-Organization" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let subOrg">{{ subOrg.subOrgName }}</td>
+            </ng-container>
+
+            <!-- subOrganization Type Column -->
+            <ng-container matColumnDef="parentOrganization">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "subOrganization.Parent_Organization" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let subOrg">
+                {{ subOrg.parentOrganization }}
+              </td>
+            </ng-container>
+
+            <!-- subOrganization Type Column -->
+            <ng-container matColumnDef="Type">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "organization.type" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let subOrg">
+                {{ subOrg.subOrgTypeDesc }}
+              </td>
+            </ng-container>
+
+            <!-- State Name Column -->
+            <!-- <ng-container matColumnDef="state">
+              <th mat-header-cell *matHeaderCellDef>State</th>
+              <td mat-cell *matCellDef="let subOrg">{{ subOrg.stateName }}</td>
+            </ng-container> -->
+
+            <!-- District Column -->
+            <!-- <ng-container matColumnDef="district">
+              <th mat-header-cell *matHeaderCellDef>District</th>
+              <td mat-cell *matCellDef="let subOrg">{{ subOrg.districtName }}</td>
+            </ng-container> -->
+
+            <!-- Status Name  Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "common.status" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let subOrg">
+                {{ subOrg.subOrgStatusDesc }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Action">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "common.action" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let subOrg">
+                <a href="javascript:void(0)" (click)="
+                    onviewEditSubOrg(subOrg.subOrgId, 'view', subOrg.orgId)
+                  "><svg id="Component_58_16" data-namdeleteRowe="Component 58 – 16"
+                    xmlns="http://www.w3.role/2000/svg" width="20.037" height="20.037" viewBox="0 0 20.037 20.037">
+                    <path id="Path_5226" data-name="Path 5226" d="M0,0H20.037V20.037H0Z" fill="none" />
+                    <path id="Path_5227" data-name="Path 5227"
+                      d="M1.181,10.514a9.186,9.186,0,0,1,18.065,0,9.186,9.186,0,0,1-18.065,0Zm9.032,4.174a4.174,4.174,0,1,0-4.174-4.174A4.174,4.174,0,0,0,10.213,14.688Zm0-1.67a2.5,2.5,0,1,1,2.5-2.5A2.5,2.5,0,0,1,10.213,13.018Z"
+                      transform="translate(-0.195 -0.495)" fill="#185b85" />
+                  </svg></a>
+                &nbsp;&nbsp;
+                <a *ngIf="
+                    isLivestackAdmin ||
+                    (!isLivestackAdmin && userOrgId == subOrg?.orgId)
+                  " href="javascript:void(0)" appPermission [permissionType]="masterConfig.isModify"
+                  (click)="onviewEditSubOrg(subOrg.subOrgId, 'edit', subOrg.or)"><svg
+                    xmlns="http://www.w3.role/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                    <path id="pencil-alt"
+                      d="M15.583,4.513,14.142,5.954a.375.375,0,0,1-.531,0L10.142,2.485a.375.375,0,0,1,0-.531L11.583.513a1.5,1.5,0,0,1,2.122,0l1.878,1.878A1.5,1.5,0,0,1,15.583,4.513ZM8.9,3.192.7,11.4.035,15.2a.751.751,0,0,0,.869.869L4.7,15.4l8.207-8.207a.375.375,0,0,0,0-.531L9.439,3.192a.379.379,0,0,0-.534,0Zm-5,7.5a.436.436,0,0,1,0-.619L8.714,5.263a.438.438,0,0,1,.619.619L4.52,10.695a.436.436,0,0,1-.619,0ZM2.773,13.323h1.5v1.134l-2.016.353-.972-.972.353-2.016H2.773Z"
+                      transform="translate(-0.024 -0.075)" fill="#185b85" />
+                  </svg></a>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="loading">
+              <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+                Loading, please wait...
+              </mat-footer-cell>
+            </ng-container>
+            <ng-container matColumnDef="noData">
+              <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+                {{ "common.No_records_found" | translate }}
+              </mat-footer-cell>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <div *ngIf="dataSource.data.length > 0">
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">
+                  {{ "common.no_matching_filter" | translate }} "{{
+                  input.value
+                  }}"
+                </td>
+              </tr>
+            </div>
+
+            <mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSource && dataSource.data.length > 0">
+            </mat-footer-row>
+            <mat-footer-row *matFooterRowDef="['loading']" [hidden]="dataSource !== undefined"></mat-footer-row>
+          </table>
+
+          <mat-paginator [pageSizeOptions]="[20, 40, 60, 80, 100]" aria-label="Select page of users"
+            #paginatorRef></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+.dialog-container {
+    padding: 1rem;
+    position: relative;
+    max-width: 500px;
+  }
+  
+  .close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 0.9rem;
+    color: black;
+  }
+  .dialog-title {
+    font-size: 18px;
+    font-weight: 600;
+    font-family: Noto Sans, Bold;
+    color: #333333;
+  }
+  .dialog-message {
+    font-size: 14px;
+    font-family: Noto Sans, Bold;
+    /* font-style: italic; */
+    color: #333333;
+  }
+  
+  /* Alert msg css */
+  .alert-dialog h2.dialog-title,
+  .alert-dialog p.dialog-message {
+    color: #f44336 !important;
+  }
+  
+  .verified_icon .warning_icon {
+    color: goldenrod;
+    font-size: 50px;
+  }
+  

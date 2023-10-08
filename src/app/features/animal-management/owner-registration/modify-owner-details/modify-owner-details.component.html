@@ -1,0 +1,705 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            <a href="javascript:void(0)" routerLink="/dashboard">{{
+              "common.breadcrumb_home" | translate
+            }}</a>
+          </li>
+          <li class="breadcrumb-item active">
+            <label>{{ "animalDetails.animal_management" | translate }} </label>
+          </li>
+          <li class="breadcrumb-item current">
+            <label>{{ "animalDetails.modify_owner" | translate }}</label>
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<section class="owner-reg">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <!-- Search By -->
+          <form [formGroup]="searchForm">
+            <div id="search-section" class="row p-0">
+              <div class="col-md-10">
+                <div class="search-mobile-view">
+                  <span class="searchby-label-black"
+                    >{{ "animalDetails.search_by" | translate }}:</span
+                  >
+                  <div class="form-check-inline">
+                    <input
+                      type="radio"
+                      class="form-check-input"
+                      name="optRadio"
+                      value="individual"
+                      (change)="onSelectingSearchBy($event)"
+                      formControlName="optRadio"
+                    />
+                    <label class="form-check-label">{{
+                      "animalDetails.individual" | translate
+                    }}</label>
+                  </div>
+                  <div class="form-check-inline">
+                    <input
+                      type="radio"
+                      class="form-check-input"
+                      name="optRadio"
+                      value="nonIndividual"
+                      (change)="onSelectingSearchBy($event)"
+                      formControlName="optRadio"
+                    />
+                    <!-- <label class="form-check-label">{{"animalDetails.organisation" | translate}}</label> -->
+                    <label class="form-check-label">{{
+                      "animalDetails.nonIndividual" | translate
+                    }}</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-2">
+                <div class="d-flex justify-content-end m-0">
+                  <input
+                    type="checkbox"
+                    class="form-check"
+                    (change)="onCheckboxChange($event)"
+                  />
+                  <span class="ml-1">{{
+                    "common.outside_area" | translate
+                  }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Outside Area -->
+
+            <div class="form-row" *ngIf="checkboxSelected">
+              <div class="form-group col-lg-3 col-md-3">
+                <label for="state" class="form-label"
+                  >{{ "animalDetails.state" | translate
+                  }}<span class="mandatory-field">*</span></label
+                >
+                <select
+                  type="text"
+                  class="form-control"
+                  id="state"
+                  formControlName="ownerAddressStateCd"
+                  (change)="getDistricts($event)"
+                >
+                  <option value="" selected disabled>
+                    {{ "animalDetails.owner_state" | translate }}
+                  </option>
+                  <option
+                    *ngFor="let state of stateList"
+                    [value]="state.stateCode"
+                  >
+                    {{ state.stateName }}
+                  </option>
+                </select>
+                <div
+                  *ngIf="
+                    (!searchForm.get('ownerAddressStateCd').pristine &&
+                      searchForm.get('ownerAddressStateCd').invalid) ||
+                    searchForm.get('ownerAddressStateCd').touched
+                  "
+                  class="alert-message"
+                >
+                  <div
+                    *ngIf="
+                      searchForm.get('ownerAddressStateCd').errors?.required
+                    "
+                  >
+                    {{ "errorMsg.no_state" | translate }}
+                  </div>
+                </div>
+                <mat-error class="validation-error-message">
+                  <!-- <span
+                    *ngIf="
+                      !personalInfo.stateCd.valid &&
+                      personalInfo.stateCd.touched
+                    "
+                    class="help=block"
+                  >
+                    {{ "validationMessage.please_Select_state" | translate }}
+                  </span> -->
+                </mat-error>
+              </div>
+              <div class="form-group col-lg-3 col-md-3">
+                <label for="language" class="form-label"
+                  >{{ "animalDetails.district" | translate
+                  }}<span class="mandatory-field">*</span></label
+                >
+                <select
+                  type="text"
+                  class="form-control"
+                  id="language"
+                  formControlName="ownerAddressDistrictCd"
+                  (change)="getTehsil($event)"
+                >
+                  <option value="" selected disabled>
+                    {{ "animalDetails.owner_district" | translate }}
+                  </option>
+                  <option
+                    *ngFor="let district of districtList"
+                    [value]="district['districtCd']"
+                  >
+                    {{ district.districtName }}
+                  </option>
+                </select>
+                <div
+                  *ngIf="
+                    (!searchForm.get('ownerAddressDistrictCd').pristine &&
+                      searchForm.get('ownerAddressDistrictCd').invalid) ||
+                    searchForm.get('ownerAddressDistrictCd').touched
+                  "
+                  class="alert-message"
+                >
+                  <div
+                    *ngIf="
+                      searchForm.get('ownerAddressDistrictCd').errors?.required
+                    "
+                  >
+                    {{ "errorMsg.no_district" | translate }}
+                  </div>
+                </div>
+                <mat-error class="validation-error-message">
+                  <!-- <span
+                    *ngIf="
+                      !personalInfo.districtCd.valid &&
+                      personalInfo.districtCd.touched
+                    "
+                    class="help=block"
+                  >
+                    {{
+                      "validationMessage.please_Select_district" | translate
+                    }}
+                  </span> -->
+                </mat-error>
+              </div>
+              <div class="form-group col-md-3">
+                <label for="tehsilCd" class="form-label"
+                  >{{ "animalDetails.tehsil" | translate
+                  }}<span class="mandatory-field">*</span></label
+                >
+                <select
+                  class="form-control"
+                  formControlName="ownerAddressTehsilCd"
+                  (change)="getVillage($event)"
+                >
+                  <option value="" selected disabled>
+                    {{
+                      "animalDetails.owner_tehsil/ulb_placeholder" | translate
+                    }}
+                  </option>
+                  <option
+                    *ngFor="let tehsil of tehsilList"
+                    [value]="tehsil.tehsilCd"
+                  >
+                    {{ tehsil.tehsilName }}
+                  </option>
+                </select>
+                <div
+                  *ngIf="
+                    (!searchForm.get('ownerAddressTehsilCd').pristine &&
+                      searchForm.get('ownerAddressTehsilCd').invalid) ||
+                    searchForm.get('ownerAddressTehsilCd').touched
+                  "
+                  class="alert-message"
+                >
+                  <div
+                    *ngIf="
+                      searchForm.get('ownerAddressTehsilCd').errors?.required
+                    "
+                  >
+                    {{ "errorMsg.no_tehsil/ulb" | translate }}
+                  </div>
+                </div>
+                <mat-error class="validation-error-message">
+                  <!-- <span
+                    *ngIf="
+                      !personalInfo.districtCd.valid &&
+                      personalInfo.districtCd.touched
+                    "
+                    class="help=block"
+                  >
+                    {{
+                      "validationMessage.please_Select_district" | translate
+                    }}
+                  </span> -->
+                </mat-error>
+              </div>
+              <div class="form-group col-lg-3 col-md-3">
+                <label class="form-label"
+                  >{{ "common.village" | translate
+                  }}<span class="mandatory-field">*</span></label
+                >
+                <ng-select
+                  class="custom select-dropdown"
+                  [items]="villageList"
+                  formControlName="ownerAddressCityVillageCd"
+                  placeholder="{{
+                    'animalDetails.owner_village/ward_placeholder' | translate
+                  }}"
+                  bindLabel="villageName"
+                  bindValue="villageCd"
+                >
+                </ng-select>
+                <div
+                  *ngIf="
+                    (!searchForm.get('ownerAddressCityVillageCd').pristine &&
+                      searchForm.get('ownerAddressCityVillageCd').invalid) ||
+                    searchForm.get('ownerAddressCityVillageCd').touched
+                  "
+                  class="alert-message"
+                >
+                  <div
+                    *ngIf="
+                      searchForm.get('ownerAddressCityVillageCd').errors
+                        ?.required
+                    "
+                  >
+                    {{ "errorMsg.no_village/ward" | translate }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="form-row"
+              *ngIf="searchBy == 'individual' || searchBy == 'nonIndividual'"
+            >
+              <div class="col-md-8 search-by">
+                <img
+                  src="/assets/images/search.svg"
+                  class="input-icon-left"
+                  alt="icon-search"
+                />
+                <input
+                  type="text"
+                  class="form-control input input-section"
+                  id="search-by"
+                  placeholder="{{
+                    'animalDetails.search_criteria' | translate
+                  }}"
+                  formControlName="searchValue"
+                  [maxlength]="50"
+                  [minlength]="3"
+                  (keydown)="spaceRestict($event)"
+                />
+                <div class="alert-message" *ngIf="errorMessage">
+                  {{ errorMessage }}
+                </div>
+                <a class="input-clear" (click)="resetValue()">
+                  {{ "common.clear" | translate }}
+                </a>
+              </div>
+
+              <div class="col-auto btn-mobile-view">
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  (click)="
+                    searchResults(this.searchForm.get('searchValue')?.value)
+                  "
+                >
+                  {{ "animalDetails.search" | translate }}
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row p-0 mb-3" *ngIf="isTableVisible">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <span class="floating-filedset fildset-bg-green">
+            <span class="float-label">{{
+              "animalDetails.search_result" | translate
+            }}</span>
+          </span>
+          <div class="row align-items-center mt-4">
+            <div class="col-lg-4 col-md-4 col-sm-12">
+              <div class="title-heading">
+                <form>
+                  <div class="form-row">
+                    <div class="filter-by">
+                      <img
+                        src="/assets/images/search.svg"
+                        class="input-icon-left"
+                        alt="icon-search"
+                      />
+                      <input
+                        type="text"
+                        class="form-control input input-section"
+                        id="filter-by"
+                        placeholder="{{
+                          'common.search_by_keyword' | translate
+                        }}"
+                        (keyup)="searchInOwners($event)"
+                      />
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="table-view table-responsive mb-3">
+            <table
+              mat-table
+              matSort
+              [dataSource]="tableDataSourceOwners"
+              class="mat-elevation-z8 mt-4"
+              *ngIf="ownerDetailsRecord.length != 0"
+            >
+              <ng-container matColumnDef="sNo">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ "common.sno" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                  {{ paginatorRef.pageIndex * paginatorRef.pageSize + (i + 1) }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ownerId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{ "common.owner_id" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <a
+                    href="javascript:void(0)"
+                    (click)="getOwnerDetailsByID(element.ownerId)"
+                    >{{ element.ownerId }}</a
+                  >
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ownerName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{ "common.owner_name_lbl" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <div
+                    class="ellips-text"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="{{ element.ownerName }}"
+                  >
+                    {{ element.ownerName }}
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ownerMobileNo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{ "common.mobile" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.ownerMobileNo }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ownerDateOfBirth">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{
+                    searchForm.get("optRadio").value == "individual"
+                      ? ("common.dob" | translate)
+                      : ("common.doi" | translate)
+                  }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{
+                    searchForm.get("optRadio").value == "individual"
+                      ? dateFormatChange(element?.ownerDateOfBirth)
+                      : dateFormatChange(element?.ownerDateOfBirth)
+                  }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ownerGender">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{
+                    searchForm.get("optRadio").value == "individual"
+                      ? ("common.gender" | translate)
+                      : ("animalDetails.nonIndividualType" | translate)
+                  }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{
+                    searchForm.get("optRadio").value == "individual"
+                      ? element?.ownerGender || "-"
+                      : element?.ownerTypeCategory || "-"
+                  }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="villageName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{ "common.village" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.villageName }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                  <img
+                    src="/assets/images/right_arrow.svg"
+                    class="icon-right-arrow"
+                    alt="icon-right-arrow"
+                    (click)="getOwnerDetailsByID(element.ownerId)"
+                  />
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumnsOwners"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayedColumnsOwners"
+              ></tr>
+            </table>
+            <mat-paginator
+              [pageSizeOptions]="[5, 10, 25, 100]"
+              aria-label="Select page of users"
+              #paginatorRef
+            >
+            </mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Orgs Tab -->
+
+  <div class="row p-0 mb-3" *ngIf="isOrgTabVisible">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body position-relative">
+          <span class="floating-filedset fildset-bg-green">
+            <span class="float-label">{{
+              "animalDetails.organisation_details" | translate
+            }}</span>
+          </span>
+          <div class="row align-items-center mb-1 mt-3">
+            <div class="col-md-6 col-sm-12">
+              <div class="org-name">
+                <h3>
+                  <strong
+                    >{{ ownerDetailsByID?.orgName }},
+                    {{ ownerDetailsByID?.orgAddress }},
+                    {{ ownerDetailsByID?.orgPin }}</strong
+                  >
+                </h3>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <div class="add-member float-md-right float-sm-left">
+                <a
+                  href="javascript:void(0)"
+                  class="view-details"
+                  (click)="viewOrgDetailsDialog()"
+                  >{{ "common.view_details" | translate }}</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div id="owner-detail" class="col-md-12">
+              <ul>
+                <li>
+                  {{ "common.reg_no" | translate }}:-
+                  {{ ownerDetailsByID?.orgRegistrationNo }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row p-0 mb-3" *ngIf="ownerDetailsSection">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body position-relative">
+          <span class="floating-filedset fildset-bg-green">
+            <span class="float-label">{{
+              "common.owner_details" | translate
+            }}</span>
+          </span>
+          <div class="row align-items-center mb-1 mt-3">
+            <div class="col-md-6 col-sm-12">
+              <span class="custmer-label d-flex">
+                <p
+                  class="owner-name ellips-text mr-1"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="{{ ownerDetailsByID.ownerName }}"
+                >
+                  {{ ownerDetailsByID.ownerName }}
+                </p>
+                <span>({{ ownerDetailsByID.ownerId }})</span>
+                <span *ngIf="ownerDetailsByID.registrationStatus == '3'">
+                  <div
+                    class="alert-message reregister-owner link-font ellips-text ml-2"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="{{ 'common.reregisterAadhaar' | translate }}"
+                  >
+                    <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                    {{ "common.reregisterOwner" | translate }}
+                  </div>
+                </span>
+              </span>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <div class="add-member float-md-right float-sm-left">
+                <a
+                  href="javascript:void(0)"
+                  class="view-details"
+                  (click)="editOwnerDialog(true)"
+                  >{{ "common.view_details" | translate }}</a
+                >
+                <img
+                  *ngIf="ownerDetailsByID.registrationStatus != '3'"
+                  src="/assets/images/edit.svg"
+                  class="icon-edit ml-3"
+                  (click)="editOwnerDialog()"
+                  alt="icon-edit"
+                  appRoutePermission
+                  [routeInfo]="'/owner/modifyowner'"
+                  [permissionType]="masterConfig.isModify"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div id="owner-detail" class="owner-name col-md-12">
+              <ul class="custmer-label d-flex">
+                <li
+                  class="ellips-text"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="{{ ownerDetailsByID.fatherName }}"
+                  *ngIf="ownerDetailsByID.ownerTypeCd == 1"
+                >
+                  {{ "common.care_of" | translate }}
+                  {{ ownerDetailsByID.fatherName }}
+                </li>
+                <li
+                  *ngIf="ownerDetailsByID.ownerTypeCd == 2"
+                  [ngClass]="
+                    ownerDetailsByID?.ownerTypeCategory?.length > 10
+                      ? 'ellips-text'
+                      : ''
+                  "
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="{{ ownerDetailsByID?.ownerTypeCategory }}"
+                >
+                  {{ "animalDetails.nonIndividualType" | translate }}:
+                  {{ ownerDetailsByID?.ownerTypeCategory }}
+                </li>
+                <li
+                  [ngClass]="
+                    ownerDetailsByID?.ownerVillageName?.length > 30
+                      ? 'ellips-text'
+                      : ''
+                  "
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="{{ ownerDetailsByID?.ownerVillageName }}"
+                >
+                  {{ "common.village" | translate }}:
+                  {{ ownerDetailsByID?.ownerVillageName }}
+                </li>
+
+                <li>
+                  {{ "common.mobile" | translate }}:
+                  {{ ownerDetailsByID.ownerMobileNo }}
+                  <img
+                    *ngIf="
+                      ownerDetailsByID.isOwnerMobileVerified;
+                      else elseBlock
+                    "
+                    src="/assets/images/verified.svg"
+                    class="icon-verified"
+                    alt="icon-verified"
+                  />
+                  <ng-template #elseBlock>
+                    <a
+                      href="javascript:void(0)"
+                      class="alert-message link-font"
+                      [ngClass]="isOwnerActive ? '' : 'ellips-text'"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="{{
+                        isOwnerActive
+                          ? 'Not-Verified'
+                          : 'Please verify Owner Mobile Number for renewal of services.'
+                      }}"
+                      (click)="openOtpDialog()"
+                      ><i
+                        class="fa fa-exclamation-circle"
+                        aria-hidden="true"
+                      ></i>
+                      {{ isOwnerActive ? "Not Verified" : "Inactive" }}</a
+                    >
+                  </ng-template>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div
+            class="separator-row"
+            *ngIf="ownerDetailsByID.registrationStatus != '3'"
+          >
+            <div class="h-divider">
+              <div class="shadow"></div>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="ownerDetailsByID.registrationStatus != '3'">
+            <div
+              class="col-md-12"
+              appRoutePermission
+              [routeInfo]="'/owner/ownersearch'"
+              [permissionType]="masterConfig.isAdd"
+            >
+              <p class="additional-info">
+                {{ "common.additional_info" | translate }} ?
+                <a
+                  href="javascript:void(0)"
+                  class="additional-info-link"
+                  (click)="addInfoDialog()"
+                  >{{ "common.click_here" | translate }}</a
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

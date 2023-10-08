@@ -1,0 +1,907 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+    <div class="center">
+        <mat-spinner class="center"></mat-spinner>
+    </div>
+</div>
+<div class="container">
+    <div class="row breadcum align-items-center py-2">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="breadcrumb-list text-md-left">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item active">
+                            <a>{{'animalDetails.home' | translate}}</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <a href="javascript:void(0)">{{'animalBreeding.breeding_module'|translate}} </a>
+                        </li>
+                        <li class="breadcrumb-item current">
+                            <a href="javascript:void(0)">{{'animalBreeding.calving'|translate}}</a>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<app-breeding-history [historyDetail]="historyDetail" (ownerDetail)="getOwnerId($event)"
+    (getBreedingDetails)='getBreedingHistoryDetail($event)'>
+</app-breeding-history>
+<section class="new-case margin-10">
+    <div class="row no-gutters col-container">
+        <div class="col-md-12 col-h left-section">
+            <div class="row mb-3 justify-content-between margin-10">
+                <div class="title-section">
+                    <div class="title-heading">
+                        {{'animalBreeding.calving'|translate}} {{'common.info'|translate}}
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="h-divider">
+                <div class="shadow"></div>
+            </div>
+
+            <form [formGroup]="addCalvingForm" (ngSubmit)="submitCase()">
+                <div class="main-section">
+                    <div class="form-row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="Calving Record Date">{{'animalBreeding.data_entry_date'|translate}}<span
+                                        class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text" [max]="today" [matDatepicker]="RecordDate"
+                                    formControlName="calvingRecordDate" placeholder="dd-mm-yyyy" />
+                                <mat-datepicker-toggle matSuffix [for]="RecordDate" class="calender-icon">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #RecordDate></mat-datepicker>
+                            </div>
+                        </div>
+
+                        <div class="col-md-1"></div>
+                        <div class="col-md-2">
+                            <div class="form-group input-icon">
+                                <label for="Treatment Date">{{'animalBreeding.calving'|translate}}
+                                    {{'common.date'|translate}}<span class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text" [min]="breedingMinDate" [max]="today"
+                                    [matDatepicker]="pickerDate" formControlName="calvingDate" placeholder="dd-mm-yyyy"
+                                  (dateChange)="checkGestationDays($event)"  />
+                                <mat-datepicker-toggle matSuffix [for]="pickerDate" class="calender-icon">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #pickerDate></mat-datepicker>
+                                <span class="alert-message" *ngIf="
+                                (formControls?.calvingDate.dirty &&
+                                formControls?.calvingDate.invalid) ||
+                                formControls?.calvingDate.touched
+                            ">
+                            <span *ngIf="formControls?.calvingDate.hasError('matDatepickerMin')">
+                                {{'common.please_enter_valid_date' | translate}}
+                            </span>
+                            <span *ngIf="formControls?.calvingDate.hasError('matDatepickerMax')">
+                                {{'common.please_enter_valid_date' | translate}}
+                            </span>
+                            <span *ngIf="formControls?.calvingDate.hasError('matDatepickerParse')">
+                                {{'common.please_enter_valid_date' | translate}}
+                            </span>
+                            <span
+                                *ngIf="formControls?.calvingDate.hasError('required') && !formControls?.calvingDate.hasError('matDatepickerParse')">
+                                {{'errorMsg.field_mandatory' | translate}}
+                            </span>
+                        </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3"></div>
+
+                        <div class="col-md-12 ">
+
+                            <div class="tabs-nav-list d-flex justify-content-md-start">
+                                <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="pills-intimation-reports"
+                                            [ngClass]="{ active: activeTab == 'INTIMATION-reports' }"
+                                            data-bs-toggle="pill" [attr.data-bs-target]="'#pills-reports'"
+                                            (click)="activeTab = 'INTIMATION-reports'" role="tab"
+                                            aria-controls="pills-reports"
+                                            aria-selected="true">{{'animalBreeding.calving_details' |translate}}</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="fir" [ngClass]="{ active: activeTab == 'fir-rep' }"
+                                            data-bs-toggle="pill" [attr.data-bs-target]="'#pills-open'"
+                                            (click)="gotoNextTab()" role="tab" aria-controls="pills-open"
+                                            aria-selected="false">{{'animalBreeding.calf_details'|translate}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="hr-divider">
+                                <div class="shadow"></div>
+                            </div>
+
+                            <div class="mt-3">
+                                <div class="tab-content" id="pills-tabContent">
+                                    <div class="tab-pane fade" [ngClass]="{
+                                      active: activeTab == 'INTIMATION-reports',
+                        
+                                      show: activeTab == 'INTIMATION-reports'
+                                    }" [id]="'pills-reports'" role="tabpanel"
+                                        aria-labelledby="pills-intimation-reports">
+                                        <div class="form-row additional-info">
+                                            <div class="col-md-3 ">
+
+                                                <div class="form-group">
+                                                    <label
+                                                        for="Treatment Date">{{'animalBreeding.calving_status'|translate}}
+                                                        <span class="mandatory-field">*</span></label>
+                                                    <select class="form-control" name="selectCalving"
+                                                        formControlName="calvingStatus"
+                                                        [ngClass]="{ 'is-invalid': ismovetoCalfDetail && formControls?.calvingStatus?.errors }">
+                                                        <option [value]="null" disabled>{{'animalDetails.select' |translate}}
+                                                        </option>
+                                                        <option [value]="type['cd']"
+                                                            *ngFor="let type of commonDetail?.calvingStatus">
+                                                            {{type['value']}} </option>
+
+                                                    </select>
+                                                    <div class="alert-message"
+                                                        *ngIf="formControls?.calvingStatus?.errors?.required && ismovetoCalfDetail">
+                                                        {{'errorMsg.field_mandatory' | translate}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="form-row additional-info">
+
+
+                                            <div class="col-md-3" *ngIf="showcalvesInfo">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="Treatment Date">{{'animalBreeding.no_of_calves'|translate}}<span
+                                                            class="mandatory-field">*</span></label>
+                                                    <select class="form-control" name="selectnoOfCalves"
+                                                        formControlName="noOfCalves"
+                                                        
+                                                        [ngClass]="{ 'is-invalid': ismovetoCalfDetail && formControls?.noOfCalves?.errors }">
+                                                        <option [value]="null" disabled>{{'animalDetails.select' |translate}}
+                                                        </option>
+                                                        <option [value]="type['cd']"
+                                                            *ngFor="let type of commonDetail?.numberOfCalves">
+                                                            {{type['value']}} </option>
+                                                    </select>
+                                                    <div class="alert-message"
+                                                        *ngIf="formControls?.noOfCalves?.errors?.required && ismovetoCalfDetail">
+                                                        {{'errorMsg.field_mandatory' | translate}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+<!-- (change)="createCalvesDetailsList($event)" -->
+                                            <div class="col-md-1" *ngIf="showcalvesInfo"></div>
+
+                                            <div class="col-md-3" *ngIf="showcalvesInfo">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="Treatment Date">{{'animalBreeding.calving_ease'|translate}}<span
+                                                            class="mandatory-field">*</span></label>
+                                                    <select class="form-control" name="selectCalvingEase"
+                                                        formControlName="calvingEase"
+                                                        [ngClass]="{ 'is-invalid': ismovetoCalfDetail && formControls?.calvingEase?.errors }">
+                                                        <option [value]="null" disabled>{{'animalDetails.select' |translate}}
+                                                        </option>
+                                                        <option [value]="type['cd']"
+                                                            *ngFor="let type of commonDetail?.calvingEase">
+                                                            {{type['value']}}
+                                                        </option>
+                                                    </select>
+                                                    <div class="alert-message"
+                                                        *ngIf="formControls?.calvingEase?.errors?.required && ismovetoCalfDetail">
+                                                        {{'errorMsg.field_mandatory' | translate}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-1" *ngIf="showcalvesInfo"></div>
+                                            <div class="col-md-3" *ngIf="formControls?.calvingStatus?.value">
+                                                <div class="form-group">
+                                                    <label for="Treatment Date">{{'animalBreeding.service_type'
+                                                        |translate}}<span class="mandatory-field">*</span></label>
+                                                    <select class="form-control" name="selectServiceType"
+                                                        formControlName="serviceType"
+                                                        [ngClass]="{ 'is-invalid': ismovetoCalfDetail && formControls?.serviceType?.errors }">
+                                                        <option [value]="null" disabled>{{'animalDetails.select' |translate}}
+                                                        </option>
+                                                        <option [value]="type?.cd" *ngFor="let type of serviceType">
+                                                            {{type?.value}}
+                                                        </option>
+                                                    </select>
+                                                    <div class="alert-message"
+                                                        *ngIf="formControls?.serviceType?.errors?.required && ismovetoCalfDetail">
+                                                        {{'errorMsg.field_mandatory' | translate}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-3"
+                                                *ngIf="formControls?.calvingStatus?.value && showSireTagField">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="Case Status">{{'animalBreeding.sire_tag_id'|translate}}<span
+                                                            class="mandatory-field"
+                                                            *ngIf="isSireIdRequired">*</span></label>
+                                                    <input class="form-control" type="text" formControlName="sireTagId"
+                                                        (change)="validateSireId($event)" maxlength="12"
+                                                        [ngClass]="{ 'is-invalid': (ismovetoCalfDetail || formControls?.sireTagId.touched) && formControls?.sireTagId?.errors }" />
+                                                    <!-- <div class="alert-message" *ngIf="sireIdValidation">
+                                                        Tag id must be 12 digit .
+                                                    </div> -->
+                                                    <div class="alert-message"
+                                                        *ngIf="(formControls?.sireTagId?.hasError('minlength') || formControls?.sireTagId?.hasError('maxlength')) && (formControls?.sireTagId?.touched ||formControls?.sireTagId?.dirty) ">
+                                                        {{'errorMsg.sire_tag_validation'|translate}}
+                                                    </div>
+                                                    <div class="alert-message"
+                                                        *ngIf="formControls?.sireTagId?.errors?.required && (ismovetoCalfDetail || formControls?.sireTagId.touched)">
+                                                        {{'errorMsg.field_mandatory' | translate}}
+                                                    </div>
+                                                    <div class="alert-message" *ngIf="verifySireID['key']">
+                                                        {{verifySireID['value']}}
+                                                    </div>
+                                                    <div class="alert-message"
+                                                        *ngIf="sireIdValidation && (formControls?.sireTagId.touched || ismovetoCalfDetail)">
+                                                        {{'errorMsg.invalid_tagg_no'|translate}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3"
+                                                *ngIf="formControls?.calvingStatus?.value && formControls?.serviceType?.value == 3">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="Case Status">{{'animalBreeding.bull_id'|translate}}</label>
+                                                    <input class="form-control" type="text" formControlName="bullId" (keyup)="addCalvingForm.patchValue({bullId: $event.target['value'].toUpperCase()})"
+                                                        (change)="verifyBullID()"
+                                                        [ngClass]="{ 'is-invalid': formControls?.bullId.touched && formControls?.bullId?.errors }" />
+
+                                                    <div class="alert-message"
+                                                        *ngIf="(formControls?.bullId?.hasError('minlength') || formControls?.bullId?.hasError('maxlength')) && (formControls?.bullId?.touched ||formControls?.bullId?.dirty) ">
+                                                        {{'errorMsg.bull_id_valid'|translate}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1" *ngIf="isAbortion"></div>
+                                            <div class="col-md-2" *ngIf="isAbortion && showInMilkStatus">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="Treatment Date">{{'animalBreeding.commonLabel.animal_in_milk'|translate}}<span
+                                                            class="mandatory-field">*</span></label>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="inMilk"
+                                                            id="inMilkYes" [value]="'Y'" formControlName="inMilk" />
+                                                        <label class="form-check-label"
+                                                            for="Yes">{{'common.yes'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="inMilk"
+                                                            id="inMilkNo" [value]="'N'" formControlName="inMilk" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no'|translate}}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-1" *ngIf=" showSireTagField"></div>
+                                        </div>
+                                        <div class="form-row additional-info" *ngIf="showcalvesInfo &&  (getAdditionalDetailsPermission && getAdditionalDetailsPermission?.length > 0 && getAdditionalDetailsPermission[0]?.parameterValue == 'Yes') ? true : false"
+                                            (click)="showAdditionalInfo=!showAdditionalInfo">
+                                            <div class="col-md-2">
+                                                <i class="fa fa-caret-right mr-2 back-section"
+                                                    *ngIf="!showAdditionalInfo"></i>
+                                                <i class="fa fa-caret-down mr-2 back-section"
+                                                    *ngIf="showAdditionalInfo"></i>
+                                                <span class="title-heading">
+                                                    {{'animalDetails.add_additional_details'|translate}}</span>
+                                            </div>
+                                            <div class="col-md-10">
+                                            </div>
+                                        </div>
+                                        <div class="form-row additional-info" *ngIf="showAdditionalInfo && (getAdditionalDetailsPermission && getAdditionalDetailsPermission?.length > 0 && getAdditionalDetailsPermission[0]?.parameterValue == 'Yes') ? true : false ">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="Case Status">{{'animalBreeding.diseases.milk_fever'|translate}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="treatedForMilkFever" id="feverYes" [value]="'Y'"
+                                                            formControlName="treatedForMilkFever" />
+                                                        <label class="form-check-label"
+                                                            for="Yes">{{'common.yes'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="treatedForMilkFever" id="feverNo" [value]="'N'"
+                                                            formControlName="treatedForMilkFever" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="treatedForMilkFever" id="feverResponse" [value]="'NA'"
+                                                            formControlName="treatedForMilkFever" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no_response'|translate}}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="Case Status">{{'animalBreeding.diseases.ketosis'|translate}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="treatedForKetosis" id="ketosisYes" [value]="'Y'"
+                                                            formControlName="treatedForKetosis" />
+                                                        <label class="form-check-label"
+                                                            for="Yes">{{'common.yes'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="treatedForKetosis" id="ketosisNo" [value]="'N'"
+                                                            formControlName="treatedForKetosis" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="treatedForKetosis" id="ketosisResponse" [value]="'NA'"
+                                                            formControlName="treatedForKetosis" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no_response'|translate}}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="Case Status">{{'animalBreeding.diseases.downer_syndrome'|translate}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="treatedForDownerSyndrome" id="downerYes" [value]="'Y'"
+                                                            formControlName="treatedForDownerSyndrome" />
+                                                        <label class="form-check-label"
+                                                            for="Yes">{{'common.yes'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="treatedForDownerSyndrome" id="downerNo" [value]="'N'"
+                                                            formControlName="treatedForDownerSyndrome" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="treatedForDownerSyndrome" id="downerResponse"
+                                                            [value]="'NA'" formControlName="treatedForDownerSyndrome" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no_response'|translate}}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="Case Status">{{'animalBreeding.diseases.placenta'|translate}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="retentionOfPlacenta" id="placentaYes" [value]="'Y'"
+                                                            formControlName="retentionOfPlacenta" />
+                                                        <label class="form-check-label"
+                                                            for="Yes">{{'common.yes'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="retentionOfPlacenta" id="placentaNo" [value]="'N'"
+                                                            formControlName="retentionOfPlacenta" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="retentionOfPlacenta" id="placentaResponse"
+                                                            [value]="'NA'" formControlName="retentionOfPlacenta" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no_response'|translate}}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="Case Status">{{'animalBreeding.diseases.prolapse'|translate}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="prolapse"
+                                                            id="prolapseYes" [value]="'Y'" formControlName="prolapse" />
+                                                        <label class="form-check-label"
+                                                            for="Yes">{{'common.yes'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="prolapse"
+                                                            id="prolapseNo" [value]="'N'" formControlName="prolapse" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="prolapse"
+                                                            id="prolapseResponse" [value]="'NA'"
+                                                            formControlName="prolapse" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no_response'|translate}}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="Case Status">{{'animalBreeding.diseases.colostrum'|translate}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="colostrumFeeding" id="colostrumYes" [value]="'Y'"
+                                                            formControlName="colostrumFeeding" />
+                                                        <label class="form-check-label"
+                                                            for="Yes">{{'common.yes'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="colostrumFeeding" id="colostrumNo" [value]="'N'"
+                                                            formControlName="colostrumFeeding" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="colostrumFeeding" id="colostrumResponse"
+                                                            [value]="'NA'" formControlName="colostrumFeeding" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no_response'|translate}}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="Case Status">{{'animalBreeding.diseases.cutting_cord'|translate}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="cuttingOfNavalCord" id="cordYes" [value]="'Y'"
+                                                            formControlName="cuttingOfNavalCord" />
+                                                        <label class="form-check-label"
+                                                            for="Yes">{{'common.yes'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="cuttingOfNavalCord" id="cordNo" [value]="'N'"
+                                                            formControlName="cuttingOfNavalCord" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="cuttingOfNavalCord" id="cordResponse" [value]="'NA'"
+                                                            formControlName="cuttingOfNavalCord" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no_response'|translate}}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="Case Status">{{'animalBreeding.diseases.colostrum_hours'|translate}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="colostrumFeedingWithinTwoHrs" id="colostrumFeedingYes"
+                                                            [value]="'Y'"
+                                                            formControlName="colostrumFeedingWithinTwoHrs" />
+                                                        <label class="form-check-label"
+                                                            for="Yes">{{'common.yes'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="colostrumFeedingWithinTwoHrs" id="colostrumFeedingNo"
+                                                            [value]="'N'"
+                                                            formControlName="colostrumFeedingWithinTwoHrs" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="colostrumFeedingWithinTwoHrs"
+                                                            id="colostrumFeedingResponse" [value]="'NA'"
+                                                            formControlName="colostrumFeedingWithinTwoHrs" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no_response'|translate}}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="Case Status">{{'animalBreeding.diseases.metabolic'|translate}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="metabolicDisease" id="metabolicYes" [value]="'Y'"
+                                                            formControlName="metabolicDisease"
+                                                            (change)="toggleMetabolic(true)" />
+                                                        <label class="form-check-label"
+                                                            for="Yes">{{'common.yes'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="metabolicDisease" id="metabolicNo" [value]="'N'"
+                                                            formControlName="metabolicDisease"
+                                                            (change)="toggleMetabolic(false)" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no'|translate}}</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="metabolicDisease" id="metabolicResponse"
+                                                            [value]="'NA'" formControlName="metabolicDisease"
+                                                            (change)="toggleMetabolic(null)" />
+                                                        <label class="form-check-label"
+                                                            for="No">{{'common.no_response'|translate}}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4" *ngIf="showMetabolicType">
+                                                <div class="form-group">
+                                                    <select class="form-control" name="metabolicType"
+                                                        formControlName="metabolicType">
+                                                        <option [value]="'NA'">{{'animalDetails.select'|translate}}
+                                                        </option>
+                                                        <option value="1238">Normal</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+
+                                <div class="tab-content" id="fir">
+                                    <div class="tab-pane fade" [ngClass]="{
+                                      active: activeTab == 'fir-rep',
+                        
+                                      show: activeTab == 'fir-rep'
+                                    }" [id]="'pills-open'" role="tabpanel" aria-labelledby="fir">
+                                        <div class="col-md-12 col-h left-section">
+                                            <div formArrayName="calfDetailsList"
+                                                *ngFor="let calf of addCalvingForm.get('calfDetailsList')['controls']; let i = index;let first = first; let last = last">
+                                                <div [formGroupName]="i">
+                                                    <div class="form-row">
+                                                        <div class="col-md-1"
+                                                            (click)="showCalfDetail[i] = !showCalfDetail[i]">
+
+                                                            <span class="title-heading"> <i
+                                                                    class="fa fa-caret-right mr-2 back-section"
+                                                                    *ngIf="!showCalfDetail[i]"></i>
+                                                                <i class="fa fa-caret-down mr-2 back-section"
+                                                                    *ngIf="showCalfDetail[i]"></i>{{'animalBreeding.calf'|
+                                                                translate}} {{i + 1}} </span>
+                                                        </div>
+                                                        <div class="col-md-11">
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row additional-info" *ngIf="showCalfDetail[i]">
+                                                        <div class="col-md-4 " *ngIf="!isStillBirth">
+
+                                                            <div class="form-group">
+                                                                <label
+                                                                    for="Treatment Date">{{'animalBreeding.commonLabel.physically_ear_tag'|
+                                                                    translate}}<span
+                                                                        class="mandatory-field">*</span></label>
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        id="earTagyes_{{i}}" [value]="'Y'"
+                                                                        (change)="showCalfAdditionalDetail[i] = true ;updateValidation(true,i)"
+                                                                        formControlName="isEarTag" />
+                                                                    <label class="form-check-label"
+                                                                        for="i">{{'common.yes'| translate}}</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        id="earTagno_{{i}}" [value]="'N'"
+                                                                        (change)="showCalfAdditionalDetail[i] = false ;updateValidation(false,i)"
+                                                                        formControlName="isEarTag" />
+                                                                    <label class="form-check-label"
+                                                                        for="i">{{'common.no'| translate}}</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row "
+                                                        *ngIf="showCalfDetail[i] && (this.calfDetailsList.at(i).get('isEarTag').value !== null || isStillBirth)">
+                                                        <div class="col-md-3"
+                                                            *ngIf="showCalfAdditionalDetail[i] && !isStillBirth">
+                                                            <div class="form-group">
+                                                                <label
+                                                                    for="Case Status">{{'animalDetails.fillAnimalDetails.ear_tag_no'|
+                                                                    translate}} <span
+                                                                        class="mandatory-field">*</span></label>
+                                                                <input class="form-control" type="text"
+                                                                    formControlName="calfTmporaryTagId"
+                                                                    (change)="verifySireId(i,$event)" [maxLength]="12"
+                                                                    [ngClass]="{ 'is-invalid': calfDetailsList.at(i).get('calfTmporaryTagId').touched && calfDetailsList.at(i).get('calfTmporaryTagId').errors }" />
+                                                                <div class="alert-message"
+                                                                    *ngIf="isCalfTagIDUnique && (calfDetailsList.at(i).get('calfTmporaryTagId').touched ||calfDetailsList.at(i).get('calfTmporaryTagId').dirty)">
+                                                                    {{'errorMsg.no_tag_same'| translate}}
+                                                                </div>
+                                                                <div class="alert-message"
+                                                                    *ngIf="calfDetailsList.at(i).get('calfTmporaryTagId').errors?.required && (calfDetailsList.at(i).get('calfTmporaryTagId').touched ||calfDetailsList.at(i).get('calfTmporaryTagId').dirty)">
+                                                                    {{'errorMsg.field_mandatory' | translate}}
+                                                                </div>
+                                                                <div class="alert-message"
+                                                                    *ngIf="calfDetailsList.at(i).get('calfTmporaryTagId').hasError('minlength') || 
+                                                                calfDetailsList.at(i).get('calfTmporaryTagId').hasError('maxlength') && (calfDetailsList.at(i).get('calfTmporaryTagId').touched ||calfDetailsList.at(i).get('calfTmporaryTagId').dirty)">
+                                                                    {{'errorMsg.sire_tag_validation'|translate}}
+                                                                </div>
+                                                                <div class="alert-message"
+                                                                    *ngIf="calfDetailsList.at(i).get('calfTmporaryTagId')?.errors?.pattern && (calfDetailsList.at(i).get('calfTmporaryTagId').touched || calfDetailsList.at(i).get('calfTmporaryTagId').dirty)">
+                                                                    {{'errorMsg.ear_tag_no'| translate}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1"
+                                                            *ngIf="showCalfAdditionalDetail[i] && !isStillBirth"></div>
+                                                        <div class="col-md-3" *ngIf="!isStillBirth">
+                                                            <div class="form-group">
+                                                                <label
+                                                                    for="Case Status">{{'animalBreeding.calf_name'|translate}}
+                                                                    </label>
+                                                                <input class="form-control" type="text"
+                                                                    formControlName="calfName"
+                                                                    (change)="verifyCalfName(i)" [maxlength]="15"
+                                                                    [ngClass]="{ 'is-invalid': calfDetailsList.at(i).get('calfName').touched && calfDetailsList.at(i).get('calfName').errors }" />
+
+                                                                <div class="alert-message"
+                                                                    *ngIf="calfDetailsList.at(i).get('calfName').hasError('pattern')">
+                                                                    {{'errorMsg.calf_name'|translate}}
+                                                                </div>
+                                                                <!-- <div class="alert-message"
+                                                                    *ngIf="calfDetailsList.at(i).get('calfName').errors?.required && (calfDetailsList.at(i).get('calfName').touched ||calfDetailsList.at(i).get('calfName').dirty)">
+                                                                    {{'errorMsg.field_mandatory' | translate}}
+                                                                </div> -->
+                                                                <div class="alert-message"
+                                                                    *ngIf="isCalfNameIDUnique && (calfDetailsList.at(i).get('calfName').touched ||calfDetailsList.at(i).get('calfName').dirty)">
+                                                                    {{'errorMsg.calf_name_same'|translate}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1" *ngIf="!isStillBirth"></div>
+                                                        <div class="col-md-4">
+
+                                                            <div class="form-group  justify-content-start">
+                                                                <label for="rigorMortis" class="form-label">
+                                                                    {{'animalDetails.sex'|translate}} <span
+                                                                        class="mandatory-field">*</span></label>
+                                                                <div class="form-row justify-self-center">
+                                                                    <div class="form-check form-check-inline col-md-4">
+                                                                        <input class="form-check-input" type="radio"
+                                                                            id="sexOfCalf_{{i}}" [value]="'M'"
+                                                                            formControlName="sexOfCalf" />
+                                                                        <label for="male"
+                                                                            class="form-check-label">{{'animalDetails.male'|translate}}</label>
+                                                                    </div>
+                                                                    <div class="form-check form-check-inline col-md-4">
+                                                                        <input class="form-check-input" type="radio"
+                                                                            id="sexOfCalf_{{i}}" [value]="'F'"
+                                                                            formControlName="sexOfCalf" />
+                                                                        <label for="Female"
+                                                                            class="form-check-label">{{'animalDetails.female'|translate}}</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="alert-message"
+                                                                *ngIf="calfDetailsList.at(i).get('sexOfCalf').errors?.required && (calfDetailsList.at(i).get('sexOfCalf').touched ||calfDetailsList.at(i).get('sexOfCalf').dirty)">
+                                                                {{'errorMsg.field_mandatory' | translate}}
+                                                            </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="col-md-4"
+                                                            *ngIf="!showCalfAdditionalDetail[i] && !isStillBirth"></div>
+                                                        <div class="col-md-4"
+                                                            *ngIf="!showCalfAdditionalDetail[i] && !isStillBirth">
+                                                            <div class="form-group">
+                                                                <label
+                                                                    for="Treatment Date">{{'animalBreeding.commonLabel.not_entering_tag'|translate}}<span
+                                                                        class="mandatory-field">*</span></label>
+                                                                <select class="form-control"
+                                                                    name="reasonForNotRegistering"
+                                                                    formControlName="reasonForNotRegistering">
+                                                                    <option [value]="null" disabled>
+                                                                        {{'animalDetails.select'|translate}}</option>
+                                                                    <option [value]="type['cd']"
+                                                                        *ngFor="let type of commonDetail?.reasonForNotRegister">
+                                                                        {{type['value']}} </option>
+
+                                                                </select>
+                                                                <div class="alert-message"
+                                                                    *ngIf="calfDetailsList.at(i).get('reasonForNotRegistering').errors?.required && (calfDetailsList.at(i).get('reasonForNotRegistering').touched ||calfDetailsList.at(i).get('reasonForNotRegistering').dirty)">
+                                                                    {{'errorMsg.field_mandatory' | translate}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <div class="form-group">
+                                                                <label for="Case Status">{{'common.length'|translate}}
+                                                                </label>
+                                                                <input class="form-control" type="text"
+                                                                    formControlName="calfLength" placeholder="In"
+                                                                    (change)="getAnimalWeight(i)" />
+
+                                                                <div *ngIf="calfDetailsList.at(i).get('calfLength').invalid"
+                                                                    class="alert-message">
+                                                                    <div
+                                                                        *ngIf="calfDetailsList.at(i).get('calfLength').errors?.pattern">
+                                                                        {{'errorMsg.valid_value'| translate}}
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <div class="form-group">
+                                                                <label for="Case Status">{{'common.girth'|translate}}
+                                                                </label>
+                                                                <input class="form-control" type="text"
+                                                                    formControlName="calfGirth" placeholder="In"
+                                                                    (change)="getAnimalWeight(i)" />
+                                                                <div class="alert-message"
+                                                                    *ngIf="weightError && weightError?.length > 0 ? weightError[i] : false">
+                                                                    Girth should be greater than length.
+                                                                </div>
+                                                                <div *ngIf="calfDetailsList.at(i).get('calfGirth').invalid"
+                                                                    class="alert-message">
+                                                                    <div
+                                                                        *ngIf="calfDetailsList.at(i).get('calfGirth').errors?.pattern">
+                                                                        {{'errorMsg.valid_value'| translate}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1 text-size">
+                                                            <p>OR</p>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <div class="form-group">
+                                                                <label for="Case Status">{{'common.weight'|translate}}
+                                                                </label>
+                                                                <input class="form-control" type="text"
+                                                                    formControlName="calfWeight" placeholder="Kg"
+                                                                    (change)="calfWeightChange(i)" />
+                                                                <div *ngIf="calfDetailsList.at(i).get('calfWeight').invalid"
+                                                                    class="alert-message">
+                                                                    <div
+                                                                        *ngIf="calfDetailsList.at(i).get('calfWeight').errors?.pattern">
+                                                                        {{'errorMsg.valid_value'| translate}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3" *ngIf="!isStillBirth">
+                                                            <label for="resultFile">Upload Image<span
+                                                                    class="mandatory-field" *ngIf="showCalfAdditionalDetail[i]">*</span></label>
+                                                            <input type="file" accept=".jpg,.jpeg,.png" 
+                                                                class="form-control" name="resultFile" id="resultFile{{i}}"
+                                                                (change)="onFileUpload($event, i)" [disabled]="isCalvingEdit"  />
+                                                            <div class="alert-message"
+                                                                *ngIf="calfDetailsList.at(i).get('calfImage').errors?.required 
+                                                                && (calfDetailsList.at(i).get('calfImage').touched 
+                                                                ||calfDetailsList.at(i).get('calfImage').dirty)">
+                                                                {{'errorMsg.field_mandatory' | translate}}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1"></div>
+                                                        <div class="col-md-5">
+                                                            <div class="form-group ">
+                                                                <label for="controls"
+                                                                    class="form-label">{{'animalBreeding.diseases.genetic_defects'|
+                                                                    translate}}</label>
+                                                                <ng-select class="custom"
+                                                                    [items]="commonDetail?.geneticDefects"
+                                                                    [multiple]="true" bindLabel="value"
+                                                                    [closeOnSelect]="false" bindValue="cd"
+                                                                    formControlName="calvingGeneticDefectsList"
+                                                                    placeholder="Select Controls/Action taken"
+                                                                    (change)="getGeneticDefectsInformation($event,i)">
+                                                                    <!-- <ng-template ng-optgroup-tmp let-item="item"
+                                                                        let-item$="item$" let-index="index">
+                                                                        <input id="item-{{ index }}" type="checkbox"
+                                                                            [checked]="item$.selected" />
+                                                                        Select All
+                                                                    </ng-template> -->
+
+                                                                    <ng-template ng-option-tmp let-item="item"
+                                                                        let-item$="item$" let-index="index">
+                                                                        <input class="mr-2" id="item-{{ index }}"
+                                                                            type="checkbox"
+                                                                            [checked]="item$.selected" />{{ item.value
+                                                                        }}
+                                                                    </ng-template>
+                                                                </ng-select>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="h-divider additional-info">
+                                <div class="shadow"></div>
+                            </div>
+                            <div class="footer d-flex">
+                                <button type="button" class="btn btn-light mr-2 ml-auto"
+                                    *ngIf="activeTab == 'fir-rep' || isAbortion " (click)="goBack()">
+                                    {{'animalDetails.cancel'|translate}}
+                                </button>
+                                <button type="submit" class="btn btn-primary"
+                                    *ngIf="activeTab == 'fir-rep'|| isAbortion">{{'common.submit'|translate}}</button>
+                                <button type="button" class="btn btn-primary mr-2 ml-auto" (click)="gotoNextTab()"
+                                    *ngIf="activeTab == 'INTIMATION-reports' && !isAbortion">
+                                    {{'animalDetails.next'|translate}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

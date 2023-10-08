@@ -1,0 +1,373 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="add-diagnostics-dialog">
+  <div class="add-diagnostics-header">
+    <div class="headeing">
+      <h2 class="edit-heading-label">{{"animalTreatmentSurgery.preview"| translate}}</h2>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+  <div class="dialog-main-content">
+    <div class="w-100 prescription-details">
+      <h3 class="font-weight-bold">
+        {{ data?.animal?.tagId}} ({{
+        data?.animal?.tagId === "F" ? "Female" : "Male"
+        }}
+        - {{ data?.animal?.dateOfBirth | customDateFormatter }})
+      </h3>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-3">
+        <p class="label-header">{{"animalTreatmentSurgery.treatment_date_entry_date"| translate}}:</p>
+        <p>{{ data?.requestObj?.treatmentDetails?.treatmentRecordDate | customDateFormatter }}</p>
+      </div>
+      <div class="col-md-3">
+        <p class="label-header">{{"animalTreatmentSurgery.treatment_date"| translate}}:</p>
+        <p>{{ data?.requestObj?.treatmentDetails?.treatmentDate | customDateFormatter }}</p>
+      </div>
+      <div class="col-md-3">
+        <ng-container *ngIf="data?.animal?.ownerDetails?.orgName;else orgName">
+          <p class="label-header">{{"data?.animal?.org_name"| translate}}:</p>
+          <p>{{ data?.animal?.ownerDetails?.orgName }}</p>
+        </ng-container>
+        <ng-template #orgName>
+          <p class="label-header">{{"animalTreatmentSurgery.owner_name"| translate}}:</p>
+          <p>{{ data?.animal?.ownerDetails?.ownerName }}</p>
+        </ng-template>
+
+      </div>
+      <div class="col-md-3">
+        <p class=" label-header">{{"animalTreatmentSurgery.mobile_no"| translate}}:</p>
+        <ng-container *ngIf="data?.animal?.ownerDetails?.orgMobileNo;else mobileNo">
+          <p>{{ data?.animal?.ownerDetails?.orgMobileNo }}</p>
+        </ng-container>
+        <ng-template #mobileNo>
+          <p>{{ data?.animal?.ownerDetails?.ownerMobileNo }}</p>
+        </ng-template>
+
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-3">
+        <ng-container *ngIf="data?.animal?.ownerDetails?.orgStateName;else village">
+          <p class="label-header">{{"animalTreatmentSurgery.state"| translate}}:</p>
+          <p>{{ data?.animal?.ownerDetails?.orgStateName }}</p>
+        </ng-container>
+        <ng-template #village>
+          <p class="label-header">{{"animalTreatmentSurgery.village_taluka"| translate}}:</p>
+          <p>{{ data?.animal?.ownerDetails?.ownerVillageName }}</p>
+        </ng-template>
+
+      </div>
+      <div class="col-md-3">
+        <p class="label-header">{{"animalTreatmentSurgery.district"| translate}}:</p>
+        <ng-container *ngIf="data?.animal?.ownerDetails?.orgDistrictName;else district">
+          <p>{{ data?.animal?.ownerDetails?.orgDistrictName }}</p>
+        </ng-container>
+        <ng-template #district>
+          <p>{{ data?.animal?.ownerDetails?.ownerDistrictName }}</p>
+        </ng-template>
+
+      </div>
+      <div class="col-md-3">
+        <p class="label-header">{{"animalTreatmentSurgery.category_species"| translate}}:</p>
+        <p>{{ data?.animal?.species }}</p>
+      </div>
+      <div class="col-md-3">
+        <p class="font-weight-bold label-header">{{"animalTreatmentSurgery.status"| translate}}:</p>
+        <p>{{ data?.animal?.animalStatus }}</p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <p class="section-title">{{"animalTreatmentSurgery.clinical_details"| translate}}</p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-3">
+        <p class="label-header">{{"animalTreatmentSurgery.temperature"| translate}}</p>
+        <p>
+          {{
+          prescriptionRes?.draftJson?.animalTreatmentDetailForm?.bodyTemperatureF
+          ? prescriptionRes?.draftJson?.animalTreatmentDetailForm?.bodyTemperatureF
+          : "NA"
+          }}
+        </p>
+      </div>
+      <div class="col-md-3">
+        <p class="label-header">{{"animalTreatmentSurgery.heart_rate_beats_min"| translate}}</p>
+        <p>
+          {{
+          prescriptionRes?.draftJson?.animalTreatmentDetailForm?.pulseRate
+          ? prescriptionRes?.draftJson?.animalTreatmentDetailForm?.pulseRate
+          : "NA"
+          }}
+        </p>
+      </div>
+      <div class="col-md-3">
+        <p class="label-header">{{"animalTreatmentSurgery.respiration_min"| translate}}</p>
+        <p>
+          {{
+          prescriptionRes?.draftJson?.animalTreatmentDetailForm?.respiration
+          ? prescriptionRes?.draftJson?.animalTreatmentDetailForm?.respiration
+          : "NA"
+          }}
+        </p>
+      </div>
+      <div class="col-md-3">
+        <p class="label-header">{{"animalTreatmentSurgery.rumen_motility"| translate}}</p>
+        <p>
+          {{
+          prescriptionRes?.draftJson?.animalTreatmentDetailForm?.rumenMotility
+          ? prescriptionRes?.draftJson?.animalTreatmentDetailForm?.rumenMotility
+          : "NA"
+          }}
+        </p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-6 padding-0">
+        <div class="col-md-12">
+          <p class="section-title">{{"animalTreatmentSurgery.symptom_observed"| translate}}</p>
+        </div>
+        <div class="col-md-12 mt-3">
+          <p class="section-desc">{{ prescriptionRes?.draftJson?.symptomDispList | stringConcat : ', '}}</p>
+        </div>
+      </div>
+      <div class="col-md-6 padding-0">
+        <div class="col-md-12">
+          <p class="section-title">{{"animalTreatmentSurgery.disease_suspected"| translate}}</p>
+        </div>
+        <div class="col-md-12 mt-3">
+          <p class="section-desc">{{ prescriptionRes?.draftJson?.diseaseDispList | stringConcat : ', ' }}</p>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngIf="prescriptionRes?.draftJson?.MedicineForm?.selected_medicine?.length">
+      <div class="row mt-4">
+        <div class="col-md-12">
+          <p class="section-title">{{"animalTreatmentSurgery.medicines_details"| translate}}</p>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-12 table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>{{"animalTreatmentSurgery.medicine_name"| translate}}</th>
+                <th>{{"animalTreatmentSurgery.form"| translate}}</th>
+                <th>{{"animalTreatmentSurgery.dose"| translate}}</th>
+                <th>{{"animalTreatmentSurgery.frequency"| translate}}</th>
+                <th>{{"animalTreatmentSurgery.duration"| translate}}</th>
+                <th>{{"animalTreatmentSurgery.prescription_only"| translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let medicine of prescriptionRes?.draftJson?.MedicineForm?.selected_medicine">
+                <td>{{ medicine.medicineName }}</td>
+                <td>{{ medicine.form }}</td>
+                <td>{{ medicine.dosage }}</td>
+                <td>{{ medicine.medicineFrequency }}</td>
+                <td>{{ medicine.medicineDuration }}</td>
+                <td>
+                  {{
+                  medicine.medicinePrescribedOnlyFlag === "Y" ? "Yes" : "No"
+                  }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="prescriptionRes?.draftJson?.diagnosticsData?.spotTestingRows?.length">
+      <div class="row mt-4">
+        <div class="col-md-12">
+          <p class="section-title">{{"animalTreatmentSurgery.sample_details"| translate}}
+            ({{"animalTreatmentSurgery.on_spot_testing"| translate}}) </p>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-12 table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>{{"animalTreatmentSurgery.disease_suspected"| translate}}</th>
+                <th>{{"animalTreatmentSurgery.test_type"| translate}}</th>
+                <th>{{"animalTreatmentSurgery.sample_type"| translate}}</th>
+                <th>{{"animalTreatmentSurgery.initial_sample_reading"| translate}}</th>
+                <th>{{"animalTreatmentSurgery.final_sample_reading"| translate}}</th>
+                <th>{{"animalTreatmentSurgery.difference"| translate}}</th>
+                <th>{{"animalTreatmentSurgery.result"| translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let sample of prescriptionRes?.draftJson?.diagnosticsData?.spotTestingRows">
+                <td>{{ sample.diseaseSuspectedName}}</td>
+                <td>{{ sample.onSpotTestCdName}}</td>
+                <td>{{ sample.sampleTypeName}}</td>
+                <td>{{ sample.initialReading }}</td>
+                <td>{{ sample.finalReading }}</td>
+                <td>{{ sample.difference }}</td>
+                <td>{{ sample.sampleResultDesc }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="prescriptionRes?.draftJson?.diagnosticsData?.samples?.length">
+      <div class="row mt-4">
+        <div class="col-md-12">
+          <p class="section-title">{{"animalTreatmentSurgery.sample_details"| translate}}
+            ({{"animalTreatmentSurgery.sample_for_lab_testing"| translate}}) </p>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-12 table-responsive">
+          <table class="table table-bordered">
+            <thead class="disease-header">
+              <tr class="disease-header-row">
+                <th class="main-col">{{'diseaseTesting.sample_type' | translate}}</th>
+                <th class="main-col">{{'performanceRecording.examination_type' | translate}}
+                </th>
+                <th class="main-col">{{'animalTreatmentSurgery.examination_sub_type' | translate}}
+                </th>
+                <th class="main-col">{{'animalTreatmentSurgery.lab' | translate}}
+                </th>
+                <th class="main-col">{{'animalTreatmentSurgery.lab_charges' | translate}}
+                </th>
+                <th class="main-col">{{'performanceRecording.result' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody class="disease-content">
+              <!-- main table body -->
+              <ng-container
+                *ngFor="let lab of prescriptionRes?.draftJson?.diagnosticsData?.samples; let labFirst=first">
+                <tr *ngFor="let exam of lab.sampleExaminationDetails; let examFirst = first">
+                  <td class="main-col-first" *ngIf="examFirst" [attr.rowspan]="lab.sampleExaminationDetails.length">
+                    {{lab.sampleTypeDesc}}</td>
+                  <td class="sample-section">
+                    {{exam.sampleExaminationTypeDesc}}
+                  </td>
+                  <td class="sample-section">
+                    {{exam.sampleExaminationSubtypeDesc}}
+                  </td>
+                  <td class="sample-section">
+                    {{exam.labDesc}}
+                  </td>
+                  <td class="sample-section">
+                    {{exam.labCharges}}
+                  </td>
+                  <td>{{exam.result ?? "--"}}</td>
+                </tr>
+              </ng-container>
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="prescriptionRes?.draftJson?.surgeryDisp?.isSurgeryPresent">
+      <div class="row mt-4">
+        <div class="col-md-12">
+          <p class="section-title">{{"animalTreatmentSurgery.surgery"| translate}} </p>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-12 table-responsive">
+          <table class="table table-bordered" *ngIf="prescriptionRes.draftJson.surgeryDisp.surgery == 1">
+            <thead class="disease-header">
+              <tr class="disease-header-row">
+                <th class="main-col">{{"animalTreatmentSurgery.surgery_type"| translate}}</th>
+                <th class="main-col">{{"animalTreatmentSurgery.surgery_performed" | translate}}</th>
+                <th class="main-col">{{"animalTreatmentSurgery.reason_for_surgery" | translate}}</th>
+                <th class="main-col">{{"animalTreatmentSurgery.system_organ_affected" | translate}}</th>
+                <th class="main-col">{{"animalTreatmentSurgery.surgery_details_instructions" | translate}}</th>
+              </tr>
+            </thead>
+            <tbody class="disease-content">
+              <tr>
+                <td class="main-col-first">{{prescriptionRes.draftJson.surgeryDisp.surgeryDesc}}</td>
+                <td class="main-col-first">{{prescriptionRes.draftJson.surgeryDisp.surgeryTypeDesc | stringConcat :','}}
+                </td>
+                <td class="main-col-first">{{prescriptionRes.draftJson.surgeryDisp.surgeryReason}}</td>
+                <td class="main-col-first">{{prescriptionRes.draftJson.surgeryDisp.organAffectedDesc | stringConcat
+                  :','}}</td>
+                <td class="main-col-first">{{prescriptionRes.draftJson.surgeryDisp.surgeryDetails}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="table table-bordered" *ngIf="prescriptionRes.draftJson.surgeryDisp.surgery == 2">
+            <thead class="disease-header">
+              <tr class="disease-header-row">
+                <th class="main-col">{{"animalTreatmentSurgery.surgery_type"| translate}}</th>
+                <th class="main-col">{{"animalTreatmentSurgery.name_of_hospital" | translate}}</th>
+                <th class="main-col">{{"animalTreatmentSurgery.name_of_veterinarian" | translate}}</th>
+              </tr>
+            </thead>
+            <tbody class="disease-content">
+              <tr>
+                <td class="main-col-first">
+                  {{prescriptionRes.draftJson.surgeryDisp.surgeryDesc}}
+                </td>
+                <td class="main-col-first">{{prescriptionRes.draftJson.surgeryDisp.recommendedHospitalCdDesc}}</td>
+                <td class="main-col-first">{{prescriptionRes.draftJson.surgeryDisp.recommendedVetName}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+
+    <div class="row mt-4">
+      <div class="col-md-12 mb-3">
+        <p class="section-title">{{"animalTreatmentSurgery.remarks"| translate}}</p>
+      </div>
+      <div class="col-md-12">
+        <p>
+          {{
+          prescriptionRes?.draftJson?.animalTreatmentDetailForm?.treatmentRemarks
+          ? prescriptionRes?.draftJson?.animalTreatmentDetailForm?.treatmentRemarks
+          : "NA"
+          }}
+        </p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <ng-container *ngIf="prescriptionRes?.prescriptionDetails?.followUpDate">
+          <span class="font-weight-bold">{{"animalTreatmentSurgery.suggested_follow_up_date"| translate}}: </span>
+          {{ prescriptionRes?.draftJson?.animalTreatmentDetailForm?.followUpDate | customDateFormatter }}
+        </ng-container>
+      </div>
+      <!-- <div class="col-md-6 text-md-right">
+        <p> {{ prescriptionRes?.prescriptionDetails?.vetName }} <ng-container
+            *ngIf="prescriptionRes?.prescriptionDetails?.roleDesc">[{{prescriptionRes?.prescriptionDetails?.roleDesc}}]</ng-container>
+        </p>
+        <p *ngIf="prescriptionRes?.prescriptionDetails?.registrationNo">Reg. No. {{ prescriptionRes?.prescriptionDetails?.registrationNo }}</p>
+      </div> -->
+    </div>
+  </div>
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+  <div class="add-diagnostics-footer">
+    <button mat-dialog-close type="button" class="btn btn-outline-primary mr-2 ml-auto" (click)="onSubmit(false)">
+      Cancel</button>
+    <button type="submit" class="btn btn-primary" (click)="onSubmit(true)">Submit</button>
+  </div>
+</div>
+
+<ng-template #noData>{{"animalTreatmentSurgery.na"| translate}} NA </ng-template>

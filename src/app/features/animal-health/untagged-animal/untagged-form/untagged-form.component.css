@@ -1,0 +1,22 @@
+.untagged-animal .owner-details .label-heading,
+.untagged-animal .animal-details .label-heading {
+  font-weight: 600;
+  font-size: 16px;
+  font-family: Noto Sans;
+  letter-spacing: 0px;
+  color: #212529;
+}
+
+.input-icon {
+  position: relative;
+}
+
+.input-icon input {
+  padding-right: 50px;
+}
+
+.calender-icon {
+  position: absolute;
+  top: 29px;
+  right: 0px;
+}

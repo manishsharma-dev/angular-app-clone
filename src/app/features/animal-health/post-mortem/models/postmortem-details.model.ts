@@ -1,0 +1,163 @@
+export interface PostMortemDetailsRes {
+  postmortemDetails: PostmortemDetails;
+  pmStatus: number;
+  pmStatusDesc: string;
+  samplingStatus: number;
+  samplingStatusDesc: string;
+  animalDetails: AnimalDetails;
+}
+
+export interface AnimalDetails {
+  animalId: number;
+  ownerDetails: OwnerDetails;
+  breedAndExoticLevels: BreedAndExoticLevel[];
+  animalName: string;
+  animalPicUrl: string;
+  ageInMonths: number;
+  animalStatusCd: number;
+  animalStatus: string;
+  coatColourCd: number;
+  damId: string;
+  damSireId: string;
+  dateOfBirth: string;
+  isLoanOnAnimal: boolean;
+  lastDewormingDate: string;
+  lastVaccinationDate: string;
+  loanAmount: string;
+  muzzlePicUrl: string;
+  ownerId: number;
+  registrationDate: string;
+  registrationRemarks: string;
+  registrationStatus: string;
+  sex: string;
+  sireId: string;
+  sireSireId: string;
+  speciesCd: number;
+  species: string;
+  tagId: number;
+  taggingDate: string;
+  isElite: string;
+  milkingStatus: string;
+  numberCalvings: number;
+  pregnancyMonth: string;
+  pregnancyStatus: string;
+  yieldMilkRecorded: string;
+  currentLactationNo: string;
+  fieldSubmittedforUpdate: string;
+  imagePreviewUrl: string;
+}
+
+export interface BreedAndExoticLevel {
+  breed: string;
+  bloodExoticLevel: string;
+}
+
+export interface OwnerDetails {
+  ownerId: number;
+  animalsCount: string;
+  animalsList: any;
+  ownerUuidKey1: string;
+  ownerUuidKey2: string;
+  ownerName: string;
+  fatherName: string;
+  ownerDateOfbirth: string;
+  ownerGender: string;
+  ownerMobileNo: number;
+  emailId: string;
+  ownerAddress: any;
+  ownerAddressPincode: number;
+  ownerAddressStateCd: number;
+  ownerStateName: string;
+  ownerAddressDistrictCd: number;
+  ownerDistrictName: string;
+  ownerAddressCityVillageCd: number;
+  ownerVillageName: string;
+  ownerAddressHamletCd: any;
+  ownerAddressTehsilCd: number;
+  ownerTehsilName: string;
+  affiliatedAgencyUnionOrPc: boolean;
+  registrationStatus: string;
+  villageInstitutionType: any;
+  villageInstitutionCode: any;
+  membershipNumber: any;
+  modifiedDate: string;
+  modifiedBy: string;
+  createdBy: string;
+  creationDate: string;
+  locationCoordinatesLatitude: any;
+  locationCoordinatesLongitude: any;
+  alternateMobileNo: number;
+  ownerCastCategoryCd: number;
+  ownerLandHoldingCd: number;
+  isPourerMember: boolean;
+  isOwnerBelowPovertyLine: boolean;
+  hhid: string;
+  isCategoryVerified: any;
+  isOwnerMobileVerified: boolean;
+  orgId: any;
+  orgDistrictCd: any;
+  orgAddress: any;
+  orgName: any;
+  orgPin: any;
+  orgRegistrationNo: any;
+  orgType: any;
+  orgStateCd: any;
+  orgDistrictCdAreaOperating: any;
+  orgMobileNo: any;
+  districtNameAreaOperating: any;
+  orgTypeDesc: any;
+}
+
+export interface PostmortemDetails {
+  postmortemId: number;
+  animalDeathDate: string;
+  animalDeathTime: string;
+  animalId: number;
+  animalImageUrl1: string;
+  animalImageUrl2: string;
+  animalImageUrl3: string;
+  animalImageUrl4: string;
+  animalImageUrl5: string;
+  anyOtherSystem: string;
+  cardiovascularSystem: string;
+  causeOfDeath: string;
+  conductedByVetDesignation: string;
+  conductedByVetRegistrationNo: string;
+  conductedOrgCd: number;
+  createdBy: string;
+  creationDate: string;
+  gastrointestinalTract: string;
+  generalConditionCarcass: string;
+  headNeck: string;
+  history: string;
+  identificationMark: string;
+  modifiedBy: string;
+  modifiedDate: string;
+  mucousMembraneAndEyeCondition: string;
+  musculoSkeletalSystem: string;
+  naturalOrificesState: string;
+  naturePositionOfInjury: string;
+  nervousSystem: string;
+  ownerId: number;
+  placeOfDeath: string;
+  pmCharges: number;
+  pmCompletionEndDate: string;
+  pmCompletionEndTime: string;
+  pmDiagnosis: string;
+  pmStatus: number;
+  pmInitiationStartDate: string;
+  pmInitiationStartTime: string;
+  pmLocation: string;
+  receiptNo: string;
+  referredByVetDesignation: string;
+  referredByVetRegistrationNo: string;
+  referredOrgCd: number;
+  referredByVet:string
+  reproductiveSystem: string;
+  respiratorySystem: string;
+  rigorMortis: string;
+  skinCondition: string;
+  tagId: number;
+  udderTeats: string;
+  urinarySystem: string;
+}

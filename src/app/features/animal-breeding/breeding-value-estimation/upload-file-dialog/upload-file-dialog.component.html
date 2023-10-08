@@ -1,0 +1,65 @@
+<div class="overlay" *ngIf="isLoading">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="upload-dialog">
+  <div class="upload-dialog-header">
+    <p class="header-desc">{{'performanceRecording.import_files' | translate}}</p>
+  </div>
+  <div class="upload-dialog-body">
+   
+    <!-- file section -->
+    <div class="form-container row">
+      <ng-template #fileDesc>
+        <div class="col-md-12">
+          <div class="single-file">
+            <div class="file-icon">
+              <object data="assets/images/sheet-icon.svg" type="image/svg+xml" style="color: green"></object>
+            </div>
+            <div class="info">
+              <h4 class="col-6 name">
+                {{ fileForm?.value?.file?.name }}
+              </h4>
+            </div>
+            <div class="col-2 delete" (click)="fileForm.reset()">
+              <i class="fa fa-trash-o"></i>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+      <div class="col-12" *ngIf="!fileForm?.value?.file; else fileDesc">
+        <div for="uploadFile" class="drag-area" appDragAndDrop #drop="appDragAndDrop" (fileDropped)="handleFile($event)"
+          (click)="fileForm.enabled ? onFileAreaClick(fileInput):null">
+          <div class="icon">
+            <i class="fa fa-cloud-upload"></i>
+          </div>
+          <p *ngIf="!drop.fileOver">
+            {{'fir.drag_drop_files_here' | translate}} <b>{{'fir.browse' | translate}}</b>
+          </p>
+          <p *ngIf="drop.fileOver">{{'postMortem.release_to_upload' | translate}}</p>
+
+          <input type="file" id="uploadFile" hidden #fileInput (change)="onFileInputChange($event)" />
+        </div>
+
+        <div class="alert-message" *ngIf="fileForm.controls.file.touched && fileForm.controls.file.invalid">
+
+          <span *ngIf="fileForm.controls.file.hasError('invalidMimeType')">
+            {{fileForm?.controls?.file?.errors?.invalidMimeType | translate}}
+          </span>
+          <span *ngIf="fileForm.controls.file.hasError('required')">
+            {{'animalBreedingValidations.common.required' | translate}}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="upload-dialog-footer">
+    <button mat-dialog-close class="btn btn-outline-primary mr-2 px-4">
+      {{ 'diseaseTesting.cancel' | translate }}
+    </button>
+    <button class="btn btn-primary" (click)="onSubmit()">
+      {{ 'common.submit' | translate }}
+    </button>
+  </div>
+</div>

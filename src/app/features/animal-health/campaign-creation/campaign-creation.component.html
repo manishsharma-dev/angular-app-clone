@@ -1,0 +1,1086 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<!-- section breadcum -->
+<div class="container p-0">
+  <div class="row breadcum align-items-center py-2">
+    <div class="col-12">
+      <div class="breadcrumb-list">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item active" routerLink="/dashboard">
+              <a>{{ "vaccination.breadcrumb_vaccinationFirst" | translate }}</a>
+            </li>
+            <li class="breadcrumb-item active">
+              <label>{{ "vaccination.breadcrumb_vaccinationSecond" | translate }}
+              </label>
+            </li>
+            <li class="breadcrumb-item current">
+              <label>{{
+                "campaignCreation.breadcrumb_campaignCreationthird"
+                | translate
+                }}
+              </label>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- section outer start -->
+<section class="campaign-creation">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card border-0">
+        <div class="card-body">
+          <ng-container *ngIf="tabDetails">
+            <div class="row align-items-center mb-3">
+              <div class="col-md-6">
+                <div class="search-item">
+                  <form>
+                    <div class="row">
+                      <div class="col-sm-7 col-md-4">
+                        <div>
+                          <label for="colFormLabelSm" class="col-form-label col-form-label-sm">{{
+                            "campaignCreation.campaignSearch" | translate
+                            }}</label>
+                        </div>
+                      </div>
+                      <div class="col-md-5 col-md-8">
+                        <input type="text" class="form-control search-input" id="colFormLabelSm" placeholder="{{
+                            'campaignCreation.campaignSearch' | translate
+                          }}" autocomplete="off" (keyup)="filterData($event)" />
+                        <span class="search-icon"><i class="fa fa-search" aria-hidden="true"></i></span>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex justify-content-md-end">
+                  <button type="submit" (click)="addCampaign()" class="btn btn-primary" appPermission
+                    [permissionType]="masterConfig.isAdd">
+                    {{ "campaignCreation.New_Campaign" | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- hr-divider -->
+
+            <div class="h-divider">
+              <div class="shadow"></div>
+            </div>
+
+            <div class="row align-items-center">
+              <div class="col-md-6">
+                <div class="title-heading">
+                  <h3 class="muted-label-heading">
+                    {{ dataSource.data?.length }}
+                    {{ "campaignCreation.Campaigns_Available" | translate }}
+                  </h3>
+                </div>
+              </div>
+              <div class="col-md-6 tabs-nav-list d-flex justify-content-md-end">
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab"
+                      aria-controls="pills-home" aria-selected="true">
+                      {{ "campaignCreation.All_Campaigns" | translate }}</a>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="col-12 mt-3">
+                <div class="tab-content" id="pills-tabContent">
+                  <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
+                    aria-labelledby="pills-home-tab">
+                    <div class="report-table table-view mt-3">
+                      <div class="table-responsive">
+                        <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
+                          <ng-container matColumnDef="sr_no">
+                            <th mat-header-cell *matHeaderCellDef>
+                              {{ "common.sno" | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let element; let i = index" class="cell-width">
+                              {{
+                              withpaginatorRef.pageIndex *
+                              withpaginatorRef.pageSize +
+                              (i + 1)
+                              }}
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="campaignId">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                              {{ "campaignCreation.Campaign_ID" | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              {{ element.campaignId }}
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="districtName">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                              {{
+                              "animalTreatmentSurgery.district" | translate
+                              }}
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              <div class="ellips-text" data-toggle="tooltip" data-placement="top"
+                                title="{{ element.districtName }}">
+                                {{ element.districtName }}
+                              </div>
+                              <!-- <div class="mat-custom-column">
+                              {{element.districtName}}
+                            </div> -->
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="campaignType">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                              {{ "campaignCreation.Campaign_Type" | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              {{ element.campaignType }}
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="campaignName">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                              {{ "campaignCreation.Campaign_Name" | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              <div class="mat-custom-column">
+                                {{ element.campaignName }}
+                              </div>
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="campaignStartDate">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                              {{ "campaignCreation.From_Date" | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              {{ element.campaignStartDate }}
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="campaignEndDate">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                              {{ "campaignCreation.To_Date" | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              {{ element.campaignEndDate }}
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="campaignStatus">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                              {{
+                              "campaignCreation.Campaign_Status" | translate
+                              }}
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              <span class="status-highlight">{{
+                                element.campaignStatus
+                                }}</span>
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef>
+                              {{ "common.action" | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              <a href="javascript:void(0)" (click)="
+                                  openCampaignViewDialog(
+                                    element.campaignId,
+                                    element.campaignTypeId
+                                  )
+                                "><svg id="Component_58_16" data-namdeleteRowe="Component 58 – 16"
+                                  xmlns="http://www.w3.role/2000/svg" width="20.037" height="20.037"
+                                  viewBox="0 0 20.037 20.037">
+                                  <path id="Path_5226" data-name="Path 5226" d="M0,0H20.037V20.037H0Z" fill="none" />
+                                  <path id="Path_5227" data-name="Path 5227"
+                                    d="M1.181,10.514a9.186,9.186,0,0,1,18.065,0,9.186,9.186,0,0,1-18.065,0Zm9.032,4.174a4.174,4.174,0,1,0-4.174-4.174A4.174,4.174,0,0,0,10.213,14.688Zm0-1.67a2.5,2.5,0,1,1,2.5-2.5A2.5,2.5,0,0,1,10.213,13.018Z"
+                                    transform="translate(-0.195 -0.495)" fill="#185b85" />
+                                </svg></a>
+                              &nbsp;&nbsp;
+                              <a appPermission [permissionType]="masterConfig.isModify" href="javascript:void(0)"
+                                (click)="openCampaignEditDialog(element)"><svg xmlns="http://www.w3.role/2000/svg"
+                                  width="16" height="16" viewBox="0 0 16 16">
+                                  <path id="pencil-alt"
+                                    d="M15.583,4.513,14.142,5.954a.375.375,0,0,1-.531,0L10.142,2.485a.375.375,0,0,1,0-.531L11.583.513a1.5,1.5,0,0,1,2.122,0l1.878,1.878A1.5,1.5,0,0,1,15.583,4.513ZM8.9,3.192.7,11.4.035,15.2a.751.751,0,0,0,.869.869L4.7,15.4l8.207-8.207a.375.375,0,0,0,0-.531L9.439,3.192a.379.379,0,0,0-.534,0Zm-5,7.5a.436.436,0,0,1,0-.619L8.714,5.263a.438.438,0,0,1,.619.619L4.52,10.695a.436.436,0,0,1-.619,0ZM2.773,13.323h1.5v1.134l-2.016.353-.972-.972.353-2.016H2.773Z"
+                                    transform="translate(-0.024 -0.075)" fill="#185b85" />
+                                </svg></a>
+                            </td>
+                          </ng-container>
+
+                          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                          <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                              {{
+                              "campaignCreation.no_data_matching_the_filter"
+                              | translate
+                              }}
+                            </td>
+                          </tr>
+                        </table>
+                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                          aria-label="Select page of periodic elements" #withpaginatorRef>
+                        </mat-paginator>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <!-- screen 5 -->
+          <div class="campaign-form" *ngIf="compaignForm">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <div class="title-heading">
+                  <i class="fa fa-chevron-left mr-2 back-section" (click)="showTabsContent()"></i>
+                  <span class="muted-label-heading">
+                    {{ "animalDetails.back" | translate }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="h-divider">
+              <div class="shadow"></div>
+            </div>
+
+            <form class="mb-3" [formGroup]="itemForm">
+              <div class="form-row">
+                <div class="form-group col-lg-3 col-md-4 col-sm-6 col-12">
+                  <label for="stateName" class="form-label">
+                    {{ "round.campaign_select_state" | translate
+                    }}<span class="mandatory-field">*</span></label>
+                  <ng-select class="custom" [items]="state" [multiple]="false" bindLabel="stateName"
+                    groupBy="selectedAllGroup" [selectableGroup]="true" [selectableGroupAsModel]="false"
+                    [virtualScroll]="true" [closeOnSelect]="true" formControlName="stateCd" placeholder="{{
+                      'round.campaign_select_state' | translate
+                    }}">
+                    <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+                      {{ "campaignCreation.select_all" | translate }}
+                    </ng-template>
+
+                    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input class="mr-2" id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected"
+                        [ngModelOptions]="{ standalone: true }" />{{ item.stateName }}
+                    </ng-template>
+                  </ng-select>
+                  <span class="alert-message" *ngIf="
+                      (f.stateCd.dirty && f.stateCd.invalid) ||
+                      f.stateCd.touched
+                    ">
+                    <span *ngIf="f.stateCd.hasError('required')">
+                      {{ validationMsg.required | translate }}
+                    </span>
+                  </span>
+                </div>
+                <div class="form-group col-lg-3 col-md-4 col-sm-6 col-12">
+                  <label for="selectVillage" class="form-label">
+                    {{ "campaignCreation.campaign_select_district" | translate
+                    }}<span class="mandatory-field">*</span></label>
+                  <ng-select class="custom" [items]="district" [multiple]="true" bindLabel="districtName"
+                    groupBy="selectedAllGroup" [selectableGroup]="true" [selectableGroupAsModel]="false"
+                    [closeOnSelect]="false" formControlName="selectedDistrict" [virtualScroll]="true" placeholder="{{
+                      'campaignCreation.campaign_select_district' | translate
+                    }}">
+                    <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+                      {{ "campaignCreation.select_all" | translate }}
+                    </ng-template>
+
+                    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input class="mr-2" id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected"
+                        [ngModelOptions]="{ standalone: true }" />{{ item.districtName }}
+                    </ng-template>
+                  </ng-select>
+                  <span class="alert-message" *ngIf="
+                      (f.selectedDistrict.dirty &&
+                        f.selectedDistrict.invalid) ||
+                      f.selectedDistrict.touched
+                    ">
+                    <span *ngIf="f.selectedDistrict.hasError('required')">
+                      {{ validationMsg.required | translate }}
+                    </span>
+                  </span>
+                </div>
+                <div class="form-group col-lg-3 col-md-4 col-sm-6 col-12">
+                  <label for="selectVillage" class="form-label">{{ "campaignCreation.campaign_select_tehsil" | translate
+                    }}<span class="mandatory-field">*</span></label>
+                  <ng-select class="custom" [items]="tehsil" [multiple]="true" bindLabel="tehsilName"
+                    groupBy="selectedAllGroup" [selectableGroup]="true" [selectableGroupAsModel]="false"
+                    [closeOnSelect]="false" formControlName="selectedTehsil" [virtualScroll]="true" placeholder="{{
+                      'campaignCreation.campaign_select_tehsil' | translate
+                    }}">
+                    <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+                      {{ "campaignCreation.select_all" | translate }}
+                    </ng-template>
+
+                    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input class="mr-2" id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />{{
+                      item.tehsilName }}
+                    </ng-template>
+                  </ng-select>
+                  <span class="alert-message" *ngIf="
+                      (f.selectedTehsil.dirty && f.selectedTehsil.invalid) ||
+                      f.selectedTehsil.touched
+                    ">
+                    <span *ngIf="f.selectedTehsil.hasError('required')">
+                      {{ validationMsg.required | translate }}
+                    </span>
+                  </span>
+                </div>
+                <div class="form-group col-lg-3 col-md-4 col-sm-6 col-12">
+                  <label for="selectVillage" class="form-label">{{ "campaignCreation.campaign_select_village" |
+                    translate
+                    }}<span class="mandatory-field">*</span></label>
+                  <ng-select class="custom" [items]="village" [multiple]="true" bindLabel="villageName"
+                    groupBy="selectedAllGroup" [selectableGroup]="true" [selectableGroupAsModel]="false"
+                    [closeOnSelect]="false" formControlName="selectedVillage" [virtualScroll]="true" placeholder="{{
+                      'campaignCreation.campaign_select_village' | translate
+                    }}">
+                    <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+                      {{ "campaignCreation.select_all" | translate }}
+                    </ng-template>
+
+                    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input class="mr-2" id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />{{
+                      item.villageName }}
+                    </ng-template>
+                  </ng-select>
+                  <span class="alert-message" *ngIf="
+                      (f.selectedVillage.dirty && f.selectedVillage.invalid) ||
+                      f.selectedVillage.touched
+                    ">
+                    <span *ngIf="f.selectedVillage.hasError('required')">
+                      {{ validationMsg.required | translate }}
+                    </span>
+                  </span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-lg-3 col-md-4 col-sm-6 col-12">
+                  <label for="projectId" class="form-label">{{ "campaignCreation.campaign_select_project" | translate
+                    }}<span class="mandatory-field">*</span></label>
+
+                  <ng-select bindLabel="name" placeholder="{{
+                      'campaignCreation.select_project_name' | translate
+                    }}" [searchable]="true" [clearable]="true" id="projectId" (change)="onProjectChange($event)"
+                    formControlName="projectId" [ngClass]="{
+                      'is-invalid':
+                        (f.projectId.touched || campaignCreationSubmitted) &&
+                        f.projectId.errors
+                    }">
+                    <ng-option value="">
+                      {{ "campaignCreation.select_project_name" | translate }}
+                    </ng-option>
+                    <ng-option *ngFor="let data of projectTypeData" [value]="data.projectId">
+                      {{ data.projectName }}
+                    </ng-option>
+                  </ng-select>
+                  <span class="alert-message" *ngIf="
+                      (f.projectId.dirty && f.projectId.invalid) ||
+                      f.projectId.touched
+                    ">
+                    <span *ngIf="f.projectId.hasError('required')">
+                      {{ validationMsg.required | translate }}
+                    </span>
+                  </span>
+                </div>
+                <div class="form-group col-lg-3 col-md-4 col-sm-6 col-12">
+                  <label for="campaignName">
+                    {{ "campaignCreation.Campaign_Name" | translate
+                    }}<span class="mandatory-field">*</span></label>
+                  <div class="d-flex justify-content-between">
+                    <div class="w-100">
+                      <input type="text" class="form-control" id="campaignName" placeholder="{{
+                          'campaignCreation.type_campaign_name' | translate
+                        }}" formControlName="campaignName" />
+
+                      <span class="alert-message" *ngIf="
+                          (f.campaignName.dirty && f.campaignName.invalid) ||
+                          f.campaignName.touched
+                        ">
+                        <span *ngIf="f.campaignName.hasError('required')">
+                          {{ validationMsg.required | translate }}
+                        </span>
+                        <span *ngIf="f.campaignName.hasError('maxlength')">
+                          {{ validationMsg.campaignNamePattern | translate }}
+                        </span>
+                        <span *ngIf="f.campaignName.hasError('pattern')">
+                          {{ "errorMsg.invalid_char" | translate }}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group col-lg-3 col-md-4 col-sm-6 col-12">
+                  <label for="recordDate" class="form-label">
+                    {{ "animalDetails.dataEntryDate" | translate }}
+                  </label>
+                  <input type="text" class="form-control" formControlName="recordDate" placeholder="Enter Date"
+                    #recordDate />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-lg-3 col-md-4 col-sm-6 col-12">
+                  <label for="campaignStartDate" class="form-label">
+                    {{ "campaignCreation.campaign_start_date" | translate
+                    }}<span class="mandatory-field">*</span></label>
+                  <input class="form-control vaccDate" id="campaignStartDate" [min]="campMinStartDate"
+                    [max]="campMaxStartDate" (dateInput)="fromDateChange($event.value)"
+                    [matDatepicker]="campaignStartDate" formControlName="campaignStartDate"
+                    placeholder="{{ 'common.select_date' | translate }}" />
+                  <mat-datepicker-toggle matSuffix [for]="campaignStartDate" class="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #campaignStartDate></mat-datepicker>
+                  <span class="alert-message" *ngIf="
+                      (f.campaignStartDate.dirty &&
+                        f.campaignStartDate.invalid) ||
+                      f.campaignStartDate.touched
+                    ">
+                    <span *ngIf="f.campaignStartDate.hasError('required')">
+                      {{ validationMsg.required | translate }}
+                    </span>
+                    <span *ngIf="
+                        f.campaignStartDate.hasError('matDatepickerMin') ||
+                        f.campaignStartDate.hasError('matDatepickerMax')
+                      ">
+                      {{
+                      "animalTreatmentSurgery.please_enter_valid_date"
+                      | translate
+                      }}
+                    </span>
+                  </span>
+                </div>
+                <div class="form-group col-lg-3 col-md-4 col-sm-6 col-12">
+                  <label for="campaignEndDate" class="form-label">{{ "vaccination.CampaignEndDate" | translate
+                    }}<span class="mandatory-field">*</span></label>
+                  <input class="form-control vaccDate" id="campaignEndDate"
+                    (dateInput)="campaignEndDateChange($event.value)" [min]="campMinEndDate" [max]="campMaxEndDate"
+                    [matDatepicker]="campaignEndDate" formControlName="campaignEndDate"
+                    placeholder="{{ 'common.select_date' | translate }}" />
+                  <mat-datepicker-toggle matSuffix [for]="campaignEndDate" class="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #campaignEndDate></mat-datepicker>
+                  <span class="alert-message" *ngIf="
+                      (f.campaignEndDate.dirty && f.campaignEndDate.invalid) ||
+                      f.campaignEndDate.touched
+                    ">
+                    <span *ngIf="f.campaignEndDate.hasError('required')">
+                      {{ validationMsg.required | translate }}
+                    </span>
+                    <span *ngIf="
+                        f.campaignEndDate.hasError('matDatepickerMin') ||
+                        f.campaignEndDate.hasError('matDatepickerMax')
+                      ">
+                      {{
+                      "animalTreatmentSurgery.please_enter_valid_date"
+                      | translate
+                      }}
+                    </span>
+                  </span>
+                </div>
+                <div class="form-group col-lg-3 col-md-4 col-sm-6 col-12">
+                  <label for="campaigndataEntryEndDate" class="form-label">{{ "campaignCreation.campaign_entry_end_date"
+                    | translate
+                    }}<span class="mandatory-field">*</span></label>
+                  <input class="form-control vaccDate" id="campaigndataEntryEndDate"
+                    [matDatepicker]="campaigndataEntryEndDate" [min]="campMinEntryEndDate" [max]="campMaxEntryEndDate"
+                    formControlName="campaigndataEntryEndDate" placeholder="{{ 'common.select_date' | translate }}" />
+                  <mat-datepicker-toggle matSuffix [for]="campaigndataEntryEndDate" class="picker">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #campaigndataEntryEndDate></mat-datepicker>
+                  <span class="alert-message" *ngIf="
+                      (f.campaigndataEntryEndDate.dirty &&
+                        f.campaigndataEntryEndDate.invalid) ||
+                      f.campaigndataEntryEndDate.touched
+                    ">
+                    <span *ngIf="f.campaigndataEntryEndDate.hasError('required')">
+                      {{ validationMsg.required | translate }}
+                    </span>
+                    <span *ngIf="
+                        f.campaigndataEntryEndDate.hasError(
+                          'matDatepickerMin'
+                        ) ||
+                        f.campaigndataEntryEndDate.hasError('matDatepickerMax')
+                      ">
+                      {{
+                      "animalTreatmentSurgery.please_enter_valid_date"
+                      | translate
+                      }}
+                    </span>
+                  </span>
+                </div>
+                <div class="form-group col-lg-3 col-md-4 col-sm-6 col-12">
+                  <label for="campaignType" class="form-label">{{ "campaignCreation.type_of_campaign" | translate
+                    }}<span class="mandatory-field">*</span></label>
+                  <select id="campaignType" class="form-control" formControlName="campaignType"
+                    (change)="campaign($event)">
+                    <option value="null">
+                      {{ "campaignCreation.select_campaign_type" | translate }}
+                    </option>
+                    <option *ngFor="let data of campaignTypeData" [value]="data.cd">
+                      {{ data.value }}
+                    </option>
+                  </select>
+                  <span class="alert-message" *ngIf="
+                      (f.campaignType.dirty && f.campaignType.invalid) ||
+                      f.campaignType.touched
+                    ">
+                    <span *ngIf="f.campaignType.hasError('required')">
+                      {{ validationMsg.required | translate }}
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="h-divider">
+                <div class="shadow"></div>
+              </div>
+
+              <ng-container *ngIf="selectedCampaignValue == 1">
+                <div class="form-row">
+                  <div class="form-group col-md-3">
+                    <label for="diseaseCd" class="form-label">{{ "campaignCreation.vaccination_For" | translate
+                      }}<span class="mandatory-field">*</span></label>
+                    <ng-select bindLabel="name" placeholder="{{
+                        'vaccination.select_vaccine_for' | translate
+                      }}" [searchable]="true" [clearable]="true" id="diseaseCd" (change)="vaccForSelected($event)"
+                      formControlName="diseaseCd" [ngClass]="{
+                        'is-invalid':
+                          (f.diseaseCd.touched || campaignCreationSubmitted) &&
+                          f.diseaseCd.errors
+                      }">
+                      <ng-option value="">
+                        {{ "vaccination.select_vaccine_for" | translate }}
+                      </ng-option>
+                      <ng-option *ngFor="let data of getVaccinationFor" [value]="data.diseaseCd">
+                        {{ data.diseaseDesc }}
+                      </ng-option>
+                    </ng-select>
+
+                    <span class="alert-message" *ngIf="
+                        (f.diseaseCd.dirty && f.diseaseCd.invalid) ||
+                        f.diseaseCd.touched
+                      ">
+                      <span *ngIf="f.diseaseCd.hasError('required')">
+                        {{ validationMsg.required | translate }}
+                      </span>
+                    </span>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="vaccineCd" class="form-label">{{ "campaignCreation.vaccine_name" | translate
+                      }}<span class="mandatory-field">*</span></label>
+
+                    <ng-select bindLabel="name" placeholder="{{
+                        'vaccination.select_vaccine_name' | translate
+                      }}" [searchable]="true" [clearable]="true" id="vaccineCd" formControlName="vaccineCd"
+                      (change)="vaccNameSelected($event)" [ngClass]="{
+                        'is-invalid':
+                          (f.vaccineCd.touched || campaignCreationSubmitted) &&
+                          f.vaccineCd.errors
+                      }">
+                      <ng-option value="">
+                        {{ "vaccination.select_vaccine_name" | translate }}
+                      </ng-option>
+                      <ng-option *ngFor="let data of getVaccinationName" [value]="data.vaccineCd">
+                        {{ data.vaccineName }} ({{ data.manufacturer }})
+                      </ng-option>
+                    </ng-select>
+                    <span class="alert-message" *ngIf="
+                        (f.vaccineCd.dirty && f.vaccineCd.invalid) ||
+                        f.vaccineCd.touched
+                      ">
+                      <span *ngIf="f.vaccineCd.hasError('required')">
+                        {{ validationMsg.required | translate }}
+                      </span>
+                    </span>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="vaccineTypeCd" class="form-label">{{ "campaignCreation.vaccine_type" | translate
+                      }}<span class="mandatory-field">*</span></label>
+
+                    <ng-select bindLabel="name" placeholder="{{
+                        'vaccination.select_vaccine_type' | translate
+                      }}" [searchable]="true" [clearable]="true" id="vaccineTypeCd" formControlName="vaccineTypeCd"
+                      [ngClass]="{
+                        'is-invalid':
+                          (f.vaccineTypeCd.touched ||
+                            campaignCreationSubmitted) &&
+                          f.vaccineTypeCd.errors
+                      }">
+                      <ng-option value="">
+                        {{ "vaccination.select_vaccine_type" | translate }}
+                      </ng-option>
+                      <ng-option *ngFor="let data of _values2" [value]="data.vaccineTypeCd">
+                        {{ data.vaccineTypeName }}
+                      </ng-option>
+                    </ng-select>
+
+                    <span class="alert-message" *ngIf="
+                        (f.vaccineTypeCd.dirty && f.vaccineTypeCd.invalid) ||
+                        f.vaccineTypeCd.touched
+                      ">
+                      <span *ngIf="f.vaccineTypeCd.hasError('required')">
+                        {{ validationMsg.required | translate }}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-3">
+                    <label for="vaccineSubtypeCd" class="form-label">{{ "campaignCreation.vaccine_subtype" | translate
+                      }}<span class="mandatory-field">*</span></label>
+
+                    <ng-select bindLabel="name" placeholder="{{
+                        'vaccination.select_vaccine_subtype' | translate
+                      }}" [searchable]="true" [clearable]="true" id="vaccineSubtypeCd"
+                      formControlName="vaccineSubtypeCd" [ngClass]="{
+                        'is-invalid':
+                          (f.vaccineSubtypeCd.touched ||
+                            campaignCreationSubmitted) &&
+                          f.vaccineSubtypeCd.errors
+                      }">
+                      <ng-option value="">
+                        {{ "vaccination.select_vaccine_subtype" | translate }}
+                      </ng-option>
+                      <ng-option *ngFor="let data of subTypeValue" [value]="data.vaccineSubtypeCd">
+                        {{ data.vaccineSubtypeName }}
+                      </ng-option>
+                    </ng-select>
+
+                    <span class="alert-message" *ngIf="
+                        (f.vaccineSubtypeCd.dirty &&
+                          f.vaccineSubtypeCd.invalid) ||
+                        f.vaccineSubtypeCd.touched
+                      ">
+                      <span *ngIf="f.vaccineSubtypeCd.hasError('required')">
+                        {{ validationMsg.required | translate }}
+                      </span>
+                    </span>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="vaccinationType" class="form-label">{{ "vaccination.vaccinationType" | translate
+                      }}<span class="mandatory-field">*</span></label>
+
+                    <ng-select bindLabel="value" placeholder="{{ 'vaccination.vacc_type' | translate }}"
+                      [searchable]="true" [clearable]="true" id="vaccinationType" formControlName="vaccinationType"
+                      [ngClass]="{
+                        'is-invalid':
+                          (f.vaccinationType.touched ||
+                            campaignCreationSubmitted) &&
+                          f.vaccinationType.errors
+                      }">
+                      <ng-option value="">
+                        {{ "vaccination.vacc_type" | translate }}
+                      </ng-option>
+                      <ng-option *ngFor="let vaccType of getVaccinationType" [value]="vaccType.cd">
+                        {{ vaccType.value }}
+                      </ng-option>
+                    </ng-select>
+                    <span class="alert-message" *ngIf="
+                        (f.vaccinationType.dirty &&
+                          f.vaccinationType.invalid) ||
+                        f.vaccinationType.touched
+                      ">
+                      <span *ngIf="f.vaccinationType.hasError('required')">
+                        {{ validationMsg.required | translate }}
+                      </span>
+                    </span>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="batchNumber">{{ "vaccination.BatchNumber" | translate }}
+                      <span class="mandatory-field">*</span></label>
+                    <div class="d-flex justify-content-between">
+                      <div class="w-100">
+                        <input formControlName="batchNumber" placeholder="{{
+                            'vaccination.select_vaccine_batch' | translate
+                          }}" type="text" class="form-control" />
+
+                        <span class="alert-message" *ngIf="
+                            (f.batchNumber.dirty && f.batchNumber.invalid) ||
+                            f.batchNumber.touched
+                          ">
+                          <span *ngIf="f.batchNumber.hasError('required')">
+                            {{ validationMsg.required | translate }}
+                          </span>
+                          <span *ngIf="f.batchNumber.hasError('pattern')">
+                            {{ validationMsg.batchNumberPattern | translate }}
+                          </span>
+                          <span *ngIf="
+                              !f.batchNumber.hasError('pattern') &&
+                              f.batchNumber.hasError('maxlength')
+                            ">
+                            {{ validationMsg.batchNumbermaxlength | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Species Details section -->
+                <div class="form-row">
+                  <div class="col-12">
+                    <div class="mobile-title-heading">
+                      <div class="separator">
+                        <div>
+                          {{ "campaignCreation.species_details" | translate }}
+                        </div>
+                        <div class="line"></div>
+                      </div>
+                    </div>
+                    <div class="row symt-details">
+                      <div class="form-group col-lg-12 col-md-12">
+                        <div class="table-responsive mb-3">
+                          <table mat-table [dataSource]="affectedAnimalDataSource" formArrayName="affectedAnimals"
+                            class="symt-details-table mat-elevation-z8">
+                            <ng-container matColumnDef="species">
+                              <th mat-header-cell *matHeaderCellDef>
+                                {{ "common.species" | translate
+                                }}<span class="mandatory-field">*</span>
+                              </th>
+                              <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index"
+                                class="cell-width">
+                                <mat-select formControlName="speciesCd" (selectionChange)="test($event, index)">
+                                  <mat-option *ngFor="let species of getSpeciesType" [value]="species.speciesCd">
+                                    {{ species.speciesName }}</mat-option>
+                                </mat-select>
+                              </td>
+                            </ng-container>
+                            <ng-container matColumnDef="form">
+                              <th mat-header-cell *matHeaderCellDef>
+                                {{ "deworming.Form" | translate
+                                }}<span class="mandatory-field">*</span>
+                              </th>
+                              <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index"
+                                class="cell-width">
+                                <mat-select formControlName="formCd">
+                                  <mat-option *ngFor="let data of formData[index]" [value]="data.formCd">
+                                    {{ data.formName }}</mat-option>
+                                </mat-select>
+                              </td>
+                            </ng-container>
+                            <ng-container matColumnDef="route">
+                              <th mat-header-cell *matHeaderCellDef>
+                                {{ "deworming.route" | translate
+                                }}<span class="mandatory-field">*</span>
+                              </th>
+                              <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index"
+                                class="cell-width">
+                                <mat-select formControlName="routeCd">
+                                  <mat-option *ngFor="let data of getRouteName[index]" [value]="data.routeCd">
+                                    {{ data.routeName }}</mat-option>
+                                </mat-select>
+                              </td>
+                            </ng-container>
+                            <ng-container matColumnDef="dose">
+                              <th mat-header-cell *matHeaderCellDef>
+                                {{ "deworming.Dose" | translate
+                                }}<span class="mandatory-field">*</span>
+                              </th>
+                              <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index"
+                                class="cell-width">
+                                <mat-select formControlName="dosage">
+                                  <mat-option *ngFor="let data of getDose[index]" [value]="data.dosage">
+                                    {{ data.dosage }}</mat-option>
+                                </mat-select>
+                              </td>
+                            </ng-container>
+                            <ng-container matColumnDef="unit">
+                              <th mat-header-cell *matHeaderCellDef>
+                                {{ "deworming.Unit" | translate }}
+                              </th>
+                              <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index"
+                                class="cell-width">
+                                <mat-select formControlName="unitCd">
+                                  <mat-option *ngFor="let data of getUnit[index]" [value]="data.unitCd">
+                                    {{ data.unitName }}</mat-option>
+                                </mat-select>
+                              </td>
+                            </ng-container>
+                            <ng-container matColumnDef="action">
+                              <th mat-header-cell *matHeaderCellDef></th>
+                              <td mat-cell *matCellDef="let element; let index = index">
+                                <i aria-hidden="true" class="fa fa-trash-o icon-pointer"
+                                  (click)="removeAffectedAnimalElement(index)"></i>
+                              </td>
+                            </ng-container>
+
+                            <tr class="action-link table-head" mat-header-row
+                              *matHeaderRowDef="affectedAnimalDisplayedColumns"></tr>
+                            <tr class="action-link table-head" mat-row *matRowDef="
+                                let row;
+                                columns: affectedAnimalDisplayedColumns
+                              "></tr>
+                            <tr class="mat-row" *matNoDataRow>
+                              <td class="mat-cell text-center" [attr.colspan]="
+                                  affectedAnimalDisplayedColumns.length
+                                ">
+                                {{
+                                "campaignCreation.no_data_matching_the_filter"
+                                | translate
+                                }}
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                        <span class="validation-error-message mb-3" *ngIf="
+                            (f.affectedAnimals.invalid && f.affectedAnimals.touched)">
+                          <!-- Role Name already exist. please select another Role ! -->
+                          {{
+                          "campaignCreation.species_not_selected" | translate
+                          }}
+                        </span>
+                        <div class="add-row">
+                          <span class="add-row--btn" (click)="addAffectedAnimalRow()">
+                            <i aria-hidden="true" class="fa fa-plus add-row--icon"></i><b class="">
+                              {{ "campaignCreation.add_row" | translate }}</b>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="selectedCampaignValue == 2">
+                <div class="col-md-12">
+                  <label for="medicineControl" class="form-label">{{
+                    "common.Search_by_keywords" | translate
+                    }}</label>
+                  <div class="form-row selectSearch align-items-center mb-3">
+                    <div class="col-md-7">
+                      <ng-select class="custom" [items]="medicines | async" formControlName="medicineControl"
+                        [multiple]="false" bindLabel="medicineName" groupBy="selectedAllGroup" [selectableGroup]="true"
+                        [minTermLength]="3" [hideSelected]="true" [selectableGroupAsModel]="false"
+                        typeToSearchText="Please enter 3 or more characters" placeholder="{{
+                          'common.Search_by_keywords' | translate
+                        }}" [closeOnSelect]="true" [typeahead]="medcineInput$" (change)="onSelectMedicne($event)">
+                        <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                          <input id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected"
+                            [ngModelOptions]="{ standalone: true }" />
+                          {{ "campaignCreation.select_all" | translate }}
+                        </ng-template>
+
+                        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                          <div class="d-flex align-items-center">
+                            <div class="col-md-9">
+                              <p>
+                                <b>{{ item.medicineName }}</b>
+                              </p>
+                              <p>{{ item.saltDesc }}</p>
+                            </div>
+
+                            <div class="col-md-3">
+                              <div class="d-flex justify-content-end" (click)="fetchTable()">
+                                <ng-container *ngIf="true; else notPresent">
+                                  <span class="add-medicine-btn"><i class="fa fa-plus mr-2" aria-hidden="true">
+                                    </i>{{
+                                    "campaignCreation.add_row" | translate
+                                    }}</span>
+                                </ng-container>
+                                <ng-template #notPresent>
+                                  <span class="add-medicine-btn">
+                                    <i class="fa fa-minus mr-2" aria-hidden="true">
+                                    </i>{{
+                                    "diseaseTesting.remove" | translate
+                                    }}</span>
+                                </ng-template>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="search-btn">
+                        <button type="submit" class="btn btn-primary" (click)="fetchMedicines()">
+                          {{ "animalDetails.search" | translate }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-4">
+                    <label for="dewormerCd" class="form-label">{{ "deworming.De-wormer_Name" | translate
+                      }}<span class="mandatory-field">*</span></label>
+                    <select id="dewormerCd" class="form-control" formControlName="dewormerCd">
+                      <option value="">
+                        {{ "deworming.De-wormer_Content" | translate }}
+                      </option>
+                      <option *ngFor="let data of selectedMedicine" [value]="data.medicineCd">
+                        {{ data.medicineName }}
+                      </option>
+                    </select>
+                    <span class="alert-message" *ngIf="
+                        (f.dewormerCd.dirty && f.dewormerCd.invalid) ||
+                        f.dewormerCd.touched
+                      ">
+                      <span *ngIf="f.dewormerCd.hasError('required')">
+                        {{ validationMsg.required | translate }}
+                      </span>
+                    </span>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="dewormerContent" class="form-label">{{
+                      "deworming.De-wormer_Content" | translate
+                      }}</label>
+                    <input formControlName="dewormerContent" type="text" [disabled]="true" class="form-control" />
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="route" class="form-label">{{
+                      "deworming.route" | translate
+                      }}</label>
+                    <select id="route" class="form-control" formControlName="route">
+                      <option value="">
+                        {{ "deworming.route" | translate }}
+                      </option>
+                      <option *ngFor="let data of selectedMedicine" [value]="data.routeName">
+                        {{ data.routeName }}
+                      </option>
+                    </select>
+                    <span class="alert-message" *ngIf="
+                        (f.route.dirty && f.route.invalid) || f.route.touched
+                      ">
+                      <span *ngIf="f.route.hasError('required')">
+                        {{ validationMsg.required | translate }}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-3">
+                    <label for="dosage" class="form-label">{{ "campaignCreation.dosage" | translate }}
+                      <span class="mandatory-field">*</span>
+                    </label>
+                    <input type="text" class="form-control table-input" formControlName="dosage" placeholder="{{
+                        'campaignCreation.enter_dose_details' | translate
+                      }}" min="0" onkeypress="return (
+                      (event.charCode != 8 && event.charCode == 0) ||
+                      (event.charCode >= 48 && event.charCode <= 57) ||
+                      event.charCode === 46
+                    )" />
+                    <!-- <input formControlName="dosage"
+                      placeholder="{{ 'campaignCreation.enter_dose_details' | translate }}" type="text"
+                      class="form-control" /> -->
+
+                    <span class="alert-message" *ngIf="
+                        (f.dosage.dirty || f.dosage.touched) && f.dosage.invalid
+                      "><span *ngIf="f.dosage.hasError('required')">
+                        {{ validationMsg.required | translate }}
+                      </span>
+                      <span *ngIf="f.dosage.hasError('pattern')">
+                        {{ validationMsg.dosePattern | translate }}
+                      </span>
+                      <span *ngIf="f.dosage.hasError('invalidDecimalNo')">
+                        {{
+                        "animalTreatmentSurgery.dosage_cannot_be_more_than_4_characters"
+                        | translate
+                        }}
+                      </span>
+                    </span>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="manufacture" class="form-label">{{
+                      "campaignCreation.manufacturer" | translate
+                      }}</label>
+                    <select id="manufacturer" class="form-control" formControlName="manufacturer">
+                      <option value="">
+                        {{
+                        "campaignCreation.select_manufacturer_name"
+                        | translate
+                        }}
+                      </option>
+                      <option *ngFor="let data of selectedMedicine" [value]="data.manufacturer">
+                        {{ data.manufacturer }}
+                      </option>
+                    </select>
+                    <span class="alert-message" *ngIf="
+                        (f.manufacturer.dirty && f.manufacturer.invalid) ||
+                        f.manufacturer.touched
+                      ">
+                      <span *ngIf="f.manufacturer.hasError('required')">
+                        {{ validationMsg.required | translate }}
+                      </span>
+                    </span>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="formName" class="form-label">{{
+                      "deworming.Form" | translate
+                      }}</label>
+                    <select id="formName" class="form-control" formControlName="formName">
+                      <option value="">
+                        {{ "deworming.Form" | translate }}
+                      </option>
+                      <option *ngFor="let data of selectedMedicine" [value]="data.medicineFormCd">
+                        {{ data.formName }}
+                      </option>
+                    </select>
+                    <span class="alert-message" *ngIf="
+                        (f.formName.dirty && f.formName.invalid) ||
+                        f.formName.touched
+                      ">
+                      <span *ngIf="f.formName.hasError('required')">
+                        {{ validationMsg.required | translate }}
+                      </span>
+                    </span>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="unit" class="form-label">{{
+                      "deworming.Unit" | translate
+                      }}</label>
+                    <select id="unit" class="form-control" formControlName="unit">
+                      <option value="">
+                        {{ "deworming.Unit" | translate }}
+                      </option>
+                      <option *ngFor="let data of selectedMedicine" [value]="data.unitDesc">
+                        {{ data.unitDesc }}
+                      </option>
+                    </select>
+                    <span class="alert-message" *ngIf="(f.unit.dirty && f.unit.invalid) || f.unit.touched">
+                      <span *ngIf="f.unit.hasError('required')">
+                        {{ validationMsg.required | translate }}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </ng-container>
+
+              <div class="d-flex justify-content-end">
+                <button type="reset" class="btn btn-outline-primary mr-2" (click)="campaignCancel()">
+                  {{ "animalDetails.cancel" | translate }}
+                </button>
+                <button type="submit" class="btn btn-primary" (click)="CamCreationSubmit()">
+                  {{ "common.submit" | translate }}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- section outer end -->

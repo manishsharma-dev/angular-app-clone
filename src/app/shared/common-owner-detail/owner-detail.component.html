@@ -1,0 +1,95 @@
+<div class="row p-0 mb-3"
+  *ngIf="ownerDetailsByID?.ownerTypeCd === 1 || ownerDetailsByID?.ownerTypeCd === 2; else orgDetails">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body position-relative">
+        <span class="floating-filedset fildset-bg-green">
+          <span class="float-label">{{'animalBreeding.owner_details'|translate}}</span>
+        </span>
+        <div class="row align-items-center mb-1 mt-3">
+          <div class="col-md-6 col-sm-12">
+            <div class="owner-name">
+              {{ ownerDetailsByID?.ownerName }}
+              ({{ ownerDetailsByID?.ownerId }})
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <div class="add-member float-md-right float-sm-left">
+              <a href="javascript: void(0)" class="view-details"
+                (click)="editOwnerDialog(true)">{{'animalBreeding.view_details'|translate}}</a>
+              <!-- <img src="/assets/images/edit.svg" class="icon-edit ml-3" (click)="editOwnerDialog()" alt="icon-edit" /> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div id="owner-detail" class="owner-name col-md-12">
+            <ul>
+              <li *ngIf="ownerDetailsByID?.ownerTypeCd === 1;else OwnerType">{{'common.care_of'|translate}}
+                {{ ownerDetailsByID?.fatherName }}</li>
+              <ng-template #OwnerType>
+                <li>{{"animalDetails.nonIndividualType" | translate}} {{ownerDetailsByID?.ownerTypeCategory}}</li>
+              </ng-template>
+              <li>{{'common.village_name' | translate}}: {{ ownerDetailsByID?.ownerVillageName }}</li>
+
+              <li>
+                {{'common.mobile'|translate}}: {{ ownerDetailsByID?.ownerMobileNo }}
+                <img *ngIf="
+                      ownerDetailsByID?.isOwnerMobileVerified;
+                      else elseBlock
+                    " src="/assets/images/verified.svg" class="icon-verified" alt="icon-verified" />
+                <ng-template #elseBlock>
+                  <span href="javascript: void(0)" class="alert-message">
+                    <i class="fa fa-exclamation-circle text-danger"></i>
+                    {{'errorMsg.not_verified' |translate}}
+                  </span>
+                  <!-- (click)="openOtpDialog('verification')" -->
+                </ng-template>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #orgDetails>
+
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body position-relative">
+          <span class="floating-filedset fildset-bg-green">
+            <span class="float-label">{{'animalDetails.orangisation_details' | translate}}</span>
+          </span>
+          <div class="row align-items-center mb-1 mt-3">
+            <div class="col-md-6 col-sm-12">
+              <div class="org-name">
+                <h3>
+                  <strong>{{ ownerDetailsByID?.orgName }},
+                    {{ ownerDetailsByID?.orgAddress }},
+                    {{ ownerDetailsByID?.orgPin }}</strong>
+                </h3>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <div class="add-member float-md-right float-sm-left">
+                <a href="javascript:void(0)" class="view-details"
+                  (click)="viewOrgDetailsDialog()">{{'animalDetails.viewOwnerDetails' | translate}}</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div id="owner-detail" class="col-md-12">
+              <ul>
+                <li>{{'animalBreeding.reg_no'|translate}}:- {{ ownerDetailsByID?.orgRegistrationNo }}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

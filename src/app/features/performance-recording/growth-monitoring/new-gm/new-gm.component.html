@@ -1,0 +1,222 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<app-common-breadcrumb [breadcrumbKeys]="[ 'performanceRecording.pr', 'performanceRecording.growth_monitoring']">
+</app-common-breadcrumb>
+
+<section class="new-gm">
+  <div class="row no-gutters col-container">
+    <div class="col-md-12 col-h left-section">
+      <div class="owner-details-section">
+        <div class="row owner-detail-table mb-4 mx-0 py-3 align-items-center user-detail">
+
+          <div class="back-arrow">
+            <i class="fa fa-chevron-left mr-2 back-section" (click)="goBack()"></i>
+          </div>
+          <div class="table-responsive">
+            <table class="table animal-table m-0" *ngIf="animal">
+              <thead>
+                <tr>
+                  <th>{{'animalDetails.previewAnimalDetails.tagId'|translate}}</th>
+                  <th>{{'common.species'|translate}}</th>
+                  <th>{{'animalDetails.breed'|translate}}</th>
+                  <th>{{'common.sex'|translate}}</th>
+                  <th>{{'common.age'|translate}}</th>
+                  <th>{{'animalDetails.pregnant'|translate}}</th>
+                  <th>{{'animalDetails.milking_status'|translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ animal.tagId }}</td>
+                  <td>{{ animal.species }}</td>
+                  <td>{{
+                    animal.breedAndExoticLevels &&
+                    animal.breedAndExoticLevels.length > 1
+                    ? 'Cross Breed'
+                    : animal.breedAndExoticLevels &&
+                    animal.breedAndExoticLevels.length
+                    ? animal.breedAndExoticLevels[0].breed
+                    : 'NA' }}</td>
+                  <td>{{ animal.sex }}</td>
+                  <td>
+                    {{ animal.ageInMonths ? getAnimalAge(animal.ageInMonths) : (animal.ageInDays + 'D')}}
+                  </td>
+                  <td class="col-auto">
+                    {{ (animal.pregnancyStatus ? (animal.pregnancyStatus === "Y" ? "common.yes" : "common.no"): 'NA') |
+                    translate}}
+                  </td>
+                  <td class="col-auto">{{ animal.milkingStatus ?? "NA" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="title-heading mb-3">
+        <h3 class="muted-label-heading">{{'performanceRecording.last_growth_monitoring_history' | translate}}</h3>
+      </div>
+      <div class="owner-details-section">
+        <div class="row owner-detail-table mb-4 mx-0 py-3 align-items-center user-detail">
+          <div class="table-responsive">
+            <ng-template #noData>
+              {{'performanceRecording.no_history_found' | translate}}
+            </ng-template>
+            <table class="table animal-table m-0" *ngIf="history; else noData">
+              <thead>
+                <tr>
+                  <th>{{'performanceRecording.sno' | translate}}</th>
+                  <th>{{'performanceRecording.gm_date' | translate}}</th>
+                  <th>{{'performanceRecording.length' | translate}}</th>
+                  <th>{{'performanceRecording.girth' | translate}}</th>
+                  <th>{{'performanceRecording.weight' | translate}}</th>
+                  <th>{{'performanceRecording.growth_rate' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ historyLength }}</td>
+                  <td>{{ history.gmDate | date:'dd/MM/YYYY' }}</td>
+                  <td>{{
+                    history.length }}"</td>
+                  <td>{{ history.girth }}"</td>
+                  <td>
+                    {{ history.weight }} Kg
+                  </td>
+                  <td class="col-auto">
+                    {{ history.growthRate }} gm/day
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="title-heading mb-3">
+        <h3 class="muted-label-heading">{{'performanceRecording.fill_growth_monitoring_details' | translate}}</h3>
+      </div>
+      <div class="h-divider">
+        <div class="shadow"></div>
+      </div>
+      <form [formGroup]="gmForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="" class="form-label">{{'animalDetails.dataEntryDate' | translate}}</label>
+            <input type="text" class="form-control" formControlName="recordDate">
+          </div>
+          <div class="form-group input-icon">
+            <label for="gmDate">{{'performanceRecording.gm_date' | translate}}<span
+                class="mandatory-field">*</span></label>
+            <input class="form-control" type="text" [min]="minDate" [max]="today" [matDatepicker]="pickerDate"
+              formControlName="gmDate" placeholder="dd/mm/yyyy" />
+            <mat-datepicker-toggle matSuffix [for]="pickerDate" class="calender-icon"></mat-datepicker-toggle>
+            <mat-datepicker #pickerDate></mat-datepicker>
+
+            <span class="alert-message" *ngIf="
+                    (gmForm.get('gmDate').dirty &&
+                      gmForm.get('gmDate').invalid) ||
+                    gmForm.get('gmDate').touched
+                    ">
+              <span *ngIf="gmForm.get('gmDate').hasError('matDatepickerMin')">
+                {{'common.please_enter_valid_date' | translate}}
+              </span>
+              <span *ngIf="gmForm.get('gmDate').hasError('matDatepickerMax')">
+                {{'common.please_enter_valid_date' | translate}}
+              </span>
+              <span *ngIf="gmForm.get('gmDate').hasError('matDatepickerParse')">
+                {{'common.please_enter_valid_date' | translate}}
+              </span>
+              <span
+                *ngIf="gmForm.get('gmDate').hasError('required') && !gmForm.get('gmDate').hasError('matDatepickerParse')">
+                {{cmnValidation.required|translate}}
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-2 input-icon">
+            <label for="length" class="form-label">{{'performanceRecording.length' | translate}}<span
+                class="mandatory-field">*</span></label>
+            <input type="text" formControlName="length" id="length" class="form-control" placeholder='00'>
+            <span class="input-units">"</span>
+            <div class="alert-message" *ngIf="isControlValid('length')">
+              <span *ngIf="gmForm.get('length').hasError('invalidDecimalNo')">
+                {{cmnValidation.decimalValidation|translate}}
+              </span>
+              <span *ngIf="gmForm.get('length').hasError('min')">
+                {{validationMsg.minLength|translate}}
+              </span>
+              <span *ngIf="gmForm.get('length').hasError('required')">
+                {{cmnValidation.required|translate}}
+              </span>
+
+            </div>
+          </div>
+
+          <div class="form-group col-md-2 input-icon">
+            <label for="girth" class="form-label">{{'performanceRecording.girth' | translate}}<span
+                class="mandatory-field">*</span></label>
+            <input type="text" formControlName="girth" class="form-control" placeholder='00'>
+            <span class="input-units">"</span>
+            <div class="alert-message" *ngIf="isControlValid('girth')">
+              <span *ngIf="gmForm.get('girth').hasError('invalidDecimalNo')">
+                {{cmnValidation.decimalValidation|translate}}
+              </span>
+              <span *ngIf="gmForm.hasError('girthLessThanLength')">
+                {{validationMsg.girthLessThanLength|translate}}
+              </span>
+              <span *ngIf="gmForm.get('girth').hasError('min')">
+                {{validationMsg.minGirth|translate}}
+              </span>
+              <span *ngIf="gmForm.get('girth').hasError('required')">
+                {{cmnValidation.required|translate}}
+              </span>
+
+            </div>
+          </div>
+
+
+          <div class="form-group col-md-2 input-icon">
+            <label for="weight" class="form-label">{{'performanceRecording.weight' | translate}}</label>
+            <input type="text" formControlName="weight" id="weight" class="form-control" placeholder='00'
+              (change)="onWeightChange()">
+            <span class="input-units">Kg</span>
+            <div class="alert-message" *ngIf="isControlValid('weight')">
+              <span *ngIf="gmForm.get('weight').hasError('pattern')">
+                {{cmnValidation.decimalValidation|translate}}
+              </span>
+              <span *ngIf="gmForm.get('weight').hasError('min')">
+                {{validationMsg.minWeight|translate}}
+              </span>
+              <span *ngIf="gmForm.get('weight').hasError('required')">
+                {{cmnValidation.required|translate}}
+              </span>
+              <span *ngIf="gmForm.hasError('weightRequired')">
+                {{cmnValidation.required|translate}}
+              </span>
+            </div>
+          </div>
+
+        </div>
+        <div class="h-divider">
+          <div class="shadow"></div>
+        </div>
+
+        <div class="footer d-flex">
+          <button type="button" (click)="goBack()" class="btn btn-outline-primary mr-2 ml-auto">
+            {{ "animalDetails.cancel" | translate }}
+          </button>
+          <button type="button" (click)="onReset()" class="btn btn-outline-primary mr-2">
+            {{ "animalDetails.reset" | translate }}
+          </button>
+          <button type="submit" class="btn btn-primary">
+            {{ "common.submit" | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

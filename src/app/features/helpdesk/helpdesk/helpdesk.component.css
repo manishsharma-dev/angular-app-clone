@@ -1,0 +1,46 @@
+.helpdesk .card-header {
+  background-color: #fff;
+  border-radius: 16px 16px 0px 0px;
+}
+
+.helpdesk .card-header .heading {
+  font-size: 14px;
+  font-family: Noto Sans;
+  font-weight: bold;
+  letter-spacing: 0.2px;
+  color: #003640;
+}
+
+.helpdesk .card-body .pdf-pannel,
+.helpdesk .card-body .video-pannel {
+  display: flex;
+}
+
+.helpdesk .card-body .pdf-pannel .pdf-icon {
+  width: 50px;
+  height: 50px;
+  margin-right: 0.75rem;
+}
+
+.helpdesk .card-body .video-pannel .video-icon {
+  width: 200px;
+  aspect-ratio: 16 / 9;
+  margin-right: 0.75rem;
+}
+
+.helpdesk .card-body .pdf-pannel .desc-text,
+.helpdesk .card-body .video-pannel .desc-text {
+  line-height: 0px;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  color: #3f4254;
+}
+.helpdesk .card-body .pdf-pannel .desc-text:hover {
+  color: #009ef7;
+}
+
+.scrollables {
+  overflow-y: auto;
+  max-height: 200px;
+}

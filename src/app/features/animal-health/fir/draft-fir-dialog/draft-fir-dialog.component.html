@@ -1,0 +1,12 @@
+<div class="status-dialog">
+  <img src="/assets/images/checkbox-circle-line.svg" alt="checkbox-circle-line">
+  <p class="sd-id">{{ "animalDetails.transaction_id" | translate }}: <b>{{ data.firID }}</b></p>
+  <h3 class="sd-msg">{{ data.title }}</h3>
+  <!-- <p class="sd-noti-detail">{{ "fir.notification_sent_to_the_cvo_for_approval" | translate }}</p> -->
+  <p class="sd-noti-detail" *ngIf="data.supervisorName">{{"animalTreatmentSurgery.notification_send_to" | translate}} {{
+    data.supervisorName }}</p>
+  <div class="close-btn">
+    <button type="submit" mat-dialog-close class="btn btn-primary" (click)="closeDialog()">{{ "common.ok_string" |
+      translate }}</button>
+  </div>
+</div>

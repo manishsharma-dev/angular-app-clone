@@ -1,0 +1,24 @@
+@media screen and (min-width: 768px) {
+  .submit-btn {
+    position: relative;
+  }
+
+  .submit-btn button {
+    position: absolute;
+    top: 30px;
+  }
+}
+
+.input-icon {
+  position: relative;
+}
+
+.input-icon input {
+  padding-right: 50px;
+}
+
+.calender-icon {
+  position: absolute;
+  top: 29px;
+  right: 0px;
+}

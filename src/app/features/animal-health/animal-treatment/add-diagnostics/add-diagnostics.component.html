@@ -1,0 +1,221 @@
+<div class="add-diagnostics-dialog">
+  <div class="add-diagnostics-header">
+    <div class="headeing">
+      <h2 Class="edit-heading-label">{{"animalTreatmentSurgery.add_diagnostics" | translate}}</h2>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+
+  <div class="dialog-main-content">
+    <form [formGroup]="diagnosticsForm">
+      <div class="sample-labCd--testing mb-3">
+        <div class="separator mb-2">
+          <div>
+            <span class="mr-2"><b>{{"animalTreatmentSurgery.on_spot_testing" | translate}}?</b></span>
+            <div class="form-check-inline">
+              <label class="form-check-label">
+                <input type="radio" class="form-check-input" formControlName="onSpotTesting"
+                  value="yes" />{{"common.yes" | translate}}
+              </label>
+            </div>
+            <div class="form-check-inline">
+              <input type="radio" class="form-check-input" formControlName="onSpotTesting" value="no" />
+              <label class="form-check-label">{{"common.no" | translate}}</label>
+            </div>
+          </div>
+          <div class="line"></div>
+        </div>
+        <div class="table-outebox mb-3" *ngIf="diagnosticsForm.get('onSpotTesting')?.value == 'yes'">
+          <div class="medicine-list mb-3">
+            <div class="medicine-list-heading mb-3">{{"animalTreatmentSurgery.sample_details" | translate}}</div>
+            <div class="table-responsive mb-3">
+              <table mat-table [dataSource]="dataSource" formArrayName="spotTestingRows"
+                class="custom-view-table add-degnostics-table mat-elevation-z8">
+                <ng-container matColumnDef="diseaseSuspected">
+                  <th mat-header-cell *matHeaderCellDef>{{"animalTreatmentSurgery.disease_suspected" | translate}} <span
+                      class="mandatory-field" *ngIf="isDiseaseRequired">*</span></th>
+                  <td mat-cell *matCellDef="let element; let index = index" class="cell-width" [formGroupName]="index">
+                    <mat-select formControlName="diseaseSuspected"
+                      (selectionChange)="subscribeTospotTestingRowsChange('diseaseSuspected',index,element, $event)">
+                      <mat-option *ngFor="let disease of onSpotDiseaseSuspected" [value]="disease.diseaseCd">
+                        {{ disease.diseaseDesc }}</mat-option>
+                    </mat-select>
+                    <div class="alert-message" *ngIf="
+                    element.get('diseaseSuspected').touched &&
+                    element.get('diseaseSuspected').hasError('required')
+                  ">
+                      {{"animalTreatmentSurgery.disease_suspected_is_required" | translate}}
+                    </div>
+                  </td>
+                </ng-container>
+                <!-- Position Column -->
+                <ng-container matColumnDef="onSpotTestCd">
+                  <th mat-header-cell *matHeaderCellDef>{{"animalTreatmentSurgery.test_type" | translate}} <span
+                      class="mandatory-field">*</span></th>
+                  <td mat-cell *matCellDef="let element; let index = index" class="cell-width" [formGroupName]="index">
+                    <!-- <input type="text" class="form-control table-input" formControlName="onSpotTestCd" /> -->
+                    <mat-select formControlName="onSpotTestCd"
+                      (selectionChange)="subscribeTospotTestingRowsChange('onSpotTestCd',index,element, $event)">
+                      <mat-option *ngFor="let sample of onSpotTestMasterRow[index]" [value]="sample.onSpotTestCd">
+                        {{ sample.onSpotTestDesc }}
+                      </mat-option>
+                    </mat-select>
+                    <div class="alert-message" *ngIf="
+                        element.get('onSpotTestCd').touched &&
+                        element.get('onSpotTestCd').hasError('required')
+                      ">
+                      {{"animalTreatmentSurgery.test_type_is_required" | translate}}
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sampleType">
+                  <th mat-header-cell *matHeaderCellDef>{{"animalTreatmentSurgery.sample_type" | translate}}</th>
+                  <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                    <mat-select formControlName="sampleType"
+                      (selectionChange)="subscribeTospotTestingRowsChange('sampleType',index,element)">
+                      <mat-option *ngFor="let sample of onSpotSampleList[index]" [value]="sample.sampleTypeCd">
+                        {{ sample.sampleTypeDesc }}</mat-option>
+                    </mat-select>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="initialReading">
+                  <th mat-header-cell *matHeaderCellDef>{{"animalTreatmentSurgery.initial_reading" | translate}}</th>
+                  <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index" class="cell-width">
+                    <input type="text" class="form-control table-input" formControlName="initialReading" />
+                    <div class="alert-message" *ngIf="
+                    element.get('initialReading').dirty &&
+                    element.get('initialReading').hasError('invalidDecimalNo')
+                  ">
+                      {{"errorMsg.check_field" | translate}} </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="finalReading">
+                  <th mat-header-cell *matHeaderCellDef>{{"animalTreatmentSurgery.final_reading" | translate}}</th>
+                  <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index" class="cell-width">
+                    <input type="text" class="form-control table-input" formControlName="finalReading"
+                      (change)="updateDifference(index, $event)" />
+                    <div class="alert-message" *ngIf="
+                    element.get('finalReading').dirty &&
+                    element.get('finalReading').hasError('invalidDecimalNo')
+                  ">
+                      {{"errorMsg.check_field" | translate}}
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="difference">
+                  <th mat-header-cell *matHeaderCellDef>{{"animalTreatmentSurgery.difference" | translate}}</th>
+                  <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index" class="cell-width">
+                    <input type="text" class="form-control table-input" formControlName="difference"
+                      (change)="updateDifference(index, $event)" />
+                    <div class="alert-message" *ngIf="
+                    element.get('difference').dirty &&
+                    element.get('difference').hasError('invalidDecimalNo')
+                  ">
+                      {{"errorMsg.check_field" | translate}}
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="sampleResult">
+                  <th mat-header-cell *matHeaderCellDef>{{"animalTreatmentSurgery.results" | translate}}</th>
+                  <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                    <mat-select formControlName="sampleResult">
+                      <mat-option [value]="1">{{"animalTreatmentSurgery.positive" | translate}}</mat-option>
+                      <mat-option [value]="2">{{"animalTreatmentSurgery.negative" | translate}}</mat-option>
+                    </mat-select>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell *matCellDef="let element; let index = index">
+                    <i *ngIf="!element.value.isUpdate || data.isDraft" class="fa fa-trash-o"
+                      (click)="removeSpotTestingElement(index)"></i>
+                  </td>
+                </ng-container>
+
+                <tr class="action-link table-head" mat-header-row *matHeaderRowDef="spotTestingDisplayedColumns"></tr>
+                <tr class="action-link table-head" mat-row *matRowDef="let row; columns: spotTestingDisplayedColumns">
+                </tr>
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell text-center" [attr.colspan]="spotTestingDisplayedColumns.length">
+                    {{"animalTreatmentSurgery.no_data_matching_the_filter" | translate}}.
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div class="add-row">
+              <span class="add-row--btn"><i class="fa fa-plus add-row--icon" aria-hidden="true"
+                  (click)="addSpotTestingRow()"></i>
+                <b>{{"animalTreatmentSurgery.add_row" | translate}}
+                </b>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sample-labCd--testing mb-3">
+        <div class="separator mb-2">
+          <div>
+            <span class="mr-2"><b> {{"animalTreatmentSurgery.sample_for_lab_testing"| translate}}?</b></span>
+            <div class="form-check-inline">
+              <label class="form-check-label">
+                <input type="radio" class="form-check-input" formControlName="sampleforLabTesting"
+                  value="yes" />{{"common.yes"| translate}}
+              </label>
+            </div>
+            <div class="form-check-inline">
+              <input type="radio" class="form-check-input" formControlName="sampleforLabTesting" value="no" />
+              <label class="form-check-label">{{"common.no"| translate}}</label>
+            </div>
+          </div>
+          <div class="line"></div>
+        </div>
+        <div class="table-outebox mb-3" *ngIf="diagnosticsForm.get('sampleforLabTesting')?.value == 'yes'">
+          <div class="medicine-list mb-3">
+            <div class="medicine-list-heading mb-3">
+              {{"animalTreatmentSurgery.sample_collection_details"| translate}}
+            </div>
+            <app-lab-testing-sample [diseaseRequiredFlag]="false" [SampleStatusFlags]="['A','B','D','O']"
+              [diagnosticsForm]="diagnosticsForm" [sampleData]="data.sampleData" [isDraft]="data.isDraft">
+            </app-lab-testing-sample>
+
+          </div>
+        </div>
+      </div>
+
+
+      <div class="table-outebox diagnostics-section  w-100">
+        <span> {{"animalTreatmentSurgery.advanced_diagnostics"| translate}}</span>
+        <div class="d-flex mt-3 flex-wrap">
+          <span class="update-result mr-3 d-flex align-items-center justify-content-between"
+            formArrayName="diagnosticsData" *ngFor="let radio of radioFormArray['controls']; let i = index">
+            <input type="checkbox" class="mr-2" [formControlName]="i" [value]="radiologyreportData[i].cd" />
+            {{ radiologyreportData[i].value }}
+          </span>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+
+  <div class="add-diagnostics-footer">
+    <button class="btn btn-outline-primary mr-2" mat-dialog-close (click)="onCancel()">
+      {{"animalTreatmentSurgery.cancel"| translate}}
+    </button>
+    <button type="submit" class="btn btn-primary" (click)="saveDiagnosticsData()" [disabled]="diagnosticsForm.pristine">
+      {{"animalDetails.save"| translate}}
+    </button>
+  </div>
+</div>

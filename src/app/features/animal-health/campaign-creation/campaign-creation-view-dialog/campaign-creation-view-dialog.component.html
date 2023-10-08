@@ -1,0 +1,343 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+
+<div class="edit-dialog">
+  <div class="edit-section-header">
+    <div class="edit-heading">
+      <h3>{{ "campaignCreation.campaign_details" | translate }}</h3>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+  <!-- Vaccination Content Starts -->
+  <div class="edit-container" *ngIf="vaccinationRes">
+    <div class="row mt-4 section-title">
+      <div class="col-md-12">
+        <p class="">{{ "campaignCreation.Campaign_Name" | translate }}:
+          {{prescriptionRes?.viewCampaignDetailDto?.campaignName}} </p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{ "campaignCreation.campaign_start_date" | translate }} : </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.campaignStartDate}} </p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{ "vaccination.CampaignEndDate" | translate }} : </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.campaignEndDate}}</p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{ "campaignCreation.campaign_entry_end_date" | translate }} : </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.campaignDataEntryEndDate}} </p>
+      </div>
+    </div>
+   
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"campaignCreation.campaign_select_project" | translate}} </h4>
+        <p> {{prescriptionRes?.viewCampaignDetailDto?.projectName}}</p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"campaignCreation.Campaign_Type" | translate}}</h4>
+        <p> {{prescriptionRes?.viewCampaignDetailDto?.campaignType}} </p>
+      </div>
+    </div>
+    <div class="row mt-4 section-title">
+      <div class="col-md-12">
+        <p class="">{{"vaccination.vaccination" | translate}}</p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"vaccination.BatchNumber" | translate}}:
+          {{prescriptionRes?.viewCampaignDetailDto?.batchNumber}}
+        </h4>
+        <p> </p>
+      </div>
+    </div>
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{'campaignCreation.vaccination_For' | translate}}: </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.diseaseDesc}} </p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"campaignCreation.vaccine_name" | translate}} : </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.vaccineName}}</p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"campaignCreation.vaccine_type" | translate}}: </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.vaccineType}} </p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{'campaignCreation.vaccine_subtype' | translate}}: </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.vaccineSubtypeName}}</p>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-12 affected-animal-table">
+        <table class="table table-bordered w-80">
+          <thead>
+            <tr>
+              <th>{{"common.species" | translate}}</th>
+              <th>{{"deworming.Form" | translate}}</th>
+              <th> {{"deworming.route" | translate}}</th>
+              <th>{{"campaignCreation.dosage" | translate}}</th>
+              <th>{{"deworming.Unit" | translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of  prescriptionRes?.speciesImpactedEntity">
+              <td>{{data.species ?? "null"}}</td>
+              <td>{{data.form ?? "null"}}</td>
+              <td>{{data.route ?? "null"}}</td>
+              <td>{{data.dosage ?? "null"}}</td>
+              <td>{{data.unit ?? "null"}}</td>
+            </tr>
+            <tr *ngIf=" prescriptionRes?.speciesImpactedEntity.length == 0">
+              <td colspan="5">{{"campaignCreation.no_species_found" | translate}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+   
+    <div class="row mt-4">
+      <div class="col-md-12 affected-animal-table">
+        <div class="form-group">
+          <input type="text" class="form-control search-field" placeholder="Search Village/Tehsil/District Here"
+          [(ngModel)]="searchText">
+        </div>
+        <table class="table table-bordered w-80">
+          <thead>
+            <tr>
+              <th>{{ "animalTreatmentSurgery.village_taluka" | translate }} </th>
+              <th>{{ "user.tehsil" | translate }}</th>
+              <th>{{ "animalTreatmentSurgery.district" | translate }}</th>
+
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of  prescriptionRes?.locationDetailsResponseDto | filter: searchText">
+              <td>{{data.villageName}}</td>
+              <td>{{data.tehsilName}}</td>
+              <td>{{data.districtName}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Deworming Content Starts -->
+
+  <div class="edit-container" *ngIf="dewormingRes">
+    <div class="row mt-4 section-title">
+      <div class="col-md-12">
+        <p class="">{{ "campaignCreation.Campaign_Name" | translate }}:
+          {{prescriptionRes?.viewCampaignDetailDto?.campaignName}} </p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{ "campaignCreation.campaign_start_date" | translate }} : </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.campaignStartDate}} </p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{'vaccination.CampaignEndDate' | translate}} : </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.campaignEndDate}}</p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{'campaignCreation.campaign_entry_end_date' | translate}} : </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.campaignDataEntryEndDate}} </p>
+      </div>
+    </div>
+   
+    
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"campaignCreation.campaign_select_project" | translate}} </h4>
+        <p> {{prescriptionRes?.viewCampaignDetailDto?.projectName}}</p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"campaignCreation.Campaign_Type" | translate}} </h4>
+        <p> {{prescriptionRes?.viewCampaignDetailDto?.campaignType}} </p>
+      </div>
+    </div>
+    <div class="row mt-4 section-title">
+      <div class="col-md-12">
+        <p class="">{{"deworming.breadcrumb_dewormingthird" | translate}}</p>
+      </div>
+    </div>
+
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"deworming.De-wormer_Content" | translate}}: </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.dewormerContent ?? "null"}} </p>
+
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"animalTreatmentSurgery.medicine_name" | translate}}: </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.medicineName ?? "null"}}</p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"campaignCreation.manufacturer" | translate}}</h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.manufacturer}}</p>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-12 affected-animal-table">
+        <div class="form-group">
+          <input type="text" class="form-control search-field" placeholder="Search Village/Tehsil/District Here"
+          [(ngModel)]="searchTextDeworming">
+        </div>
+        <table class="table table-bordered w-80">
+          <thead>
+            <tr>
+              <th>{{ "animalTreatmentSurgery.village_taluka" | translate }} </th>
+              <th>{{ "user.tehsil" | translate }}</th>
+              <th>{{ "animalTreatmentSurgery.district" | translate }}</th>
+
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of  prescriptionRes?.locationDetailsResponseDto | filter: searchTextDeworming">
+              <td>{{data.villageName}}</td>
+              <td>{{data.tehsilName}}</td>
+              <td>{{data.districtName}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- Treatment/Fertility Content Starts -->
+  <div class="edit-container" *ngIf="treatmentRes">
+    <div class="row mt-4 section-title">
+      <div class="col-md-12">
+        <p class="">{{ "campaignCreation.Campaign_Name" | translate }}:
+          {{prescriptionRes?.viewCampaignDetailDto?.campaignName}} </p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{ "campaignCreation.campaign_start_date" | translate }} : </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.campaignStartDate}} </p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{ "vaccination.CampaignEndDate" | translate }} : </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.campaignEndDate}}</p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{ "campaignCreation.campaign_entry_end_date" | translate }} : </h4>
+        <p>{{prescriptionRes?.viewCampaignDetailDto?.campaignDataEntryEndDate}} </p>
+      </div>
+    </div>
+  
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"campaignCreation.campaign_select_project" | translate}} </h4>
+        <p> {{prescriptionRes?.viewCampaignDetailDto?.projectName}}</p>
+      </div>
+      <div class="col-md-4">
+        <h4 class="font-weight-bold label-header">{{"campaignCreation.Campaign_Type" | translate}}</h4>
+        <p> {{prescriptionRes?.viewCampaignDetailDto?.campaignType}} </p>
+      </div>
+    </div>
+    <div class="row mt-4 section-title">
+      <div class="col-md-12">
+        <p class="">{{prescriptionRes?.viewCampaignDetailDto?.campaignName}}</p>
+      </div>
+    </div>
+
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-12 affected-animal-table">
+        <table class="table table-bordered w-80">
+          <thead>
+            <tr>
+              <th>{{"common.species" | translate}}</th>
+              <th>{{"deworming.Form" | translate}}</th>
+              <th> {{"deworming.route" | translate}}</th>
+              <th>{{"campaignCreation.dosage" | translate}}</th>
+              <th>{{"deworming.Unit" | translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of  prescriptionRes?.speciesImpactedEntity">
+              <td>{{data.species ?? "null"}}</td>
+              <td>{{data.form ?? "null"}}</td>
+              <td>{{data.route ?? "null"}}</td>
+              <td>{{data.dosage ?? "null"}}</td>
+              <td>{{data.unit ?? "null"}}</td>
+            </tr>
+            <tr *ngIf=" prescriptionRes?.speciesImpactedEntity.length == 0">
+              <td colspan="5">{{"campaignCreation.no_species_found" | translate}}</td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-12 affected-animal-table">
+        <div class="form-group">
+          <input type="text" class="form-control search-field" placeholder="Search Village/Tehsil/District Here"
+          [(ngModel)]="searchTextFertility">
+        </div>
+        <table class="table table-bordered w-80">
+          <thead>
+            <tr>
+              <th>{{ "animalTreatmentSurgery.village_taluka" | translate }} </th>
+              <th>{{ "user.tehsil" | translate }}</th>
+              <th>{{ "animalTreatmentSurgery.district" | translate }}</th>
+
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of  prescriptionRes?.locationDetailsResponseDto | filter: searchTextFertility">
+              <td>{{data.villageName}}</td>
+              <td>{{data.tehsilName}}</td>
+              <td>{{data.districtName}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="edit-footer">
+    <button type="button" class="btn btn-outline-primary mr-2" mat-dialog-close>
+      {{ "animalDetails.cancel" | translate }}
+    </button>
+    <button type="submit" class="btn btn-primary" mat-dialog-close>
+      {{ "common.ok_string" | translate }}
+    </button>
+  </div>
+</div>

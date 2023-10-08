@@ -1,0 +1,17 @@
+.animal-table thead th,
+.animal-table td {
+  border-top: none;
+  border-bottom: none;
+  padding: 0.2rem 0.4rem !important;
+}
+.owner-details-section .owner-detail-table {
+  background-color: #eaf0f2;
+  padding: 12px 12px 12px 30px;
+  position: relative;
+}
+
+.owner-details-section .owner-detail-table .back-arrow {
+  position: absolute;
+  top: 20px;
+  left: 12px;
+}

@@ -1,0 +1,23 @@
+ /*main-container*/
+
+  .main-contant-container{
+    padding: 0 10px;
+  }
+  
+  .no-gutters>[class*='col-'] {
+    padding-right: 7px !important;
+    padding-left: 7px !important;
+  }
+
+
+  
+ 
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,37 @@
+<div
+  class="container d-flex flex-column align-items-center justify-content-between dialog-container px-4"
+>
+  <button mat-dialog-close class="close">&#x2715;</button>
+  <h1 mat-dialog-title class="py-2">Confirmation Require!</h1>
+  <div mat-dialog-content>
+    <div class="pb-3">
+      <h4 class="muted-label-heading text-center">
+        Are you sure you want to save this project allocation
+      </h4>
+    </div>
+    <div class="row py-2">
+      <div class="col">
+        <h4 class="muted-label-heading">Project Name</h4>
+        <p class="detail-text">{{ data.name }}</p>
+      </div>
+      <div class="col">
+        <h4 class="muted-label-heading">Role Name</h4>
+        <p class="detail-text">{{ data.role }}</p>
+      </div>
+    </div>
+    <div class="row py-2">
+      <div class="col">
+        <h4 class="muted-label-heading">Allocation Start Date</h4>
+        <p class="detail-text">{{ data.startDate }}</p>
+      </div>
+      <div class="col">
+        <h4 class="muted-label-heading">Allocation End Date</h4>
+        <p class="detail-text">{{ data.endDate }}</p>
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions class="d-flex justify-content-center py-4 mt-3">
+    <button mat-dialog-close class="btn btn-light mr-2 px-4">No</button>
+    <button mat-dialog-close class="btn btn-dark px-4">Yes</button>
+  </div>
+</div>

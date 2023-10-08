@@ -1,0 +1,166 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+    <div class="center">
+        <mat-spinner class="center"></mat-spinner>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row breadcum align-items-center py-2">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="breadcrumb-list text-md-left">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item active">
+                          <a>{{'animalDetails.home' | translate}}</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                          <a href="javascript:void(0)">{{'animalBreeding.breeding_module'|translate}} </a>
+                        </li>
+                        <li class="breadcrumb-item current">
+                          <a href="javascript:void(0)">{{'animalBreeding.bull_master'|translate}}</a>
+                        </li>
+                      </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="new-case margin-10">
+    <div class="row no-gutters col-container">
+        <div class="col-md-12 col-h left-section">
+            <div class="row mb-3 justify-content-between margin-10">
+                <div class="title-section">
+                    <div class="title-heading">
+                        {{'animalBreeding.bull_info'|translate}}
+
+                    </div>
+                </div>
+                <div class="ticket-section">
+                    <button type="submit" class="btn btn-primary" routerLink="../add-bull" [queryParams]="{bullId: bullId}" appPermission [permissionType]="masterConfig.isModify">   {{'common.edit'| translate}}</button>
+                </div>
+                
+            </div>
+            <div class="h-divider">
+                <div class="shadow"></div>
+            </div>
+
+           
+                <div class="main-section">
+
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="AI Record Date">{{'animalBreeding.semen_station'|translate}}</label>
+                              <div><b>{{stationName?.semenName}}</b></div> 
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="AI Record Date">{{'animalBreeding.data_entry_date'|translate}}</label>
+                              <div><b>{{formatDate(bullDetails?.bullRegistrationRecordDate)}}</b></div> 
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="AI Record Date">{{'animalBreeding.bull_registration_date'|translate}}</label>
+                              <div><b>{{formatDate(bullDetails?.bullRegistrationDate)}}</b></div> 
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="AI Record Date">{{'animalBreeding.imported_semen'|translate}}</label>
+                              <div><b>{{bullDetails?.importedSemenFlag == 'Y'?'Yes':'No'}}</b></div> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-divider">
+                        <div class="shadow"></div>
+                    </div>
+                   
+                    <div class="form-row">
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="AI Record Date">{{'animalDetails.tag_id'|translate}}</label>
+                              <div><b>{{bullDetails?.tagId}}</b></div> 
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="AI Record Date"> {{'animalBreeding.bull_id' | translate}}</label>
+                              <div><b>{{bullDetails?.bullId}}</b></div> 
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="AI Record Date">{{'animalDetails.category_species'|translate}}</label>
+                              <div><b>{{bullDetails?.species}}</b></div> 
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="AI Record Date">{{'animalBreeding.bull_status' | translate}}</label>
+                              <div><b>{{bullDetails?.bullStatus == 1 ? 'Active' : 'In-Active'}}</b></div> 
+                            </div>
+                        </div>
+                     
+                    </div>
+                    <div class="h-divider">
+                        <div class="shadow"></div>
+                    </div>
+                </div>
+                <div class="row mb-3 justify-content-between margin-10">
+                    <div class="title-section">
+                        <div class="title-heading">
+                            {{'animalBreeding.other_details'|translate}}
+    
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="form-row">
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="AI Record Date">{{'animalBreeding.nominated_bull' | translate}}</label>
+                          <div><b>{{bullDetails?.nominatedBullFlag == 'Y'?'Yes':'No'}}</b></div> 
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="AI Record Date">{{'animalBreeding.active' | translate}}</label>
+                          <div><b>{{bullDetails?.bullStatus == 1 ? 'Yes' : 'No'}}</b></div> 
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="AI Record Date">ET Bull</label>
+                          <div><b>{{bullDetails?.etBullFlag == 'Y'?'Yes':'No'}}</b></div> 
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="AI Record Date">Sex Sorted</label>
+                          <div><b>{{bullDetails?.sexSortedFlag == 'Y'?'Yes':'No'}}</b></div> 
+                        </div>
+                    </div> -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="AI Record Date">{{'animalBreeding.semen_type' | translate}}</label>
+                          <div><b>{{bullDetails?.bullTypeFlag == 'S'?'Sex Sorted':bullDetails?.bullTypeFlag == 'C'? 'Conventional' :'Sex Sorted / Conventional'}}</b></div> 
+                        </div>
+                    </div>
+                 
+                </div>
+                <div class="footer d-flex">
+                    <button type="button" class="btn btn-primary mr-2 ml-auto" (click)="goBack()">
+                        {{'animalDetails.back'| translate}}
+                    </button>
+                    
+                </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,1203 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<app-common-breadcrumb
+  [breadcrumbKeys]="[ 'animalTreatmentSurgery.animal_health', 'animalTreatmentSurgery.animal_treatment_surgery']">
+</app-common-breadcrumb>
+
+<section class="new-case">
+  <div class="row no-gutters col-container">
+    <div class="col-md-12 col-h left-section">
+      <div class="treatment-header">
+        <div class="back-arrow">
+          <i class="fa fa-chevron-left mr-2 back-section" (click)="goBack()"></i>
+        </div>
+
+        <div class="title-section">
+          <div class="title-heading">
+            <span class="muted-label-heading">
+              {{"animalTreatmentSurgery.fill_animal_treatment_details" | translate}}
+            </span>
+          </div>
+        </div>
+
+        <div class="ticket-section" *ngIf="animal">
+          <span class="mr-2">
+            {{"animalDetails.tag_id" | translate}}: <b>{{ animal.tagId }} </b>
+          </span>
+          <span class="mr-2">
+            {{"common.species" | translate}}: <b>{{ animal.species }} </b>
+          </span>
+          <span class="mr-2">
+            {{"common.age" | translate}}:
+            <b>
+              {{ animal ? getAnimalAge(animal.ageInMonths) : "" }}
+            </b>
+          </span>
+          <span class="mr-2">
+            {{"common.sex" | translate}}: <b>{{ animal.sex }} </b>
+          </span>
+          <!-- <span class=""> Ticket Number : <b>1234567890</b></span> -->
+        </div>
+      </div>
+
+      <div class="h-divider">
+        <div class="shadow"></div>
+      </div>
+
+      <form [formGroup]="animalTreatmentDetailForm" (ngSubmit)="submitCase()">
+        <div class="main-section">
+          <div class="form-row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="Treatment Record Date"> {{"animalTreatmentSurgery.treatment_date_entry_date" |
+                  translate}}<span class="mandatory-field">*</span></label>
+                <input type="text" class="form-control" formControlName="treatmentRecordDate" #treatmentRecordDate />
+                <span class="alert-message" *ngIf="
+                    (formControls.treatmentRecordDate.dirty &&
+                      formControls.treatmentRecordDate.invalid) ||
+                    formControls.treatmentRecordDate.touched
+                  ">
+                  <span *ngIf="
+                      formControls.treatmentRecordDate.hasError('required')
+                    ">
+                    {{ validationMsg.required | translate}}
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group input-icon">
+                <label for="Treatment Date"> {{"animalTreatmentSurgery.treatment_date" |
+                  translate}}<span class="mandatory-field">*</span></label>
+                <input class="form-control" type="text" [min]="treatmentMinDate" [max]="today"
+                  [matDatepicker]="pickerDate" formControlName="treatmentDate" placeholder="dd/mm/yyyy" />
+                <mat-datepicker-toggle matSuffix [for]="pickerDate" class="calender-icon"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDate></mat-datepicker>
+
+                <span class="alert-message" *ngIf="
+                  (formControls.treatmentDate.dirty &&
+                    formControls.treatmentDate.invalid) ||
+                  formControls.treatmentDate.touched
+                ">
+                  <span *ngIf="formControls.treatmentDate.hasError('matDatepickerMin')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span *ngIf="formControls.treatmentDate.hasError('matDatepickerMax')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span *ngIf="formControls.treatmentDate.hasError('matDatepickerParse')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span
+                    *ngIf="formControls.treatmentDate.hasError('required') && !formControls.treatmentDate.hasError('matDatepickerParse')">
+                    {{ validationMsg.required | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="Case Status"> {{"animalTreatmentSurgery.case_status" | translate}}<span
+                    class="mandatory-field">*</span></label>
+                <select class="form-control" name="caseStatus" formControlName="caseStatus"
+                  (change)="onCaseStatusChange($event)">
+                  <option value="null" disabled> {{"animalTreatmentSurgery.select_status" |
+                    translate}}</option>
+                  <option [value]="status.cd" *ngFor="let status of caseStatus">
+                    {{ status.value }}
+                  </option>
+                </select>
+                <span class="alert-message" *ngIf="
+                    (formControls.caseStatus.dirty &&
+                      formControls.caseStatus.invalid) ||
+                    formControls.caseStatus.touched
+                  ">
+                  <span *ngIf="formControls.caseStatus.hasError('required')">
+                    {{ validationMsg.required | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group" *ngIf="animalTreatmentDetailForm.get('caseStatus').value == '5'">
+                <label for="Case Status"> {{"animalTreatmentSurgery.recommended_vet_name" | translate}}</label>
+                <input class="form-control" formControlName="recommeded_vet_name"
+                  [placeholder]='"animalTreatmentSurgery.recommended_vet_name" | translate'>
+                <span class="alert-message" *ngIf="
+                              (formControls.recommeded_vet_name.dirty &&
+                              formControls.recommeded_vet_name.invalid) ||
+                              formControls.recommeded_vet_name.touched
+                            ">
+                  <span *ngIf="formControls.recommeded_vet_name.hasError('pattern')">
+                    {{ validationMsg.treatmentRemarksPattern | translate }}
+                  </span>
+                  <span
+                    *ngIf="!formControls.recommeded_vet_name.hasError('pattern') && surgeryControls.recommeded_vet_name.hasError('maxlength')">
+                    {{ validationMsg.treatmentRemarks | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="Treatment Date">{{"animalTreatmentSurgery.select_campaign" | translate}}</label>
+                <select class="form-control" name="selectCampaign" formControlName="campaignId">
+                  <option value="null">{{"animalTreatmentSurgery.select_campaign" | translate}}</option>
+                  <option *ngFor="let campaign of campaignList" [value]="campaign.campaignId">
+                    {{ campaign.campaignId }} - {{ campaign.campaignName }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-md-4">
+              <div class="form-group add-Clinic">
+                <input type="checkbox" id="clinicalParameter" formControlName="clinicalParameterFlag" />
+                <label for="clinicalParameter" class="form-label ml-2">
+                  {{"animalTreatmentSurgery.add_clinical_parameter" | translate}}
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-row" *ngIf="
+              animalTreatmentDetailForm.get('clinicalParameterFlag')?.value
+            ">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="Temperature" class="form-label">
+                  {{"animalTreatmentSurgery.add_clinical_parameter" | translate}}
+                </label>
+                <div class="form-row align-items-center">
+                  <div class="col-md">
+                    <input type="text" class="form-control input-section"
+                      [placeholder]='"animalTreatmentSurgery.celsius" | translate' formControlName="bodyTemperatureC"
+                      name="celsius" />
+                    <span class="temperature-icon">
+                      <sup class="temperature-deg">0</sup>C
+                    </span>
+                  </div>
+                  <div class="col-md-1 text-center">=</div>
+                  <div class="col-md">
+                    <input type="text" class="form-control input-section"
+                      [placeholder]='"animalTreatmentSurgery.fahrenheit" | translate' formControlName="bodyTemperatureF"
+                      name="fahrenheit" />
+                    <span class="temperature-icon">
+                      <sup class="temperature-deg">0</sup>F
+                    </span>
+                  </div>
+                </div>
+                <span class="alert-message" *ngIf="
+                    formControls.bodyTemperatureC.hasError('pattern') ||
+                    formControls.bodyTemperatureF.hasError('pattern')
+                  ">
+                  {{ validationMsg.temperaturePattern | translate }}
+                </span>
+                <span class="alert-message" *ngIf="
+                    formControls.bodyTemperatureC.hasError('min') ||
+                    formControls.bodyTemperatureF.hasError('min') ||
+                    formControls.bodyTemperatureC.hasError('max') ||
+                    formControls.bodyTemperatureF.hasError('max')
+
+                  ">
+                  {{ validationMsg.temperaturePattern | translate }}
+                </span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="Heart Rate(beats/min)">{{"animalTreatmentSurgery.heart_rate_beats_min" | translate}}</label>
+                <input type="text" class="form-control"
+                  [placeholder]='"animalTreatmentSurgery.enter_heart_rate_details" | translate'
+                  formControlName="pulseRate" />
+                <span class="alert-message" *ngIf="
+                    formControls.pulseRate.dirty &&
+                    formControls.pulseRate.invalid
+                  ">
+                  <span *ngIf="formControls.pulseRate.hasError('pattern')">
+                    {{ validationMsg.heartRatePattern | translate }}
+                  </span>
+                  <span *ngIf="formControls.pulseRate.hasError('min') || formControls.pulseRate.hasError('max')">
+                    {{ validationMsg.heartRatePattern | translate }}
+                  </span>
+                  <!-- <span *ngIf="
+                      !formControls.pulseRate.hasError('pattern') &&
+                      formControls.pulseRate.hasError('maxlength')
+                    ">
+                    {{ validationMsg.heartRateLength | translate }}
+                  </span> -->
+                </span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="Respiration/min">{{"animalTreatmentSurgery.respiration_min" |
+                  translate}}</label>
+                <input type="text" class="form-control"
+                  [placeholder]='"animalTreatmentSurgery.enter_respiratory_details" | translate'
+                  formControlName="respiration" />
+                <span class="alert-message" *ngIf="
+                    formControls.respiration.dirty &&
+                    formControls.respiration.invalid
+                  ">
+                  <span *ngIf="formControls.respiration.hasError('pattern')">
+                    {{ validationMsg.respiratoryRatePattern | translate }}
+                  </span>
+                  <span *ngIf="
+                      !formControls.respiration.hasError('pattern') &&
+                      formControls.respiration.hasError('maxlength')
+                    ">
+                    {{ validationMsg.respiratoryRateLength | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="Rumen Motility/min">{{"animalTreatmentSurgery.rumen_motility" | translate}}</label>
+                <input type="text" class="form-control"
+                  [placeholder]='"animalTreatmentSurgery.enter_rumen_motility_details" | translate'
+                  formControlName="rumenMotility" />
+                <span class="alert-message" *ngIf="
+                    formControls.rumenMotility.dirty &&
+                    formControls.rumenMotility.invalid
+                  ">
+                  <span *ngIf="formControls.rumenMotility.hasError('pattern')">
+                    {{ validationMsg.motilityPattern | translate }}
+                  </span>
+                  <span
+                    *ngIf="formControls.rumenMotility.hasError('min') || formControls.rumenMotility.hasError('max')">
+                    {{ validationMsg.motilityPattern | translate }}
+                  </span>
+                  <!-- <span *ngIf="
+                      !formControls.rumenMotility.hasError('pattern') &&
+                      formControls.rumenMotility.hasError('maxlength')
+                    ">
+                    {{ validationMsg.motilityLength | translate }}
+                  </span> -->
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="align-items-center treatment-information col-md-12">
+              <div class="tabs-nav-list d-flex justify-content-md-start">
+                <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link" [ngClass]="{ active: activeTab == 'treatment' }" id="pills-allCampaigns-tab"
+                      data-bs-toggle="pill" [attr.data-bs-target]="'#pills-allCampaigns'" role="tab"
+                      aria-controls="pills-allCampaigns" (click)="changeTab('treatment')"
+                      aria-selected="true">{{"animalTreatmentSurgery.treatment" | translate}}</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="pills-open-tab"
+                      [ngClass]="{ active: activeTab == 'surgery',disabled: isSurgeryDisabled }" data-bs-toggle="pill"
+                      [attr.data-bs-target]="'#pills-open'" (click)="changeTab('surgery')" role="tab"
+                      aria-controls="pills-open" aria-selected="false">{{"animalTreatmentSurgery.surgery" |
+                      translate}}</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="mt-3">
+                <div class="tab-content" id="pills-tabContent">
+                  <div class="tab-pane fade" [ngClass]="{
+                      active: activeTab == 'treatment',
+                      show: activeTab == 'treatment'
+                    }" [id]="'pills-allCampaigns'" role="tabpanel" aria-labelledby="pills-allCampaigns-tab">
+                    <div class="form-row align-items-center">
+                      <div class="col-12">
+                        <mat-accordion class="examination-expansion-panel">
+                          <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" multi class="mb-1">
+                            <mat-expansion-panel-header class="p-0">
+                              <mat-panel-title class="mobile-title-heading">
+                                <div class="separator">
+                                  <div>{{"animalTreatmentSurgery.symptoms_disease" | translate}}</div>
+                                  <div class="line"></div>
+                                </div>
+                              </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="details-list">
+                              <div class="row">
+                                <div class="col-md-6 form-group border-right">
+                                  <!-- <div class="row justify-content-center"> -->
+                                  <div class="mb-3">
+                                    <label for="selectVillage" class="form-label">
+                                      {{"animalTreatmentSurgery.select_symptoms" | translate}}
+                                      <span class="mandatory-field"> * </span>
+                                    </label>
+                                    <ng-select class="custom" appendTo="body" [items]="symptoms" [multiple]="true"
+                                      bindLabel="symptomDesc" groupBy="selectedAllGroup" [selectableGroup]="false"
+                                      [selectableGroupAsModel]="false"
+                                      [placeholder]='"animalTreatmentSurgery.search_by_keywords" | translate'
+                                      [closeOnSelect]="false" [clearSearchOnAdd]="true"
+                                      formControlName="symptomsDetails">
+                                      <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                                        <div class="d-flex justify-content-between">
+                                          <span>{{ item.symptomDesc }}</span>
+                                          <span class="add-medicine-btn" *ngIf="
+                                              !checkSymptomSelected(item);
+                                              else removeSymptom
+                                            ">
+                                            <i class="fa fa-plus mr-2" aria-hidden="true">
+                                            </i>
+                                            {{"animalTreatmentSurgery.add" | translate}}
+                                          </span>
+                                          <ng-template #removeSymptom>
+                                            <span class="add-medicine-btn">
+                                              <i class="fa fa-minus mr-2" aria-hidden="true">
+                                              </i>
+                                              {{"animalTreatmentSurgery.remove" | translate}}
+                                            </span>
+                                          </ng-template>
+                                        </div>
+                                      </ng-template>
+                                    </ng-select>
+                                    <span class="alert-message" *ngIf="
+                                        (formControls.symptomsDetails.dirty &&
+                                          formControls.symptomsDetails
+                                            .invalid) ||
+                                        formControls.symptomsDetails.touched
+                                      ">
+                                      <span *ngIf="
+                                          formControls.symptomsDetails.hasError(
+                                            'required'
+                                          )
+                                        ">
+                                        {{ validationMsg.required | translate }}
+                                      </span>
+                                    </span>
+                                  </div>
+
+                                  <div class="symptom-list mb-2" *ngIf="
+                                      formControls.symptomsDetails.value?.length
+                                    ">
+                                    <mat-chip-list>
+                                      <mat-chip *ngFor="
+                                          let symptom of formControls
+                                            .symptomsDetails.value;
+                                          let i = index
+                                        ">
+                                        {{ symptom.symptomDesc }}
+                                        <i (click)="removeSelectedSymptom(i)" class="fa fa-close mx-2"
+                                          aria-hidden="true"></i>
+                                      </mat-chip>
+                                    </mat-chip-list>
+                                  </div>
+
+                                  <div class="mb-2">
+                                    <span (click)="toggleOtherSymptoms(true)">
+                                      <span *ngIf="
+                                          !otherSymptomsFlag;
+                                          else othersymptoms
+                                        ">
+                                        +
+                                      </span>
+                                      <ng-template #othersymptoms>
+                                        -
+                                      </ng-template>
+                                      <span class="text-link">
+                                        {{"animalTreatmentSurgery.symptoms_not_listed_in_master" | translate}}
+                                      </span>
+                                    </span>
+                                  </div>
+                                  <ng-container *ngIf="otherSymptomsFlag" formArrayName="otherSymptoms">
+                                    <div [formGroupName]="i" class="mb-2 form-row align-items-start" *ngFor="
+                                        let controls of otherSymptomsControls;
+                                        let i = index
+                                      ">
+                                      <div class="col-md">
+                                        <input type="text"
+                                          [placeholder]='"animalTreatmentSurgery.enter_symptom_name" | translate'
+                                          class="form-control" formControlName="name" />
+                                        <div class="alert-message">
+                                          <span
+                                            *ngIf="controls.get('name').touched && controls.get('name').hasError('required')">
+                                            {{validationMsg.required | translate}} </span>
+                                          <span
+                                            *ngIf="controls.get('name').dirty && controls.get('name').hasError('pattern')">
+                                            {{ validationMsg.invalidChar | translate }} </span>
+                                        </div>
+                                      </div>
+                                      <div class="col-md ">
+                                        <div class="d-flex align-items-center">
+                                          <input type="text"
+                                            [placeholder]='"animalTreatmentSurgery.enter_remarks" | translate'
+                                            class="form-control" formControlName="remark" />
+                                          <div class="ml-2" (click)="onRemoveOtherSymptom(i)">
+                                            <i class="fa fa-trash-o"></i>
+                                          </div>
+                                        </div>
+
+                                        <div class="alert-message"
+                                          *ngIf="controls.get('remark').dirty && controls.get('remark').hasError('pattern')">
+                                          {{ validationMsg.invalidChar | translate }}
+
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <button type="button" class="btn btn-primary" (click)="addOtherSymptoms()">
+                                        <span class="fa fa-plus mr-2"> </span>
+                                        {{"animalTreatmentSurgery.add_row" | translate}}
+                                      </button>
+                                    </div>
+                                  </ng-container>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                  <div class="mb-3">
+                                    <label for="selectVillage" class="form-label">
+                                      {{"animalTreatmentSurgery.suspected_disease" | translate}}</label>
+                                    <ng-select class="custom" appendTo="body" [items]="diseases" [multiple]="true"
+                                      bindLabel="diseaseDesc" groupBy="type" [selectableGroup]="false"
+                                      [selectableGroupAsModel]="false" [clearSearchOnAdd]="true" [closeOnSelect]="false"
+                                      [placeholder]='"animalTreatmentSurgery.select_disease_name" | translate'
+                                      formControlName="diseaseDetails">
+                                      <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                                        <div class="d-flex justify-content-between">
+                                          <span>{{ item.diseaseDesc }}</span>
+                                          <span class="add-medicine-btn" *ngIf="
+                                              !checkDiseaseSelected(item);
+                                              else removeDisease
+                                            "><i class="fa fa-plus mr-2"
+                                              aria-hidden="true"></i>{{"animalTreatmentSurgery.add" |
+                                            translate}}</span>
+                                          <ng-template #removeDisease>
+                                            <span class="add-medicine-btn">
+                                              <i class="fa fa-minus mr-2" aria-hidden="true">
+                                              </i>
+                                              {{"animalTreatmentSurgery.remove" | translate}}
+                                            </span>
+                                          </ng-template>
+                                        </div>
+                                      </ng-template>
+                                    </ng-select>
+                                  </div>
+                                  <!-- <div class="col-md-11"> -->
+                                  <div class="symptom-list mb-2" *ngIf="
+                                      formControls.diseaseDetails.value?.length
+                                    ">
+                                    <mat-chip-list>
+                                      <mat-chip *ngFor="
+                                          let disease of formControls
+                                            .diseaseDetails.value;
+                                          let i = index
+                                        ">
+                                        {{ disease.diseaseDesc }}
+                                        <i class="fa fa-close mx-2" aria-hidden="true"
+                                          (click)="removeSelectedDisease(i)">
+                                        </i>
+                                      </mat-chip>
+                                    </mat-chip-list>
+                                  </div>
+
+                                  <div class="mb-2">
+                                    <span (click)="toggleOtherDiseases(true)">
+                                      <span *ngIf="
+                                          !otherDiseasesFlag;
+                                          else otherDiseases
+                                        ">
+                                        +
+                                      </span>
+                                      <ng-template #otherDiseases>
+                                        -
+                                      </ng-template>
+                                      <span class="text-link">
+                                        {{"animalTreatmentSurgery.diseases_not_listed_in_master" | translate}}
+                                      </span>
+                                    </span>
+                                  </div>
+                                  <ng-container *ngIf="otherDiseasesFlag" formArrayName="otherDiseases">
+                                    <div [formGroupName]="i" class="mb-2 form-row" *ngFor="
+                                        let controls of otherDiseasesControls;
+                                        let i = index
+                                      ">
+                                      <div class="col-md">
+                                        <input type="text"
+                                          [placeholder]='"animalTreatmentSurgery.enter_disease_name" | translate'
+                                          class="form-control" formControlName="name" />
+                                        <div class="alert-message">
+                                          <span
+                                            *ngIf="controls.get('name').dirty && controls.get('name').hasError('pattern')">
+                                            {{ validationMsg.invalidChar | translate }} </span>
+                                        </div>
+                                      </div>
+                                      <div class="col-md">
+                                        <div class="d-flex align-items-center">
+                                          <input type="text"
+                                            [placeholder]='"animalTreatmentSurgery.enter_remarks" | translate'
+                                            class="form-control" formControlName="remark" maxLength="150" />
+
+                                          <div class="ml-2" (click)="onRemoveOtherDisease(i)">
+                                            <i class="fa fa-trash-o"></i>
+                                          </div>
+                                        </div>
+                                        <div class="alert-message">
+                                          <span
+                                            *ngIf="controls.get('remark').dirty && controls.get('remark').hasError('pattern')">
+                                            {{ validationMsg.invalidChar | translate }} </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="mt-2">
+                                      <button type="button" class="btn btn-primary" (click)="addOtherDiseases()">
+                                        <span class="fa fa-plus mr-2"> </span>
+                                        {{"animalTreatmentSurgery.add_row" | translate}}
+                                      </button>
+                                    </div>
+                                  </ng-container>
+                                </div>
+                              </div>
+                            </div>
+                          </mat-expansion-panel>
+                        </mat-accordion>
+                      </div>
+                    </div>
+                    <div class="row align-items-center">
+                      <div class="col-12">
+                        <mat-accordion class="examination-expansion-panel">
+                          <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" multi class="mb-1">
+                            <mat-expansion-panel-header class="p-0">
+                              <mat-panel-title class="mobile-title-heading">
+                                <div class="separator">
+                                  <div>{{"animalTreatmentSurgery.medicine" | translate}}</div>
+                                  <div class="line"></div>
+                                </div>
+                              </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="details-list" [formGroup]="MedicineForm">
+                              <div class="row mb-3" *ngIf="getMedicineFormArray['controls']?.length">
+                                <div class="col-md-12 d-flex align-items-center overflow-auto">
+                                  <span>{{"animalTreatmentSurgery.suggestive_medicine" | translate}}
+                                    :
+                                  </span>
+
+                                  <span formArrayName="suggested_medicine"
+                                    *ngFor="let medicine of getMedicineFormArray['controls'];let i = index"
+                                    class="update-result mx-2 d-flex align-items-center justify-content-between">
+                                    <ng-container [formGroupName]="i">
+                                      <input type="checkbox" class="mr-2" formControlName="selected" [value]="
+                                          medicine.value.selected
+                                        " (change)="
+                                          onSuggestedMedChange(medicine)
+                                        " />
+                                      <!-- {{ medicine['controls'].medicineName.value }} -->
+                                      {{medicine.value.medicineName}}
+                                      <ng-container *ngIf="medicine.value.formName">({{medicine.value.formName}})
+                                      </ng-container>
+                                    </ng-container>
+                                  </span>
+                                </div>
+                              </div>
+                              <div class="row mb-3">
+                                <div class="col-md-12 mt-3">
+                                  <div class="medicine-list mb-3">
+                                    <div class="row align-items-center mb-2">
+                                      <div class="col-lg-6 col-md-6 col-sm-12">
+                                        <div class="title-heading">
+                                          <h3 class="muted-label-heading">
+                                            {{"animalTreatmentSurgery.medicine_list" | translate}}
+                                          </h3>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                        <div class="d-flex justify-content-md-end">
+                                          <button type="button" class="btn btn-primary" (click)="addMedicine()">
+                                            <i class="fa fa-plus mr-2" aria-hidden="true"></i>
+                                            {{"animalTreatmentSurgery.add_medicine" | translate}}
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="table-responsive mb-3">
+                                      <table mat-table [dataSource]="dataSource" formArrayName="selected_medicine"
+                                        class="custom-view-table mat-elevation-z8">
+                                        <!-- Position Column -->
+                                        <ng-container matColumnDef="medicineName">
+                                          <th mat-header-cell *matHeaderCellDef>
+                                            {{"animalTreatmentSurgery.medicine_name" | translate}}
+                                          </th>
+                                          <td mat-cell *matCellDef="
+                                              let element;
+                                              let index = index
+                                            " [formGroupName]="index" class="cell-width">
+                                            <input type="text" class="form-control table-input"
+                                              formControlName="medicineName" />
+                                            <div class="alert-message" *ngIf="
+                                              element.get('medicineName').dirty &&
+                                              element.get('medicineName').hasError('required')
+                                            ">
+                                              {{"animalTreatmentSurgery.medicine_name_is_required" | translate}}.
+                                            </div>
+                                          </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="medicineFormCd">
+                                          <th mat-header-cell *matHeaderCellDef>
+                                            {{"animalTreatmentSurgery.form" | translate}}
+                                          </th>
+                                          <td mat-cell *matCellDef="
+                                              let element;
+                                              let index = index
+                                            " [formGroupName]="index">
+                                            <mat-select formControlName="medicineFormCd">
+                                              <mat-option *ngFor="
+                                                  let form of medicineFormMaster
+                                                " [value]="form.cd">{{ form.value }}</mat-option>
+                                            </mat-select>
+                                            <div class="alert-message"
+                                              *ngIf="element.get('medicineFormCd').touched && element.get('medicineFormCd').invalid">
+                                              <span *ngIf="element.get('medicineFormCd').hasError('required')">
+                                                {{validationMsg.required | translate}}
+                                              </span>
+                                            </div>
+                                          </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="medicineRouteCd">
+                                          <th mat-header-cell *matHeaderCellDef>
+                                            {{"animalTreatmentSurgery.route" | translate}}
+                                          </th>
+                                          <td mat-cell *matCellDef="
+                                              let element;
+                                              let index = index
+                                            " [formGroupName]="index" class="cell-width">
+                                            <mat-select formControlName="medicineRouteCd">
+                                              <mat-option *ngFor="
+                                                  let route of routeMaster
+                                                " [value]="route.routeCd">{{
+                                                route.routeName
+                                                }}</mat-option>
+                                            </mat-select>
+                                            <div class="alert-message"
+                                              *ngIf="element.get('medicineRouteCd').touched && element.get('medicineRouteCd').invalid">
+                                              <span *ngIf="element.get('medicineRouteCd').hasError('required')">
+                                                {{validationMsg.required | translate}}
+                                              </span>
+                                            </div>
+                                          </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="dosage">
+                                          <th mat-header-cell *matHeaderCellDef>
+                                            {{"animalTreatmentSurgery.dose" | translate}}
+                                          </th>
+                                          <td mat-cell *matCellDef="
+                                              let element;
+                                              let index = index
+                                            " [formGroupName]="index" class="cell-width">
+                                            <input type="text" class="form-control table-input" formControlName="dosage"
+                                              min="0" onkeypress="return (
+                                                (event.charCode != 8 && event.charCode == 0) ||
+                                                (event.charCode >= 48 && event.charCode <= 57) ||
+                                                event.charCode === 46
+                                              )" />
+                                            <div class=" alert-message"
+                                              *ngIf="(element.get('dosage').dirty || element.get('dosage').touched) && element.get('dosage').invalid">
+                                              <span *ngIf="element.get('dosage').hasError('required')">
+                                                {{validationMsg.required | translate}}
+                                              </span>
+                                              <span class="alert-message" *ngIf="
+                                              element.get('dosage').hasError('invalidDecimalNo')
+                                            ">
+                                                {{"animalTreatmentSurgery.dosage_cannot_be_more_than_4_characters" |
+                                                translate}}
+                                              </span>
+                                            </div>
+                                          </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="medicineUnitCd">
+                                          <th mat-header-cell *matHeaderCellDef>
+                                            {{"animalTreatmentSurgery.unit" | translate}}
+                                          </th>
+                                          <td mat-cell *matCellDef="
+                                              let element;
+                                              let index = index
+                                            " [formGroupName]="index" class="cell-width">
+                                            <mat-select formControlName="medicineUnitCd">
+                                              <mat-option [value]="unit.unitCd" *ngFor="let unit of unitMaster">
+                                                {{ unit.unitDesc }}
+                                              </mat-option>
+                                            </mat-select>
+                                            <div class="alert-message"
+                                              *ngIf="element.get('medicineUnitCd').touched && element.get('medicineUnitCd').invalid">
+                                              <span *ngIf="element.get('medicineUnitCd').hasError('required')">
+                                                {{validationMsg.required | translate}}
+                                              </span>
+                                            </div>
+                                          </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="medicineFrequency">
+                                          <th mat-header-cell *matHeaderCellDef>
+                                            {{"animalTreatmentSurgery.freq_day" | translate}}
+                                          </th>
+                                          <td mat-cell *matCellDef="
+                                              let element;
+                                              let index = index
+                                            " [formGroupName]="index">
+                                            <input type="text" class="form-control table-input"
+                                              formControlName="medicineFrequency" min="0"
+                                              onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" />
+                                            <div class="alert-message"
+                                              *ngIf="(element.get('medicineFrequency').dirty || element.get('medicineFrequency').touched) && element.get('medicineFrequency').invalid">
+                                              <span *ngIf="element.get('medicineFrequency').hasError('required')">
+                                                {{validationMsg.required | translate}}
+                                              </span>
+                                              <span
+                                                *ngIf="element.get('medicineFrequency').hasError('min') || element.get('medicineFrequency').hasError('max')">
+                                                {{'animalTreatmentSurgery.please_enter_valid_frequency' | translate}}
+                                              </span>
+                                              <!-- <span class="alert-message" *ngIf="
+                                              element.get('medicineFrequency').dirty &&
+                                              element.get('medicineFrequency').hasError('maxlength')
+                                            ">{{"animalTreatmentSurgery.freq_day_cannot_be_more_than_2_characters" |
+                                                translate}}
+                                              </span> -->
+                                            </div>
+
+                                          </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="medicineDuration">
+                                          <th mat-header-cell *matHeaderCellDef>
+                                            {{"animalTreatmentSurgery.duration_days" | translate}}
+                                          </th>
+                                          <td mat-cell *matCellDef="
+                                              let element;
+                                              let index = index
+                                            " [formGroupName]="index">
+                                            <input type="text" class="form-control table-input"
+                                              formControlName="medicineDuration" min="0"
+                                              onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" />
+                                            <div class="alert-message"
+                                              *ngIf="(element.get('medicineDuration').dirty || element.get('medicineDuration').touched) && element.get('medicineDuration').invalid">
+                                              <span *ngIf="element.get('medicineDuration').hasError('required')">
+                                                {{validationMsg.required | translate}}
+                                              </span>
+                                              <span class="alert-message" *ngIf="
+                                              element.get('medicineDuration').dirty &&
+                                              element.get('medicineDuration').hasError('maxlength')
+                                            ">
+                                                {{"animalTreatmentSurgery.duration_cannot_be_more_than_2_characters" |
+                                                translate}}
+                                              </span>
+                                            </div>
+
+                                          </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="medicinePrescribedOnlyFlag">
+                                          <th mat-header-cell *matHeaderCellDef>
+                                            {{"animalTreatmentSurgery.medicines_prescribed_only" | translate}}
+                                          </th>
+                                          <td mat-cell *matCellDef="
+                                              let element;
+                                              let index = index
+                                            " [formGroupName]="index">
+                                            <input type="checkbox" formControlName="medicinePrescribedOnlyFlag" />
+                                          </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="remarks">
+                                          <th mat-header-cell *matHeaderCellDef>
+                                            {{"animalTreatmentSurgery.remarks" | translate}}
+                                          </th>
+                                          <td mat-cell *matCellDef="
+                                              let element;
+                                              let index = index
+                                            " [formGroupName]="index" class="cell-width">
+                                            <input type="text" class="form-control table-input"
+                                              formControlName="remarks" />
+                                            <div class="alert-message" *ngIf="
+                                              element.get('remarks').dirty &&
+                                              element.get('remarks').hasError('maxlength')
+                                            ">
+                                              {{"newCase.remarks" | translate}}
+                                            </div>
+                                            <div class="alert-message" *ngIf="
+                                              element.get('remarks').dirty &&
+                                              element.get('remarks').hasError('pattern')
+                                            ">
+                                              {{"animalTreatmentSurgery.invalid_characters_present" | translate}}
+
+                                            </div>
+                                          </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="action">
+                                          <th mat-header-cell *matHeaderCellDef></th>
+                                          <td mat-cell *matCellDef="
+                                              let element;
+                                              let i = index
+                                            " (click)="
+                                              deleteFromMedicineList(element, i)
+                                            ">
+                                            <i class="fa fa-trash-o"></i>
+                                          </td>
+                                        </ng-container>
+                                        <tr class="action-link table-head" mat-header-row *matHeaderRowDef="
+                                            medicineTableDisplayedColumns
+                                          "></tr>
+                                        <tr class="action-link table-head" mat-row *matRowDef="
+                                            let row;
+                                            columns: medicineTableDisplayedColumns
+                                          "></tr>
+                                        <tr class="mat-row" *matNoDataRow>
+                                          <td class="mat-cell text-center" [attr.colspan]="
+                                              medicineTableDisplayedColumns.length
+                                            ">
+                                            {{"animalTreatmentSurgery.no_medicines_selected" | translate}}
+                                          </td>
+                                        </tr>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row mb-3">
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <input type="checkbox" formControlName="add_to_favorite" />
+                                    {{"animalTreatmentSurgery.add_to_favourite" | translate}}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </mat-expansion-panel>
+                        </mat-accordion>
+                      </div>
+                    </div>
+                    <div class="row align-items-center">
+                      <div class="col-12">
+                        <mat-accordion class="examination-expansion-panel">
+                          <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" multi class="mb-2">
+                            <mat-expansion-panel-header class="p-0">
+                              <mat-panel-title class="mobile-title-heading">
+                                <div class="separator">
+                                  <div>{{"animalTreatmentSurgery.diagnostics" | translate}}</div>
+                                  <div class="line"></div>
+                                </div>
+                              </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="details-list">
+                              <div class="row mb-2">
+                                <div class="col-md-12">
+                                  <button *ngIf="!isUpdate" type="button" class="btn btn-primary"
+                                    (click)="addDiagnostics()">
+                                    {{"animalTreatmentSurgery.add_diagnostics" | translate}}
+                                  </button>
+                                  <button *ngIf="isSpotUpdate" type="button" class="btn btn-primary"
+                                    (click)="addDiagnostics()">
+                                    {{"animalTreatmentSurgery.update_diagnostics" | translate}}
+                                  </button>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-12 table-outebox my-3" *ngIf="diagnosticsDataSource.length">
+                                  <div class="medicine-list-heading mb-3">
+                                    {{"animalTreatmentSurgery.diagnostics_list" | translate}}
+                                  </div>
+                                  <div class="table-responsive mb-3">
+                                    <table mat-table [dataSource]="diagnosticsDataSource"
+                                      class="diagnostics-view-table mat-elevation-z8">
+                                      <ng-container matColumnDef="diagnosticsType">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                          {{"animalTreatmentSurgery.diagnostics_type" | translate}}
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" class="cell-width">
+                                          {{ element.diagnosticsType }}
+                                        </td>
+                                      </ng-container>
+                                      <!-- Position Column -->
+                                      <ng-container matColumnDef="sampleType">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                          {{"animalTreatmentSurgery.sample_type" | translate}}
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" class="cell-width">
+                                          {{ element.sampleType }}
+                                        </td>
+                                      </ng-container>
+
+                                      <tr class="action-link table-head" mat-header-row *matHeaderRowDef="
+                                          diagnosticsDisplayedColumns
+                                        "></tr>
+                                      <tr class="action-link table-head" mat-row *matRowDef="
+                                          let row;
+                                          columns: diagnosticsDisplayedColumns
+                                        "></tr>
+                                      <tr class="mat-row" *matNoDataRow>
+                                        <td class="mat-cell text-center" [attr.colspan]="
+                                            diagnosticsDisplayedColumns.length
+                                          ">
+                                          {{"animalTreatmentSurgery.no_data_matching_the_filter" | translate}}
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </mat-expansion-panel>
+                        </mat-accordion>
+                      </div>
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                      <div class="col-md-auto next-follow">
+                        <span>{{"animalTreatmentSurgery.next_follow_up_date" | translate}} </span>
+                      </div>
+                      <div class="col-lg-3 col-md-4 input-icon">
+                        <input formControlName="followUpDate" class="form-control" type="text" [min]="followUpMinDate"
+                          [matDatepicker]="followPickerDate" placeholder="dd/mm/yyyy" />
+                        <mat-datepicker-toggle matSuffix [for]="followPickerDate" class="follow-calender-icon">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #followPickerDate></mat-datepicker>
+                        <span class="alert-message" *ngIf="
+                        (formControls.followUpDate.dirty &&
+                          formControls.followUpDate.invalid) ||
+                        formControls.followUpDate.touched
+                      ">
+                          <span *ngIf="formControls.followUpDate.hasError('matDatepickerMin')">
+                            {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                          </span>
+                          <span *ngIf="formControls.followUpDate.hasError('matDatepickerMax')">
+                            {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                          </span>
+                          <span *ngIf="formControls.followUpDate.hasError('matDatepickerParse')">
+                            {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                          </span>
+                          <span
+                            *ngIf="formControls.followUpDate.hasError('required') && !formControls.followUpDate.hasError('matDatepickerParse')">
+                            {{ validationMsg.required | translate }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label for="remark">{{"animalTreatmentSurgery.remarks" | translate}}</label>
+                          <textarea class="form-control" formControlName="treatmentRemarks"
+                            [placeholder]='"animalTreatmentSurgery.enter_remarks_details" | translate'></textarea>
+                          <span class="alert-message"
+                            *ngIf="formControls.treatmentRemarks.dirty &&formControls.treatmentRemarks.invalid">
+                            <span *ngIf="formControls.treatmentRemarks.hasError('pattern')">
+                              {{ validationMsg.treatmentRemarksPattern | translate }}
+                            </span>
+                            <span
+                              *ngIf="!formControls.treatmentRemarks.hasError('pattern') && formControls.treatmentRemarks.hasError('maxlength')">
+                              {{ validationMsg.treatmentRemarks | translate }}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Vaccination Tab Content Start -->
+                  </div>
+                  <div class="tab-pane fade" [id]="'pills-open'" [ngClass]="{
+                      active: activeTab == 'surgery',
+                      show: activeTab == 'surgery'
+                    }" role="tabpanel surgery-tab-panel" aria-labelledby="pills-open-tab" formGroupName="surgeryGroup">
+                    <!-- surgery type radio button -->
+
+                    <div class="row my-3 mx-0">
+                      <div class="form-check form-check-inline col-md-4">
+                        <input type="radio" formControlName="surgery" id="refer" class="form-check-input" name="surgery"
+                          [value]="2" />
+                        <label for="refer" class="form-check-label">{{"animalTreatmentSurgery.recommended_referred" |
+                          translate}}</label>
+                      </div>
+                      <div class="form-check form-check-inline col-md-4">
+                        <input type="radio" formControlName="surgery" id="self" class="form-check-input" name="surgery"
+                          [value]="1" />
+                        <label for="self" class="form-check-label">{{"animalTreatmentSurgery.self_performed" |
+                          translate}}</label>
+                      </div>
+                    </div>
+
+                    <!-- Refer section -->
+                    <div class="surgery-form-container px-3 py-2 mx-0" *ngIf="surgeryControls.surgery.value === 2">
+                      <div class="form-row">
+                        <div class="form-group col-md-4">
+                          <label for="recommendedHospitalCd"
+                            class="form-label">{{"animalTreatmentSurgery.name_of_hospital"
+                            | translate}}
+                            <span class="mandatory-field">*</span></label>
+                          <ng-select class="custom" formControlName="recommendedHospitalCd" [placeholder]="'animalTreatmentSurgery.enter_the_name_of_hospital' |
+                            translate">
+                            <ng-option *ngFor="let hospital of hospitals"
+                              [value]="hospital.subOrgId">{{hospital.subOrgName}}</ng-option>
+                            <ng-option [value]="0" *ngIf="!showAllHospitals"><a href="javascript:void(0)">Show All
+                                Hospitals</a></ng-option>
+                          </ng-select>
+
+                          <span class="alert-message" *ngIf="
+                              (surgeryControls.recommendedHospitalCd.dirty &&
+                                surgeryControls.recommendedHospitalCd
+                                  .invalid) ||
+                              surgeryControls.recommendedHospitalCd.touched
+                            ">
+                            <span *ngIf="
+                                surgeryControls.recommendedHospitalCd.hasError(
+                                  'required'
+                                )
+                              ">
+                              {{ validationMsg.required | translate }}
+                            </span>
+                          </span>
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label for="recommendedVetName"
+                            class="form-label">{{"animalTreatmentSurgery.name_of_veterinarian" |
+                            translate}}</label>
+                          <input type="text" class="form-control" formControlName="recommendedVetName"
+                            [placeholder]='"animalTreatmentSurgery.enter_the_name_of_veterinarian" | translate' />
+                          <span class="alert-message" *ngIf="
+                              (surgeryControls.recommendedVetName.dirty &&
+                                surgeryControls.recommendedVetName.invalid) ||
+                              surgeryControls.recommendedVetName.touched
+                            ">
+                            <span *ngIf="surgeryControls.recommendedVetName.hasError('pattern')">
+                              {{ validationMsg.treatmentRemarksPattern | translate }}
+                            </span>
+                            <span
+                              *ngIf="!surgeryControls.recommendedVetName.hasError('pattern') && surgeryControls.recommendedVetName.hasError('maxlength')">
+                              {{ validationMsg.treatmentRemarks | translate }}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- self surgery section -->
+                    <div class="surgery-form-container px-3 py-2 mx-0" *ngIf="surgeryControls.surgery.value === 1">
+                      <div class="form-row">
+                        <div class="form-group col-md-4">
+                          <label for="surgerytype" class="form-label">{{"animalTreatmentSurgery.surgery_performed" |
+                            translate}}
+                            <span class="mandatory-field">*</span></label>
+                          <ng-select class="custom" formControlName="surgeryType" [items]="surgeryMaster"
+                            [clearSearchOnAdd]="true" [multiple]="true" bindLabel="surgeryTypeDesc"
+                            bindValue="surgeryTypeCd"
+                            [placeholder]='"animalTreatmentSurgery.select_surgery_type" | translate'
+                            [closeOnSelect]="false">
+                            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                              {{ item.surgeryTypeDesc }}
+                            </ng-template>
+                          </ng-select>
+                          <span class="alert-message" *ngIf="
+                              (surgeryControls.surgeryType.dirty &&
+                                surgeryControls.surgeryType.invalid) ||
+                              surgeryControls.surgeryType.touched
+                            ">
+                            <span *ngIf="
+                                surgeryControls.surgeryType.hasError('required')
+                              ">
+                              {{ validationMsg.required | translate }}
+                            </span>
+                          </span>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                          <label for="surgeryReason" class="form-label">{{"animalTreatmentSurgery.reason_for_surgery" |
+                            translate}}<span class="mandatory-field">*</span></label>
+                          <input type="text" class="form-control"
+                            [placeholder]='"animalTreatmentSurgery.enter_reason_details" | translate'
+                            formControlName="surgeryReason" />
+                          <span class="alert-message" *ngIf="
+                              (surgeryControls.surgeryReason.dirty &&
+                                surgeryControls.surgeryReason.invalid) ||
+                              surgeryControls.surgeryReason.touched
+                            ">
+                            <span *ngIf="
+                                surgeryControls.surgeryReason.hasError(
+                                  'required'
+                                )
+                              ">
+                              {{ validationMsg.required | translate }}
+                            </span>
+                            <span *ngIf="surgeryControls.surgeryReason.hasError('pattern')">
+                              {{ validationMsg.treatmentRemarksPattern | translate }}
+                            </span>
+                            <span
+                              *ngIf="!surgeryControls.surgeryReason.hasError('pattern') && surgeryControls.surgeryReason.hasError('maxlength')">
+                              {{ validationMsg.treatmentRemarks | translate }}
+                            </span>
+                          </span>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                          <label for="organAffected" class="form-label">{{"animalTreatmentSurgery.system_organ_affected"
+                            |
+                            translate}}
+                            <span class="mandatory-field">*</span></label>
+                          <ng-select class="custom" formControlName="organAffected" [items]="affectedOrgans"
+                            [clearSearchOnAdd]="true" [multiple]="true" bindValue="organCd" bindLabel="organDesc"
+                            [placeholder]='"animalTreatmentSurgery.select_organ_name" | translate'
+                            [closeOnSelect]="false">
+                            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                              {{ item.organDesc }}
+                            </ng-template>
+                          </ng-select>
+                          <span class="alert-message" *ngIf="
+                              (surgeryControls.organAffected.dirty &&
+                                surgeryControls.organAffected.invalid) ||
+                              surgeryControls.organAffected.touched
+                            ">
+                            <span *ngIf="
+                                surgeryControls.organAffected.hasError(
+                                  'required'
+                                )
+                              ">
+                              {{ validationMsg.required | translate }}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="form-row">
+                        <div class="form-group col">
+                          <label for="details"
+                            class="form-label">{{"animalTreatmentSurgery.surgery_details_instructions"
+                            |
+                            translate}}</label>
+                          <textarea name="details" id="details" rows="3" class="form-control"
+                            formControlName="surgeryDetails"
+                            [placeholder]='"animalTreatmentSurgery.enter_surgery_details_instructions_details" | translate'></textarea>
+                          <span class="alert-message"
+                            *ngIf="surgeryControls.surgeryDetails.dirty && surgeryControls.surgeryDetails.invalid">
+                            <span *ngIf="surgeryControls.surgeryDetails.hasError('pattern')">
+                              {{ validationMsg.treatmentRemarksPattern | translate }}
+                            </span>
+                            <span
+                              *ngIf="!surgeryControls.surgeryDetails.hasError('pattern') && surgeryControls.surgeryDetails.hasError('maxlength')">
+                              {{ validationMsg.treatmentRemarks | translate }}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="h-divider">
+          <div class="shadow"></div>
+        </div>
+
+        <!-- Form Buttons -->
+        <div class="footer d-flex">
+          <button type="button" (click)="saveInDraft()" class="btn btn-outline-primary"
+            *ngIf="(followUpNo == null || followUpNo == undefined)  && !isUpdate">
+            {{"animalTreatmentSurgery.save_draft" | translate}}
+          </button>
+          <button type="button" (click)="goBack()" class="btn btn-outline-primary mr-2 ml-auto">
+            {{"animalTreatmentSurgery.cancel" | translate}}
+          </button>
+          <button type="button" (click)="onReset()" class="btn btn-outline-primary mr-2">
+            {{"animalTreatmentSurgery.reset" | translate}}
+          </button>
+          <button type="submit" class="btn btn-primary">{{"animalTreatmentSurgery.submit" |
+            translate}}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

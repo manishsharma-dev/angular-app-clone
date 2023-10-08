@@ -1,0 +1,481 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            {{"animalDetails.home"|translate}}
+          </li>
+          <li class="breadcrumb-item active">
+            {{"organization.Admin_Management"|translate}}
+          </li>
+          <li class="breadcrumb-item current">
+
+            {{"project.Project_Management"|translate}}
+          </li>
+          <li class="breadcrumb-item current">
+
+            {{"project.Project_setup"|translate}}
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="container-white-bg-with-border">
+  <mat-tab-group animationDuration="0ms" (selectedTabChange)="tabClick($event)" [(selectedIndex)]="value">
+    <mat-tab label='{{"project.User_Allocation"| translate}}'>
+
+      <app-user-allocation-serach (filterDataEvent)="receiveData($event)"></app-user-allocation-serach>
+
+      <div class="h-divider"></div>
+      <div class="col-md-12 filter-set-user-allcation">
+        <span class="floating-filedset fildset-bg-blue">
+          <span class="float-label">{{"common.list" | translate }}</span>
+        </span>
+      </div>
+      <div class="row">
+
+        <div class="col-md-4">
+          <div class="form-group">
+
+            <input type="text" autocomplete="off" (keyup)="applyFilter($event)" matInput
+              class="form-control input-custom-border" id="searchAllocation" placeholder="Search by Keyword" #input />
+          </div>
+          <div class="form-group col-auto align-self-end">
+            <!-- <button type="submit" class="btn btn-dark">Search</button> -->
+          </div>
+
+
+
+        </div>
+        <div class="col-md-8">
+          <ul class="project-mgmt">
+            <li>
+              <!-- <input type="file" #myFileInput  class="form-control"  id="registrationDocs" name="registrationDocs" placeholder="" (change)="onFileUpload($event)" /> -->
+              <mat-error>
+                <!-- <span
+                *ngIf="searchForm.get('registrationDocs').invalid && !searchForm.get('registrationDocs').pristine || searchForm.get('registrationDocs').touched"
+                class="validation-error-message">
+                <span *ngIf="searchForm.get('registrationDocs').errors?.['required']">
+                  {{"validationMessage.registration_document" | translate}}
+                </span> 
+      
+                </span> -->
+                <span class="validation-error-message" *ngIf="isValidFileTypeOrSize">
+                  {{ isValidFileTypeOrSize }}
+                </span>
+              </mat-error>
+            </li>
+            <li>
+              <!-- <button type="submit" class="btn btn-primary"  (click)="onSubmitFile()">
+               Upload
+              </button>
+     -->
+            </li>
+          </ul>
+
+        </div>
+      </div>
+      <div class="row" *ngIf="itemsSelected.length>0">
+        <div class="col-sm-11">
+          <ul class="userAllcationLists">
+            <li>
+              [ <span *ngFor="let item of itemsSelected | slice : startPage:paginationLimit">{{
+                item.loginId}}</span>]
+            </li>
+            <li>
+              <span class="viewMore-text" *ngIf="itemsSelected.length>8" (click)="showMoreItemsDialog(itemsSelected)">
+                view More
+              </span>
+
+            </li>
+          </ul>
+
+        </div>
+        <div class="col-sm-1">
+          <span class="items_number">{{numItems}}</span>
+        </div>
+      </div>
+      <div class="table-responsive table-view">
+
+
+        <table mat-table [dataSource]="dataSourceAloc" matSort>
+
+          <!-- Checkbox Column -->
+
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"
+                [color]="'primary'" (change)="selctItems($event)">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)" [color]="'primary'"
+                (change)="selctItems($event)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- projectId Name Column -->
+          <ng-container matColumnDef="projectId">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let user; let index = index">
+              <!-- {{ user.projectId }} -->
+              <span class="isVisible">{{ paginatorRef.pageIndex * paginatorRef.pageSize + (index + 1) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- projectId Name Column -->
+          <ng-container matColumnDef="runSeqNo">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let user">
+              <!-- {{ user.runSeqNo }} -->
+            </td>
+          </ng-container>
+
+          <!-- projectName Name Column -->
+          <ng-container matColumnDef="userID">
+            <th mat-header-cell *matHeaderCellDef>Login ID</th>
+            <td mat-cell *matCellDef="let user">
+              {{ user.loginId }}
+            </td>
+          </ng-container>
+
+          <!-- userName Type Column -->
+          <ng-container matColumnDef="userName">
+            <th mat-header-cell *matHeaderCellDef>User Name</th>
+            <td mat-cell *matCellDef="let user">{{ user.firstName }} {{user.lastName}}</td>
+          </ng-container>
+
+
+          <!-- user type Name Column -->
+          <ng-container matColumnDef="userType">
+            <th mat-header-cell *matHeaderCellDef>User Type</th>
+            <td mat-cell *matCellDef="let user">{{ user.userTypeDesc }}</td>
+          </ng-container>
+
+
+          <!-- role Name  Column -->
+          <!-- <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef>Role</th>
+          <td mat-cell *matCellDef="let user">
+            {{ user.roleDesc }}
+          </td>
+        </ng-container> -->
+
+          <!-- baseLocation Name  Column -->
+          <!-- <ng-container matColumnDef="baseLocation">
+          <th mat-header-cell *matHeaderCellDef>Base Location</th>
+          <td mat-cell *matCellDef="let user">
+            
+            {{ user.districtName }}, {{ user.stateName }}
+          </td>
+        </ng-container> -->
+
+          <!-- projectStartDate Name  Column -->
+
+          <ng-container matColumnDef="projectStartDate">
+            <th mat-header-cell *matHeaderCellDef>Start Date</th>
+            <td mat-cell *matCellDef="let user;let i=index" class="startDateTdCustomSpce">
+              <input matInput [matDatepicker]="picker" class="form-control input-custom-border"
+                [min]="user.projectCreationDate" [max]="user.projectEndDate"
+                [(ngModel)]="userAllocationSelectStartDate[i]" [ngModel]="todayDate"
+                (dateChange)="dateChange($event,i)">
+              <mat-datepicker-toggle matSuffix [for]="picker" class="date-picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </td>
+          </ng-container>
+
+
+          <!-- projectEndDate Name  Column -->
+          <ng-container matColumnDef="projectEndDate">
+            <th mat-header-cell *matHeaderCellDef>End Date</th>
+            <td mat-cell *matCellDef="let user;let i=index" class="endDateTdCustomSpce">
+
+              <input matInput [matDatepicker]="picker" class="form-control input-custom-border"
+                [min]="userAllocationSelectStartDate[i]" [max]="user.projectEndDate"
+                [(ngModel)]="userAllocationSelectEndDate[i]" [ngModel]="user.projectEndDate">
+              <mat-datepicker-toggle matSuffix [for]="picker" class="date-picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </td>
+          </ng-container>
+
+
+
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>Action</th>
+            <td mat-cell *matCellDef="let user">
+              <a href="javascript:void(0)" routerLink="/dashboard/project-management/project-details">View</a>
+              &
+              <a href="javascript:void(0)" routerLink="/dashboard/project-management/add-new-project">Edit</a>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="loading">
+            <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+              Loading, please wait...
+            </mat-footer-cell>
+          </ng-container>
+          <ng-container matColumnDef="noData">
+            <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+              {{"common.No_records_found" |translate}}
+            </mat-footer-cell>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <!-- Row shown when there is no matching data. -->
+          <div *ngIf="dataSourceAloc.data.length > 0">
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">{{"common.no_matching_filter" |translate}} "{{input.value}}"</td>
+            </tr>
+          </div>
+
+          <mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSourceAloc && dataSourceAloc.data.length > 0">
+          </mat-footer-row>
+          <mat-footer-row *matFooterRowDef="['loading']" [hidden]="dataSourceAloc !== undefined"></mat-footer-row>
+
+
+        </table>
+        <mat-paginator [pageSizeOptions]="[20, 40, 60, 80, 100]" aria-label="Select page of users"
+          #paginatorRef></mat-paginator>
+
+        <div class="h-divider mt-3"></div>
+        <div class="d-flex justify-content-end mt-2">
+          <button type="reset" class="btn btn-outline-primary mr-2" routerLink="/dashboard/project-management/list">
+            {{"animalDetails.back" | translate}}
+          </button>
+
+          <!-- <button type="submit" class="btn btn-primary mr-2 " (click)="downloadExcel()">
+          Download Excel  {{"common.download" | translate}}</button> -->
+
+
+          <button type="submit" class="btn btn-primary" (click)="onUserAllocation('Users Allocate ')">
+            {{"common.submit" | translate}}</button>
+        </div>
+
+
+      </div>
+    </mat-tab>
+
+    <mat-tab label='{{"project.User_DeAllocation"| translate}}'>
+      <app-user-allocation-serach (filterDataEventDeallcation)="receiveDataDeallaction($event)">
+      </app-user-allocation-serach>
+
+      <div class="h-divider"></div>
+
+      <div class="col-md-12 filter-set-user-allcation">
+        <span class="floating-filedset fildset-bg-blue">
+          <span class="float-label">{{"common.list" | translate }}</span>
+        </span>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-4">
+
+          <input type="text" autocomplete="off" (keyup)="applyFilter($event)" matInput
+            class="form-control input-custom-border" id="search" placeholder="Search by Keyword" #inputdeallocation />
+        </div>
+        <!-- <div class="form-group col-auto align-self-end">
+            <button type="button" class="btn btn-primary" (click)="onUserProjectList()">Search</button>
+          </div> -->
+
+
+      </div>
+      <div class="row" *ngIf="itemsSelected.length>0">
+        <div class="col-sm-11">
+          <ul class="userAllcationLists">
+            <li>
+              [ <span *ngFor="let item of itemsSelected | slice : startPage:paginationLimit">{{
+                item.loginId}}</span>]
+            </li>
+            <li>
+              <span class="viewMore-text" *ngIf="itemsSelected.length>8" (click)="showMoreItemsDialog(itemsSelected)">
+                view More
+              </span>
+
+            </li>
+          </ul>
+
+        </div>
+        <div class="col-sm-1">
+          <span class="items_number">{{numItems}}</span>
+        </div>
+      </div>
+      <div class="table-responsive table-view">
+
+
+        <table mat-table [dataSource]="dataSource" matSort>
+
+          <!-- Checkbox Column -->
+
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"
+                [color]="'primary'" (change)="selctItems($event)">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)" [color]="'primary'"
+                (change)="selctItems($event)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- projectId Name Column -->
+          <ng-container matColumnDef="projectId">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let user; let index = index">
+              <!-- {{ user.projectId }} -->
+              <!-- <span class="">{{ paginatorRefde.pageIndex * paginatorRefde.pageSize + (index + 1) }}</span> -->
+            </td>
+          </ng-container>
+
+          <!-- projectName Name Column -->
+          <ng-container matColumnDef="userID">
+            <th mat-header-cell *matHeaderCellDef>Login ID</th>
+            <td mat-cell *matCellDef="let user">
+              {{ user.loginId }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="runSeqNo">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let user">
+              <!-- {{ user.runSeqNo }} -->
+            </td>
+          </ng-container>
+
+
+          <!-- userName Type Column -->
+          <ng-container matColumnDef="userName">
+            <th mat-header-cell *matHeaderCellDef>User Name</th>
+            <td mat-cell *matCellDef="let user">{{ user.firstName }} {{user.lastName}}</td>
+          </ng-container>
+
+
+          <!-- user type Name Column -->
+          <ng-container matColumnDef="userType">
+            <th mat-header-cell *matHeaderCellDef>User Type</th>
+            <td mat-cell *matCellDef="let user">{{ user.userTypeDesc }}</td>
+          </ng-container>
+
+
+          <!-- role Name  Column -->
+          <!-- <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef>Role</th>
+          <td mat-cell *matCellDef="let user">
+            {{ user.roleDesc }}
+          </td>
+        </ng-container> -->
+
+          <!-- baseLocation Name  Column -->
+          <!-- <ng-container matColumnDef="baseLocation">
+          <th mat-header-cell *matHeaderCellDef>Base Location</th>
+          <td mat-cell *matCellDef="let user">
+            
+            {{ user.districtName }}, {{ user.stateName }}
+          </td>
+        </ng-container> -->
+
+          <!-- projectStartDate Name  Column -->
+
+          <ng-container matColumnDef="projectStartDate">
+            <th mat-header-cell *matHeaderCellDef>Start Date</th>
+            <td mat-cell *matCellDef="let user;let i=index" class="startDateTdCustomSpce">
+
+              <input matInput [matDatepicker]="picker" class="form-control input-custom-border"
+                [(ngModel)]="user.userAllocationStartDate" disabled>
+              <mat-datepicker-toggle matSuffix [for]="picker" class="date-picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </td>
+          </ng-container>
+
+          <!-- projectEndDate Name  Column -->
+          <ng-container matColumnDef="projectEndDate">
+            <th mat-header-cell *matHeaderCellDef>End Date</th>
+            <td mat-cell *matCellDef="let user; let i=index" class="endDateTdCustomSpce">
+              <input matInput [matDatepicker]="picker" class="form-control input-custom-border" [min]="todayDate"
+                [max]="todayDate" [(ngModel)]="userDeAllocationSelectEndDate[i]" [ngModel]="todayDate">
+              <mat-datepicker-toggle matSuffix [for]="picker" class="date-picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </td>
+          </ng-container>
+
+
+
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>Action</th>
+            <td mat-cell *matCellDef="let user">
+              <a href="javascript:void(0)" routerLink="/dashboard/project-management/project-details">View</a>
+              &
+              <a href="javascript:void(0)" routerLink="/dashboard/project-management/add-new-project">Edit</a>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="loading">
+            <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+              Loading, please wait...
+            </mat-footer-cell>
+          </ng-container>
+          <ng-container matColumnDef="noData">
+            <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+              {{"common.No_records_found" |translate}}
+            </mat-footer-cell>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <!-- Row shown when there is no matching data. -->
+          <div *ngIf="dataSource.data.length > 0">
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">{{"common.no_matching_filter" |translate}} "{{input.value}}"</td>
+            </tr>
+          </div>
+
+          <mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSource && dataSource.data.length > 0">
+          </mat-footer-row>
+          <mat-footer-row *matFooterRowDef="['loading']" [hidden]="dataSource !== undefined"></mat-footer-row>
+
+
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[20, 40, 60, 80, 100]" aria-label="Select page of users"
+          #paginatorRefde></mat-paginator>
+
+        <div class="h-divider mt-3"></div>
+        <div class="d-flex justify-content-end mt-2">
+          <button type="reset" class="btn btn-outline-primary mr-2" routerLink="/dashboard/project-management/list">
+            {{"animalDetails.back" | translate}}
+          </button>
+
+          <button type="submit" class="btn btn-primary" (click)="onUserDeallocation('Users Deallocate')">
+            {{"common.submit" |translate}}</button>
+        </div>
+
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+
+</div>

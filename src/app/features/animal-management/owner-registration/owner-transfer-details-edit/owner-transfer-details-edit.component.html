@@ -1,0 +1,564 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="edit-dialog">
+  <div class="edit-section-header">
+    <div class="edit-heading">
+      <h2 class="edit-heading-label">
+        {{ "animalDetails.owner_transfer" | translate }}
+      </h2>
+      <p class="edit-heading-desc">
+        {{ "animalDetails.ownership_transfer.dialog_sub_heading" | translate }}
+      </p>
+    </div>
+    <mat-icon mat-dialog-close (click)="onClosingDialog()">clear</mat-icon>
+  </div>
+
+  <!--edit owner info details -->
+  <div class="user-infoedit">
+    <div class="row">
+      <div class="col-md-12">
+        <p Class="selected-animal mb-2">
+          {{ animalData.length }}
+          {{ "animalDetails.ownership_transfer.selected_animal" | translate }}
+        </p>
+        <ul class="selected-animal-list">
+          <li
+            class="selected-animal-listitem outline"
+            *ngFor="let data of animalData"
+          >
+            {{ data.tagId }}
+            <img
+              src="/assets/images/cross-icon.svg"
+              class="animal-listitem-cross"
+              (click)="onClickingRemove(data)"
+              alt="icon-search"
+            />
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Starts -->
+  <div class="edit-container">
+    <div class="row mb-2">
+      <div class="col-md-12">
+        <h3 class="label-heading">
+          {{ "animalDetails.BuyerDetails" | translate }}
+        </h3>
+      </div>
+    </div>
+
+    <!-- Search By -->
+    <div class="mb-3">
+      <div id="search-section" class="row">
+        <span class="searchby-label-black">{{
+          "animalDetails.searchBuyer" | translate
+        }}</span>
+      </div>
+      <form [formGroup]="searchForm">
+        <div id="search-section" class="row">
+          <span class="searchby-label-black"
+            >{{ "animalDetails.search_by" | translate }}:</span
+          >
+          <div class="search-mobile-view">
+            <div class="form-check-inline">
+              <input
+                type="radio"
+                class="form-check-input"
+                name="optRadio"
+                value="individual"
+                (change)="onSelectingSearchBy($event)"
+                formControlName="optRadio"
+              />
+              <label class="form-check-label">{{
+                "animalDetails.individual" | translate
+              }}</label>
+            </div>
+            <div class="form-check-inline">
+              <input
+                type="radio"
+                class="form-check-input"
+                name="optRadio"
+                value="nonIndividual"
+                (change)="onSelectingSearchBy($event)"
+                formControlName="optRadio"
+              />
+              <label class="form-check-label">{{
+                "animalDetails.nonIndividual" | translate
+              }}</label>
+            </div>
+            <div class="form-check-inline">
+              <input
+                type="radio"
+                class="form-check-input"
+                name="optRadio"
+                value="organization"
+                (change)="onSelectingSearchBy($event)"
+                formControlName="optRadio"
+              />
+              <label class="form-check-label">{{
+                "animalDetails.organisation" | translate
+              }}</label>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="form-row"
+          *ngIf="searchBy == 'individual' || searchBy == 'nonIndividual'"
+        >
+          <div class="col-md-9 search-by">
+            <img
+              src="/assets/images/search.svg"
+              class="input-icon-left"
+              alt="icon-search"
+            />
+            <input
+              type="text"
+              class="form-control input input-section"
+              id="search-by"
+              placeholder="{{ 'animalDetails.search_criteria' | translate }}"
+              formControlName="searchValue"
+              [maxLength]="25"
+              [minlength]="3"
+            />
+            <div class="alert-message" *ngIf="errorMessage">
+              {{ errorMessage }}
+            </div>
+            <a class="input-clear" (click)="resetValue()">
+              {{ "common.clear" | translate }}
+            </a>
+          </div>
+
+          <div class="col-auto btn-mobile-view">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              (click)="searchResults(this.searchForm.get('searchValue')?.value)"
+            >
+              {{ "animalDetails.search" | translate }}
+            </button>
+          </div>
+        </div>
+      </form>
+      <div class="form-row" *ngIf="searchBy == 'organization'">
+        <div class="col-md-9 search-by">
+          <ng-select
+            class="select-dropdown"
+            [items]="orgsList"
+            placeholder="Select Organization Name"
+            [(ngModel)]="orgValue"
+            bindLabel="orgName"
+            bindValue="orgId"
+            (clear)="resetValue()"
+          >
+          </ng-select>
+        </div>
+        <div class="col-auto align-self-end btn-mobile-view">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            (click)="getOrgDetails()"
+          >
+            {{ "animalDetails.search" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buyer Table -->
+
+    <section class="buyer-section" *ngIf="isBuyerTableVisible">
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <h2 class="label-heading mb-2">
+            {{ "animalDetails.ownership_transfer.search_result" | translate }}
+          </h2>
+          <div class="table-responsive table-view mb-3">
+            <table
+              mat-table
+              matSort
+              [dataSource]="tableDataSourceOwner"
+              class="mat-elevation-z8 mt-4"
+              *ngIf="ownerDetailsRecord.length != 0"
+            >
+              <ng-container matColumnDef="ownerId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{ "common.owner_id" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <a
+                    href="javascript:void(0)"
+                    (click)="getOwnerDetailsByID(element.ownerId)"
+                    >{{ element.ownerId }}</a
+                  >
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ownerName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{ "common.owner_name_lbl" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let data">
+                  <div
+                    class="ellips-text"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="{{ data.ownerName }}"
+                  >
+                    {{ data.ownerName }}
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="arrow">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                  <img
+                    src="/assets/images/right_arrow.svg"
+                    class="icon-right-arrow"
+                    alt="icon-right-arrow"
+                    (click)="getOwnerDetailsByID(element.ownerId)"
+                  />
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="ownerSearchResult"></tr>
+              <tr mat-row *matRowDef="let row; columns: ownerSearchResult"></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section-2 -->
+    <section class="not-found-section" *ngIf="detailNotFound">
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <div class="not-found-heading">
+            {{ "errorMsg.no_data" | translate }}
+          </div>
+          <div class="not-found-subheading">
+            {{
+              "animalDetails.owners_detail_not_found_in_the_system" | translate
+            }}
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <button
+            type="button"
+            class="btn btn-primary mr-3"
+            routerLink="dashboard/owner/ownersearch"
+            mat-dialog-close
+          >
+            {{ "animalDetails.register_owner" | translate }}
+          </button>
+          <a
+            *ngIf="isOwnershipTransfer"
+            href="javascript:void(0)"
+            class="register-now"
+            (click)="continueWithoutReg()"
+          >
+            {{ "animalDetails.continue_without_registration" | translate }}</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Section-3 -->
+    <section *ngIf="buyerinfofill">
+      <div class="row mb-2">
+        <div class="col-md-12">
+          <h3 class="label-heading">
+            {{ "animalDetails.enter_buyers_information" | translate }}
+          </h3>
+        </div>
+      </div>
+      <!-- row-1 -->
+      <form [formGroup]="buyerDetailForm">
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="FirstName" class="form-label">
+              {{ "animalDetails.ownership_transfer.buyer_name" | translate }}
+              <span class="mandatory-field">*</span></label
+            >
+            <input
+              type="text"
+              class="form-control title-case"
+              id="FirstName"
+              formControlName="newOwnerName"
+            />
+            <div
+              *ngIf="
+                buyerDetailForm.controls.newOwnerName.touched &&
+                buyerDetailForm.controls.newOwnerName.invalid
+              "
+              class="alert-message"
+            >
+              <div
+                *ngIf="buyerDetailForm.controls.newOwnerName.errors?.required"
+              >
+                {{ "errorMsg.enter_name" | translate }}
+              </div>
+              <div
+                *ngIf="buyerDetailForm.controls.newOwnerName.errors?.pattern"
+              >
+                {{ "errorMsg.invalid_name" | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="MobileNumber" class="form-label">
+              {{ "common.mobile" | translate }}
+              <span class="mandatory-field">*</span></label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="LastName"
+              formControlName="newOwnerMobileNo"
+              [maxlength]="10"
+            />
+            <div
+              *ngIf="
+                (!buyerDetailForm.controls.newOwnerMobileNo.pristine &&
+                  buyerDetailForm.controls.newOwnerMobileNo.invalid) ||
+                buyerDetailForm.controls.newOwnerMobileNo.touched
+              "
+              class="alert-message"
+            >
+              <div
+                *ngIf="
+                  buyerDetailForm.controls.newOwnerMobileNo.errors?.required
+                "
+              >
+                {{ "errorMsg.enter_mobile" | translate }}
+              </div>
+              <div
+                *ngIf="
+                  buyerDetailForm.controls.newOwnerMobileNo.errors?.pattern
+                "
+              >
+                {{ "errorMsg.invalid_mobile" | translate }}
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-md-8">
+            <label for="Address" class="form-label">
+              {{ "animalDetails.address" | translate }}
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="LastName"
+              formControlName="newOwnerAddress"
+            />
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- Section-4 -->
+
+    <section *ngIf="confSection">
+      <div class="row mb-2">
+        <div class="col-md-12">
+          <h3 class="label-heading">
+            {{ "animalDetails.ownership_transfer.buyer_info" | translate }}
+          </h3>
+        </div>
+      </div>
+
+      <div class="buyer-info mb-3">
+        <div class="row">
+          <div class="col-md-12 d-flex justify-content-between">
+            <ul class="buyer-info--list">
+              <li
+                class="buyer-info--listitem hyperbold"
+                [ngClass]="[
+                  buyerDetailForm.value.newOwnerName.length > 20
+                    ? 'ellips-text'
+                    : ''
+                ]"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="{{ buyerDetailForm.value.newOwnerName }}"
+              >
+                <img
+                  src="/assets/images/user_profile.svg"
+                  class="icon-buyer-info"
+                  alt="icon-search"
+                />
+                {{ buyerDetailForm.value.newOwnerName }}
+              </li>
+              <li class="buyer-info--listitem">
+                <img
+                  src="/assets/images/contact.svg"
+                  class="icon-buyer-info"
+                  alt="icon-search"
+                />
+                {{ buyerDetailForm.value.newOwnerMobileNo }}
+              </li>
+              <li
+                class="buyer-info--listitem"
+                *ngIf="buyerDetailForm.value.newOwnerAddress"
+              >
+                <img
+                  src="/assets/images/location.svg"
+                  class="icon-buyer-info"
+                  alt="icon-search"
+                />
+                {{ buyerDetailForm.value.newOwnerAddress }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <form [formGroup]="miscDetailsForm" *ngIf="isOwnershipTransfer">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="transferdate">
+              {{
+                "animalDetails.ownership_transfer.owner_transfer_date"
+                  | translate
+              }}
+              <span class="mandatory-field">*</span></label
+            >
+            <input
+              class="form-control"
+              max="{{ registrationDateToday }}"
+              min="{{ getPastDate() }}"
+              [matDatepicker]="ownershipTransferDate"
+              placeholder="dd/mm/yyyy"
+              formControlName="ownershipTransferDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="ownershipTransferDate"
+              class="date-picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #ownershipTransferDate></mat-datepicker>
+            <div
+              *ngIf="
+                miscDetailsForm.get('ownershipTransferDate').invalid &&
+                miscDetailsForm.get('ownershipTransferDate').touched &&
+                !miscDetailsForm.get('ownershipTransferDate').pristine
+              "
+              class="alert-message"
+            >
+              <mat-error
+                *ngIf="
+                  miscDetailsForm
+                    .get('ownershipTransferDate')
+                    .hasError('matDatepickerMin')
+                "
+                >{{ "common.invalid_date" | translate }}</mat-error
+              >
+              <mat-error
+                *ngIf="
+                  miscDetailsForm
+                    .get('ownershipTransferDate')
+                    .hasError('matDatepickerMax')
+                "
+                >{{ "common.invalid_date" | translate }}</mat-error
+              >
+              <mat-error
+                *ngIf="
+                  miscDetailsForm
+                    .get('ownershipTransferDate')
+                    .hasError('matDatepickerParse')
+                "
+                >{{ "common.please_enter_valid_date" | translate }}</mat-error
+              >
+              <div
+                *ngIf="
+                  miscDetailsForm.get('ownershipTransferDate').errors
+                    ?.required &&
+                  !miscDetailsForm
+                    .get('ownershipTransferDate')
+                    .hasError('matDatepickerParse')
+                "
+              >
+                <span> {{ "common.select_date" | translate }} </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label>
+              {{
+                "animalDetails.ownership_transfer.reason_for_transfer"
+                  | translate
+              }}
+              <span class="mandatory-field">*</span></label
+            >
+            <ng-select
+              class="select-dropdown"
+              appendTo="body"
+              [items]="reasonForTransfer"
+              formControlName="reasonForTransfer"
+              placeholder="{{
+                'animalDetails.ownership_transfer.reason_for_transfer'
+                  | translate
+              }}"
+              bindLabel="value"
+              bindValue="cd"
+            ></ng-select>
+            <div
+              *ngIf="
+                miscDetailsForm.controls.reasonForTransfer.touched &&
+                miscDetailsForm.controls.reasonForTransfer.invalid
+              "
+              class="alert-message"
+            >
+              <div
+                *ngIf="
+                  miscDetailsForm.controls.reasonForTransfer.errors?.required
+                "
+              >
+                {{ "errorMsg.tag_reason_select" | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <div class="edit-footer" *ngIf="buyerinfofill">
+    <button type="button" class="btn btn-outline-primary mr-2" mat-dialog-close>
+      {{ "animalDetails.ownership_transfer.cancel" | translate }}
+    </button>
+    <button
+      type="submit"
+      class="btn btn-primary"
+      *ngIf="buyerinfofill"
+      (click)="onSaveExit()"
+    >
+      {{ "animalDetails.ownership_transfer.save_continue" | translate }}
+    </button>
+  </div>
+
+  <div class="edit-footer" *ngIf="confSection">
+    <button type="button" class="btn btn-outline-primary mr-2" mat-dialog-close>
+      {{ "animalDetails.ownership_transfer.cancel" | translate }}
+    </button>
+    <button
+      type="submit"
+      class="btn btn-primary"
+      (click)="openOwnerTransferDialog()"
+      [disabled]="disableButtons"
+    >
+      {{ "animalDetails.transfer" | translate }}
+    </button>
+  </div>
+</div>

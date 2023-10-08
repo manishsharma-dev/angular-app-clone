@@ -1,0 +1,31 @@
+<div class="common-info">
+  <div class="common-info-header">
+    <img [src]="data.icon" class="custom-icon" alt="icon-verified" />
+    <p class="header-desc">{{ data.title | translate }}</p>
+  </div>
+
+  <div class="common-info-body">
+    <p>{{ data.id }}</p>
+    <p>{{ data.message | translate }}</p>
+  </div>
+
+  <div class="common-info-footer">
+    <button
+      mat-dialog-close
+      class="btn btn-outline-primary mr-2 px-4"
+      *ngIf="data.secondaryBtnText"
+      (click)="onCancel()"
+    >
+      {{ data.secondaryBtnText | translate }}
+    </button>
+
+    <button
+      mat-dialog-close
+      class="btn btn-primary"
+      [mat-dialog-close]="true"
+      (click)="onSubmit()"
+    >
+      {{ data.primaryBtnText | translate }}
+    </button>
+  </div>
+</div>

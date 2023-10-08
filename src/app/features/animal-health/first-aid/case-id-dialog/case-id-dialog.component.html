@@ -1,0 +1,13 @@
+<div class="status-dialog">
+    <img src="../../../../../assets/images/checkbox-circle-line.svg" alt="checkbox-circle-line">
+    <p class="sd-id">{{ "firstAid.Case_ID" | translate }}: <b>{{ data.caseID }}</b></p>
+    <h3 class="sd-msg">{{ data.title }}</h3>
+    <p class="sd-noti-detail">{{data.message}}</p>
+    <h3 class="sd-msg" *ngIf="data.supervisorName">{{"animalTreatmentSurgery.notification_send_to" | translate}} {{
+        data.supervisorName }}</h3>
+    <div class="close-btn">
+        <!-- <button type="submit" class="btn btn-outline-primary mr-2">Cancel</button> -->
+        <button type="submit" class="btn btn-primary" (click)="closeDialog()"> {{ "animalDetails.ok" | translate
+            }}</button>
+
+    </div>

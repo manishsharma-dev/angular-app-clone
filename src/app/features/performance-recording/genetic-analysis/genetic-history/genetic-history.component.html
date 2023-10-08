@@ -1,0 +1,10 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<app-common-breadcrumb [breadcrumbKeys]="[ 'performanceRecording.pr', 'performanceRecording.genetic_analysis']">
+</app-common-breadcrumb>
+
+<app-breeding-history [historyDetail]="historyDetail"></app-breeding-history>

@@ -1,0 +1,114 @@
+<div class="container">
+  <div class="row breadcum align-items-center py-2">
+    <div class="col-lg-5 col-md-5 col-sm-12">
+      <div class="breadcum-heading">
+        <h3 class="heading">User Management</h3>
+      </div>
+    </div>
+    <div class="col-lg-7 col-md-7 col-sm-12">
+      <div class="breadcrumb-list text-md-right">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item active">
+              Home
+            </li>
+            <li class="breadcrumb-item active">
+              Admin Management
+            </li>
+            <li class="breadcrumb-item active">
+              User Management
+            </li>
+            <li class="breadcrumb-item current">
+              Area Allocation
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="row no-gutters col-container">
+    <div class="col-md-12 col-h left-section">
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <div class="title-heading">
+            <h3 class="muted-label-heading">Area Allocation List</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <table mat-table [dataSource]="dataSource">
+          <ng-container matColumnDef="#">
+            <th mat-header-cell *matHeaderCellDef>#</th>
+            <td mat-cell *matCellDef="let area; let i = index">
+              {{ i + 1 }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Project Name</th>
+            <td mat-cell *matCellDef="let area">
+              {{ area.name }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef>Role</th>
+            <td mat-cell *matCellDef="let area">{{ area.role }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="state">
+            <th mat-header-cell *matHeaderCellDef>State</th>
+            <td mat-cell *matCellDef="let area">{{ area.state }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="district">
+            <th mat-header-cell *matHeaderCellDef>District</th>
+            <td mat-cell *matCellDef="let area">{{ area.district }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="tehsil">
+            <th mat-header-cell *matHeaderCellDef>Tehsil/Taluk</th>
+            <td mat-cell *matCellDef="let area">{{ area.tehsil }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="village">
+            <th mat-header-cell *matHeaderCellDef>Village</th>
+            <td mat-cell *matCellDef="let area">{{ area.village }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="hamlet">
+            <th mat-header-cell *matHeaderCellDef>Hamlet</th>
+            <td mat-cell *matCellDef="let area">{{ area.hamlet }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="more">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let user" align="right">
+              <button [matMenuTriggerFor]="menu" class="menu-btn">
+                <mat-icon>more_horiz</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="openEditDialog()">Edit</button>
+                <button mat-menu-item (click)="openDeleteDialog()">
+                  Delete
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+      <div class="row justify-content-start p-2">
+        <button class="btn btn-light mr-2" (click)="goBack()">Back</button>
+        <button class="btn btn-primary" (click)="openEditDialog()">
+          + Add More
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

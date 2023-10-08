@@ -1,0 +1,272 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            {{ "common.breadcrumb_home" | translate }}
+          </li>
+          <li class="breadcrumb-item active">
+            {{ "organization.Admin_Management" | translate }}
+          </li>
+          <li class="breadcrumb-item current">
+            {{ "subOrganization.subOrganizationManagement" | translate }}
+          </li>
+          <li class="breadcrumb-item current">
+            {{ "subOrganization.Sub-Organization" | translate }}
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="row p-0 view-animal-detail mb-3">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="card mb-4">
+          <div class="card-header view-animal-info">
+            <div class="row">
+              <div class="col-md-10 d-flex align-items-center">
+                <div class="info-details" *ngIf="subOrgDetail">
+                  <div id="animal-detail">
+                    <ul>
+                      <h4>
+                        {{ subOrgDetail.subOrganizationBasicInfo.subOrgName }}.
+                      </h4>
+                    </ul>
+                  </div>
+                  <div id="animal-unique-detail" class="d-flex mb-1">
+                    <ul>
+                      <li>
+                        <p>
+                          {{ "subOrganization.Sub Org. ID" | translate }} :
+                          {{ subOrgDetail.subOrgId }} ({{
+                            subOrgDetail.subOrgStatusDesc
+                          }})
+                        </p>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div
+                *ngIf="
+                  isLivestackAdmin ||
+                  (!isLivestackAdmin && userOrgId == subOrgDetail?.orgId)
+                "
+                class="col-md-2 d-flex justify-content-end"
+              >
+                <img
+                  src="/assets/images/edit.svg"
+                  class="icon-edit"
+                  alt="icon-edit"
+                  (click)="
+                    onviewEditSubOrg(
+                      subOrgDetail.subOrgId,
+                      'edit',
+                      subOrgDetail.orgId
+                    )
+                  "
+                />
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row animal-bio-info" *ngIf="subOrgDetail">
+              <div class="col-sm-8">
+                <div class="row">
+                  <div class="col-md-12 basic-details">
+                    <h5>{{ "organization.basicInformation" | translate }}</h5>
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "subOrganization.Parent_id" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ subOrgDetail.orgId }}
+                      </div>
+                    </div>
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "subOrganization.Parent_Organization" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ subOrgDetail.orgName }}
+                      </div>
+                    </div>
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "subOrganization.Sub-OrganizationName" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{ subOrgDetail.subOrganizationBasicInfo.subOrgName }}
+                      </div>
+                    </div>
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "subOrganization.suborganizationType" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{
+                          subOrgDetail.subOrganizationBasicInfo.subOrgTypeDesc
+                        }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "subOrganization.subonBoardingDate" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{
+                          subOrgDetail.subOrganizationBasicInfo
+                            .subOrgOnboardDate | customDateFormatter
+                        }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{
+                          "subOrganization.subtenureCompletionDate" | translate
+                        }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{
+                          subOrgDetail.subOrganizationBasicInfo
+                            .subOrgTenureCompleteDate | customDateFormatter
+                        }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div class="flex-custom-left detail-page-text">
+                        {{ "organization.registrationNo." | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{
+                          subOrgDetail.subOrganizationBasicInfo
+                            .subOrgIdentificationNo
+                        }}
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                      <div
+                        class="flex-custom-left detail-page-text"
+                        *ngIf="subOrgDetail.subOrgServiceMapList.length > 0"
+                      >
+                        {{ "subOrganization.Service_Provided" | translate }}
+                      </div>
+                      <div class="flex-custom-right detail-page-text-bold">
+                        <span
+                          *ngFor="
+                            let service of subOrgDetail.subOrgServiceMapList
+                          "
+                        >
+                          {{ service.split(" ") }}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="d-flex">
+                      <div
+                        class="flex-custom-left detail-page-text"
+                        *ngIf="
+                          subOrgDetail.subOrganizationBasicInfo
+                            .semenStationCd &&
+                          subOrgDetail.subOrganizationBasicInfo.subOrgType === 2
+                        "
+                      >
+                        {{ "subOrganization.semenStationCd" | translate }}
+                      </div>
+
+                      <div
+                        class="flex-custom-left detail-page-text"
+                        *ngIf="
+                          subOrgDetail.subOrganizationBasicInfo
+                            .semenStationCd &&
+                          subOrgDetail.subOrganizationBasicInfo.subOrgType ===
+                            11
+                        "
+                      >
+                        {{ "subOrganization.etLabCd" | translate }}
+                      </div>
+
+                      <div class="flex-custom-right detail-page-text-bold">
+                        {{
+                          subOrgDetail.subOrganizationBasicInfo.semenStationCd
+                        }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="h-space"></div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="row">
+                  <div class="col-md-12 basic-details">
+                    <h3 class="details-heading">
+                      {{ "organization.participatingArea" | translate }}
+                    </h3>
+                    <div class="flex-custom-left detail-page-text">
+                      {{ "animalDetails.state" | translate }}
+                    </div>
+                    <div
+                      style="padding: 0px 12px 0px 0px"
+                      class="detail-page-text"
+                    >
+                      <ul class="animal-detail">
+                        <li
+                          *ngFor="
+                            let organizationParticipatingAreaWithName of subOrgDetail[
+                              'organizationParticipatingAreaWithNames'
+                            ]
+                          "
+                        >
+                          <!-- <a href="javascript:void(0)"></a> -->
+                          <a
+                            href="javascript:void(0)"
+                            placement="right"
+                            ngbPopover="{{
+                              organizationParticipatingAreaWithName.districts
+                            }}"
+                            popoverTitle="{{
+                              'animalDetails.district' | translate
+                            }}"
+                          >
+                            {{
+                              organizationParticipatingAreaWithName.state.split(
+                                "-"
+                              )[1]
+                            }}
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12 text-right">
+                <button
+                  class="btn btn-outline-primary"
+                  [routerLink]="['..', 'list']"
+                >
+                  {{ "animalDetails.back" | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

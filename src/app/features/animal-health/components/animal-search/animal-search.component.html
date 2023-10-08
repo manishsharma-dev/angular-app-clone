@@ -1,0 +1,59 @@
+<div class="row p-0 mb-3">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <!-- Search By -->
+        <form [formGroup]="searchForm">
+          <div id="search-section" class="row">
+            <span class="searchby-label-black">{{"animalDetails.search_by" | translate}}:</span>
+            <div class="search-mobile-view">
+              <div class="form-check-inline">
+                <input type="radio" class="form-check-input" name="optRadio" value="individual"
+                  formControlName="optRadio" />
+                <label class="form-check-label">{{"animalDetails.individual" | translate}}</label>
+              </div>
+              <div class="form-check-inline">
+                <input type="radio" class="form-check-input" name="optRadio" value="organization"
+                  formControlName="optRadio" />
+                <label class="form-check-label">{{"animalDetails.organisation" | translate}}</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-row" *ngIf="searchBy == 'individual'">
+            <div class="col-md-8 search-by">
+              <img src="/assets/images/search.svg" class="input-icon-left" alt="icon-search" />
+              <input type="text" class="form-control input input-section" id="search-by"
+                placeholder="{{'animalDetails.search_criteria' | translate}}" formControlName="searchValue"
+                [maxLength]="20" />
+              <div class="alert-message" *ngIf="errorMessage">
+                {{ errorMessage }}
+              </div>
+              <a class="input-clear" (click)="resetValue()"> {{"common.clear" | translate}} </a>
+            </div>
+
+            <div class="col-auto btn-mobile-view">
+              <button type="submit" class="btn btn-primary" (click)="
+                  searchResults(this.searchForm.get('searchValue')?.value)
+                ">
+                {{"animalDetails.search" | translate}}
+              </button>
+            </div>
+          </div>
+          <div class="form-row" *ngIf="searchBy == 'organization'">
+            <div class="col-md-8 search-by">
+              <ng-select class="select-dropdown" [items]="orgsList"
+                placeholder="{{'animalDetails.select_org' | translate }}" formControlName="orgValue" bindLabel="orgName"
+                bindValue="orgId">
+              </ng-select>
+            </div>
+            <div class="col-auto align-self-end btn-mobile-view">
+              <button type="submit" class="btn btn-primary" (click)="getOrgDetails()">
+                {{"animalDetails.search" | translate}}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

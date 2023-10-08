@@ -1,0 +1,49 @@
+---
+version: 0.2
+phases:
+  install:
+    commands:
+      - export PATH=$PWD/:$PATH
+      - apt-get clean
+      - apt-key adv --refresh-keys --keyserver keyserver.ubuntu.com
+      - apt-get update && apt-get -y install jq python3-pip python3-dev && pip3 install --upgrade awscli
+    
+  pre_build:
+      commands:
+        - TAG="$REPOSITORY_NAME.$REPOSITORY_BRANCH"
+        - echo $TAG
+        - echo $REPOSITORY_URI
+        - echo $REPOSITORY_URI:$TAG
+        - sed -i 's@Client_IMAGE@'"$REPOSITORY_URI:latest"'@' k8s/epashu-client-depl.yaml
+        - (aws ecr get-login-password)
+        - export KUBECONFIG=$HOME/.kube/config
+        - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 174484476447.dkr.ecr.ap-south-1.amazonaws.com
+    ##  - rm -rf node_modules
+    ##  - rm package-lock.json 
+        - npm cache clean --force
+        - npm install --force
+        
+  build:
+    commands:
+      - npm run build
+      - docker build -t  $REPOSITORY_URI --no-cache .
+      
+  post_build:
+    commands:
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 174484476447.dkr.ecr.ap-south-1.amazonaws.com
+      - echo "Docker Build Success"
+      - docker push $REPOSITORY_URI
+      - CREDENTIALS=$(aws sts assume-role --role-arn $EKS_KUBECTL_ROLE_ARN --role-session-name codebuild-kubectl --duration-seconds 900)
+      - export AWS_ACCESS_KEY_ID="$(echo ${CREDENTIALS} | jq -r '.Credentials.AccessKeyId')"
+      - export AWS_SECRET_ACCESS_KEY="$(echo ${CREDENTIALS} | jq -r '.Credentials.SecretAccessKey')"
+      - export AWS_SESSION_TOKEN="$(echo ${CREDENTIALS} | jq -r '.Credentials.SessionToken')"
+      - export AWS_EXPIRATION=$(echo ${CREDENTIALS} | jq -r '.Credentials.Expiration')
+      - aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $EKS_CLUSTER_NAME
+      - kubectl delete -f k8s/epashu-client-depl.yaml
+      - kubectl apply -f k8s/epashu-client-depl.yaml
+      - printf '[{"name":"epashu-client-depl.yaml","imageUri":"%s"}]' $REPOSITORY_URI:$TAG > build.json
+artifacts:
+  files: 
+   - "**/*"
+  discard-paths: no
+  base-directory: dist/nddb

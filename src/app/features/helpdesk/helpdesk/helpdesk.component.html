@@ -1,0 +1,130 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<!-- section breadcum -->
+<div class="container p-0">
+  <div class="row breadcum align-items-center py-2">
+    <div class="col-12">
+      <div class="breadcrumb-list">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item active" routerLink="/dashboard">
+              <a>{{ "vaccination.breadcrumb_vaccinationFirst" | translate }}</a>
+            </li>
+            <li class="breadcrumb-item active">
+              <label>{{ "helpdesk.breadcrumb" | translate }} </label>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- section breadcum -->
+
+<section class="helpdesk">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <form [formGroup]="helpdeskForm" (ngSubmit)="searchVideos(helpdeskForm)">
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <!-- <label for="moduleCd" class="form-label">{{"helpdesk.select_module" | translate}}
+                  <span class="mandatory-field">*</span></label> -->
+                <ng-select [items]="moduleList" class="custom" formControlName="moduleCd" bindLabel="moduleName"
+                  bindValue="moduleCd" [placeholder]="'helpdesk.search_module' | translate">
+                </ng-select>
+                <span class="alert-message" *ngIf="
+                (formControls.moduleCd.dirty &&
+                  formControls.moduleCd.invalid) ||
+                formControls.moduleCd.touched
+              ">
+                  <span *ngIf="formControls.moduleCd.hasError('required')">
+                    {{ validationMsg.selectRequired | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group col-md-4">
+                <!-- <label for="moduleCd" class="form-label">{{"helpdesk.select_submodule" | translate}}
+                  <span class="mandatory-field">*</span></label> -->
+                <ng-select [items]="subModuleList" class="custom" formControlName="subModuleCd"
+                  bindLabel="subModuleName" bindValue="subModuleCd"
+                  [placeholder]="'helpdesk.search_submodule' | translate">
+                </ng-select>
+                <span class="alert-message" *ngIf="
+                (formControls.subModuleCd.dirty &&
+                  formControls.subModuleCd.invalid) ||
+                formControls.subModuleCd.touched
+              ">
+                  <span *ngIf="formControls.subModuleCd.hasError('required')">
+                    {{ validationMsg.selectRequired | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="form-group col-md-4 d-flex align-items-start">
+                <button type="submit" class="btn btn-primary">{{"animalTreatmentSurgery.submit" | translate}}</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-row p-0 mb-3">
+
+    <div class="col-md-6" *ngIf="videoList.length">
+      <div class="card h-100">
+        <div class="card-header ">
+          <p class="heading">Videos</p>
+        </div>
+        <div class="card-body">
+          <!-- <p *ngFor="let video of videoList"> {{video | json}}
+
+          </p> -->
+          <div class="scrollables">
+            <div class="video-pannel mb-3" *ngFor="let video of videoList">
+              <!-- <img src="assets/images/pdf.png" class="video-icon" alt="video-image"> -->
+              <video controls class="video-icon" controlsList="nodownload" #videoElement>
+                <!-- (play)="OnPlay(videoElement)" -->
+                <source [src]="video.manualUrl" />
+              </video>
+              <div class="flex-grow-1">
+                <!-- <span class="desc-text">{{manual.title}}</span>
+              <a [href]="manual.manualUrl" target="_blank" class="fa fa-eye"></a>
+              <a href="javascript:void(0)" (click)="downloadFile(manual)" class="fa fa-download"></a> -->
+                <span class="desc-text">{{video.title}}</span>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6" *ngIf="pdfList.length">
+      <div class="card h-100">
+        <div class="card-header">
+          <p class="heading">User Manuals</p>
+        </div>
+        <div class="card-body">
+          <div class="scrollables">
+            <div class="pdf-pannel mb-3" *ngFor="let manual of pdfList">
+              <img src="assets/images/pdf.svg" class="pdf-icon" alt="pdf-image">
+              <div class="flex-grow-1">
+                <!-- <span class="desc-text">{{manual.title}}</span>
+              <a [href]="manual.manualUrl" target="_blank" class="fa fa-eye"></a>
+              <a href="javascript:void(0)" (click)="downloadFile(manual)" class="fa fa-download"></a> -->
+                <a [href]="manual.manualUrl" target="_blank" class="desc-text">{{manual.title}}</a>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,20 @@
+.access-list {
+    border: 1px solid #BECCD1;
+    border-radius: 5px;
+}
+
+.header-row {
+    background: #EDF3F5;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.dark-label-heading {
+    font-weight: bold;
+}
+
+.role_multi_role {
+    margin-right: 8px;
+    background: #edf3f5;
+    border-radius: 5px;
+    padding: 2px 9px
+}

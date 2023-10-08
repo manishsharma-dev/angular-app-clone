@@ -1,0 +1,162 @@
+.separator {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.separator .line {
+  height: 1px;
+  flex: 1;
+  background-color: #dcdcdc;
+  margin-left: 8px;
+}
+
+.add-row .add-row--icon {
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background: #dcdcdc;
+}
+
+.custom-viewexpandable-table {
+  background-color: #eeecec;
+}
+
+/* table design */
+
+.custom-view-table {
+  box-shadow: none !important;
+  border-collapse: inherit;
+}
+
+.custom-view-table td.mat-cell,
+.custom-view-table th.mat-header-cell {
+  padding: 0px 5px !important;
+  white-space: nowrap;
+}
+
+.custom-view-table td.mat-cell {
+  border: 1px solid #dcdcdc;
+}
+
+.custom-view-table .table-input {
+  border: transparent;
+  background-color: #fff;
+  padding: 0px;
+}
+
+.custom-view-table tr.mat-row,
+.custom-view-table tr.mat-header-row {
+  height: 40px;
+}
+
+.custom-view-table tr.mat-header-row th {
+  background: #f8f7fa;
+  height: 38px;
+}
+
+.custom-view-table ::ng-deep.mat-sort-header-arrow {
+  position: absolute;
+  left: -20px !important;
+}
+
+.custom-view-table .status-highlight {
+  padding: 4px 10px;
+  border-radius: 16px;
+  background: #929292;
+  font-weight: bold;
+  opacity: 0.5;
+}
+
+/* /.custom-view-table .cell-width {
+  width: 15%;
+} */
+
+.custom-view-table tr.mat-header-row th:nth-child(1) {
+  min-width: 100px;
+}
+
+.custom-view-table tr.mat-header-row th:nth-child(2),
+.custom-view-table tr.mat-header-row th:nth-child(3) {
+  min-width: 120px;
+}
+
+.custom-view-table tr.mat-header-row th:nth-child(5) {
+  min-width: 70px;
+}
+.custom-view-table tr.mat-header-row th:nth-child(10) {
+  min-width: 10px;
+}
+
+.custom-view-table tr.mat-header-row th:nth-child(4),
+.custom-view-table tr.mat-header-row th:nth-child(6),
+.custom-view-table tr.mat-header-row th:nth-child(7) {
+  min-width: 10%;
+}
+
+.custom-view-table tr.mat-header-row th:nth-child(8) {
+  min-width: 10%;
+}
+.custom-view-table tr.mat-header-row th:nth-child(9) {
+  min-width: 2%;
+}
+
+/* .custom-view-table tr.mat-header-row th:last-child,
+.custom-view-table th:last-child,
+.custom-view-table td:last-child {
+  border: none !important;
+  background: none;
+} */
+
+/*Medicine Table*/
+
+/*Diagnostics Table*/
+
+.diagnostics-view-table {
+  box-shadow: none !important;
+  /* border: 1px solid #929292; */
+  border-collapse: inherit;
+}
+
+.diagnostics-view-table td.mat-cell,
+.diagnostics-view-table th.mat-header-cell {
+  padding: 0px 5px !important;
+  white-space: nowrap;
+}
+
+.diagnostics-view-table td.mat-cell {
+  border: 1px solid #dcdcdc;
+}
+
+.diagnostics-view-table .table-input {
+  border: transparent;
+  background-color: #fff;
+  padding: 0px;
+}
+
+.diagnostics-view-table tr.mat-row,
+.diagnostics-view-table tr.mat-header-row {
+  height: 40px;
+}
+
+.diagnostics-view-table tr.mat-header-row th {
+  background: #f8f7fa;
+  height: 38px;
+}
+
+.diagnostics-view-table ::ng-deep.mat-sort-header-arrow {
+  position: absolute;
+  left: -20px !important;
+}
+
+.diagnostics-view-table .status-highlight {
+  padding: 4px 10px;
+  border-radius: 16px;
+  background: #929292;
+  font-weight: bold;
+  opacity: 0.5;
+}
+
+i.fa {
+  cursor: pointer;
+}

@@ -1,0 +1,39 @@
+<div class="status-dialog">
+  <img src="/assets/images/checkbox-circle-line.svg" alt="checkbox-circle-line">
+  <p class="sd-id">{{'diseaseTesting.pool_id' | translate}}: <b>{{data.diseaseCode}}</b></p>
+  <h3 class="sd-msg">{{'diseaseTesting.pool_disease_testing_details_saved_successfully' | translate}}</h3>
+  <p class="sd-noti">{{'diseaseTesting.sample_id_has_been_generated' | translate}} </p>
+  <p class="sd-noti" *ngIf="data.supervisorName">{{"animalTreatmentSurgery.notification_send_to" | translate}} {{
+    data.supervisorName }}</p>
+  <div class="table-section">
+    <ng-container *ngIf="data.table_value?.length">
+      <b class="table-title">{{'diseaseTesting.sample_collected_for' | translate}} {{data.animalCount}}
+        {{'diseaseTesting.animals' | translate}}</b>
+      <!-- <table class="table table-bordered">
+        <thead class="thead-default">
+          <tr>
+            <th>{{ data.table_header.col1 }}</th>
+            <th>{{ data.table_header.col2 }}</th>
+            <th>{{ data.table_header.col3 }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of data.table_value">
+            <td>{{ value.testingLocationDesc }}
+              <ng-container *ngIf="value.testingLocation == 2 && value.labCdDesc"> ({{value.labCdDesc}})
+              </ng-container>
+            </td>
+            <td>{{ value.sampleId }}</td>
+            <td>{{ value.sampleTypeDesc }}</td>
+          </tr>
+        </tbody>
+      </table> -->
+    </ng-container>
+  </div>
+
+  <br>
+  <div class="close-btn">
+    <button type="submit" mat-dialog-close class="btn btn-primary" (click)="closeDialog()">{{'animalDetails.ok' |
+      translate}}</button>
+  </div>
+</div>

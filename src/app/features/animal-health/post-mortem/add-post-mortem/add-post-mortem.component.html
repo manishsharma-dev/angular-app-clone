@@ -1,0 +1,818 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<app-common-breadcrumb [breadcrumbKeys]="[ 'animalTreatmentSurgery.animal_health', 'postMortem.post_mortem']">
+</app-common-breadcrumb>
+
+
+<section class="add-post-mortem">
+  <mat-accordion>
+    <!-- Basic Details Form -->
+    <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)">
+      <mat-expansion-panel-header [style.height]="submitStatus.basicDetailsForm ? '48px' : null">
+        <mat-panel-title><span>1. {{'postMortem.fill_basic_details' | translate}}</span>
+          <i class="fa fa-check-circle-o ml-1 panel-check-icon" *ngIf="submitStatus.basicDetailsForm && step !== 0"></i>
+        </mat-panel-title>
+        <mat-panel-description *ngIf="submitStatus.basicDetailsForm && step !== 0">
+          <button class="btn btn-secondary ml-auto">{{'postMortem.edit' | translate}}</button>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <form [formGroup]="vetForm">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="" class="form-label">{{'postMortem.post_mortem' | translate}}</label>
+            <div class="form-row ml-3">
+              <!-- <div class="form-check col-md-6">
+                  <input type="checkbox" id="conductedby" class="form-check-input" formControlName="conductedBy">
+                  <label for="conductedby" class="form-check-label">Conducted By</label>
+                </div> -->
+              <div class="form-check col-md-6">
+                <input type="checkbox" id="ReferredBy" class="form-check-input" formControlName="referredBy">
+                <label for="ReferredBy" class="form-check-label">{{'postMortem.referred_by' | translate}}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row mt-1" *ngIf="vetForm.get('referredBy').value">
+          <div class="form-group col-md-3">
+            <label for="" class="form-label">{{'postMortem.organization' | translate}}</label>
+            <ng-select class="custom" formControlName="referredOrgCd" bindLabel="subOrgName">
+              <ng-option *ngFor="let lab of labMaster" [value]="lab">{{lab.subOrgName}}</ng-option>
+              <ng-option [value]="{subOrgId: 0}" *ngIf="!showAllHospitals"><a href="javascript:void(0)">Show All
+                  Hospitals</a></ng-option>
+            </ng-select>
+            <!-- <input type="text" formControlName="referredOrgCd" class="form-control"> -->
+            <div class="alert-message"
+              *ngIf="vetForm.get('referredOrgCd').invalid && (vetForm.get('referredOrgCd').touched || vetForm.get('referredOrgCd').dirty)">
+              <span *ngIf="vetForm.get('referredOrgCd').hasError('pattern')">
+                {{'diseaseTesting.invalid_characters_present' | translate}}
+              </span>
+              <span *ngIf="vetForm.get('referredOrgCd').hasError('maxlength')">
+                {{'postMortem.only_100_characters_allowed' | translate}}
+              </span>
+            </div>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="" class="form-label">{{'postMortem.veterinarian' | translate}}</label>
+            <!-- <ng-select class="custom" formControlName="veterinarian">
+              <ng-option>Vet 1</ng-option>
+              <ng-option>Vet 2</ng-option>
+              <ng-option>Vet 3</ng-option>
+            </ng-select> -->
+            <input type="text" formControlName="referredByVet" class="form-control">
+            <div class="alert-message"
+              *ngIf="vetForm.get('referredByVet').invalid && (vetForm.get('referredByVet').touched || vetForm.get('referredByVet').dirty)">
+              <span *ngIf="vetForm.get('referredByVet').hasError('pattern')">
+                {{'diseaseTesting.invalid_characters_present' | translate}}
+              </span>
+              <span *ngIf="vetForm.get('referredByVet').hasError('maxlength')">
+                {{'postMortem.only_100_characters_allowed' | translate}}
+              </span>
+            </div>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="" class="form-label">{{'postMortem.vet_council_reg_no' | translate}}</label>
+            <input type="text" class="form-control" formControlName="referredByVetRegistrationNo">
+            <div class="alert-message"
+              *ngIf="vetForm.get('referredByVetRegistrationNo').invalid && (vetForm.get('referredByVetRegistrationNo').touched || vetForm.get('referredByVetRegistrationNo').dirty)">
+              <span *ngIf="vetForm.get('referredByVetRegistrationNo').hasError('pattern')">
+                {{'postMortem.only_numeric_values_allowed' | translate}}
+              </span>
+              <span *ngIf="vetForm.get('referredByVetRegistrationNo').hasError('maxlength')">
+                {{'postMortem.only_100_characters_allowed' | translate}}
+              </span>
+            </div>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="" class="form-label">{{'postMortem.designation' | translate}}</label>
+            <input type="text" class="form-control" formControlName="referredByVetDesignation">
+            <div class="alert-message"
+              *ngIf="vetForm.get('referredByVetDesignation').invalid && (vetForm.get('referredByVetDesignation').touched || vetForm.get('referredByVetDesignation').dirty)">
+              <span *ngIf="vetForm.get('referredByVetDesignation').hasError('pattern')">
+                {{'diseaseTesting.invalid_characters_present' | translate}}
+              </span>
+              <span *ngIf="vetForm.get('referredByVetDesignation').hasError('maxlength')">
+                {{'postMortem.only_100_characters_allowed' | translate}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </form>
+      <form [formGroup]="basicDetailsForm">
+
+        <!-- first row -->
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="deathDateTime" class="form-label">
+              {{'postMortem.animal_death_date_time' | translate}} <span class="mandatory-field">*</span>
+            </label>
+            <div class="form-row">
+              <div class="col-md-6 mb-2 mb-md-0 input-icon">
+                <input type="text" name="animalDeathDate" id="animalDeathDate" formControlName="animalDeathDate"
+                  class="form-control" [max]="today" [matDatepicker]="animalDeathDate" placeholder="dd/mm/yyyy"
+                  [min]="animal?.dateOfBirth" (dateChange)="resetControls('animalDeathDate')" />
+                <mat-datepicker-toggle matSuffix [for]="animalDeathDate" class="calender-icon"></mat-datepicker-toggle>
+                <mat-datepicker #animalDeathDate></mat-datepicker>
+
+                <!-- <span class="validation-error-message" *ngIf="
+                    (basicDetailsControls.animalDeathDate.dirty &&
+                      basicDetailsControls.animalDeathDate.invalid) ||
+                    basicDetailsControls.animalDeathDate.touched
+                  ">
+                  <span *ngIf="
+                      basicDetailsControls.animalDeathDate.hasError('required')
+                    ">
+                    {{ validationMsg.required | translate}}
+                  </span>
+                </span> -->
+
+                <span class="alert-message" *ngIf="
+                (basicDetailsControls.animalDeathDate.dirty &&
+                basicDetailsControls.animalDeathDate.invalid) ||
+                basicDetailsControls.animalDeathDate.touched
+              ">
+                  <span *ngIf="basicDetailsControls.animalDeathDate.hasError('matDatepickerMin')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span *ngIf="basicDetailsControls.animalDeathDate.hasError('matDatepickerMax')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span *ngIf="basicDetailsControls.animalDeathDate.hasError('matDatepickerParse')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span
+                    *ngIf="basicDetailsControls.animalDeathDate.hasError('required') && !basicDetailsControls.animalDeathDate.hasError('matDatepickerParse')">
+                    {{ validationMsg.required | translate }}
+                  </span>
+                </span>
+
+
+              </div>
+              <div class="col-md-6">
+                <input type="time" name="animalDeathTime" id="animalDeathTime" formControlName="animalDeathTime"
+                  class="form-control" (change)="resetControls('animalDeathTime')" />
+                <span class="validation-error-message" *ngIf="
+                    (basicDetailsControls.animalDeathTime.dirty &&
+                      basicDetailsControls.animalDeathTime.invalid) ||
+                    basicDetailsControls.animalDeathTime.touched
+                  ">
+                  <span *ngIf="
+                      basicDetailsControls.animalDeathTime.hasError('required')
+                    ">
+                    {{ validationMsg.required | translate}}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="placeOfDeath" class="form-label">
+              {{'postMortem.place_of_death' | translate}} <span class="mandatory-field">*</span>
+            </label>
+
+            <input type="text" id="placeOfDeath" formControlName="placeOfDeath" class="form-control" />
+            <span class="validation-error-message" *ngIf="
+                (basicDetailsControls.placeOfDeath.dirty &&
+                  basicDetailsControls.placeOfDeath.invalid) ||
+                basicDetailsControls.placeOfDeath.touched
+              ">
+              <span *ngIf="basicDetailsControls.placeOfDeath.hasError('required')">
+                {{ validationMsg.required | translate}}
+              </span>
+              <span *ngIf="basicDetailsControls.placeOfDeath.hasError('pattern')">
+                {{ validationMsg.invalidChar | translate}}
+              </span>
+            </span>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="history" class="form-label"> {{'common.history' | translate}} </label>
+            <input type="text" id="history" formControlName="history" class="form-control" />
+            <span class="validation-error-message" *ngIf="
+                (basicDetailsControls.history.dirty &&
+                  basicDetailsControls.history.invalid) ||
+                basicDetailsControls.history.touched
+              ">
+              <span *ngIf="basicDetailsControls.history.hasError('required')">
+                {{ validationMsg.required | translate}}
+              </span>
+              <span *ngIf="basicDetailsControls.history.hasError('pattern')">
+                {{ validationMsg.invalidChar | translate}}
+              </span>
+            </span>
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="identificationMark" class="form-label"> {{'postMortem.identification_mark' | translate}}
+            </label>
+            <input type="text" class="form-control" id="identificationMark" formControlName="identificationMark" />
+            <span class="validation-error-message" *ngIf="
+            (basicDetailsControls.identificationMark.dirty &&
+              basicDetailsControls.identificationMark.invalid) ||
+            basicDetailsControls.identificationMark.touched
+          ">
+              <span *ngIf="basicDetailsControls.identificationMark.hasError('pattern')">
+                {{ validationMsg.invalidChar | translate}}
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <!-- image section -->
+        <div class="form-container row">
+          <div class="form-group col-md-6">
+            <label for="uploadFile" class="form-label">{{'fir.upload_images' | translate}}</label>
+            <div for="uploadFile" class="drag-area" appDragAndDrop #drop="appDragAndDrop"
+              (fileDropped)="handleFiles($event)" (click)="basicDetailsForm.enabled ? onFileAreaClick(fileInput):null"
+              [isDisabled]="isUploading() || basicDetailsForm.disabled">
+              <div class="icon">
+                <i class="fa fa-cloud-upload"></i>
+              </div>
+              <p *ngIf="!drop.fileOver&& !isUploading()">
+                {{'fir.drag_drop_files_here' | translate}} <b>{{'fir.browse' | translate}}</b>
+              </p>
+              <p *ngIf="drop.fileOver&& !isUploading()">{{'postMortem.release_to_upload' | translate}}</p>
+              <p *ngIf="isUploading()">{{'postMortem.uploading_files_please_wait' | translate}}</p>
+
+              <input [disabled]="isUploading() && basicDetailsForm.disabled" type="file" multiple id="uploadFile" hidden
+                #fileInput (change)="onFileInputChange($event)" />
+            </div>
+            <span class="validation-error-message"
+              *ngIf="basicDetailsControls.animalImages.hasError('invalidMimeType')">
+              {{'fir.only_type_files_are_allowed' | translate}}
+            </span>
+          </div>
+          <div class="col-md-6 form-group">
+            <div class="files-list">
+              <div *ngIf="isUploading()" class="mb-2">{{'fir.uploading' | translate}}</div>
+              <div class="single-file" *ngFor="let file of uploadedMedia; let i = index; let first = first">
+                <div class="file-icon">
+                  <i class="fa fa-image"></i>
+                </div>
+                <div class="info">
+                  <div class="row first-row">
+                    <h4 class="col-6 name">
+                      {{ file.fileName }}
+                    </h4>
+                    <p class="col-4 size">
+                      {{
+                      file.fileSize
+                      }}
+                    </p>
+                    <div class="col-2 delete" (click)="deleteFile(i)">
+                      <i class="fa" [ngClass]="{
+                          'fa-close': !file.uploaded,
+                          'fa-trash': file.uploaded
+                        }"></i>
+                    </div>
+                  </div>
+                  <ng-container *ngIf="!file.uploaded">
+                    <div class="second-row">
+                      <div class="progress" style="height: 2px">
+                        <div class="progress-bar" [style.width.%]="file.fileProgress"></div>
+                      </div>
+                    </div>
+                    <div class="third-row">
+                      <span class="upload-percent">{{ file.fileProgress }}% {{'common.done' | translate}}</span>
+                      <!-- <span class="upload-speed">300 kb/s</span> -->
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- second row -->
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="postMortemStart" class="form-label">
+              {{'postMortem.post_mortem_initiation_start_date_time' | translate}}
+              <span class="mandatory-field">*</span>
+            </label>
+            <div class="form-row">
+              <div class="col-md-6 mb-2 mb-md-0 input-icon">
+                <input type="text" name="pmInitiationStartDate" id="pmInitiationStartDate"
+                  formControlName="pmInitiationStartDate" class="form-control" [max]="today"
+                  [min]="basicDetailsForm.get('animalDeathDate')?.value" [matDatepicker]="pmInitiationStartDate"
+                  placeholder="dd/mm/yyyy" (dateChange)="resetControls('pmInitiationStartDate')" />
+                <mat-datepicker-toggle matSuffix [for]="pmInitiationStartDate" class="calender-icon">
+                </mat-datepicker-toggle>
+                <mat-datepicker #pmInitiationStartDate></mat-datepicker>
+                <span class="alert-message" *ngIf="
+                (basicDetailsControls.pmInitiationStartDate.dirty &&
+                basicDetailsControls.pmInitiationStartDate.invalid) ||
+                basicDetailsControls.pmInitiationStartDate.touched
+              ">
+                  <span *ngIf="basicDetailsControls.pmInitiationStartDate.hasError('matDatepickerMin')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span *ngIf="basicDetailsControls.pmInitiationStartDate.hasError('matDatepickerMax')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span *ngIf="basicDetailsControls.pmInitiationStartDate.hasError('matDatepickerParse')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span
+                    *ngIf="basicDetailsControls.pmInitiationStartDate.hasError('required') && !basicDetailsControls.pmInitiationStartDate.hasError('matDatepickerParse')">
+                    {{ validationMsg.required | translate }}
+                  </span>
+                </span>
+                <!-- <span class="validation-error-message" *ngIf="
+                    (basicDetailsControls.pmInitiationStartDate.dirty &&
+                      basicDetailsControls.pmInitiationStartDate.invalid) ||
+                    basicDetailsControls.pmInitiationStartDate.touched
+                  ">
+                  <span *ngIf="
+                      basicDetailsControls.pmInitiationStartDate.hasError(
+                        'required'
+                      )
+                    ">
+                    {{ validationMsg.required | translate}}
+                  </span>
+                </span> -->
+              </div>
+
+              <div class="col-md-6">
+                <input type="time" name="pmInitiationStartTime" id="pmInitiationStartTime"
+                  formControlName="pmInitiationStartTime" class="form-control" />
+                <span class="validation-error-message" *ngIf="
+                    (basicDetailsControls.pmInitiationStartTime.dirty &&
+                      basicDetailsControls.pmInitiationStartTime.invalid) ||
+                    basicDetailsControls.pmInitiationStartTime.touched
+                  ">
+                  <span *ngIf="
+                      basicDetailsControls.pmInitiationStartTime.hasError(
+                        'required'
+                      )
+                    ">
+                    {{ validationMsg.required | translate}}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-4">
+            <label for="postMortemEnd" class="form-label">
+              {{'postMortem.post_mortem_completion_end_date_time' | translate}}
+              <span class="mandatory-field">*</span>
+            </label>
+            <div class="form-row">
+              <div class="col-md-6 mb-2 mb-md-0 input-icon">
+                <input type="text" name="pmCompletionEndDate" id="pmCompletionEndDate"
+                  formControlName="pmCompletionEndDate" class="form-control"
+                  [min]="basicDetailsForm.get('pmInitiationStartDate')?.value" [max]="today"
+                  [matDatepicker]="pmCompletionEndDate" placeholder="dd/mm/yyyy"
+                  (dateChange)="resetControls('pmCompletionEndDate')" />
+                <mat-datepicker-toggle matSuffix [for]="pmCompletionEndDate" class="calender-icon">
+                </mat-datepicker-toggle>
+                <mat-datepicker #pmCompletionEndDate></mat-datepicker>
+                <span class="alert-message" *ngIf="
+                (basicDetailsControls.pmCompletionEndDate.dirty &&
+                basicDetailsControls.pmCompletionEndDate.invalid) ||
+                basicDetailsControls.pmCompletionEndDate.touched
+              ">
+                  <span *ngIf="basicDetailsControls.pmCompletionEndDate.hasError('matDatepickerMin')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span *ngIf="basicDetailsControls.pmCompletionEndDate.hasError('matDatepickerMax')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span *ngIf="basicDetailsControls.pmCompletionEndDate.hasError('matDatepickerParse')">
+                    {{'animalTreatmentSurgery.please_enter_valid_date' | translate}}
+                  </span>
+                  <span
+                    *ngIf="basicDetailsControls.pmCompletionEndDate.hasError('required') && !basicDetailsControls.pmCompletionEndDate.hasError('matDatepickerParse')">
+                    {{ validationMsg.required | translate }}
+                  </span>
+                </span>
+                <!-- <span class="validation-error-message" *ngIf="
+                    (basicDetailsControls.pmCompletionEndDate.dirty &&
+                      basicDetailsControls.pmCompletionEndDate.invalid) ||
+                    basicDetailsControls.pmCompletionEndDate.touched
+                  ">
+                  <span *ngIf="
+                      basicDetailsControls.pmCompletionEndDate.hasError(
+                        'required'
+                      )
+                    ">
+                    {{ validationMsg.required | translate}}
+                  </span>
+                </span> -->
+              </div>
+              <div class="col-md-6">
+                <input type="time" name="pmCompletionEndTime" id="pmCompletionEndTime"
+                  formControlName="pmCompletionEndTime" class="form-control" />
+                <span class="validation-error-message" *ngIf="
+                    (basicDetailsControls.pmCompletionEndTime.dirty &&
+                      basicDetailsControls.pmCompletionEndTime.invalid) ||
+                    basicDetailsControls.pmCompletionEndTime.touched
+                  ">
+                  <span *ngIf="
+                      basicDetailsControls.pmCompletionEndTime.hasError(
+                        'required'
+                      )
+                    ">
+                    {{ validationMsg.required | translate}}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-4 input-section">
+            <label for="pmLocation" class="form-label">
+              {{'postMortem.location' | translate}} <span class="mandatory-field">*</span>
+            </label>
+            <input type="text" id="pmLocation" class="form-control" formControlName="pmLocation" />
+            <mat-icon class="location-icon">gps_fixed</mat-icon>
+            <span class="validation-error-message" *ngIf="
+                (basicDetailsControls.pmLocation.dirty &&
+                  basicDetailsControls.pmLocation.invalid) ||
+                basicDetailsControls.pmLocation.touched
+              ">
+              <span *ngIf="basicDetailsControls.pmLocation.hasError('required')">
+                {{ validationMsg.required | translate}}
+              </span>
+
+              <span *ngIf="basicDetailsControls.pmLocation.hasError('pattern')">
+                {{ validationMsg.invalidChar | translate}}
+              </span>
+            </span>
+          </div>
+        </div>
+      </form>
+      <mat-action-row>
+        <button type="button" class="btn btn-outline-primary mr-2" (click)="saveInDraft()" *ngIf="!editMode">
+          {{'postMortem.save_as_draft' | translate}}
+        </button>
+        <button type="button" class="btn btn-secondary mr-2" (click)="onReset(basicDetailsForm)" *ngIf="!editMode">
+          {{'diseaseTesting.reset' | translate}}
+        </button>
+        <button type="submit" class="btn btn-primary" (click)="nextStep(basicDetailsForm)">
+          {{'animalDetails.next' | translate}}
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+
+    <!-- External Examination Form -->
+    <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)">
+      <mat-expansion-panel-header [style.height]="submitStatus.externalExaminationForm ? '48px' : null">
+        <mat-panel-title>
+          <span>2. {{'postMortem.external_examination' | translate}}</span>
+
+          <i class="fa fa-check-circle-o ml-1 panel-check-icon"
+            *ngIf="submitStatus.externalExaminationForm && step !== 1"></i>
+        </mat-panel-title>
+        <mat-panel-description *ngIf="submitStatus.externalExaminationForm && step !== 1">
+          <button class="btn btn-secondary ml-auto">{{'postMortem.edit' | translate}}</button>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <form [formGroup]="externalExaminationForm">
+        <!-- External Examination Section Row 1 -->
+        <div class="form-row">
+          <div class="form-group col-md-4 justify-content-start">
+            <label for="rigorMortis" class="form-label"> {{'postMortem.rigor_mortis' | translate}} </label>
+            <div class="form-row justify-self-center">
+              <div class="form-check form-check-inline col-md-4">
+                <input type="radio" id="present" class="form-check-input" name="rigorMortis" value="Y"
+                  formControlName="rigorMortis" />
+                <label for="present" class="form-check-label">{{'postMortem.present' | translate}}</label>
+              </div>
+              <div class="form-check form-check-inline col-md-4">
+                <input type="radio" id="absent" class="form-check-input" name="rigorMortis"
+                  formControlName="rigorMortis" value="N" />
+                <label for="absent" class="form-check-label">{{'postMortem.absent' | translate}}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- External Examination Section Row 2 -->
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="generalConditionCarcass" class="form-label">
+              {{'postMortem.general_condition_of_carcass' | translate}}
+            </label>
+            <input type="text" class="form-control" id="generalConditionCarcass"
+              formControlName="generalConditionCarcass" />
+            <span class="validation-error-message" *ngIf="
+              (externalExaminationControls.generalConditionCarcass.dirty &&
+                externalExaminationControls.generalConditionCarcass.invalid) ||
+              externalExaminationControls.generalConditionCarcass.touched
+            ">
+              <span *ngIf="externalExaminationControls.generalConditionCarcass.hasError('pattern')">
+                {{ validationMsg.invalidChar | translate}}
+              </span></span>
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="naturePositionOfInjury" class="form-label">
+              {{'postMortem.nature_and_position_of_injury' | translate}}
+            </label>
+            <input type="text" class="form-control" id="naturePositionOfInjury"
+              formControlName="naturePositionOfInjury" />
+            <span class="validation-error-message" *ngIf="
+              (externalExaminationControls.naturePositionOfInjury.dirty &&
+                externalExaminationControls.naturePositionOfInjury.invalid) ||
+              externalExaminationControls.naturePositionOfInjury.touched
+            ">
+              <span *ngIf="externalExaminationControls.naturePositionOfInjury.hasError('pattern')">
+                {{ validationMsg.invalidChar | translate}}
+              </span></span>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="naturalOrificesState" class="form-label">
+              {{'postMortem.state_of_natural_orifices' | translate}}
+            </label>
+            <input type="text" class="form-control" id="naturalOrificesState" formControlName="naturalOrificesState" />
+            <span class="validation-error-message" *ngIf="
+            (externalExaminationControls.naturalOrificesState.dirty &&
+              externalExaminationControls.naturalOrificesState.invalid) ||
+            externalExaminationControls.naturalOrificesState.touched
+          ">
+              <span *ngIf="externalExaminationControls.naturalOrificesState.hasError('pattern')">
+                {{ validationMsg.invalidChar | translate}}
+              </span></span>
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="mucousMembraneAndEyeCondition" class="form-label">
+              {{'postMortem.mucous_membrane_and_eye_condition' | translate}}
+            </label>
+            <input type="text" class="form-control" id="mucousMembraneAndEyeCondition"
+              formControlName="mucousMembraneAndEyeCondition" />
+            <span class="validation-error-message" *ngIf="
+              (externalExaminationControls.mucousMembraneAndEyeCondition.dirty &&
+                externalExaminationControls.mucousMembraneAndEyeCondition.invalid) ||
+              externalExaminationControls.mucousMembraneAndEyeCondition.touched
+            ">
+              <span *ngIf="externalExaminationControls.mucousMembraneAndEyeCondition.hasError('pattern')">
+                {{ validationMsg.invalidChar | translate}}
+              </span></span>
+          </div>
+        </div>
+
+        <!-- External Examination Section Row 2 -->
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="skinCondition" class="form-label">
+              {{'postMortem.skin_condition' | translate}}
+            </label>
+            <input type="text" class="form-control" id="skinCondition" formControlName="skinCondition" />
+            <span class="validation-error-message" *ngIf="
+            (externalExaminationControls.skinCondition.dirty &&
+              externalExaminationControls.skinCondition.invalid) ||
+            externalExaminationControls.skinCondition.touched
+          ">
+              <span *ngIf="externalExaminationControls.skinCondition.hasError('pattern')">
+                {{ validationMsg.invalidChar | translate}}
+              </span></span>
+          </div>
+        </div>
+      </form>
+
+      <mat-action-row>
+        <button type="button" class="btn btn-outline-primary mr-auto" (click)="step = step + 1" *ngIf="!editMode">
+          {{'animalDetails.skip' | translate}}
+        </button>
+        <button type="button" class="btn btn-outline-primary mr-2" (click)="saveInDraft()" *ngIf="!editMode">
+          {{'postMortem.save_as_draft' | translate}}
+        </button>
+        <button type="button" class="btn btn-secondary mr-2" (click)="onReset(externalExaminationForm)"
+          *ngIf="!editMode">
+          {{'diseaseTesting.reset' | translate}}
+        </button>
+        <button type="submit" class="btn btn-primary" (click)="nextStep(externalExaminationForm)">
+          {{'animalDetails.next' | translate}}
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+
+    <!-- Internal Examination Form -->
+    <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)">
+      <mat-expansion-panel-header [style.height]="submitStatus.internalExaminationForm ? '48px' : null">
+        <mat-panel-title>
+          <span>3. {{'postMortem.internal_examination' | translate}}</span>
+          <i class="fa fa-check-circle-o ml-1 panel-check-icon"
+            *ngIf="submitStatus.internalExaminationForm && step !== 2"></i>
+        </mat-panel-title>
+        <mat-panel-description *ngIf="submitStatus.internalExaminationForm && step !== 2">
+          <button class="btn btn-secondary ml-auto">{{'postMortem.edit' | translate}}</button>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <form [formGroup]="internalExaminationForm">
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <ng-select class="custom" placeholder="Select internal examination fields" appendTo="body"
+              [items]="fieldLabel" clearAllText="clear" [multiple]="true" [closeOnSelect]="false"
+              formControlName="fieldSelect" bindLabel="label">
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <div class="d-flex justify-content-between">
+                  <span>{{ item.label }}</span>
+                  <span class="add-medicine-btn" *ngIf="selectedFields.includes(item); else addButton">
+                    <i class="fa fa-minus mr-2" aria-hidden="true"></i>{{'diseaseTesting.remove' | translate}}</span>
+                  <ng-template #addButton>
+                    <span class="add-medicine-btn">
+                      <i class="fa fa-plus mr-2" aria-hidden="true"></i>{{'common.add' | translate}}</span>
+                  </ng-template>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+        <div class="form-row" formArrayName="selectedFields">
+          <div class="form-group col-md-3" *ngFor="let control of selectedFields; let i = index" [formGroupName]="i">
+            <label for="generalConditionCarcass" class="form-label">
+              {{ selectedFields[i].label |translate}}
+            </label>
+            <input type="text" class="form-control" [formControlName]="selectedFields[i].key" />
+            <span class="validation-error-message" *ngIf="
+            (getInternalFormControls(i)[selectedFields[i].key].dirty &&
+            getInternalFormControls(i)[selectedFields[i].key].invalid) ||
+            getInternalFormControls(i)[selectedFields[i].key].touched
+          ">
+              <span *ngIf="getInternalFormControls(i)[selectedFields[i].key].hasError('pattern')">
+                {{ validationMsg.invalidChar | translate}}
+              </span>
+            </span>
+          </div>
+        </div>
+      </form>
+
+      <mat-action-row>
+        <button type="button" class="btn btn-outline-primary mr-auto" (click)="step = step + 1" *ngIf="!editMode">
+          {{'animalDetails.skip' | translate}}
+        </button>
+        <button type="button" class="btn btn-outline-primary mr-2" (click)="saveInDraft()" *ngIf="!editMode">
+          {{'postMortem.save_as_draft' | translate}}
+        </button>
+        <button type="button" class="btn btn-secondary mr-2" (click)="onReset(internalExaminationForm)"
+          *ngIf="!editMode">
+          {{'diseaseTesting.reset' | translate}}
+        </button>
+        <button type="submit" class="btn btn-primary" (click)="nextStep(internalExaminationForm)">
+          {{'animalDetails.next' | translate}}
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+
+    <!-- Lab Testing Form -->
+    <mat-expansion-panel [expanded]="step === 3" (opened)="setStep(3)">
+      <mat-expansion-panel-header [style.height]="submitStatus.labTestingForm ? '48px' : null">
+        <mat-panel-title>
+          <span>4. {{'postMortem.sample_for_lab_testing' | translate}}</span>
+
+          <i class="fa fa-check-circle-o ml-1 panel-check-icon" *ngIf="submitStatus.labTestingForm && step !== 3"></i>
+        </mat-panel-title>
+        <mat-panel-description *ngIf="submitStatus.labTestingForm && step !== 3">
+          <button class="btn btn-secondary ml-auto">{{'postMortem.edit' | translate}}</button>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <form [formGroup]="labTestingForm">
+        <div class="medicine-list mb-3">
+          <div class="medicine-list-heading mb-3">
+            {{'diseaseTesting.sample_collection_details' | translate}}
+          </div>
+
+          <app-lab-testing-sample [SampleStatusFlags]="['B','D','O']" [diagnosticsForm]="labTestingForm"
+            [sampleData]="sampleData" [isDraft]="isDraft">
+          </app-lab-testing-sample>
+
+        </div>
+      </form>
+
+      <mat-action-row>
+        <button type="button" class="btn btn-outline-primary mr-auto" (click)="step = step + 1" *ngIf="!editMode">
+          {{'animalDetails.skip' | translate}}
+        </button>
+        <button type="button" class="btn btn-outline-primary mr-2" (click)="saveInDraft()" *ngIf="!editMode">
+          {{'postMortem.save_as_draft' | translate}}
+        </button>
+        <button type="button" class="btn btn-secondary mr-2" (click)="onReset(labTestingForm)" *ngIf="!editMode">
+          {{'diseaseTesting.reset' | translate}}
+        </button>
+        <button type="submit" class="btn btn-primary" (click)="nextStep(labTestingForm)">
+          {{'animalDetails.next' | translate}}
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+
+    <!-- Final Observation Form -->
+    <mat-expansion-panel [expanded]="step === 4" (opened)="setStep(4)">
+      <mat-expansion-panel-header [style.height]="submitStatus.finalObservationForm ? '48px' : null">
+        <mat-panel-title>
+          <span>5. {{'postMortem.final_observation' | translate}}</span>
+
+          <i class="fa fa-check-circle-o ml-1 panel-check-icon"
+            *ngIf="submitStatus.finalObservationForm && step !== 4"></i>
+        </mat-panel-title>
+        <mat-panel-description *ngIf="submitStatus.finalObservationForm && step !== 4">
+          <button class="btn btn-secondary ml-auto">{{'postMortem.edit' | translate}}</button>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <form [formGroup]="finalObservationForm">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="causeOfDeath" class="form-label">
+              {{'postMortem.probable_cause_of_death' | translate}} <span class="mandatory-field">*</span>
+            </label>
+            <textarea name="causeOfDeath" id="causeOfDeath" rows="3" class="form-control"
+              formControlName="causeOfDeath"></textarea>
+            <span class="validation-error-message" *ngIf="
+                (finalObservationControls.causeOfDeath.dirty &&
+                  finalObservationControls.causeOfDeath.invalid) ||
+                finalObservationControls.causeOfDeath.touched
+              ">
+              <span *ngIf="finalObservationControls.causeOfDeath.hasError('required')">
+                {{ validationMsg.required | translate}}
+              </span>
+              <span *ngIf="finalObservationControls.causeOfDeath.hasError('pattern')">
+                {{validationMsg.invalidChar| translate}}
+              </span>
+            </span>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="pmDiagnosis" class="form-label">
+              {{'postMortem.post_mortem_diagnosis' | translate}} <span class="mandatory-field">*</span>
+            </label>
+            <textarea name="pmDiagnosis" id="pmDiagnosis" rows="
+              3" class="form-control" formControlName="pmDiagnosis"></textarea>
+            <span class="validation-error-message" *ngIf="
+                (finalObservationControls.pmDiagnosis.dirty &&
+                  finalObservationControls.pmDiagnosis.invalid) ||
+                finalObservationControls.pmDiagnosis.touched
+              ">
+              <span *ngIf="
+                  finalObservationControls.pmDiagnosis.hasError(
+                    'required'
+                  )
+                ">
+                {{ validationMsg.required | translate}}
+              </span>
+              <span *ngIf="finalObservationControls.pmDiagnosis.hasError('pattern')">
+                {{validationMsg.invalidChar| translate}}
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="pmCharges" class="form-label">
+              {{'postMortem.post_mortem_charges' | translate}}
+            </label>
+            <input name="pmCharges" id="pmCharges" class="form-control" formControlName="pmCharges" />
+            <span class="validation-error-message" *ngIf="
+                (finalObservationControls.pmCharges.dirty &&
+                  finalObservationControls.pmCharges.invalid) ||
+                finalObservationControls.pmCharges.touched
+              ">
+              <span *ngIf="finalObservationControls.pmCharges.hasError('invalidDecimalNo')">
+                <!-- {{ validationMsg.decimalValidation | translate}} -->
+                {{"performanceRecording.invalid_value" | translate}}
+              </span>
+              <!-- <span *ngIf="finalObservationControls.pmCharges.hasError('maxlength')">
+                {{ validationMsg.postMortemCharges | translate}}
+              </span> -->
+            </span>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="receiptNo" class="form-label"> {{'firstAid.Receipt_Number' | translate}} </label>
+            <input name="receiptNo" id="receiptNo" class="form-control" formControlName="receiptNo" />
+            <span class="validation-error-message" *ngIf="
+                (finalObservationControls.receiptNo.dirty &&
+                  finalObservationControls.receiptNo.invalid) ||
+                finalObservationControls.receiptNo.touched
+              ">
+              <span *ngIf="finalObservationControls.receiptNo.hasError('pattern')">
+                {{validationMsg.invalidChar| translate}}
+              </span>
+              <span *ngIf="finalObservationControls.receiptNo.hasError('maxlength')">
+                {{"diseaseTesting.receipt_no_cannot_be_more_than_10_characters" | translate}}
+              </span>
+            </span>
+          </div>
+        </div>
+      </form>
+
+      <mat-action-row>
+        <button type="button" class="btn btn-outline-primary mr-2" (click)="saveInDraft()" *ngIf="!editMode">
+          {{'postMortem.save_as_draft' | translate}}
+        </button>
+        <button type="button" class="btn btn-secondary mr-2" (click)="onReset(finalObservationForm)">
+          {{'diseaseTesting.reset' | translate}}
+        </button>
+        <button type="submit" class="btn btn-primary" (click)="onSubmit()">
+          {{'common.submit' | translate}}
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+</section>

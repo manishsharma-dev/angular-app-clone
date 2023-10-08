@@ -1,0 +1,82 @@
+<div class="add-diagnostics-dialog">
+  <div class="add-diagnostics-header">
+    <div class="headeing">
+      <h2>Update Results</h2>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+  <div class="dialog-main-content">
+    <div class="row">
+      <div class="align-items-center treatment-information col-md-12">
+        <div class="col-12 mt-3 px-0">
+          <div class="table-outebox my-3">
+            <span class="font-weight-bold">Sample Details</span> 10452867
+            <div class="w-100 border p-3 mt-2">
+              <div class="row">
+                <div class="col-md-4 pb-3">
+                  <h4 class="font-weight-bold label-header">
+                    Sample Collection Date
+                  </h4>
+                  <p>15/07/2022</p>
+                </div>
+                <div class="col-md-4 pb-3">
+                  <h4 class="font-weight-bold label-header">Sample Type</h4>
+                  <p>Blood</p>
+                </div>
+                <div class="col-md-4 pb-3">
+                  <h4 class="font-weight-bold label-header">
+                    Examination Type
+                  </h4>
+                  <p>-</p>
+                </div>
+                <div class="col-md-4 pb-3">
+                  <h4 class="font-weight-bold label-header">
+                    Examination Sub-type
+                  </h4>
+                  <p>-</p>
+                </div>
+                <div class="col-md-4 pb-3">
+                  <h4 class="font-weight-bold label-header">Lab</h4>
+                  <p>-</p>
+                </div>
+              </div>
+              <div class="h-divider">
+                <div class="shadow"></div>
+              </div>
+              <form [formGroup]="labTestingForm">
+                <div class="form-row mb-3">
+                  <div class="col-md-12 form-group">
+                    <label for="resultFile">Upload Result</label>
+                    <input type="file" class="form-control" name="resultFile" id="resultFile"
+                      formControlName="resultFile" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="col-md-12 form-group">
+                    <label for="remarks">Remarks</label>
+                    <textarea id="remarks" class="form-control" placeholder="Enter remarks here"
+                      formControlName="remarks"></textarea>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+  <div class="add-diagnostics-footer">
+    <button type="reset" class="btn btn-light mr-2" (click)="resetForm()">
+      Clear
+    </button>
+    <button type="submit" class="btn btn-primary" (click)="saveLabResults()">Save</button>
+  </div>
+</div>

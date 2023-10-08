@@ -1,0 +1,236 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="edit-dialog">
+  <div class="edit-section-header">
+    <div class="edit-heading">
+      <h2 class="edit-heading-label">{{"animalDetails.organisationDetails.org_lbl" | translate }}</h2>
+      <p class="edit-heading-desc">{{"animalDetails.organisationDetails.view_info" | translate }}</p>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+
+  <div class="user-infoedit">
+    <div class="row mb-2">
+      <div class="col-md-12">
+        <div class="text-msg">
+          <span class="custmer-label"
+            >{{ organizationDetails.orgName }} ({{
+              organizationDetails.orgId
+            }})</span
+          >
+          <img
+            src="/assets/images/verified.svg"
+            class="icon-verified ml-2"
+            alt="icon-verified"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div id="owner-detail" class="col-md-12">
+        <ul>
+          <li>{{"common.reg_no" | translate}}: {{ organizationDetails.orgRegistrationNo }}</li>
+          <li>{{"common.village_only" | translate}} :{{ organizationDetails.orgAddress }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- third div  start-->
+
+  <div class="edit-container">
+    <form [formGroup]="orgDetailsForm">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="orgAddress" class="form-label"
+            >{{"animalDetails.organisationDetails.org_address" | translate}}<span class="mandatory-field">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="orgAddress"
+            placeholder="eg. Please enter the address"
+            formControlName="orgAddress"
+            [maxLength]="60"
+          />
+          <div
+            *ngIf="
+              (!orgDetails.orgAddress.pristine &&
+                orgDetails.orgAddress.invalid) ||
+              orgDetails.orgAddress.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="orgDetails.orgAddress.errors?.required">
+              Please Enter Org Address
+            </div>
+            <!-- <div *ngIf="orgDetails.orgMobile.errors?.pattern">
+              Please enter 10 digit Mobile No.
+            </div> -->
+          </div>
+          <!-- <div *ngIf="isMobileNumberNotEdited && !isViewOnly">
+            <a href="javascript:void(0)" (click)="enableEditMobile()"
+              >Edit Mobile</a
+            >
+          </div> -->
+          <!-- <div *ngIf="!isMobileNumberNotEdited">
+            <a
+              href="javascript:void(0)"
+              (click)="openOtpDialog(ownerDetails.ownerMobileNo.value)"
+              >Verify Mobile Number</a
+            >
+          </div> -->
+        </div>
+
+        <!-- org pin -->
+        <div class="form-group col-md-6">
+          <label for="orgPin" class="form-label"
+            >{{"animalDetails.organisationDetails.org_pin" | translate}}<span class="mandatory-field">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="orgPin"
+            placeholder="eg. Please enter the pincode"
+            formControlName="orgPin"
+            [maxLength]="6"
+          />
+          <div
+            *ngIf="
+              (!orgDetails.orgPin.pristine && orgDetails.orgPin.invalid) ||
+              orgDetails.orgPin.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="orgDetails.orgPin.errors?.required">
+              Please Enter org pincode
+            </div>
+          </div>
+        </div>
+
+        <!-- org email  start-->
+        <div class="form-group col-md-6">
+          <label for="orgRegistrationNo" class="form-label"
+            >{{"animalDetails.organisationDetails.org_reg_no" | translate}}<span class="mandatory-field">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="orgRegistrationNo"
+            placeholder="eg. Enter the org reg. no."
+            formControlName="orgRegistrationNo"
+            [maxLength]="40"
+          />
+          <div
+            *ngIf="
+              (!orgDetails.orgRegistrationNo.pristine &&
+                orgDetails.orgRegistrationNo.invalid) ||
+              orgDetails.orgRegistrationNo.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="orgDetails.orgRegistrationNo.errors?.required">
+              Please Enter the reg. no.
+            </div>
+          </div>
+        </div>
+        <!-- org email  end-->
+
+        <!-- org type start-->
+        <div class="form-group col-md-6">
+          <label for="orgType" class="form-label"
+            >{{"animalDetails.organisationDetails.org_type" | translate}}<span class="mandatory-field">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="orgType"
+            placeholder="eg. please enter org type."
+            formControlName="orgType"
+            [maxLength]="40"
+          />
+          <div
+            *ngIf="
+              (!orgDetails.orgType.pristine && orgDetails.orgType.invalid) ||
+              orgDetails.orgType.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="orgDetails.orgType.errors?.required">
+              Please Enter the org type.
+            </div>
+          </div>
+        </div>
+        <!-- org type end-->
+
+        <!-- state code start -->
+        <!-- state code end -->
+
+        <!-- district area operating start -->
+        <div class="form-group col-md-6">
+          <label for="districtCdAreaOperating" class="form-label"
+            >{{"animalDetails.organisationDetails.district_area_operating" | translate}}
+            <span class="mandatory-field">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="districtCdAreaOperating"
+            placeholder="eg. please ente district area."
+            formControlName="districtCdAreaOperating"
+            [maxLength]="40"
+          />
+          <div
+            *ngIf="
+              (!orgDetails.districtCdAreaOperating.pristine &&
+                orgDetails.districtCdAreaOperating.invalid) ||
+              orgDetails.districtCdAreaOperating.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="orgDetails.districtCdAreaOperating.errors?.required">
+              Please Enter the district area .
+            </div>
+          </div>
+        </div>
+        <!-- district area operating end -->
+
+        <!-- mobile no field start -->
+
+        <div class="form-group col-md-6">
+          <label for="mobileNo" class="form-label"
+            >{{"animalDetails.organisationDetails.mob_no" | translate}}<span class="mandatory-field">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="mobileNo"
+            placeholder="eg. please ente mob. no."
+            formControlName="mobileNo"
+            [maxLength]="10"
+          />
+          <div
+            *ngIf="
+              (!orgDetails.mobileNo.pristine && orgDetails.mobileNo.invalid) ||
+              orgDetails.mobileNo.touched
+            "
+            class="alert-message"
+          >
+            <div *ngIf="orgDetails.mobileNo.errors?.required">
+              Please Enter the mob. no. .
+            </div>
+          </div>
+        </div>
+        <!-- mobile no field end -->
+      </div>
+    </form>
+  </div>
+
+  <!-- third div end -->
+</div>

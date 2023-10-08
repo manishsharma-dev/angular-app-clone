@@ -1,0 +1,508 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            <a>{{'animalDetails.home' | translate}}</a>
+          </li>
+          <li class="breadcrumb-item active">
+            <a href="javascript:void(0)">{{'animalBreeding.breeding_module'|translate}} </a>
+          </li>
+          <li class="breadcrumb-item current">
+            <label>{{'animalBreeding.test_ai_criteria' | translate}} </label>
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<section class="create-test-plan">
+  <mat-accordion class="example-headers-align">
+    <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)">
+      <mat-expansion-panel-header [ngClass]="{ demoClass: submitStatus.basicDetailForm }">
+        <mat-panel-title>
+          1
+          <div class="custom-panel-title">
+            <div class="col-md-12">
+              <div class="expansion-label">{{'animalBreeding.basic_details' | translate}}</div>
+            </div>
+            <div class="col-md-12" *ngIf="submitStatus.basicDetailForm">
+              <div class="expansion-infoEdit">
+                {{'animalBreeding.no_of_village_select'|translate}}: {{ selectedVillagesCount }}
+              </div>
+            </div>
+          </div>
+        </mat-panel-title>
+        <mat-panel-description *ngIf="submitStatus.basicDetailForm">
+          <button class="btn btn-secondary ml-auto align-self-center">
+            {{'common.edit'|translate}}
+          </button>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <form [formGroup]="basicDetailForm">
+        <!-- first row -->
+        <div class="form-row mar-10">
+          <div class="col-md-2">
+            <div class="form-group">
+              <div class="form-group">
+                <label for="projectId">{{'common.project'|translate}}<span class="mandatory-field">*</span></label>
+                <select class="form-control" id="projectId" formControlName="projectId">
+                  <option [value]="null">{{'animalDetails.select'|translate}} {{'common.project'|translate}}</option>
+                  <option [value]="project?.projectId" *ngFor="let project of userDetails?.userProject">{{project?.projectName}}</option>
+                </select>
+                <span class="alert-message" *ngIf="
+                    (basicDetailFormControls.projectId.dirty &&
+                      basicDetailFormControls.projectId.invalid) ||
+                    basicDetailFormControls.projectId.touched
+                  ">
+                  <span *ngIf="
+                      basicDetailFormControls.projectId.hasError('required')
+                    ">
+                    {{ commonValidationMsg.required |translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="testPlanName">{{'animalBreeding.test_plan_name'|translate}} <span
+                  class="mandatory-field">*</span></label>
+              <input class="form-control" type="text" id="testPlanName" formControlName="testPlanName"
+                placeholder="{{'animalBreeding.commonLabel.enter_test_plan'| translate}}" />
+              <span class="alert-message" *ngIf="
+                  (basicDetailFormControls.testPlanName.dirty &&
+                    basicDetailFormControls.testPlanName.invalid) ||
+                  basicDetailFormControls.testPlanName.touched
+                ">
+                <span *ngIf="
+                    basicDetailFormControls.testPlanName.hasError('required')
+                  ">
+                  {{ commonValidationMsg.required |translate}}
+                </span>
+              </span>
+              <span class="alert-message" *ngIf="basicDetailFormControls.testPlanName.hasError('pattern')">
+                {{'errorMsg.invalid_char'|translate}}
+              </span>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="startDate">{{"animalDetails.from"| translate}} {{"common.date"| translate}} <span
+                  class="mandatory-field">*</span></label>
+              <input class="form-control input input-section" id="startDate" type="text"
+                [min]="backDate"  [max]="futureDate" [matDatepicker]="fromDate" placeholder="dd-mm-yyyy"
+                formControlName="startDate"  />
+              <mat-datepicker-toggle matSuffix [for]="fromDate" class="calender-icon">
+              </mat-datepicker-toggle>
+              <mat-datepicker #fromDate></mat-datepicker>
+              <span class="alert-message" *ngIf="
+              (basicDetailFormControls.startDate.dirty &&
+              basicDetailFormControls.startDate.invalid) ||
+              basicDetailFormControls.startDate.touched
+          ">
+          <span *ngIf="basicDetailFormControls.startDate.hasError('matDatepickerMin')">
+              {{'common.please_enter_valid_date' | translate}}
+          </span>
+          <span *ngIf="basicDetailFormControls.startDate.hasError('matDatepickerMax')">
+              {{'common.please_enter_valid_date' | translate}}
+          </span>
+          <span *ngIf="basicDetailFormControls.startDate.hasError('matDatepickerParse')">
+              {{'common.please_enter_valid_date' | translate}}
+          </span>
+          <span
+              *ngIf="basicDetailFormControls.startDate.hasError('required') && !basicDetailFormControls.startDate.hasError('matDatepickerParse')">
+              {{'errorMsg.field_mandatory' | translate}}
+          </span>
+      </span>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="endDate">{{"animalDetails.to"| translate}} {{"common.date"| translate}}<span
+                  class="mandatory-field">*</span></label>
+              <input class="form-control input input-section" id="endDate" type="text" [matDatepicker]="toDate"
+                placeholder="dd-mm-yyyy" formControlName="endDate"  [min]="backDate" [max]="futureDate" />
+              <mat-datepicker-toggle matSuffix [for]="toDate" class="calender-icon">
+              </mat-datepicker-toggle>
+              <mat-datepicker #toDate></mat-datepicker>
+              <span class="alert-message" *ngIf="
+              (basicDetailFormControls.endDate.dirty &&
+              basicDetailFormControls.endDate.invalid) ||
+              basicDetailFormControls.endDate.touched
+          ">
+          <span *ngIf="basicDetailFormControls.endDate.hasError('matDatepickerMin')">
+              {{'common.please_enter_valid_date' | translate}}
+          </span>
+          <span *ngIf="basicDetailFormControls.endDate.hasError('matDatepickerMax')">
+              {{'common.please_enter_valid_date' | translate}}
+          </span>
+          <span *ngIf="basicDetailFormControls.endDate.hasError('matDatepickerParse')">
+              {{'common.please_enter_valid_date' | translate}}
+          </span>
+          <span
+              *ngIf="basicDetailFormControls.endDate.hasError('required') && !basicDetailFormControls.endDate.hasError('matDatepickerParse')">
+              {{'errorMsg.field_mandatory' | translate}}
+          </span>
+      </span>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="stateCd">{{'registration.state'|translate}}<span class="mandatory-field">*</span></label>
+              <ng-select appendTo="body" class="custom" name="stateCd" id="stateCd" formControlName="stateCd"
+                (change)="getDistrictDetails($event)" bindLabel="stateName" bindValue="stateCode"
+                placeholder="{{'registration.StateOption'|translate}}">
+                <ng-option [value]="state?.stateCd" *ngFor="let state of statesList">
+                  {{ state?.stateName }}</ng-option>
+              </ng-select>
+              <span class="alert-message" *ngIf="
+                  (basicDetailFormControls.stateCd.dirty &&
+                    basicDetailFormControls.stateCd.invalid) ||
+                  basicDetailFormControls.stateCd.touched
+                ">
+                <span *ngIf="basicDetailFormControls.stateCd.hasError('required')">
+                  {{ commonValidationMsg.required |translate}}
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="districtCd">{{'registration.district'|translate}}<span
+                  class="mandatory-field">*</span></label>
+
+              <ng-select appendTo="body" class="custom" id="districtCd" formControlName="districtCd"
+                (change)="getTehsilDetails($event)" bindLabel="districtName" bindValue="districtCd"
+                placeholder="{{'registration.DistrictOption'|translate}}">
+                <ng-option [value]="district?.districtCd" *ngFor="let district of districtList">
+                  {{ district?.districtName }}</ng-option>
+              </ng-select>
+              <span class="alert-message" *ngIf="
+                  (basicDetailFormControls.districtCd.dirty &&
+                    basicDetailFormControls.districtCd.invalid) ||
+                  basicDetailFormControls.districtCd.touched
+                ">
+                <span *ngIf="
+                    basicDetailFormControls.districtCd.hasError('required')
+                  ">
+                  {{ commonValidationMsg.required |translate}}
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div formArrayName="testAiLocationMapDto">
+          <div class="d-flex mar-10 align-items-center" *ngFor="let level of villageTehsilsControls; let i = index"
+            [formGroupName]="i">
+            <div class="form-row flex-fill">
+              <div class="col-md-2 mat-row">
+                <div class="form-group">
+                  <div class="form-group">
+                    <label for="tehsilCd">{{'registration.Tehsil/Block'|translate}}<span
+                        class="mandatory-field">*</span></label>
+                    <ng-select appendTo="body" class="custom" name="tehsilCd" formControlName="tehsilCd"
+                      (change)="getVillagesDetails($event, i)" placeholder="{{'registration.TehsilOption'|translate}}"
+                      bindLabel="tehsilName" bindValue="tehsilCd">
+                      <ng-option [value]="tehsil?.tehsilCd" *ngFor="let tehsil of tehsilList">
+                        {{ tehsil?.tehsilName }}
+                      </ng-option>
+                    </ng-select>
+                    <span class="alert-message" *ngIf="
+                        (level.controls.tehsilCd.dirty &&
+                          level.controls.tehsilCd.invalid) ||
+                        level.controls.tehsilCd.touched
+                      ">
+                      <span *ngIf="level.controls.tehsilCd.hasError('required')">
+                        {{ commonValidationMsg.required |translate}}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-10 mat-row">
+                <div class="form-group">
+                  <label for="villageCd">{{'common.village_name'|translate}}<span
+                      class="mandatory-field">*</span></label>
+                  <!-- <input class="form-control" type="text"  /> -->
+                  <ng-select appendTo="body" class="custom" [items]="villages[i]" [multiple]="true"
+                    bindLabel="villageName" groupBy="selectedAllGroup" [selectableGroup]="true"
+                    [selectableGroupAsModel]="false" [closeOnSelect]="false" bindValue="villageCd"
+                    placeholder="{{'errorMsg.no_village'|translate}}" id="villageCd" formControlName="villageCd">
+                    <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />
+                      Select All
+                    </ng-template>
+
+                    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input class="mr-2" id="item-{{ index }}" type="checkbox" [checked]="item$.selected" />{{
+                      item.villageName }}
+                    </ng-template>
+                  </ng-select>
+                  <span class="alert-message" *ngIf="
+                      (level.controls.villageCd.dirty &&
+                        level.controls.villageCd.invalid) ||
+                      level.controls.villageCd.touched
+                    ">
+                    <span *ngIf="level.controls.villageCd.hasError('required')">
+                      {{ commonValidationMsg.required |translate}}
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="align-self-stretch" (click)="removeVillageTehsilsRow(i)">
+              <i aria-hidden="true" class="fa fa-trash-o icon-pointer icon-section delete-icon-position"></i>
+            </div>
+          </div>
+        </div>
+        <div class="add-row mar-10">
+          <span class="add-row--btn" (click)="addVillageTehsilsRow()">
+            <i aria-hidden="true" class="fa fa-plus add-row--icon"></i><b
+              class="">{{'animalDetails.editAnimalDetails.add_more'|translate}}</b>
+          </span>
+        </div>
+        <div class="row">
+          <div class="h-divider mb-4">
+            <div class="dashed"></div>
+          </div>
+        </div>
+      </form>
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <span>{{'animalBreeding.commonLabel.village_select'|translate}} : [{{
+            selectedVillagesCount
+            }}]</span>
+        </div>
+        <div class="col-md-6">
+          <div class="d-flex justify-content-end">
+            <!-- (click)="onReset(basicDetailForm)" -->
+            <button type="button" class="btn btn-secondary mr-2" (click)="goBack()">
+              {{'animalDetails.cancel'|translate}}
+            </button>
+            <button type="submit" class="btn btn-primary" (click)="nextStep(basicDetailForm)">
+              {{'animalDetails.next'|translate}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)">
+      <mat-expansion-panel-header [style.height]="submitStatus.testingDetailForm ? '48px' : null">
+        <mat-panel-title>
+          2
+          <div class="custom-panel-title ml-3">
+            <div class="expansion-label">{{'animalDetails.select'|translate}} {{'animalBreeding.bull'|translate}} </div>
+          </div>
+        </mat-panel-title>
+        <mat-panel-description *ngIf="submitStatus.testingDetailForm">
+          <button class="btn btn-secondary ml-auto align-items-center">
+            {{'common.edit'|translate}}
+          </button>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <form [formGroup]="filterForm">
+        <div class="form-row mar-10">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="Case Status">{{'animalBreeding.semen_station'|translate}} </label>
+              <ng-select class="custom" formControlName="semenStationCodes"
+                placeholder="{{'animalDetails.select_semene_station'|translate}}" appendTo="body" [multiple]="true"
+                (change)="getBullList('semenStationCodes')" [multiple]="true" bindLabel="subOrgName"
+                bindValue="subOrgId" (remove)="onRemove($event)" (clear)="resetSemenStation();">
+                <ng-option *ngFor="let org of orgsList" [value]="org.subOrgId">{{ org.subOrgName }}</ng-option>
+              </ng-select>
+
+            </div>
+          </div>
+
+          <!-- <div class="col-md-4">
+            <div class="form-group">
+              <label for="Case Status">Breed</label>
+              <ng-select class="custom" formControlName="breedCd" (change)="getBullList('breedCd')" appendTo="body"
+                placeholder="Select">
+              </ng-select>
+            </div>
+          </div> -->
+          <div class="col-md-4">
+            <div class="form-group input-section">
+              <label for="Case Status">{{'animalBreeding.bull_id'|translate}} </label>
+              <input class="form-control" formControlName="bullId" placeholder="{{'errorMsg.enter_bull'|translate}}" (keydown)="$event.keyCode == 13 ? $event.preventDefault() : null"/>
+              <span class="add-btn" (click)="getBullList('bullId')">
+                <i class="fa fa-plus"></i> {{'common.add'|translate}}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <section class="bull-list" *ngIf="dataSource.data.length">
+          <div class="row p-0 mb-3">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-body position-relative">
+                  <div class="row align-items-center mt-4">
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                      <div class="title-heading">
+                        <form>
+                          <div class="form-row">
+                            <div class="filter-by">
+                              <!-- <img src="/assets/images/search.svg" class="input-icon-left" alt="icon-search" /> -->
+                              <input type="text" class="form-control input input-section" id="filter-by"
+                                placeholder="{{'errorMsg.search_by_keywords'|translate}}"
+                                (keyup)="searchInTable($event)" />
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="table-responsive table-view mb-3">
+                    <div class="table-responsive">
+
+                      <table mat-table #outerSort="matSort" [dataSource]="dataSource"
+                        class="outer-table mat-elevation-z8 mt-4 table-container" multiTemplateDataRows matSort>
+                        <ng-container matColumnDef="check">
+                          <th mat-header-cell *matHeaderCellDef>
+                            <input type="checkbox" (change)="selectAll($event)"
+                              [checked]="selectedBulls.length && selectedBulls.length === dataSource.data.length" />
+                          </th>
+                          <td mat-cell *matCellDef="let element; let index = index">
+                            <input type="checkbox" [checked]="checkIfSelected(element, true)"
+                              (change)="onCheckBoxChange($event, element, index, true)" />
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="bullId">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'animalBreeding.bull_id'|translate}}
+                          </th>
+                          <td mat-cell *matCellDef="let element">
+                            {{ element.bull.bullId }}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="semenStation">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'animalBreeding.semen_station'|translate}}
+                          </th>
+                          <td mat-cell *matCellDef="let element">
+                            {{ element?.subOrganizationDetailsResponceDto?.
+                            subOrganizationBasicInfo?.subOrgName }}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="species">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'animalDetails.species'|translate}}
+                          </th>
+                          <td mat-cell *matCellDef="let element">
+                            {{ element.bull.species }}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="breed">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'animalDetails.breed'|translate}}
+                          </th>
+                          <td mat-cell *matCellDef="let element">
+                            {{ element.bull.breed }}
+                          </td>
+                        </ng-container>
+
+                        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                        <ng-container matColumnDef="expandedDetail">
+                          <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+                            <div class="example-element-detail" *ngIf="element?.associatedBullsList?.length">
+                              <div class="inner-table">
+                                <table #innerTables mat-table #innerSort="matSort"
+                                  [dataSource]="element?.associatedBullsList" matSort>
+                                  <ng-container matColumnDef="check">
+                                    <td mat-cell *matCellDef="let e; let i = index">
+                                      <input type="checkBox" [checked]="checkIfSelected(e, false)"
+                                        (change)="onCheckBoxChange($event, e, i, false, element)" />
+                                    </td>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="bullId">
+                                    <td mat-cell *matCellDef="let e">
+                                      {{ e.bullId }} ({{'animalBreeding.alias'|translate}})
+                                    </td>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="semenStation">
+                                    <td mat-cell *matCellDef="let e">
+                                      {{ element?.subOrganizationDetailsResponceDto?.
+                                      subOrganizationBasicInfo?.subOrgName }}
+                                    </td>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="species">
+                                    <td mat-cell *matCellDef="let e">
+                                      {{ e.species }}
+                                    </td>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="breed">
+                                    <td mat-cell *matCellDef="let e">
+                                      {{ e.breed }}
+                                    </td>
+                                  </ng-container>
+                                  <tr mat-row *matRowDef="let row; columns: innerColumnsToDisplay"></tr>
+                                </table>
+                              </div>
+                            </div>
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+                        <tr mat-row *matRowDef="let element; columns: columnsToDisplay"></tr>
+                        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"
+                          [class.hidden-row]="!row?.associatedBullsList || row?.associatedBullsList?.length === 0"></tr>
+                      </table>
+
+                      <mat-paginator #paginator [length]="totalRows" [pageIndex]="currentPage" [pageSize]="pageSize"
+                  [pageSizeOptions]="pageSizeOptions" (page)="pageChanged($event)" aria-label="Select page">
+                </mat-paginator>
+
+                    </div>
+                  </div>
+
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="row align-items-center">
+          <div class="col-md-12">
+            <div class="d-flex justify-content-end">
+              <button type="button" class="btn btn-secondary mr-2" (click)="goBack()">
+                {{'animalDetails.cancel'|translate}}
+              </button>
+              <!-- (click)="onReset(filterForm)" -->
+              <button type="submit" class="btn btn-primary" (click)="onSubmit()">
+                {{'common.submit'|translate}}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </mat-expansion-panel>
+  </mat-accordion>
+</section>

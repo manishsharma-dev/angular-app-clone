@@ -1,0 +1,618 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="campaign-edit-dialog">
+  <!-- header -->
+  <div class="campaign-edit-header">
+    <div class="headeing">
+      <h2 class="edit-heading-label"> Manage {{data.areaSection}}</h2>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+
+  <!-- contant -->
+  <div class="dialog-main-content">
+    <div class="form-row" *ngIf="data.areaSection == 'state'">
+      <form class="w-100" [formGroup]="areaAllocation">
+        <div class="card mb-2">
+          <div class="card-header">
+            State
+          </div>
+          <div class="card-body py-0">
+            <div class="form-row">
+              <div class="col-md-5 border-right">
+                <div class="col-md-12 mt-3 form-group">
+                  <label for="state" class="form-label">{{ "round.campaign_select_state" |translate }}</label>
+                  <ng-select [items]="masterData | async" [multiple]="false" bindLabel="stateName" groupBy="section"
+                    [selectableGroup]="true" [virtualScroll]="true" [clearSearchOnAdd]="true"
+                    [selectableGroupAsModel]="false" [closeOnSelect]="false" [clearable]="false"
+                    formControlName="selectedState" (change)="onAreaChange($event, 'state','state')"
+                    (remove)="onAreaRemove($event, 'state','state')" placeholder="Select States">
+                    <ng-template class="form-control" ng-optgroup-tmp let-item="item" let-item$="item$"
+                      let-index="index">
+                      <input id="item-{{ index }}" type="checkbox" [(ngModel)]="item$.selected"
+                        [ngModelOptions]="{ standalone: true }" />
+                      Select All
+                    </ng-template>
+                    <ng-template class="form-control" ng-multi-label-tmp let-items="items" let-item$="item$"
+                      let-clear="clear">
+                      <div class="ng-value" *ngFor="let item of items | slice:0:3;let index =index">
+                        {{item[bindStateName]}}
+                      </div>
+                      <div class="ng-value" *ngIf="items.length > 3">
+                        <span class="ng-value-label"> + {{items.length - 3}} more...</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                  <span class="alert-message"
+                    *ngIf="(formControls.selectedState.dirty && formControls.selectedState.invalid) || formControls.selectedState.touched ">
+                    <span *ngIf=" formControls.selectedState.hasError('required')">
+                      {{ validationMsg.required | translate }}
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <div class="col-md-12 mt-3 form-group">
+                  <label for="state" class="form-label">Selected States</label>
+                  <div class="symptom-list mb-2" *ngIf="formControls.selectedState.value">
+                    <mat-chip-list>
+                      <mat-chip (click)="getStateDetails(formControls.selectedState.value)"
+                        [ngClass]="{'selected-chip': (stateSelected !=null && stateSelected == formControls.selectedState.value[bindStateCode])}">
+                        {{ formControls.selectedState.value[bindStateName] }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="stateSelected">
+          <div class="card mb-2">
+            <div class="card-header">
+              District
+            </div>
+            <div class="card-body form-row py-0">
+              <div class="col-md-5 border-right">
+                <div class="col-md-12 mt-3 form-group">
+                  <label for="selectVillage" class="form-label"> {{ "campaignCreation.campaign_select_district"
+                    |translate}}<span class="mandatory-field">*</span></label>
+                  <ng-select [items]="districtMasterData | async" [multiple]="true" bindLabel="districtName"
+                    groupBy="section" [selectableGroup]="true" [virtualScroll]="true" [clearSearchOnAdd]="true"
+                    [compareWith]="compareDistrictFunction" [selectableGroupAsModel]="false" [closeOnSelect]="false"
+                    [clearable]="false" formControlName="selectedDistrict" (selectAll)="selectAllStates($event)"
+                    (add)="onAreaChange($event, 'district','state')" (remove)="onAreaRemove($event, 'district','state')"
+                    placeholder="Select districts">
+                    <ng-template class="form-control" ng-optgroup-tmp let-item="item" let-item$="item$"
+                      let-index="index">
+                      <input id="itemD-{{ index }}" type="checkbox" [(ngModel)]="item$.selected"
+                        [ngModelOptions]="{ standalone: true }" />
+                      Select All
+                    </ng-template>
+                    <ng-template class="form-control" ng-multi-label-tmp let-items="items" let-item$="item$"
+                      let-clear="clear">
+                      <div class="ng-value" *ngFor="let item of items | slice:0:3;let index =index">
+                        {{item[bindDistrictName]}}
+                      </div>
+                      <div class="ng-value" *ngIf="items.length > 3">
+                        <span class="ng-value-label"> + {{items.length - 3}} more...</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <div class="col-md-12 mt-3 form-group">
+                  <label for="state" class="form-label">Selected Districts</label>
+                  <div class="symptom-list mb-2" *ngIf="formControls.selectedDistrict.value?.length">
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="let district of formControls.selectedDistrict.value| slice : 0:(districtExpanded ? undefined : 3) ; let i = index"
+                        (click)="getDistrictDetails(district)"
+                        [ngClass]="{'selected-chip': districtSelected == district[bindDistrictCd]}">
+                        {{ district[bindDistrictName] }}
+                      </mat-chip>
+                    </mat-chip-list>
+                    <span class="ng-value-label text-primary" *ngIf="formControls.selectedDistrict.value.length>3"
+                      (click)="districtExpanded = !districtExpanded"> see
+                      <ng-container *ngIf="!districtExpanded"> {{formControls.selectedDistrict.value.length - 3}}
+                        more...</ng-container> <ng-container *ngIf="districtExpanded">less </ng-container> </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="stateSelected && districtSelected">
+          <div class="card mb-2">
+            <div class="card-header">
+              Tehsil
+            </div>
+            <div class="card-body form-row py-0">
+              <div class="col-md-5 border-right">
+                <div class="col-md-12 mt-3 form-group">
+                  <label for="selectVillage" class="form-label"> {{ "campaignCreation.campaign_select_tehsil" |
+                    translate}} </label>
+                  <ng-select [items]="tehsilMasterData | async" [multiple]="true" bindLabel="tehsilName"
+                    groupBy="section" [selectableGroup]="true" [virtualScroll]="true" [clearSearchOnAdd]="true"
+                    [selectableGroupAsModel]="false" [closeOnSelect]="false" [clearable]="false"
+                    [compareWith]="compareTehsilFunction" formControlName="selectedTehsil"
+                    (add)="onAreaChange($event, 'tehsil','state')" (remove)="onAreaRemove($event, 'tehsil','state')"
+                    placeholder="Select tehsil">
+                    <ng-template class="form-control" ng-optgroup-tmp let-item="item" let-item$="item$"
+                      let-index="index">
+                      <input id="itemT-{{ index }}" type="checkbox" [(ngModel)]="item$.selected"
+                        [ngModelOptions]="{ standalone: true }" />
+                      Select All
+                    </ng-template>
+                    <ng-template class="form-control" ng-multi-label-tmp let-items="items" let-item$="item$"
+                      let-clear="clear">
+                      <div class="ng-value" *ngFor="let item of items | slice:0:3;let index =index">
+                        {{item[bindTehsilName]}}
+                      </div>
+                      <div class="ng-value" *ngIf="items.length > 3">
+                        <span class="ng-value-label"> + {{items.length - 3}} more...</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <div class="col-md-12 mt-3 form-group">
+                  <label for="state" class="form-label">Selected Tehsils</label>
+                  <div class="symptom-list mb-2" *ngIf="formControls.selectedDistrict.value?.length">
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="let district of formControls.selectedTehsil.value| slice : 0:(tehsilExpanded ? undefined : 3) ; let i = index"
+                        (click)="getTehsilDetails(district)"
+                        [ngClass]="{'selected-chip': tehsilSelected == district[bindTehsilCd]}">
+                        {{ district[bindTehsilName] }}
+                        <i (click)="onClickingRemove(i,'tehsil')" class="fa fa-close mx-2" aria-hidden="true"></i>
+                      </mat-chip>
+                    </mat-chip-list>
+                    <span class="ng-value-label text-primary"
+                      *ngIf="formControls.selectedTehsil.value && formControls.selectedTehsil.value.length>3"
+                      (click)="tehsilExpanded = !tehsilExpanded"> see
+                      <ng-container *ngIf="!tehsilExpanded"> {{formControls.selectedTehsil.value.length - 3}}
+                        more...</ng-container> <ng-container *ngIf="tehsilExpanded">less </ng-container>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="stateSelected && districtSelected && tehsilSelected">
+          <div class="card mb-2">
+            <div class="card-header">
+              Village
+            </div>
+            <div class="card-body form-row py-0">
+              <div class="col-md-5 border-right">
+                <div class="col-md-12 mt-3 form-group">
+                  <label for="selectVillage" class="form-label"> {{"campaignCreation.campaign_select_village" |
+                    translate
+                    }} </label>
+                  <ng-select [items]="villageMasterData | async" [multiple]="true" bindLabel="villageName"
+                    groupBy="section" [selectableGroup]="true" [virtualScroll]="true" [clearSearchOnAdd]="true"
+                    [selectableGroupAsModel]="false" [closeOnSelect]="false" [clearable]="false"
+                    [compareWith]="compareVillageFunction" formControlName="selectedVillage"
+                    (add)="onAreaChange($event, 'village','state')" (remove)="onAreaRemove($event, 'village','state')"
+                    placeholder="Select villages">
+                    <ng-template class="form-control" ng-optgroup-tmp let-item="item" let-item$="item$"
+                      let-index="index">
+                      <input id="itemV-{{ index }}" type="checkbox" [(ngModel)]="item$.selected"
+                        [ngModelOptions]="{ standalone: true }" />
+                      Select All
+                    </ng-template>
+                    <ng-template class="form-control" ng-multi-label-tmp let-items="items" let-item$="item$"
+                      let-clear="clear">
+                      <div class="ng-value" *ngFor="let item of items | slice:0:3;let index =index">
+                        {{item[bindvillageName]}}
+                      </div>
+                      <div class="ng-value" *ngIf="items.length > 3">
+                        <span class="ng-value-label"> + {{items.length - 3}} more...</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <div class="col-md-12 mt-3 form-group">
+                  <label for="state" class="form-label">Selected Villages</label>
+                </div>
+                <div class="symptom-list mb-2" *ngIf="formControls.selectedVillage.value?.length">
+                  <mat-chip-list>
+                    <mat-chip
+                      *ngFor="let village of formControls.selectedVillage.value| slice : 0:(villageExpanded ? undefined : 3) ; let i = index">
+                      {{ village[bindvillageName] }}
+                      <i (click)="onClickingRemove(i,'village')" class="fa fa-close mx-2" aria-hidden="true"></i>
+                    </mat-chip>
+                  </mat-chip-list>
+                  <span class="ng-value-label text-primary" *ngIf="formControls.selectedVillage.value.length>3"
+                    (click)="villageExpanded = !villageExpanded"> see
+                    <ng-container *ngIf="!villageExpanded"> {{formControls.selectedVillage.value.length - 3}}
+                      more...</ng-container> <ng-container *ngIf="villageExpanded">less </ng-container>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </form>
+    </div>
+    <div class="form-row" *ngIf="data.areaSection == 'district'">
+      <form class="w-100" [formGroup]="areaAllocation">
+        <div class="card mb-2">
+          <div class="card-header">
+            District
+          </div>
+          <div class="card-body form-row py-0">
+            <div class="col-md-5 border-right">
+              <div class="col-md-12 mt-3 form-group">
+                <label for="selectVillage" class="form-label"> {{ "campaignCreation.campaign_select_district"
+                  |translate}}<span class="mandatory-field">*</span></label>
+                <ng-select [items]="masterData | async" [multiple]="true" bindLabel="districtName" groupBy="section"
+                  [selectableGroup]="true" [virtualScroll]="true" [selectableGroupAsModel]="false"
+                  [clearSearchOnAdd]="true" [closeOnSelect]="false" [clearable]="false"
+                  [compareWith]="compareDistrictFunction" formControlName="selectedDistrict"
+                  (add)="onAreaChange($event, 'district','district')"
+                  (remove)="onAreaRemove($event, 'district','district')" placeholder="Select districts">
+                  <ng-template class="form-control" ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                    <input id="itemDD-{{ index }}" type="checkbox" [(ngModel)]="item$.selected"
+                      [ngModelOptions]="{ standalone: true }" />
+                    Select All
+                  </ng-template>
+                  <ng-template class="form-control" ng-multi-label-tmp let-items="items" let-item$="item$"
+                    let-clear="clear">
+                    <div class="ng-value" *ngFor="let item of items | slice:0:3;let index =index">
+                      {{item[bindDistrictName]}}
+                    </div>
+                    <div class="ng-value" *ngIf="items.length > 3">
+                      <span class="ng-value-label"> + {{items.length - 3}} more...</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
+                <span class="alert-message"
+                  *ngIf="(formControls.selectedDistrict.dirty && formControls.selectedDistrict.invalid) || formControls.selectedDistrict.touched ">
+                  <span *ngIf=" formControls.selectedDistrict.hasError('required')">
+                    {{ validationMsg.required | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-7">
+              <div class="col-md-12 mt-3 form-group">
+                <label for="state" class="form-label">Selected Districts</label>
+                <div class="symptom-list mb-2" *ngIf="formControls.selectedDistrict.value?.length">
+                  <mat-chip-list>
+                    <mat-chip
+                      *ngFor="let district of formControls.selectedDistrict.value| slice : 0:(districtExpanded ? undefined : 3) ; let i = index"
+                      (click)="getDistrictDetails(district)"
+                      [ngClass]="{'selected-chip': districtSelected == district[bindDistrictCd]}">
+                      {{ district[bindDistrictName] }}
+                    </mat-chip>
+                  </mat-chip-list>
+                  <span class="ng-value-label text-primary" *ngIf="formControls.selectedDistrict.value.length>3"
+                    (click)="districtExpanded = !districtExpanded"> see
+                    <ng-container *ngIf="!districtExpanded"> {{formControls.selectedDistrict.value.length - 3}}
+                      more...</ng-container> <ng-container *ngIf="districtExpanded">less </ng-container> </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="districtSelected">
+          <div class="card mb-2">
+            <div class="card-header">
+              Tehsil
+            </div>
+            <div class="card-body form-row py-0">
+              <div class="col-md-5 border-right">
+                <div class="col-md-12 mt-3 form-group">
+                  <label for="selectVillage" class="form-label"> {{ "campaignCreation.campaign_select_tehsil" |
+                    translate}} </label>
+                  <ng-select [items]="tehsilMasterData | async" [multiple]="true" bindLabel="tehsilName"
+                    groupBy="section" [selectableGroup]="true" [virtualScroll]="true" [clearSearchOnAdd]="true"
+                    [selectableGroupAsModel]="false" [closeOnSelect]="false" [clearable]="false"
+                    [compareWith]="compareTehsilFunction" formControlName="selectedTehsil"
+                    (add)="onAreaChange($event, 'tehsil','district')" (remove)="onAreaRemove($event, 'tehsil','state')"
+                    placeholder="Select tehsil">
+                    <ng-template class="form-control" ng-optgroup-tmp let-item="item" let-item$="item$"
+                      let-index="index">
+                      <input id="itemT-{{ index }}" type="checkbox" [(ngModel)]="item$.selected"
+                        [ngModelOptions]="{ standalone: true }" />
+                      Select All
+                    </ng-template>
+                    <ng-template class="form-control" ng-multi-label-tmp let-items="items" let-item$="item$"
+                      let-clear="clear">
+                      <div class="ng-value" *ngFor="let item of items | slice:0:3;let index =index">
+                        {{item[bindTehsilName]}}
+                      </div>
+                      <div class="ng-value" *ngIf="items.length > 3">
+                        <span class="ng-value-label"> + {{items.length - 3}} more...</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <div class="col-md-12 mt-3 form-group">
+                  <label for="state" class="form-label">Selected Tehsils</label>
+                  <div class="symptom-list mb-2" *ngIf="formControls.selectedTehsil.value?.length">
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="let district of formControls.selectedTehsil.value| slice : 0:(tehsilExpanded ? undefined : 3) ; let i = index"
+                        (click)="getTehsilDetails(district)"
+                        [ngClass]="{'selected-chip': tehsilSelected == district[bindTehsilCd]}">
+                        {{ district[bindTehsilName] }}
+                      </mat-chip>
+                    </mat-chip-list>
+                    <span class="ng-value-label text-primary" *ngIf="formControls.selectedTehsil.value.length>3"
+                      (click)="tehsilExpanded = !tehsilExpanded"> see
+                      <ng-container *ngIf="!tehsilExpanded"> {{formControls.selectedTehsil.value.length - 3}}
+                        more...</ng-container> <ng-container *ngIf="tehsilExpanded">less </ng-container>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="districtSelected && tehsilSelected">
+          <div class="card mb-2">
+            <div class="card-header">
+              Village
+            </div>
+            <div class="card-body form-row py-0">
+              <div class="col-md-5 border-right">
+                <div class="col-md-12 mt-3 form-group">
+                  <label for="selectVillage" class="form-label"> {{"campaignCreation.campaign_select_village" |
+                    translate
+                    }} </label>
+                  <ng-select [items]="villageMasterData | async" [multiple]="true" bindLabel="villageName"
+                    groupBy="section" [selectableGroup]="true" [virtualScroll]="true" [clearSearchOnAdd]="true"
+                    [selectableGroupAsModel]="false" [closeOnSelect]="false" [clearable]="false"
+                    [compareWith]="compareVillageFunction" formControlName="selectedVillage"
+                    (add)="onAreaChange($event, 'village','district')"
+                    (remove)="onAreaRemove($event, 'village','state')" placeholder="Select villages">
+                    <ng-template class="form-control" ng-optgroup-tmp let-item="item" let-item$="item$"
+                      let-index="index">
+                      <input id="itemV-{{ index }}" type="checkbox" [(ngModel)]="item$.selected"
+                        [ngModelOptions]="{ standalone: true }" />
+                      Select All
+                    </ng-template>
+                    <ng-template class="form-control" ng-multi-label-tmp let-items="items" let-item$="item$"
+                      let-clear="clear">
+                      <div class="ng-value" *ngFor="let item of items | slice:0:3;let index =index">
+                        {{item[bindvillageName]}}
+                      </div>
+                      <div class="ng-value" *ngIf="items.length > 3">
+                        <span class="ng-value-label"> + {{items.length - 3}} more...</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <div class="col-md-12 mt-3 form-group">
+                  <label for="state" class="form-label">Selected Villages</label>
+                </div>
+                <div class="symptom-list mb-2" *ngIf="formControls.selectedVillage.value?.length">
+                  <mat-chip-list>
+                    <mat-chip
+                      *ngFor="let village of formControls.selectedVillage.value| slice : 0:(villageExpanded ? undefined : 3) ; let i = index">
+                      {{ village[bindvillageName] }}
+                    </mat-chip>
+                  </mat-chip-list>
+                  <span class="ng-value-label text-primary" *ngIf="formControls.selectedVillage.value.length>3"
+                    (click)="villageExpanded = !villageExpanded"> see
+                    <ng-container *ngIf="!villageExpanded"> {{formControls.selectedVillage.value.length - 3}}
+                      more...</ng-container> <ng-container *ngIf="villageExpanded">less </ng-container>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </form>
+    </div>
+    <div class="form-row" *ngIf="data.areaSection == 'tehsil'">
+      <form class="w-100" [formGroup]="areaAllocation">
+        <div class="card mb-2">
+          <div class="card-header">
+            Tehsil
+          </div>
+          <div class="card-body form-row py-0">
+            <div class="col-md-5 border-right">
+              <div class="col-md-12 mt-3 form-group">
+                <label for="selectVillage" class="form-label"> {{ "campaignCreation.campaign_select_tehsil" |
+                  translate}} </label>
+                <ng-select [items]="masterData | async" [multiple]="true" bindLabel="tehsilName" groupBy="section"
+                  [selectableGroup]="true" [virtualScroll]="true" [selectableGroupAsModel]="false"
+                  [compareWith]="compareTehsilFunction" [clearSearchOnAdd]="true" [closeOnSelect]="false"
+                  [clearable]="false" formControlName="selectedTehsil" (add)="onAreaChange($event, 'tehsil','tehsil')"
+                  (remove)="onAreaRemove($event, 'tehsil','tehsil')" placeholder="Select tehsils">
+                  <ng-template class="form-control" ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                    <input id="itemTT-{{ index }}" type="checkbox" [(ngModel)]="item$.selected"
+                      [ngModelOptions]="{ standalone: true }" />
+                    Select All
+                  </ng-template>
+                  <ng-template class="form-control" ng-multi-label-tmp let-items="items" let-item$="item$"
+                    let-clear="clear">
+                    <div class="ng-value" *ngFor="let item of items | slice:0:3;let index =index">
+                      {{item[bindTehsilName]}}
+                    </div>
+                    <div class="ng-value" *ngIf="items.length > 3">
+                      <span class="ng-value-label"> + {{items.length - 3}} more...</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
+                <span class="alert-message"
+                  *ngIf="(formControls.selectedTehsil.dirty && formControls.selectedTehsil.invalid) || formControls.selectedTehsil.touched ">
+                  <span *ngIf=" formControls.selectedTehsil.hasError('required')">
+                    {{ validationMsg.required | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-7">
+              <div class="col-md-12 mt-3 form-group">
+                <label for="state" class="form-label">Selected Tehsils</label>
+                <div class="symptom-list mb-2" *ngIf="formControls.selectedTehsil.value?.length">
+                  <mat-chip-list>
+                    <mat-chip
+                      *ngFor="let district of formControls.selectedTehsil.value| slice : 0:(tehsilExpanded ? undefined : 3) ; let i = index"
+                      (click)="getTehsilDetails(district)"
+                      [ngClass]="{'selected-chip': tehsilSelected == district[bindTehsilCd]}">
+                      {{ district[bindTehsilName] }}
+                    </mat-chip>
+                  </mat-chip-list>
+                  <span class="ng-value-label text-primary" *ngIf="formControls.selectedTehsil.value.length>3"
+                    (click)="tehsilExpanded = !tehsilExpanded"> see
+                    <ng-container *ngIf="!tehsilExpanded"> {{formControls.selectedTehsil.value.length - 3}}
+                      more...</ng-container> <ng-container *ngIf="tehsilExpanded">less </ng-container>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="tehsilSelected">
+          <div class="card mb-2">
+            <div class="card-header">
+              Village
+            </div>
+            <div class="card-body form-row py-0">
+              <div class="col-md-5 border-right">
+                <div class="col-md-12 mt-3 form-group">
+                  <label for="selectVillage" class="form-label"> {{"campaignCreation.campaign_select_village" |
+                    translate
+                    }} </label>
+                  <ng-select [items]="villageMasterData | async" [multiple]="true" bindLabel="villageName"
+                    groupBy="section" [selectableGroup]="true" [virtualScroll]="true" [clearSearchOnAdd]="true"
+                    [selectableGroupAsModel]="false" [closeOnSelect]="false" [clearable]="false"
+                    [compareWith]="compareVillageFunction" formControlName="selectedVillage"
+                    (add)="onAreaChange($event, 'village','tehsil')" (remove)="onAreaRemove($event, 'village','state')"
+                    placeholder="Select villages">
+                    <ng-template class="form-control" ng-optgroup-tmp let-item="item" let-item$="item$"
+                      let-index="index">
+                      <input id="itemV-{{ index }}" type="checkbox" [(ngModel)]="item$.selected"
+                        [ngModelOptions]="{ standalone: true }" />
+                      Select All
+                    </ng-template>
+                    <ng-template class="form-control" ng-multi-label-tmp let-items="items" let-item$="item$"
+                      let-clear="clear">
+                      <div class="ng-value" *ngFor="let item of items | slice:0:3;let index =index">
+                        {{item[bindvillageName]}}
+                      </div>
+                      <div class="ng-value" *ngIf="items.length > 3">
+                        <span class="ng-value-label"> + {{items.length - 3}} more...</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <div class="col-md-12 mt-3 form-group">
+                  <label for="state" class="form-label">Selected Villages</label>
+                  <div class="symptom-list mb-2" *ngIf="formControls.selectedVillage.value?.length">
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="let village of formControls.selectedVillage.value| slice : 0:(villageExpanded ? undefined : 3) ; let i = index">
+                        {{ village[bindvillageName] }}
+                        <i (click)="onClickingRemove(i,'village')" class="fa fa-close mx-2" aria-hidden="true"></i>
+                      </mat-chip>
+                    </mat-chip-list>
+                    <span class="ng-value-label text-primary" *ngIf="formControls.selectedVillage.value.length>3"
+                      (click)="villageExpanded = !villageExpanded"> see
+                      <ng-container *ngIf="!villageExpanded"> {{formControls.selectedVillage.value.length - 3}}
+                        more...</ng-container> <ng-container *ngIf="villageExpanded">less </ng-container>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </form>
+    </div>
+    <div class="form-row" *ngIf="data.areaSection == 'village'">
+      <form class="w-100" [formGroup]="areaAllocation">
+        <div class="card mb-2">
+          <div class="card-header">
+            Village
+          </div>
+          <div class="card-body form-row py-0">
+            <div class="col-md-5 border-right">
+              <div class="col-md-12 mt-3 form-group">
+                <label for="selectVillage" class="form-label"> {{"campaignCreation.campaign_select_village" | translate
+                  }} </label>
+                <ng-select [items]="masterData | async" [multiple]="true" bindLabel="villageName" groupBy="section"
+                  [selectableGroup]="true" [virtualScroll]="true" [selectableGroupAsModel]="false"
+                  [clearSearchOnAdd]="true" [closeOnSelect]="false" [clearable]="false"
+                  [compareWith]="compareVillageFunction" formControlName="selectedVillage"
+                  (add)="onAreaChange($event, 'village','village')" (remove)="onAreaRemove($event, 'village','village')"
+                  placeholder="Select Villages">
+                  <ng-template class="form-control" ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                    <input id="itemVV-{{ index }}" type="checkbox" [(ngModel)]="item$.selected"
+                      [ngModelOptions]="{ standalone: true }" />
+                    Select All
+                  </ng-template>
+                  <ng-template class="form-control" ng-multi-label-tmp let-items="items" let-item$="item$"
+                    let-clear="clear">
+                    <div class="ng-value" *ngFor="let item of items | slice:0:3;let index =index">
+                      {{item[bindvillageName]}}
+                    </div>
+                    <div class="ng-value" *ngIf="items.length > 3">
+                      <span class="ng-value-label"> + {{items.length - 3}} more...</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
+                <span class="alert-message"
+                  *ngIf="(formControls.selectedVillage.dirty && formControls.selectedVillage.invalid) || formControls.selectedVillage.touched ">
+                  <span *ngIf=" formControls.selectedVillage.hasError('required')">
+                    {{ validationMsg.required | translate }}
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-7">
+              <div class="col-md-12 mt-3 form-group">
+                <label for="state" class="form-label">Selected Villages</label>
+                <div class="symptom-list mb-2" *ngIf="formControls.selectedVillage.value?.length">
+                  <mat-chip-list>
+                    <mat-chip
+                      *ngFor="let village of formControls.selectedVillage.value| slice : 0:(villageExpanded ? undefined : 3) ; let i = index">
+                      {{ village[bindvillageName] }}
+                      <i (click)="onClickingRemove(i,'village')" class="fa fa-close mx-2" aria-hidden="true"></i>
+                    </mat-chip>
+                  </mat-chip-list>
+                  <span class="ng-value-label text-primary" *ngIf="formControls.selectedVillage.value.length>3"
+                    (click)="villageExpanded = !villageExpanded"> see
+                    <ng-container *ngIf="!villageExpanded"> {{formControls.selectedVillage.value.length - 3}}
+                      more...</ng-container> <ng-container *ngIf="villageExpanded">less </ng-container>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <div class="campaign-edit-footer">
+    <button mat-dialog-close type="button" class="btn btn-primary" cdkFocusInitial>{{ "animalDetails.close" | translate
+      }}</button>
+    <button type="submit" class="btn btn-primary ml-2" cdkFocusInitial
+      (click)="saveNewAreaAllocation()">{{"common.submit" | translate}}</button>
+  </div>
+
+</div>

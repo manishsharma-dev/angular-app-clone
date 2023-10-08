@@ -1,0 +1,485 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+    <div class="center">
+        <mat-spinner class="center"></mat-spinner>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row breadcum align-items-center py-2">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="breadcrumb-list text-md-left">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item active">
+                          <a>{{'animalDetails.home' | translate}}</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                          <a href="javascript:void(0)">{{'animalBreeding.breeding_module'|translate}} </a>
+                        </li>
+                        <li class="breadcrumb-item current">
+                          <a href="javascript:void(0)">{{'animalBreeding.bull_master'|translate}}</a>
+                        </li>
+                      </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="new-case margin-10">
+    <div class="row no-gutters col-container">
+        <div class="col-md-12 col-h left-section">
+            <div class="row mb-3 justify-content-between margin-10">
+                <div class="title-section">
+                    <div class="title-heading">
+                        {{'animalBreeding.bull_info'|translate}}
+
+                    </div>
+                </div>
+                <div class="ticket-section">
+                    <span class=""> {{'animalBreeding.semen_station'|translate}} : <b>{{semenStationInformation?.semenName}}</b></span>
+                </div>
+            </div>
+            <div class="h-divider">
+                <div class="shadow"></div>
+            </div>
+
+            <form [formGroup]="addBullFormForm" (ngSubmit)="submitBullDetail()">
+                <div class="main-section">
+
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="AI Record Date">{{'animalBreeding.data_entry_date'|translate}}<span
+                                        class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text" [min]="minDate" [max]="today"
+                                    [matDatepicker]="RecordDate" formControlName="bullRegistrationRecordDate"
+                                    placeholder="dd-mm-yyyy" />
+                                <mat-datepicker-toggle matSuffix [for]="RecordDate" class="calender-icon">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #RecordDate></mat-datepicker>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group input-icon">
+                                <label for="Treatment Date">{{'animalBreeding.bull_registration_date'|translate}}<span
+                                        class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text"  [max]="today"
+                                    [matDatepicker]="pickerDate" formControlName="bullRegistrationDate" placeholder="dd/mm/yyyy"
+                                    />
+                                <mat-datepicker-toggle matSuffix [for]="pickerDate" class="calender-icon">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #pickerDate></mat-datepicker>
+                                <span class="alert-message" *ngIf="
+                                (formControls.bullRegistrationDate.dirty &&
+                                formControls.bullRegistrationDate.invalid) ||
+                                formControls.bullRegistrationDate.touched
+                            ">
+                            <span *ngIf="formControls.bullRegistrationDate.hasError('matDatepickerMin')">
+                                {{'common.please_enter_valid_date' | translate}}
+                            </span>
+                            <span *ngIf="formControls.bullRegistrationDate.hasError('matDatepickerMax')">
+                                {{'common.please_enter_valid_date' | translate}}
+                            </span>
+                            <span *ngIf="formControls.bullRegistrationDate.hasError('matDatepickerParse')">
+                                {{'common.please_enter_valid_date' | translate}}
+                            </span>
+                            <span
+                                *ngIf="formControls.bullRegistrationDate.hasError('required') && !formControls.bullRegistrationDate.hasError('matDatepickerParse')">
+                                {{'errorMsg.field_mandatory' | translate}}
+                            </span>
+                        </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-divider">
+                        <div class="shadow"></div>
+                    </div>
+                    <!-- <div class="form-row additional-info">
+                        <div class="col-md-2">
+                            <label for="Case Status">Imported Semen</label>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-check-inline ">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="importedSemenFlag"
+                                        value="Y" formControlName="importedSemenFlag" />Yes
+                                </label>
+                            </div>
+                            <div class="form-check-inline">
+                                <input type="radio" class="form-check-input" name="importedSemenFlag"  value="N" formControlName="importedSemenFlag"/>
+                                <label class="form-check-label">No</label>
+                            </div>
+                            
+                        </div>
+                    </div> -->
+                    <div class="form-row additional-info">
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalDetails.tag_id'|translate}}<span
+                                    class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text"  formControlName="tagId" name="tagId" placeholder="Enter Tag ID" (change)="getAnimalDetail()"  [ngClass]="{ 'is-invalid': formControls?.tagId.touched && formControls?.tagId?.errors }"/>
+                                <div class="alert-message"
+                                 *ngIf="(formControls?.tagId?.hasError('minlength') || formControls?.tagId?.hasError('maxlength')) && (formControls?.tagId?.touched ||formControls?.tagId?.dirty) ">
+                                 {{'errorMsg.sire_tag_validation'|translate}}
+                                 </div>
+                                <div class="alert-message"
+                                *ngIf="formControls?.tagId?.errors?.required && submitBullDetailForm">
+                                {{'errorMsg.field_mandatory' | translate}}
+                                </div>
+                                <div class="alert-message"
+                                *ngIf="formControls?.tagId?.touched && !isTagIDVerified">{{verifiedError}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.ss_id' | translate}}<span
+                                    class="mandatory-field">*</span></label>
+                                    <input class="form-control" type="text" [placeholder]="semenStationInformation?.ssId ? semenStationInformation?.ssId :''"   readonly/>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="Case Status"><span>{{'animalBreeding.bull_id' | translate}}</span><span
+                                    class="mandatory-field">*</span></label>
+                                    <input class="form-control" type="text"  formControlName="bullId"  
+                                        [ngClass]="{ 'is-invalid': formControls?.bullId.touched && formControls?.bullId?.errors }" (keyup)="addBullFormForm.patchValue({bullId: $event.target['value'].toUpperCase()})" />
+
+                                        <div class="alert-message"
+                                        *ngIf="(formControls?.bullId?.hasError('minlength') || formControls?.bullId?.hasError('maxlength')) && (formControls?.bullId?.touched ||formControls?.bullId?.dirty) ">
+                                        {{'errorMsg.bull_id_valid'|translate}}
+                                        </div>
+                                        <div class="alert-message"
+                                       *ngIf="formControls?.bullId?.errors?.required && submitBullDetailForm">
+                                       {{'errorMsg.field_mandatory' | translate}}
+                                       </div>
+                                
+                                <!-- (change)="verifyBullID()" -->
+                                
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.bull_status' | translate}}<span class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text"  formControlName="animalStatus" name="animalStatus"/>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalDetails.category_species'|translate}}<span class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text"  formControlName="species" name="species"/>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6" >
+                            <div class="form-group">
+                                <label for="Treatment Date">{{'animalDetails.blood_level'|translate}}<span
+                                        class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text" formControlName="breedAndExoticLevels"  />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalDetails.date_of_birth'|translate}}</label>
+                                <input class="form-control" type="text"  formControlName="dateOfBirth" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status">{{'common.age'|translate}}</label>
+                                <input class="form-control" type="text"  formControlName="age" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row additional-info">
+                        <p >{{'animalBreeding.commonLabel.incorrect_animal_detail' | translate}} <a href="javascript:void(0)" (click)="addAnimalAdditionalDetails(false)">{{'animalBreeding.click_here' | translate}}</a></p>
+                    </div>
+                    <div class="form-row additional-info">
+                        <div class="col-md-12">
+                            <label for="Case Status">{{'animalBreeding.semen_type' | translate}}<span
+                                class="mandatory-field">*</span></label>
+                          </div>
+                         
+                          <div class="col-md-6">
+                            <div class="form-row justify-self-center">
+                                <div class="form-check form-check-inline col-md-4" *ngFor="let semen of getCommonMasterDetail['semen_type']">
+                                    <input class="form-check-input" type="checkbox"
+                                        name="bullTypeFlag" id="{{semen?.value}}"
+                                        [value]="semen?.cd"  (change)="onCheckChange(semen)" [checked]="semen?.checked"/>
+                                    <label for="{{semen?.value}}"
+                                        class="form-check-label">{{semen?.value}}</label>
+                                </div>
+                                <div class="alert-message"
+                                *ngIf="formControls?.bullTypeFlag?.errors?.required && submitBullDetailForm">
+                                {{'errorMsg.field_mandatory' | translate}}
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="form-row additional-info">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status">{{'animalBreeding.bull_source' | translate}}<span
+                                    class="mandatory-field">*</span></label>
+                                <select class="form-control" name="bullSource"
+                                formControlName="bullSource" (change)="checkSourceDetail()" [ngClass]="{ 'is-invalid': formControls?.bullSource?.errors && submitBullDetailForm }"
+                                >
+                                <option [value]="null">{{'animalDetails.select' | translate}} {{'animalBreeding.bull_source' | translate}}</option>
+                                <option [value]="source?.cd"
+                                *ngFor="let source of getCommonMasterDetail['bull_source']">
+                                    {{source?.value}}</option>
+    
+                            </select>
+                            <div class="alert-message"
+                              *ngIf="formControls?.bullSource?.errors?.required && submitBullDetailForm">
+                              {{'errorMsg.field_mandatory' | translate}}
+                              </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" *ngIf="formControls?.bullSource?.value == 9">
+                            <div class="form-group">
+                                <label for="Case Status" class="label-adjust"></label>
+                                <input class="form-control" type="text"  formControlName="bullSourceOthers"  placeholder="Enter Source Name" />
+                            </div>
+                        </div>
+                       
+                      
+                    </div>
+                    <div class="form-row additional-info" *ngIf="formControls?.bullSource?.value == 4">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status" class="label-adjust">{{'animalBreeding.naab_code' | translate}}<span
+                                    class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text"  formControlName="importedNaabCd"  placeholder="Enter NAAB Code" [maxlength]="50"/>
+                            <span *ngIf="formControls.importedNaabCd.errors?.['pattern']" class="alert-message">
+                                {{'errorMsg.invalid_char' | translate}}
+                      </span>
+                      <div class="alert-message"
+                      *ngIf="formControls?.importedNaabCd?.errors?.required && formControls?.importedNaabCd?.touched">
+                      {{'errorMsg.field_mandatory' | translate}}
+                      </div>
+                            </div>
+                            </div>
+                        <div class="col-md-3" >
+                            <div class="form-group">
+                                <label for="Case Status" class="label-adjust">{{'animalBreeding.reg_name' | translate}}<span
+                                    class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text"  formControlName="importedRegName"  placeholder="Enter Registration Name" [maxlength]="50"/>
+                                <span *ngIf="formControls.importedRegName.errors?.['pattern']" class="alert-message">
+                                    {{'errorMsg.invalid_char' | translate}}
+                          </span>
+                          <div class="alert-message"
+                          *ngIf="formControls?.importedRegName?.errors?.required && formControls?.importedRegName?.touched">
+                          {{'errorMsg.field_mandatory' | translate}}
+                          </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status" class="label-adjust">{{'animalBreeding.reason_no' | translate}}<span
+                                    class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text"  formControlName="importedRegNo"  placeholder="Enter Registration No." [maxlength]="50"/>
+                                <span *ngIf="formControls.importedRegNo.errors?.['pattern']" class="alert-message">
+                                    {{'errorMsg.invalid_char' | translate}}
+                          </span>
+                          <div class="alert-message"
+                          *ngIf="formControls?.importedRegNo?.errors?.required && formControls?.importedRegNo?.touched">
+                          {{'errorMsg.field_mandatory' | translate}}
+                          </div>
+                            </div>
+                            </div>
+                        <div class="col-md-3" >
+                            <div class="form-group">
+                                <label for="Case Status" class="label-adjust">{{'animalBreeding.imported_agency_name' | translate}}<span
+                                    class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text"  formControlName="importingAgency"  placeholder="Enter Agency Name" [maxlength]="50"/>
+                                <span *ngIf="formControls.importingAgency.errors?.['pattern']" class="alert-message">
+                                    {{'errorMsg.invalid_char' | translate}}
+                          </span>
+                          <div class="alert-message"
+                          *ngIf="formControls?.importingAgency?.errors?.required && formControls?.importingAgency?.touched">
+                          {{'errorMsg.field_mandatory' | translate}}
+                          </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Case Status" class="label-adjust">{{'animalBreeding.imported_from' | translate}}<span
+                                    class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text"  formControlName="importedFrom"  placeholder="Enter From" [maxlength]="50"/>
+                                <span *ngIf="formControls.importedFrom.errors?.['pattern']" class="help=block">
+                                    {{'errorMsg.invalid_char' | translate}}
+                          </span>
+                          <div class="alert-message"
+                          *ngIf="formControls?.importedFrom?.errors?.required && formControls?.importedFrom?.touched">
+                          {{'errorMsg.field_mandatory' | translate}}
+                          </div>
+                            </div>
+                            </div>
+                        <div class="col-md-3" >
+                            <div class="form-group">
+                                <label for="Case Status" class="label-adjust">{{'animalBreeding.imported_under_sch' | translate}}<span
+                                    class="mandatory-field">*</span></label>
+                                <input class="form-control" type="text"  formControlName="importedScheme"  placeholder="Enter Under Scheme" [maxlength]="50"/>
+                                <span *ngIf="formControls.importedScheme.errors?.['pattern']" class="help=block">
+                                    {{'errorMsg.invalid_char' | translate}}
+                          </span>
+                            </div>
+                        </div>
+                </div>
+                    <div  class="form-row  additional-info">
+                        <div class="col-md-3">
+                            <label for="Nominated Bull">{{'animalBreeding.nominated_bull' | translate}}<span
+                                class="mandatory-field">*</span></label>
+                          </div>
+            
+                          <div class="col-md-3">
+                              <div class="form-check-inline">
+                                <label class="form-check-label">
+                                  <input
+                                    type="radio"
+                                    class="form-check-input"
+                                    name="nominatedBullFlag"
+                                    value="Y"
+                                    formControlName="nominatedBullFlag"
+                                  />{{'common.yes' | translate}}
+                                </label>
+                              </div>
+                              <div class="form-check-inline">
+                                <input
+                                  type="radio"
+                                  class="form-check-input"
+                                  formControlName="nominatedBullFlag"
+                                  name="nominatedBullFlag"
+                                  value="N"
+                                />
+                                <label class="form-check-label">{{'common.no' | translate}}</label>
+                              </div>
+                              <div class="alert-message"
+                              *ngIf="formControls?.nominatedBullFlag?.errors?.required && submitBullDetailForm">
+                              {{'errorMsg.field_mandatory' | translate}}
+                              </div>
+                          </div>
+                          <div class="col-md-6">
+                            
+                          </div>
+            
+                          <!-- <div class="col-md-3">
+                              <div class="form-check-inline">
+                                <label class="form-check-label">
+                                  <input
+                                    type="radio"
+                                    class="form-check-input"
+                                    formControlName="sexSortedFlag"
+                                    name="sexSortedFlag"
+                                    value="Y"
+                                  />Yes
+                                </label>
+                              </div>
+                              <div class="form-check-inline">
+                                <input
+                                  type="radio"
+                                  class="form-check-input"
+                                  formControlName="sexSortedFlag"
+                                  value="N"
+                                  name="sexSortedFlag"
+                                />
+                                <label class="form-check-label">No</label>
+                              </div>
+                              <div class="alert-message"
+                              *ngIf="formControls?.sexSortedFlag?.errors?.required && submitBullDetailForm">
+                              This field is mandatory
+                              </div>
+                          </div> -->
+                          <div class="col-md-3">
+                            <label for="Active">{{'animalBreeding.active' | translate}}<span
+                                class="mandatory-field">*</span></label>
+                          </div>
+            
+                          <div class="col-md-3">
+                              <div class="form-check-inline">
+                                <label class="form-check-label">
+                                  <input
+                                    type="radio"
+                                    class="form-check-input"
+                                    formControlName="bullStatus"
+                                    name="bullStatus"
+                                    [value]="1"
+                                  />{{'common.yes' | translate}}
+                                </label>
+                              </div>
+                              <div class="form-check-inline">
+                                <input
+                                  type="radio"
+                                  class="form-check-input"
+                                  formControlName="bullStatus"
+                                  [value]="2"
+                                  name="bullStatus"
+                                />
+                                <label class="form-check-label">{{'common.no' | translate}}</label>
+                              </div>
+                              <div class="alert-message"
+                              *ngIf="formControls?.bullStatus?.errors?.required && submitBullDetailForm">
+                              This field is mandatory
+                              </div>
+                          </div>
+                          <div class="col-md-6">
+                            <!-- <label for="Sex Sorted">ET Bull<span
+                                class="mandatory-field">*</span></label> -->
+                          </div>
+            
+                          <!-- <div class="col-md-3">
+                              <div class="form-check-inline">
+                                <label class="form-check-label">
+                                  <input
+                                    type="radio"
+                                    class="form-check-input"
+                                    formControlName="etBullFlag"
+                                    value="Y"
+                                    name="etBullFlag"
+                                  />Yes
+                                </label>
+                              </div>
+                              <div class="form-check-inline">
+                                <input
+                                  type="radio"
+                                  class="form-check-input"
+                                  formControlName="etBullFlag"
+                                  value="N"
+                                  name="etBullFlag"
+                                />
+                                <label class="form-check-label">No</label>
+                              </div>
+                              <div class="alert-message"
+                              *ngIf="formControls?.etBullFlag?.errors?.required && submitBullDetailForm">
+                              This field is mandatory
+                              </div>
+                          </div> -->
+                    </div>
+                  
+                    <div class="form-row additional-info" *ngIf="bullId">
+                        <p>{{'animalBreeding.commonLabel.add_additional_details' | translate}} <a href="javascript:void(0)" (click)="addAdditionalDetails(false)" >{{'animalBreeding.click_here' | translate}}</a></p>
+                        
+                    </div>
+
+
+                </div>
+
+                <div class="h-divider additional-info">
+                    <div class="shadow"></div>
+                </div>
+                <div class="footer d-flex">
+                    <button type="button" class="btn btn-light mr-2 ml-auto" (click)="goBack()">
+                        {{'animalDetails.cancel'|translate}}
+                    </button>
+                    <button type="submit" class="btn btn-primary">{{'common.submit'|translate}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

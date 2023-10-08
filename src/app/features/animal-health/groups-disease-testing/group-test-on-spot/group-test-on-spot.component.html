@@ -1,0 +1,146 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="form-row" [formGroup]="onSpotRequestDtos">
+  <div class="col-md-3 form-group">
+    <label for="date_of_testing" class="form-label">
+      {{'diseaseTesting.disease_suspected_on_spot' | translate}} <span class="mandatory-field"
+        *ngIf="isDiseaseRequired">*</span>
+    </label>
+    <ng-select class="custom" appendTo="body" [items]="suspectedDiseaseMaster" bindLabel="diseaseDesc"
+      [selectableGroup]="true" [selectableGroupAsModel]="false" [virtualScroll]="true" placeholder="Search Disease"
+      [closeOnSelect]="true" formControlName="suspectedDisease">
+      <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+        <div class="d-flex justify-content-between">
+          <span>{{ item.diseaseDesc }}</span>
+        </div>
+      </ng-template>
+    </ng-select>
+    <span class="alert-message" *ngIf="
+                    (formControls.suspectedDisease.dirty &&
+                      formControls.suspectedDisease.invalid) ||
+                    formControls.suspectedDisease.touched
+                  ">
+      <span *ngIf="formControls.suspectedDisease.hasError('required')">
+        {{ validationMsg.selectRequired | translate }}
+      </span>
+    </span>
+  </div>
+  <div class="col-3 form-group">
+    <label for="Sample">{{'diseaseTesting.test_type' | translate}} <span class="mandatory-field">*</span> </label>
+    <select class="form-control" formControlName="onSpotTestCd" (change)="subscribeTospotTestingRowsChange($event)">
+      <option value="null">{{'diseaseTesting.select_test_type' | translate}}</option>
+      <option *ngFor="let test of onSpotTest" [value]="test.onSpotTestCd">{{test.onSpotTestDesc}}</option>
+    </select>
+    <span class="alert-message" *ngIf="
+                    (formControls.onSpotTestCd.dirty &&
+                      formControls.onSpotTestCd.invalid) ||
+                    formControls.onSpotTestCd.touched
+                  ">
+      <span *ngIf="formControls.onSpotTestCd.hasError('required')">
+        {{ validationMsg.selectRequired | translate }}
+      </span>
+    </span>
+  </div>
+  <div class="col-3 form-group">
+    <label for="Sample">{{'diseaseTesting.sample_type' | translate}}</label>
+    <ng-select class="custom" appendTo="body" [items]="onSpotSampleMaster" bindLabel="sampleTypeDesc"
+      [selectableGroup]="true" [selectableGroupAsModel]="false" [virtualScroll]="true"
+      placeholder="{{'diseaseTesting.search_sample_type' | translate}}" [closeOnSelect]="true"
+      formControlName="sampleType">
+      <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+        <div class="d-flex justify-content-between">
+          <span>{{ item.sampleTypeDesc }}</span>
+        </div>
+      </ng-template>
+    </ng-select>
+  </div>
+  <div class="h-divider">
+    <div class="shadow"></div>
+  </div>
+  <ng-container *ngIf="spotTestingRows.length">
+    <div class="col-md-12">
+      <h4>{{'diseaseTesting.update_sample_results_of_selected_animals' | translate}}</h4>
+    </div>
+    <div class="col-md-8">
+      <div class="table-responsive mb-3">
+        <table mat-table [dataSource]="dataSource" formArrayName="spotTestingRows"
+          class="custom-view-table add-degnostics-table mat-elevation-z8">
+
+          <ng-container matColumnDef="srno">
+            <th mat-header-cell *matHeaderCellDef>{{'common.sno' | translate}}</th>
+            <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index" class="cell-width">
+              {{index+1}}
+          </ng-container>
+          <ng-container matColumnDef="tagId">
+            <th mat-header-cell *matHeaderCellDef>{{'animalDetails.tag_id' | translate}}</th>
+            <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index" class="cell-width">
+              <input type="text" class="form-control table-input" formControlName="tagId" />
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="initialSampleResultValue">
+            <th mat-header-cell *matHeaderCellDef>{{'diseaseTesting.initial_reading' | translate}}</th>
+            <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index" class="cell-width">
+              <input type="text" class="form-control table-input" (change)="updateDifference(index, $event)"
+                formControlName="initialSampleResultValue" />
+              <div class="alert-message" *ngIf="
+              element.get('initialSampleResultValue').dirty &&
+              element.get('initialSampleResultValue').hasError('invalidDecimalNo')
+            ">
+                {{"errorMsg.check_field" | translate}}
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="finalSampleResultValue">
+            <th mat-header-cell *matHeaderCellDef>{{'diseaseTesting.final_reading' | translate}}</th>
+            <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index" class="cell-width">
+              <input type="text" class="form-control table-input" formControlName="finalSampleResultValue"
+                (change)="updateDifference(index, $event)" />
+              <div class="alert-message" *ngIf="
+              element.get('finalSampleResultValue').dirty &&
+              element.get('finalSampleResultValue').hasError('invalidDecimalNo')
+            ">
+                {{"errorMsg.check_field" | translate}}
+              </div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="difference">
+            <th mat-header-cell *matHeaderCellDef>{{'diseaseTesting.difference' | translate}}</th>
+            <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index" class="cell-width">
+              <input type="text" class="form-control table-input" formControlName="difference"
+                (change)="updateDifference(index, $event)" />
+              <div class="alert-message" *ngIf="
+              element.get('difference').dirty &&
+              element.get('difference').hasError('invalidDecimalNo')
+            ">
+                {{"errorMsg.check_field" | translate}}
+              </div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="sampleResult">
+            <th mat-header-cell *matHeaderCellDef>{{'diseaseTesting.results' | translate}}</th>
+            <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+              <mat-select formControlName="sampleResult">
+                <mat-option [value]="1">{{'diseaseTesting.positive' | translate}}</mat-option>
+                <mat-option [value]="2">{{'diseaseTesting.negative' | translate}}</mat-option>
+              </mat-select>
+            </td>
+          </ng-container>
+
+          <tr class="action-link table-head" mat-header-row *matHeaderRowDef="spotTestingDisplayedColumns"></tr>
+          <tr class="action-link table-head" mat-row *matRowDef="let row; columns: spotTestingDisplayedColumns">
+          </tr>
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="spotTestingDisplayedColumns.length">
+              {{'diseaseTesting.no_data_matching_the_filter' | translate}}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+
+</div>

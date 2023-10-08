@@ -1,0 +1,711 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<!-- section breadcum -->
+<app-common-breadcrumb
+  [breadcrumbKeys]="[ 'vaccination.breadcrumb_vaccinationSecond', 'deworming.breadcrumb_dewormingthird']">
+</app-common-breadcrumb>
+<!-- section breadcum -->
+
+<section class="deworming">
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card border-0">
+        <div class="card-body">
+          <div class="radio-action row align-items-center" [ngClass]="{ 'mb-1': !withOutCampaign }">
+            <div class="col-lg-8 col-md-6">
+              <div [ngClass]="{ 'mb-2': !withOutCampaign }">
+                <p class="select-camping-label mb-1">
+                  {{ "vaccination.select" | translate}}
+                  <!-- {{
+                  withOutCampaign
+                  ? "Select Without Campaign"
+                  : "Select Campaign"
+                  }} -->
+                </p>
+                <form [formGroup]="campaignOrWithoutCampainFrom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="campaign" (change)="toggleCampaign()"
+                      formControlName="control" [value]="false" />
+                    <label class="form-check-label" for="campaign">{{ "vaccination.with_campaign" | translate }}</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="withoutCampaign" (change)="toggleCampaign()"
+                      formControlName="control" [value]="true" />
+                    <label class="form-check-label" for="withoutCampaign">{{ "vaccination.without_campaign" | translate
+                      }}</label>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-2" *ngIf="!withOutCampaign">
+              <div class="filter-by">
+                <i aria-hidden="true" class="fa fa-search input-icon-left"></i>
+                <input type="text" id="filter-by" placeholder="{{'vaccination.search_campaign' | translate}}"
+                  name="search" [(ngModel)]="search" class="form-control input input-section" />
+              </div>
+            </div>
+          </div>
+          <!-- && campaigns?.length -->
+          <ng-container *ngIf="!withOutCampaign">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="customCheckBox1" [(ngModel)]="showAllCampaigns"
+                (change)="filterCampaigns()">
+              <label class="custom-control-label" for="customCheckBox1">{{'vaccination.include_data_entry_campaigns' |
+                translate}}</label>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <!-- new carousel -->
+                <div id="carouselExampleControls" class="carousel" data-bs-ride="carousel">
+                  <div class="carousel-inner">
+                    <div class="carousel-item active" *ngFor="let data of getCampaignList | filter : search as folder">
+                      <div class="carousel-cell">
+                        <div class="campaign-detail">
+                          <ul class="buyer-info--list">
+                            <li class="buyer-info--listitem hyperbold" [matTooltip]="data.campaignName">
+                              <div class="camping-name">
+                                {{ data.campaignName }}
+                              </div>
+                            </li>
+                            <li class="buyer-info--listitem">
+                              <span class="lable">{{'campaignCreation.Campaign_ID' | translate}}:</span>
+                              {{ data.campaignId }}
+                            </li>
+                            <li class="buyer-info--listitem">
+                              <span class="lable">{{'vaccination.CampaignEndDate' | translate}}:</span>
+                              {{ data.campaignEndDate }}
+                            </li>
+                            <li class="buyer-info--listitem">
+                              <span class="lable"> {{'vaccination.dataEntryEndDate' | translate}}:</span>
+                              {{ data.campaignDataEntryEndDate }}
+                            </li>
+                            <!-- <li
+                              class="buyer-info--listitem hyperbold mt-1"
+                              [matTooltip]="
+                                data.vaccineName + '-' + data.batchNumber
+                              "
+                            > -->
+                            <!-- <div class="vacc-desc">
+                                {{ data.vaccineName }} - {{ data.batchNumber }}
+                              </div> -->
+                            <li class="buyer-info--listitem hyperbold mt-1" [matTooltip]="
+                                data.dewormerName + '-' + data.saltDesc
+                              ">
+                              <div class="vacc-desc">
+                                {{ data.dewormerName }} - {{ data.saltDesc}}
+                              </div>
+                            </li>
+                          </ul>
+                          <div class="selectCampaign-btn">
+                            <button type="submit" name="{{ data.campaignId }}" class="btn btn-primary" [ngClass]="{
+                                selected: data.campaignId === selectedCampId
+                              }" (click)="getVillages(data)">
+                              {{
+                              data.campaignId === selectedCampId
+                              ? "Selected"
+                              : "Select"
+                              }}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <button *ngIf="isVisual" class="carousel-control-prev" id="carousel-control-prev" type="button"
+                    data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true">
+                    </span>
+                    <!-- <span class="visually-hidden">Previous</span> -->
+                  </button>
+                  <button *ngIf="isVisual" class="carousel-control-next" id="carousel-control-next" type="button"
+                    data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <!-- <span class="visually-hidden">Next</span> -->
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <div class="row mt-2">
+            <div class="col-md-6">
+              <div class="no-record-data" *ngIf="!withOutCampaign && !campaigns?.length">
+                <span>{{'diseaseTesting.no_data_matching_the_filter' | translate}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- withOutCampaign -->
+  <ng-container *ngIf="withOutCampaign">
+    <div class="row p-0 mb-3">
+      <div class="col-12">
+        <div class="card border-0">
+          <div class="card-body">
+            <form [formGroup]="withoutCampaignForm">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="selectAnimal mb-2">
+                    <p class="sa-heading">{{ "deworming.Select_De-wormer_content" | translate }}<span
+                        class="mandatory-field">*</span></p>
+                  </div>
+
+                  <div class="form-row selectSearch align-items-center mb-3">
+                    <div class="col-md-7">
+                      <ng-select class="custom" [items]="medicines | async" formControlName="medicineControl"
+                        [multiple]="false" bindLabel="medicineName" groupBy="selectedAllGroup" [selectableGroup]="true"
+                        [minTermLength]="3" [hideSelected]="true" [selectableGroupAsModel]="false"
+                        typeToSearchText="Please enter 3 or more characters"
+                        placeholder="{{'animalTreatmentSurgery.search_by_keywords' | translate}}" [closeOnSelect]="true"
+                        [typeahead]="medcineInput$" (change)="onSelectMedicne($event)">
+                        <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                          <input id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected"
+                            [ngModelOptions]="{ standalone: true }" />
+                          {{'campaignCreation.select_all' | translate}}
+                        </ng-template>
+
+                        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                          <div class="d-flex align-items-center">
+                            <div class="col-md-9">
+                              <p>
+                                <b>{{ item.medicineName }}</b>
+                              </p>
+                              <p>{{ item.saltDesc }}</p>
+                            </div>
+
+                            <div class="col-md-3">
+                              <div class="d-flex justify-content-end" (click)="fetchTable()">
+                                <ng-container *ngIf="true; else notPresent">
+                                  <span class="add-medicine-btn"><i class="fa fa-plus mr-2" aria-hidden="true">
+                                    </i>{{'animalTreatmentSurgery.add' | translate}}</span>
+                                </ng-container>
+                                <ng-template #notPresent>
+                                  <span class="add-medicine-btn">
+                                    <i class="fa fa-minus mr-2" aria-hidden="true">
+                                    </i>{{'animalTreatmentSurgery.remove' | translate}}</span>
+                                </ng-template>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="search-btn">
+                        <button type="submit" class="btn btn-primary" (click)="fetchMedicines()">
+                          {{'animalTreatmentSurgery.search' | translate}}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="medicine-main-content">
+                    <div class="form-group form-check">
+                      <input type="checkbox" class="form-check-input" id="de-wormerCheck"
+                        formControlName="dewormerNotFoundFlag" />
+                      <label class="form-check-label" for="de-wormerCheck">{{ "deworming.new_Dewormer_name" | translate
+                        }}</label>
+                    </div>
+                    <div class="selectAnimal mb-2">
+                      <p class="sa-heading">{{ "deworming.Medicine_List" | translate }}</p>
+                    </div>
+                    <div class="table-responsive mb-3">
+                      <table mat-table [dataSource]="dataSourceMedicineList"
+                        class="custom-view-table deworming-medi mat-elevation-z8">
+                        <!-- Position Column -->
+                        <ng-container matColumnDef="dewormer_name">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ "deworming.De-wormer_Name" | translate }}<span class="mandatory-field">*</span>
+                          </th>
+                          <td mat-cell *matCellDef="let element; let i = index" class="cell-width">
+                            <input class="form-control table-input" type="text" formControlName="medicineName" />
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="dewormer_content">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ "deworming.De-wormer_Content" | translate }}
+                          </th>
+                          <td mat-cell *matCellDef="let element">
+                            <!-- {{ element.salt | stringConcat: "+":1 }} -->
+
+                            <input class="form-control table-input" type="text" formControlName="medcineSalt" />
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="unit">
+                          <th mat-header-cell *matHeaderCellDef>{{ "deworming.Unit" | translate }}</th>
+                          <td mat-cell *matCellDef="let element; let index = index" class="cell-width">
+                            <mat-select [value]="element.medicineUnitCd" formControlName="medicineUnitCd">
+                              <mat-option [value]="unit.unitCd" *ngFor="let unit of unitMaster">{{ unit.unitDesc }}
+                              </mat-option>
+                            </mat-select>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="dose">
+                          <th mat-header-cell *matHeaderCellDef>{{ "deworming.Dose" | translate }}<span
+                              class="mandatory-field">*</span></th>
+                          <td mat-cell *matCellDef="let element; let index = index" class="cell-width">
+                            <input type="text" min="0" class="form-control table-input" formControlName="medicineDosage"
+                              onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57) ||
+                              event.charCode === 46)" />
+
+                            <div class=" alert-message"
+                              *ngIf="(withoutCampaignForm.get('medicineDosage').dirty || withoutCampaignForm.get('medicineDosage').touched) && withoutCampaignForm.get('medicineDosage').invalid">
+                              <span *ngIf="withoutCampaignForm.get('medicineDosage').hasError('required')">
+                                {{validationMsg.required | translate}}
+                              </span>
+                              <span class="alert-message" *ngIf="
+                              withoutCampaignForm.get('medicineDosage').hasError('invalidDecimalNo')
+                                ">
+                                {{"animalTreatmentSurgery.dosage_cannot_be_more_than_4_characters" |
+                                translate}}
+                              </span>
+                            </div>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="form">
+                          <th mat-header-cell *matHeaderCellDef>{{ "deworming.Form" | translate }}</th>
+                          <td mat-cell *matCellDef="let element; let index = index">
+                            <mat-select [value]="element.medicineFormCd" formControlName="medicineFormCd">
+                              <mat-option [value]="form.cd" *ngFor="let form of forms">{{ form.value }}
+                              </mat-option>
+                            </mat-select>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="route">
+                          <th mat-header-cell *matHeaderCellDef>{{ "deworming.route" | translate }}</th>
+                          <td mat-cell *matCellDef="let element; let index = index">
+                            <mat-select [value]="element.medicineFormCd" formControlName="medicineRouteCd">
+                              <mat-option [value]="route.routeCd" *ngFor="let route of routes">{{ route.routeName }}
+                              </mat-option>
+                            </mat-select>
+                          </td>
+                        </ng-container>
+                        <tr class="action-link table-head" mat-header-row
+                          *matHeaderRowDef="MedicineListDisplayedColumns"></tr>
+                        <tr class="action-link table-head" mat-row *matRowDef="
+                            let row;
+                            columns: MedicineListDisplayedColumns
+                          "></tr>
+                        <tr class="mat-row" *matNoDataRow>
+                          <td class="mat-cell text-center" [attr.colspan]="MedicineListDisplayedColumns.length">
+                            {{ "deworming.no_medicine_selected" | translate }}.
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- withCampaign -->
+  <div class="row p-0 mb-3" *ngIf="showVillage">
+    <div class="col-md-12">
+      <div class="card border-0">
+        <div class="card-body">
+          <div class="row selectVillage">
+            <div class="col-md-5">
+              <div class="form-row">
+                <div class="form-group col">
+                  <label for="selectVillage" class="label-heading">{{ "vaccination.village_select" | translate
+                    }}</label>
+                  <ng-select id="selectVillage" [(ngModel)]="selectVillage" (ngModelChange)="onVillageSelected()"
+                    [placeholder]="'vaccination.village_select' | translate">
+
+                    <ng-option *ngFor="let village of campaignsVillages" [value]="village">
+                      {{ village.villageName }}
+                    </ng-option>
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-1 or-section" *ngIf="((withOutCampaign && !selectVillage));else only_animal">
+              <span>{{ "diseaseTesting.or" | translate }}</span>
+            </div>
+            <ng-template #only_animal>
+              <div class="col-md-1 or-section">
+                <span>{{ "vaccination.and" | translate }}</span>
+              </div>
+            </ng-template>
+
+            <div class="col-md-6">
+              <div>
+                <form [formGroup]="searchForm">
+                  <div class="form-group">
+                    <div id="search-section" class="row">
+                      <span class="searchby-label-black">{{'animalDetails.search_by' |translate}}:</span>
+                      <div class="form-check-inline">
+                        <input type="radio" class="form-check-input" name="ownerType" value="individual"
+                          (change)="onSelectingSearchBy($event)" formControlName="ownerType" />
+                        <label class="form-check-label">{{
+                          "animalDetails.individual" | translate
+                          }}</label>
+                      </div>
+                      <div class="form-check-inline">
+                        <input type="radio" class="form-check-input" name="ownerType" value="nonIndividual"
+                          (change)="onSelectingSearchBy($event)" formControlName="ownerType" />
+                        <label class="form-check-label">{{
+                          "animalDetails.nonIndividual" | translate
+                          }}</label>
+                      </div>
+                    </div>
+                    <div class="search-by d-flex" *ngIf="searchBy == 'individual' || searchBy == 'nonIndividual'">
+                      <div class="search-by-input">
+                        <img src="/assets/images/search.svg" class="input-icon-left" alt="icon-search" />
+                        <input type="text" class="form-control input input-section" id="search-by"
+                          placeholder="{{ 'performanceRecording.common_search_placeholder' | translate }}"
+                          formControlName="searchValue" maxlength="15" />
+                        <span class="input-clear" (click)="resetValue()">
+                          {{ "common.clear" | translate }}
+                        </span>
+                        <div class="alert-message mx-1" *ngIf="(this.searchForm.invalid && this.searchForm.touched) ">
+                          <span
+                            *ngIf="!this.searchForm.get('searchValue').hasError('required') && this.searchForm.hasError('invalidSearchValue')">
+                            {{ this.searchForm.errors?.invalidSearchValue | translate}}
+                          </span>
+                          <span *ngIf="this.searchForm.get('searchValue').hasError('required')">
+                            {{ 'animalBreedingValidations.common.required' | translate}}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="search-btn ml-2">
+                        <button type="submit" (click)="
+                            searchResults(
+                              this.searchForm.get('searchValue')?.value
+                            )
+                          " class="btn btn-primary">
+                          {{ "animalDetails.search" | translate }}
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- <div class="alert-message" *ngIf="errorMessage">
+                      {{ errorMessage }}
+                    </div> -->
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="row">
+            <div class="h-divider">
+              <div class="dashed"></div>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row p-0 mb-3">
+    <div class="col-md-12">
+      <div class="card border-0">
+        <div class="card-body">
+          <div class="row" *ngIf="isAnimalTableVisible">
+            <div [ngClass]="{
+                'col-md-5': withOutCampaign,
+                'col-md-6': !withOutCampaign
+              }">
+              <div class="filter-by mb-3">
+                <form class="search d-flex">
+                  <div class="inputsearch">
+                    <i aria-hidden="true" class="fa fa-search input-icon-left"></i>
+                    <input type="text" class="form-control input input-section" id="filter-by"
+                      placeholder="{{ 'vaccination.Search_Owner_Name_and_Tag_Id' | translate}}"
+                      (keyup)="applyFilter($event)" />
+                  </div>
+
+                  <!-- <span class="input-filter"><i class="fa fa-filter" aria-hidden="true"></i>
+                  </span> -->
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Owner List table -->
+          <div class="row selectAnimalTable table-view" *ngIf="isOwnerTableVisible">
+            <div class="col-md-12">
+              <div class="table-responsive mb-3">
+                <table mat-table [dataSource]="ownerDataSource" class="mat-elevation-z8">
+                  <ng-container matColumnDef="S.No.">
+                    <th mat-header-cell *matHeaderCellDef>{{ "common.sno" | translate }}</th>
+                    <td mat-cell *matCellDef="let element; let i = index" class="cell-width">
+                      {{
+                      ownerpaginator.pageIndex * ownerpaginator.pageSize +
+                      i +
+                      1
+                      }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="Owner_ID">
+                    <th mat-header-cell *matHeaderCellDef>{{ "common.owner_id" | translate }}</th>
+                    <td mat-cell *matCellDef="let element" class="cell-width">
+                      <a class="text-link" (click)="showOwnerDetails(element.ownerId, true)">{{ element.ownerId
+                        }}</a>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="Owner_Name">
+                    <th mat-header-cell *matHeaderCellDef>{{ "common.owner_name_lbl" | translate }}</th>
+                    <td mat-cell *matCellDef="let element" class="cell-width">
+                      <div class="owner-name-desc" data-toggle="tooltip" data-placement="top"
+                        title="{{ element.ownerName}}">
+                        {{ element.ownerName }}
+                      </div>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="Mobile_Number">
+                    <th mat-header-cell *matHeaderCellDef>{{ "common.mobile" | translate }}</th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.ownerMobileNo }}
+                    </td>
+                  </ng-container>
+                  <!-- <ng-container matColumnDef="gender">
+                    <th mat-header-cell *matHeaderCellDef>
+                      {{ "common.gender" | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.ownerGender }}
+                    </td>
+                  </ng-container> -->
+                  <ng-container matColumnDef="gender">
+                    <th mat-header-cell *matHeaderCellDef>
+                      {{
+                      searchForm.get("ownerType").value == 1
+                      ? ("common.gender" | translate)
+                      : ("animalDetails.nonIndividualType" | translate)
+                      }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{
+                      searchForm.get("ownerType").value == 1
+                      ? element?.ownerGender || "-"
+                      : element?.ownerTypeCategory || "-"
+                      }}
+                    </td>
+                  </ng-container>
+                  <!-- <ng-container matColumnDef="DOB">
+                    <th mat-header-cell *matHeaderCellDef>{{ "common.dob" | translate }}</th>
+                    <td mat-cell *matCellDef="let element" class="cell-width">
+                      {{ formatDate(element.ownerDateOfBirth) }}
+                    </td>
+                  </ng-container> -->
+                  <ng-container matColumnDef="DOB">
+                    <th mat-header-cell *matHeaderCellDef>
+                      {{
+                      searchForm.get("ownerType").value == 1
+                      ? ("common.dob" | translate)
+                      : ("common.doi" | translate)
+                      }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{
+                      searchForm.get("ownerType").value == 1
+                      ? formatDate(element?.ownerDateOfBirth)
+                      : formatDate(element?.ownerDateOfBirth)
+                      }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Village">
+                    <th mat-header-cell *matHeaderCellDef>{{ "common.village_name" | translate }}</th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.villageName }}
+                    </td>
+                  </ng-container>
+
+                  <tr class="action-link table-head" mat-header-row *matHeaderRowDef="ownerListColumns"></tr>
+                  <tr class="action-link table-head" mat-row *matRowDef="let row; columns: ownerListColumns"></tr>
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell text-center" [attr.colspan]="ownerListColumns.length">
+                      {{ "diseaseTesting.no_data_available" | translate }}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons #ownerpaginator>
+              </mat-paginator>
+            </div>
+          </div>
+
+          <!-- animal list table -->
+          <p class="no-animal" *ngIf="noAnimalRegistered">
+            {{ "deworming.no_animals_registred" | translate }}
+          </p>
+          <div class="row selectAnimalTable table-view" *ngIf="isAnimalTableVisible">
+            <div class="col-md-12">
+              <form [formGroup]="dewormingwithcampaignForm">
+                <div class="table-responsive mb-3">
+                  <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
+                    <ng-container matColumnDef="checkbox">
+                      <th mat-header-cell *matHeaderCellDef>
+                        <input type="checkbox" class="check-input" name="selectAll" id="selectHeader" [value]=""
+                          [checked]="
+                            animalDetail.length &&
+                            animalDetail.length === dataSource.data.length
+                          " (change)="checkAllBoxes($event)" appPermission [permissionType]="masterConfig.isAdd" />
+                      </th>
+                      <td mat-cell *matCellDef="let element" class="cell-width">
+                        <input type="checkbox" class="check-input" name="rowcheck" id="selectrow" [value]=""
+                          [checked]="checkIfInSelectedList(element)" (change)="onCheckboxChange($event, element)"
+                          appPermission [permissionType]="masterConfig.isAdd" />
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="sr_no">
+                      <th mat-header-cell *matHeaderCellDef>{{ "common.sno" | translate }}</th>
+                      <td mat-cell *matCellDef="let element; let i = index" class="cell-width">
+                        {{ paginator.pageIndex * paginator.pageSize + i + 1 }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="tagId">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef> {{ "animalDetails.tag_id" | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element" class="cell-width">
+                        {{ element.tagId }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="ownerName">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "common.owner_name_lbl" | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element" class="cell-width">
+                        <div class="owner-name-desc" data-toggle="tooltip" data-placement="top"
+                          title="{{ element.orgName?? element.ownerName}}">
+
+                          {{ element.orgName?? element.ownerName }}
+                        </div>
+
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="village">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "common.village_name" | translate }}</th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element.villageName ?? element.ownerVillageName }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="category_species">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        {{ "animalDetails.category_species" | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element" class="cell-width">
+                        {{ element.speciesDesc ?? element.species }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="animalCategory">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        {{ "animalDetails.category" | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element.animalCategory }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="sex">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef> {{ "common.sex" | translate }}</th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element.sex }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="dateOfBirth">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "common.dob" | translate }}</th>
+                      <td mat-cell *matCellDef="let element" class="cell-width">
+                        {{ element.dateOfBirth }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="animalAge">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ "common.age" | translate }}</th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element.animalAge }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="health_history">
+                      <th mat-header-cell *matHeaderCellDef>{{ "diseaseTesting.health_history" | translate }}</th>
+                      <td mat-cell *matCellDef="let element" class="cell-width">
+                        <a href="javascript:void(0)" class="health-history" (click)="viewAnimalHistory(element)">
+                          {{"role.View" | translate}}</a>
+                      </td>
+                    </ng-container>
+                    <tr class="action-link table-head" mat-header-row *matHeaderRowDef="spotTestingDisplayedColumns">
+                    </tr>
+                    <tr class="action-link table-head" mat-row
+                      *matRowDef="let row; columns: spotTestingDisplayedColumns"></tr>
+                    <tr class="mat-row" *matNoDataRow>
+                      <td class="mat-cell text-center" [attr.colspan]="spotTestingDisplayedColumns.length">
+                        {{"diseaseTesting.no_data_available" | translate}}
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"
+                  [pageSize]="animalPageSize" [pageIndex]="animalPageIndex" [length]="animalsCount"
+                  (page)="onPageAnimalPageChange($event)">
+                </mat-paginator>
+              </form>
+            </div>
+          </div>
+          <ng-container *ngIf="dataSource.data.length">
+            <div class="row">
+              <div class="h-divider">
+                <div class="dashed"></div>
+              </div>
+            </div>
+
+            <div class="row select-id">
+              <div class="col-lg-12 col-md-12">
+                <div class="row no-gutters mb-2">
+                  <div class="col-md-2 m-0 p-0">
+                    <span class="st-label">{{ "diseaseTesting.selected_tag_id" | translate}}<span class="st-id">[{{
+                        animalDetail.length }}]</span>
+                    </span>
+                  </div>
+
+                  <div class="col-md-10 m-0 p-0">
+                    <div *ngIf="isAnimalTableVisible">
+                      <ul class="selected-animal-list">
+                        <li class="selected-animal-listitem outline ng-star-inserted"
+                          *ngFor="let animal of animalDetail | slice : 0 : 4">
+                          {{ animal.tagId }}
+                          <img src="/assets/images/cross-icon.svg" alt="icon-cross" (click)="onClickingRemove(animal)"
+                            class="animal-listitem-cross" />
+                        </li>
+                        <li class="selected-viewMore" *ngIf="animalDetail.length > 4">
+                          <span class="viewMore-text" (click)="openDialog()"> {{"diseaseTesting.view_more" |
+                            translate}}</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-12 col-md-12">
+                <div class="form-row justify-content-end my-2">
+                  <button type="button" class="btn btn-outline-primary mr-2" (click)="onReset()">
+                    {{ "animalDetails.cancel" | translate }}
+                  </button>
+                  <button type="submit" class="btn btn-primary" (click)="onSubmit()" appPermission
+                    [permissionType]="masterConfig.isAdd">
+                    {{ "animalDetails.proceed" | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

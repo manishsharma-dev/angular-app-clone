@@ -1,0 +1,39 @@
+<div class="campaign-dialog">
+  <div class="campaign-msg mb-4">
+    <img src="assets/images/verified.svg" alt="checkbox-circle-line" />
+    <h1 class="succes-msg">
+      <span class="succes-msg-desc">{{'postMortem.post_mortem_id' | translate}}: </span>{{ data.postMortemId }}
+    </h1>
+    <h2 class="succes-msg">{{ data.title }}</h2>
+    <!-- <h4 class="succes-msg-desc">
+      <i> {{ data.sub_title }}</i>
+    </h4> -->
+    <!-- <h3 *ngIf="data.followDate" class="succes-msg-follow">
+      <i class="follow-up">{{ data.followDateMessage }} </i>
+      {{ data.followDate }}
+    </h3> -->
+    <ng-container *ngIf="data.table_value?.length">
+      <b class="table-title">{{'diseaseTesting.sample_collected' | translate}}</b>
+      <table class="table table-bordered">
+        <thead class="thead-default">
+          <tr>
+            <th>{{ data.table_header.col1 }}</th>
+            <th>{{ data.table_header.col2 }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of data.table_value">
+            <td>{{ value.sampleId }}</td>
+            <td>{{ value.sampleTypeDesc ?? 'NA' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+  </div>
+
+  <div class="close-button">
+    <button type="submit" class="btn btn-primary" (click)="closeDialog()" mat-dialog-close>
+      {{'animalDetails.close' | translate}}
+    </button>
+  </div>
+</div>

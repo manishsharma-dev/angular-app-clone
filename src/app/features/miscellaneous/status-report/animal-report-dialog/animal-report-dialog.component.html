@@ -1,0 +1,290 @@
+<div class="overlay" *ngIf="isLoading">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+
+<section class="animal-report">
+  <!-- header -->
+  <div class="history-header">
+    <div class="headeing">
+      <h2 class="edit-heading-label">
+        {{ "animalHealthHistory.history_view" | translate }}
+      </h2>
+    </div>
+    <div class="cross-icon">
+      <mat-icon mat-dialog-close>clear</mat-icon>
+    </div>
+  </div>
+
+  <!-- header-section -->
+  <div class="dialog-main-content">
+    <div class="history-detail">
+      <div class="col-md-12">
+        <p class="history-label">
+          {{ "registration.Animal Details" | translate }}
+        </p>
+        <p class="history-desc">
+          {{ data?.animal?.tagId }} -
+          {{ data?.animal?.species }} -
+          {{ data?.animal?.sex }} -
+          {{ data?.animal?.dateOfBirth | date: 'dd/MM/YYYY'}}
+        </p>
+      </div>
+    </div>
+
+    <!--  -->
+    <div class="h-divider">
+      <div class="shadow"></div>
+    </div>
+
+    <!--  -->
+    <form [formGroup]="form">
+      <div class="history-detail">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-5 form-group">
+              <label for="moduleCd" class="history-filter">{{ "animalHealthHistory.filter_by" | translate }}:</label>
+              <ng-select id="moduleCd" formControlName="moduleCd" tabindex="1" [clearable]="false"
+                [placeholder]='"animalHealthHistory.select" | translate' [items]="modules" bindValue="cd"
+                bindLabel="value">
+              </ng-select>
+            </div>
+            <div class="col-md-7 form-group position-relative">
+              <label class="history-filter">{{
+                "animalHealthHistory.select_date_range" | translate
+                }}:</label>
+              <div class="form-row">
+                <div class="col-6">
+                  <input class="form-control" [matDatepicker]="fromDate" formControlName="fromDate" [max]="currentDate"
+                    placeholder="dd/mm/yyyy" />
+                  <mat-datepicker-toggle matSuffix [for]="fromDate" class="filter-picker"></mat-datepicker-toggle>
+                  <mat-datepicker #fromDate></mat-datepicker>
+                  <div class="alert-message" *ngIf="
+                  (form.controls.fromDate.dirty &&
+                    form.controls.fromDate.invalid) ||
+                  form.controls.fromDate.touched
+                ">
+                    <span *ngIf="form.controls.fromDate.hasError('matDatepickerMin')">
+                      {{'common.please_enter_valid_date' | translate}}
+                    </span>
+                    <span *ngIf="form.controls.fromDate.hasError('matDatepickerMax')">
+                      {{'common.please_enter_valid_date' | translate}}
+                    </span>
+                    <span *ngIf="form.controls.fromDate.hasError('matDatepickerParse')">
+                      {{'common.please_enter_valid_date' | translate}}
+                    </span>
+                    <span
+                      *ngIf="form.controls.fromDate.hasError('required') && !form.controls.fromDate.hasError('matDatepickerParse')">
+                      {{ 'common.required' | translate }}
+                    </span>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <input class="form-control" [matDatepicker]="toDate" formControlName="toDate"
+                    [min]="form.get('fromDate').value" [max]="currentDate" placeholder="dd/mm/yyyy" />
+                  <mat-datepicker-toggle matSuffix [for]="toDate" class="filter-picker"></mat-datepicker-toggle>
+                  <mat-datepicker #toDate></mat-datepicker>
+                  <div class="alert-message" *ngIf="
+                  (form.controls.toDate.dirty &&
+                    form.controls.toDate.invalid) ||
+                  form.controls.toDate.touched
+                ">
+                    <span *ngIf="form.controls.toDate.hasError('matDatepickerMin')">
+                      {{'common.please_enter_valid_date' | translate}}
+                    </span>
+                    <span *ngIf="form.controls.toDate.hasError('matDatepickerMax')">
+                      {{'common.please_enter_valid_date' | translate}}
+                    </span>
+                    <span *ngIf="form.controls.toDate.hasError('matDatepickerParse')">
+                      {{'common.please_enter_valid_date' | translate}}
+                    </span>
+                    <span
+                      *ngIf="form.controls.toDate.hasError('required') && !form.controls.toDate.hasError('matDatepickerParse')">
+                      {{ 'common.required' | translate }}
+                    </span>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <h3 *ngIf="!historyArray.length">
+            {{ "animalHealthHistory.no_history_record_found" | translate }}
+          </h3>
+          <ul class="timeline">
+            <li class="timeline-items" *ngFor="let history of historyArray">
+              <span class="timeline-date">{{ history.historyDate }}</span>
+              <div class="timeline-section mb-3" [ngClass]="{ 'd-flex': history.children.length > 1 }"
+                *ngFor="let child of history.children; let i = index">
+                <div class="timeline-count mr-3" *ngIf="history.children.length > 1">
+                  <span>{{ i + 1 }}</span>
+                </div>
+                <div class="timeline-desc mb-3">
+                  <P class="timeline-heading">{{ child.value }}</P>
+
+                  <ng-container *ngFor="let subChild of child.children; let last = last" [ngSwitch]="child.cd">
+                    <!-- treatment -->
+                    <ul class="timeline-item-list list-inline" [ngClass]="{ 'history-list-separator': !last }"
+                      *ngSwitchCase="2">
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{ "animalHealthHistory.case_id" | translate }}:</b>{{ subChild.caseId ?? "--"
+                        }}
+                      </li>
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{ "animalHealthHistory.disease" | translate }}:</b>{{ subChild.disease ?? "--"
+                        }}
+                      </li>
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{
+                          "animalHealthHistory.prescription" | translate
+                          }}:</b><a href="javascript:void(0)" (click)="
+                            viewPrescription(
+                              subChild.caseId,
+                              subChild.followUpNo
+                            )
+                          ">{{ "animalHealthHistory.view" | translate }}</a>
+                      </li>
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{
+                          "animalHealthHistory.no_of_visits" | translate
+                          }}:</b>{{ subChild.followUpNo + 1 ?? "--" }}
+                      </li>
+                    </ul>
+
+                    <!--Vaccination -->
+                    <ul class="timeline-item-list list-inline" [ngClass]="{ 'history-list-separator': !last }"
+                      *ngSwitchCase="3">
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{
+                          "animalHealthHistory.vaccination_for" | translate
+                          }}:</b>{{ subChild.diseaseDesc ?? "--" }}
+                      </li>
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{
+                          "animalHealthHistory.vaccine_name" | translate
+                          }}:</b>{{ subChild.vaccineName ?? "--" }}
+                      </li>
+
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{ "vaccination.vaccinationType" | translate }}:</b>{{ subChild.vaccinationType
+                        ?? "--" }}
+                      </li>
+                    </ul>
+
+                    <!--Deworming -->
+                    <ul class="timeline-item-list list-inline" [ngClass]="{ 'history-list-separator': !last }"
+                      *ngSwitchCase="4">
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{
+                          "animalHealthHistory.dewormer_name" | translate
+                          }}:</b>{{ subChild.medicineName ?? "--" }}
+                      </li>
+                    </ul>
+
+                    <!--First Aid -->
+                    <ul class="timeline-item-list list-inline" [ngClass]="{ 'history-list-separator': !last }"
+                      *ngSwitchCase="5">
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{
+                          "animalHealthHistory.minor_ailment" | translate
+                          }}:</b>
+                        {{ subChild.ailmentDesc ?? "--" }}
+                      </li>
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{
+                          "animalHealthHistory.treatment_given" | translate
+                          }}:</b>
+                        {{ subChild.firstAidTreatmentGiven ?? "--" }}
+                      </li>
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{ "animalHealthHistory.remarks" | translate }}:</b>
+                        {{ subChild.treatmentRemarks ?? "--" }}
+                      </li>
+                    </ul>
+
+                    <!--Disease Testing -->
+                    <ul class="timeline-item-list list-inline" [ngClass]="{ 'history-list-separator': !last }"
+                      *ngSwitchCase="6">
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{ "animalHealthHistory.sample_id" | translate }}:</b>
+                        {{ subChild.sampleId ?? "--" }}
+                      </li>
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{
+                          "animalHealthHistory.testing_type" | translate
+                          }}:</b>
+                        {{ subChild.testingLocationValue ?? "--" }}
+                      </li>
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{
+                          "animalHealthHistory.sample_type" | translate
+                          }}:</b>
+                        {{ subChild.sampleTypeValue ?? "--" }}
+                      </li>
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{
+                          "animalHealthHistory.disease_suspected" | translate
+                          }}:</b>{{ subChild.diseaseDesc ?? "--" }}
+                      </li>
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{
+                          "animalHealthHistory.test_result" | translate
+                          }}:</b>
+                        {{ subChild.sampleResultValue ?? "--" }}
+                      </li>
+                    </ul>
+                    <!--Postmoterm -->
+                    <ul class="timeline-item-list list-inline" [ngClass]="{ 'history-list-separator': !last }"
+                      *ngSwitchCase="7">
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{
+                          "animalHealthHistory.postmortem_id" | translate
+                          }}:</b>
+                        {{ subChild.postmortemId ?? "--" }}
+                      </li>
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{
+                          "animalHealthHistory.animal_death_date" | translate
+                          }}:</b>
+                        {{ subChild.historyDate ?? "--" }}
+                      </li>
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{
+                          "animalHealthHistory.animal_death_time" | translate
+                          }}:</b>
+                        {{ subChild.animalDeathTime ?? "--" }}
+                      </li>
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{
+                          "animalHealthHistory.place_of_death" | translate
+                          }}:</b>
+                        {{ subChild.placeOfDeath ?? "--" }}
+                      </li>
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{
+                          "animalHealthHistory.postmortem_diagnosis"
+                          | translate
+                          }}:</b>{{ subChild.pmDiagnosis ?? "--" }}
+                      </li>
+                      <li class="timeline-list list-inline-item">
+                        <b class="mr-2">{{
+                          "animalHealthHistory.probable_cause_of_deaths"
+                          | translate
+                          }}:</b>
+                        {{ subChild.causeOfDeath ?? "--" }}
+                      </li>
+                    </ul>
+                  </ng-container>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>

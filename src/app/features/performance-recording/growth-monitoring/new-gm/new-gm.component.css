@@ -1,0 +1,47 @@
+.animal-table thead th,
+.animal-table td {
+  border-top: none;
+  border-bottom: none;
+  padding: 0.2rem 0.4rem !important;
+}
+.owner-details-section .owner-detail-table {
+  background-color: #eaf0f2;
+  padding: 12px 12px 12px 30px;
+  position: relative;
+}
+
+.owner-details-section .owner-detail-table .back-arrow {
+  position: absolute;
+  top: 20px;
+  left: 12px;
+}
+
+.new-gm .input-icon {
+  position: relative;
+}
+
+.new-gm .input-icon input {
+  padding-right: 50px;
+}
+
+.new-gm .calender-icon {
+  position: absolute;
+  top: 29px;
+  right: 0px;
+}
+
+.new-gm .input-section {
+  padding-right: 25px;
+  position: relative;
+}
+
+.or-label {
+  margin-top: 14px;
+}
+
+.input-icon span.input-units {
+  position: absolute;
+  top: 36px;
+  right: 12px;
+  font-size: 1.1rem;
+}

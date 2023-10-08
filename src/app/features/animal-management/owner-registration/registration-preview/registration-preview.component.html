@@ -1,0 +1,394 @@
+<!-- <div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div> -->
+<div class="campaign-edit-dialog">
+  <div class="campaign-edit-header">
+    <div class="headeing">
+      <h3 class="edit-heading-label">
+        {{ "animalDetails.previewOwnerDetails" | translate }}
+      </h3>
+      <p class="edit-heading-desc">
+        {{ "animalDetails.preview_sub_head" | translate }}
+      </p>
+    </div>
+    <div class="cross-icon">
+      <mat-icon (click)="onClose(false)">clear</mat-icon>
+    </div>
+  </div>
+
+  <div class="dialog-main-content" *ngIf="ownerDetails.aadhaarNumber">
+    <div class="owner-transfer-section">
+      <div class="current-trans">
+        <!--Accordion wrapper-->
+        <div class="card mt-2 preview-owner">
+          <div class="card-body transaction-detail">
+            <ul class="transaction-list">
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.aadhaar_card" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ ownerDetails.aadhaarNumber || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "common.mobile" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ ownerDetails.ownerMobileNo || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "common.owner_name_lbl" | translate }}
+                </div>
+                <div
+                  class="transaction-desc ellips-text"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="{{ ownerDetails.ownerName }}"
+                >
+                  {{ ownerDetails.ownerName || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.father_name" | translate }}
+                </div>
+                <div
+                  class="transaction-desc ellips-text"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="{{ ownerDetails.fatherName }}"
+                >
+                  {{ ownerDetails.fatherName || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.date_of_birth" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ dateFormatChange(ownerData?.ownerDob) }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "common.gender" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{
+                    ownerDetails.ownerGender == "M"
+                      ? "Male"
+                      : ownerDetails.ownerGender == "F"
+                      ? "Female"
+                      : "Others"
+                  }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.owner_address_placeholder" | translate }}
+                </div>
+                <div
+                  class="transaction-desc ellips-text"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="{{ ownerDetails.ownerAddress }}"
+                >
+                  {{ ownerDetails.ownerAddress || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.category" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ ownerData.selectedCategory || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.category_verified" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ ownerDetails.isCategoryVerified ? "Yes" : "No" }}
+                </div>
+              </li>
+
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "common.village" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ ownerData.village || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.tehsil" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ ownerData.tehsil || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.district" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ ownerData.distt || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.state" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ ownerData.state || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.pincode" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ ownerDetails.ownerAddressPincode || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.affiliated" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ affiliationStatus == "true" ? "Yes" : "No" }}
+                </div>
+              </li>
+              <div *ngIf="affiliationStatus == 'true'">
+                <li class="transaction-item">
+                  <div class="transaction-title">
+                    {{ "animalDetails.vill_institute_type" | translate }}
+                  </div>
+                  <div class="transaction-desc">
+                    {{ ownerData.villageInstType || "--" }}
+                  </div>
+                </li>
+                <li class="transaction-item">
+                  <div class="transaction-title">
+                    {{ "animalDetails.vill_institute_name" | translate }}
+                  </div>
+                  <div
+                    class="transaction-desc ellips-text"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="{{ ownerData.villageInstname }}"
+                  >
+                    {{ ownerData.villageInstname || "--" }}
+                  </div>
+                </li>
+                <li class="transaction-item">
+                  <div class="transaction-title">
+                    {{ "animalDetails.agency_name" | translate }}
+                  </div>
+                  <div
+                    class="transaction-desc ellips-text"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="{{ ownerData.agencyName }}"
+                  >
+                    {{ ownerData.agencyName || "--" }}
+                  </div>
+                </li>
+                <li class="transaction-item">
+                  <div class="transaction-title">
+                    {{ "animalDetails.membership_number" | translate }}
+                  </div>
+                  <div class="transaction-desc">
+                    {{ ownerDetails.membershipNumber || "--" }}
+                  </div>
+                </li>
+              </div>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog-main-content" *ngIf="ownerDetails.panNumber">
+    <div class="owner-transfer-section">
+      <div class="current-trans">
+        <!--Accordion wrapper-->
+        <div class="card mt-2 preview-owner">
+          <div class="card-body transaction-detail">
+            <ul class="transaction-list">
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.pancard_Number" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ ownerDetails.panNumber || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "common.mobile" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ ownerDetails.ownerMobileNo || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "common.owner_name_lbl" | translate }}
+                </div>
+                <div
+                  class="transaction-desc ellips-text"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="{{ ownerDetails.ownerName }}"
+                >
+                  {{ ownerDetails.ownerName || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.date_of_incorporation" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ dateFormatChange(ownerData?.dateOfIncorporation) }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.owner_address_placeholder" | translate }}
+                </div>
+                <div
+                  class="transaction-desc ellips-text"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="{{ ownerDetails.ownerAddress }}"
+                >
+                  {{ ownerDetails.ownerAddress || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.nonIndividualType" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ ownerData.selectedCategory || "--" }}
+                </div>
+              </li>
+
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "common.village" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ ownerData.village || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.tehsil" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ ownerData.tehsil || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.district" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ ownerData.distt || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.state" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ ownerData.state || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.pincode" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ ownerDetails.ownerAddressPincode || "--" }}
+                </div>
+              </li>
+              <li class="transaction-item">
+                <div class="transaction-title">
+                  {{ "animalDetails.affiliated" | translate }}
+                </div>
+                <div class="transaction-desc">
+                  {{ affiliationStatus == "true" ? "Yes" : "No" }}
+                </div>
+              </li>
+              <div *ngIf="affiliationStatus == 'true'">
+                <li class="transaction-item">
+                  <div class="transaction-title">
+                    {{ "animalDetails.vill_institute_type" | translate }}
+                  </div>
+                  <div class="transaction-desc">
+                    {{ ownerData.villageInstType || "--" }}
+                  </div>
+                </li>
+                <li class="transaction-item">
+                  <div class="transaction-title">
+                    {{ "animalDetails.vill_institute_name" | translate }}
+                  </div>
+                  <div
+                    class="transaction-desc ellips-text"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="{{ ownerData.villageInstname }}"
+                  >
+                    {{ ownerData.villageInstname || "--" }}
+                  </div>
+                </li>
+                <li class="transaction-item">
+                  <div class="transaction-title">
+                    {{ "animalDetails.agency_name" | translate }}
+                  </div>
+                  <div
+                    class="transaction-desc ellips-text"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="{{ ownerData.agencyName }}"
+                  >
+                    {{ ownerData.agencyName || "--" }}
+                  </div>
+                </li>
+                <li class="transaction-item">
+                  <div class="transaction-title">
+                    {{ "animalDetails.membership_number" | translate }}
+                  </div>
+                  <div class="transaction-desc">
+                    {{ ownerDetails.membershipNumber || "--" }}
+                  </div>
+                </li>
+              </div>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="campaign-edit-footer">
+    <button class="btn btn-secondary mr-2" (click)="onClose(false)">
+      {{ "animalDetails.cancel" | translate }}
+    </button>
+    <button class="btn btn-primary" (click)="onClose(true)">
+      {{ "common.register" | translate }}
+    </button>
+  </div>
+</div>

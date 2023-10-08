@@ -1,0 +1,9 @@
+.picker{
+    position: relative;
+    float: right;
+    top: -36%;
+  }
+  span.ls-info{
+    font-weight: bold;
+    margin-right: 4px;
+}

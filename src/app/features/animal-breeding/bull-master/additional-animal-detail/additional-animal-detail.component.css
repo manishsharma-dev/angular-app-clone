@@ -1,0 +1,32 @@
+.add-diagnostics-dialog {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .add-diagnostics-header {
+    flex-grow: 0;
+    flex-shrink: 0;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .dialog-main-content {
+    flex-grow: 1;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 0 5px 0 0;
+  }
+
+  .mr-top-10 {
+  margin-top: 5em;
+  }
+  .mr-10{
+    margin-top: 10px;
+  }
+
+ 
+  /*Expansion Panel*/
+  

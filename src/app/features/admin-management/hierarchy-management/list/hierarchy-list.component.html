@@ -1,0 +1,232 @@
+<div class="overlay" *ngIf="isLoadingSpinner">
+  <div class="center">
+    <mat-spinner class="center"></mat-spinner>
+  </div>
+</div>
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            {{ "animalDetails.home" | translate }}
+          </li>
+          <li class="breadcrumb-item active">
+            {{ "organization.Admin_Management" | translate }}
+          </li>
+          <li class="breadcrumb-item current">
+            {{ "hierarchy.Hierarchy_Management" | translate }}
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="container-white-bg-with-border mb-3">
+  <span class="floating-filedset fildset-bg-green">
+    <span class="float-label">{{"animalDetails.filter" | translate }}</span>
+  </span>
+  <div class="row search-role">
+    <div class="col-md-6">
+      <form>
+        <div class="form-row">
+          <div class="form-group col-md-8">
+            <input type="text" autocomplete="off" (keyup)="applyFilter($event)" matInput
+              class="form-control input-custom-border" id="search" placeholder="{{ 'common.placeholder' | translate }}"
+              #input />
+          </div>
+          <div class="form-group col-auto align-self-end">
+            <!-- <button type="submit" class="btn btn-dark">Search</button> -->
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-6">
+      <ul class="project-mgmt">
+        <!-- <li>
+            <button type="submit" class="btn btn-dark" routerLink="/dashboard/roleanization-management/add-new-role">
+              ADD SUB roleANIZATION
+            </button>
+          </li> -->
+        <li>
+          <button *ngIf="isLivestackAdmin" type="submit" class="btn btn-primary" appPermission
+            [permissionType]="masterConfig.isAdd" (click)="onCreateHierarchy()">
+            {{ "hierarchy.Create_Hierarchy" | translate }}
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="container-white-bg-with-border">
+  <span class="floating-filedset fildset-bg-blue">
+    <span class="float-label">{{"common.list" | translate }}</span>
+  </span>
+  <div class="row">
+    <div class="col-lg-12 col-md-12">
+      <div class="list-of-role">
+        <!-- <div class="title-heading">
+        <h3 class="muted-label-heading">List of roleanizations</h3>
+      </div> -->
+
+        <!-- <div *ngIf="data.length == 0">
+        <div class="alert alert-dark" role="alert">
+          Loading...
+        </div>
+      </div> -->
+
+        <div class="table-responsive table-view">
+          <table mat-table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="S.No.">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "common.sno" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let hierarchy; let $index = index">
+                {{ paginatorRef.pageIndex * paginatorRef.pageSize + ($index + 1) }}
+              </td>
+
+            </ng-container>
+
+            <!-- state Name Column -->
+            <ng-container matColumnDef="state">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "animalDetails.state" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let hierarchy">
+                {{ hierarchy.stateName }}
+              </td>
+            </ng-container>
+
+            <!-- Hierarchy ID Name Column -->
+            <ng-container matColumnDef="orgName">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "organization.Organization_Name" | translate }}
+              </th>
+
+              <td mat-cell *matCellDef="let hierarchy">
+                {{ hierarchy.orgName }}
+              </td>
+            </ng-container>
+
+            <!-- Hierarchy ID Name Column -->
+            <ng-container matColumnDef="Hierarchy ID">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "hierarchy.Hierarchy_ID" | translate }}
+              </th>
+
+              <td mat-cell *matCellDef="let hierarchy">
+                {{ hierarchy.hierarchyId }}
+              </td>
+            </ng-container>
+
+            <!-- Hierarchy Name Column -->
+            <ng-container matColumnDef="Hierarchy Name">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "hierarchy.Hierarchy_Name" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let hierarchy">
+                {{ hierarchy.hierarchyName }}
+              </td>
+            </ng-container>
+
+            <!-- Created on Column -->
+            <ng-container matColumnDef="Created on">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "hierarchy.Created_on" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let hierarchy">
+                {{ hierarchy.creationDate | customDateFormatter }}
+              </td>
+            </ng-container>
+
+            <!-- Status Name  Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "common.status" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let hierarchy">
+                {{ hierarchy.hierarchyStatus }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ "common.action" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let data; let i = index">
+                <a class="view" href="javascript:void(0)" (click)="openPreview(data.hierarchyId)"><svg
+                    id="Component_58_16" data-namdeleteRowe="Component 58 – 16" xmlns="http://www.w3.role/2000/svg"
+                    width="20.037" height="20.037" viewBox="0 0 20.037 20.037">
+                    <path id="Path_5226" data-name="Path 5226" d="M0,0H20.037V20.037H0Z" fill="none" />
+                    <path id="Path_5227" data-name="Path 5227"
+                      d="M1.181,10.514a9.186,9.186,0,0,1,18.065,0,9.186,9.186,0,0,1-18.065,0Zm9.032,4.174a4.174,4.174,0,1,0-4.174-4.174A4.174,4.174,0,0,0,10.213,14.688Zm0-1.67a2.5,2.5,0,1,1,2.5-2.5A2.5,2.5,0,0,1,10.213,13.018Z"
+                      transform="translate(-0.195 -0.495)" fill="#185b85" />
+                  </svg> </a>&nbsp;&nbsp;
+                <a *ngIf="
+                    isLivestackAdmin
+                  " class="edit" appPermission [permissionType]="masterConfig.isModify"
+                  (click)="editHierarchy(data.hierarchyId, 'edit')" href="javascript:void(0)"><svg
+                    xmlns="http://www.w3.role/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                    <path id="pencil-alt"
+                      d="M15.583,4.513,14.142,5.954a.375.375,0,0,1-.531,0L10.142,2.485a.375.375,0,0,1,0-.531L11.583.513a1.5,1.5,0,0,1,2.122,0l1.878,1.878A1.5,1.5,0,0,1,15.583,4.513ZM8.9,3.192.7,11.4.035,15.2a.751.751,0,0,0,.869.869L4.7,15.4l8.207-8.207a.375.375,0,0,0,0-.531L9.439,3.192a.379.379,0,0,0-.534,0Zm-5,7.5a.436.436,0,0,1,0-.619L8.714,5.263a.438.438,0,0,1,.619.619L4.52,10.695a.436.436,0,0,1-.619,0ZM2.773,13.323h1.5v1.134l-2.016.353-.972-.972.353-2.016H2.773Z"
+                      transform="translate(-0.024 -0.075)" fill="#185b85" />
+                  </svg> </a>&nbsp;&nbsp;
+                <a *ngIf="isLivestackAdmin" class="clone" href="javascript:void(0)" appPermission
+                  [permissionType]="masterConfig.isAdd" (click)="cloneHierarchy(data.hierarchyId, 'clone')"><svg
+                    id="Component_60_16" data-name="Component 60 – 16" xmlns="http://www.w3.role/2000/svg" width="20"
+                    height="20" viewBox="0 0 20 20">
+                    <path id="Path_5228" data-name="Path 5228" d="M0,0H20V20H0Z" fill="none" />
+                    <path id="Path_5229" data-name="Path 5229"
+                      d="M6.111,5.2V2.8A.789.789,0,0,1,6.889,2h9.333A.789.789,0,0,1,17,2.8V14a.789.789,0,0,1-.778.8H13.889v2.4a.791.791,0,0,1-.783.8H3.783a.768.768,0,0,1-.553-.233A.812.812,0,0,1,3,17.2L3,6a.791.791,0,0,1,.783-.8Zm1.556,0h6.222v8h1.556V3.6H7.667Zm-1.556,4v1.6h4.667V9.2Zm0,3.2V14h4.667V12.4Z"
+                      fill="#185b85" />
+                  </svg> </a>&nbsp;&nbsp;
+                <a *ngIf="isLivestackAdmin" href="javascript:void(0)" appPermission
+                  [permissionType]="masterConfig.isDelete" (click)="onDeleteRow(data.hierarchyId, i)"
+                  routerLink="/dashboard/hierarchy-management/list"><svg id="Group_4529" data-name="Group 4529"
+                    xmlns="http://www.w3.role/2000/svg" width="17.615" height="17.615" viewBox="0 0 17.615 17.615">
+                    <path id="Path_5203" data-name="Path 5203" d="M0,0H17.615V17.615H0Z" fill="none" />
+                    <path id="Path_5204" data-name="Path 5204"
+                      d="M3.551,6.654h12.41V16.737a.776.776,0,0,1-.776.776H4.327a.776.776,0,0,1-.776-.776ZM5.878,4.327V2.776A.776.776,0,0,1,6.654,2h6.2a.776.776,0,0,1,.776.776V4.327h3.878V5.878H2V4.327Zm1.551-.776v.776h4.654V3.551Zm0,6.2V14.41H8.98V9.756Zm3.1,0V14.41h1.551V9.756Z"
+                      transform="translate(-0.949 -0.949)" fill="#185b85" />
+                  </svg>
+                </a>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="loading">
+              <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+                Loading, please wait...
+              </mat-footer-cell>
+            </ng-container>
+            <ng-container matColumnDef="noData">
+              <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+                {{ "common.No_records_found" | translate }}
+              </mat-footer-cell>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <div *ngIf="dataSource.data.length > 0">
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">
+                  {{ "common.no_matching_filter" | translate }} "{{
+                  input.value
+                  }}"
+                </td>
+              </tr>
+            </div>
+
+            <mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSource && dataSource.data.length > 0">
+            </mat-footer-row>
+            <mat-footer-row *matFooterRowDef="['loading']" [hidden]="dataSource !== undefined"></mat-footer-row>
+          </table>
+          <mat-paginator [pageSizeOptions]="[20, 40,60, 80, 100]" aria-label="Select page of users"
+            #paginatorRef></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

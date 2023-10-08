@@ -1,0 +1,23 @@
+@media screen and (max-width: 370px) {
+  .search-mobile-view {
+    display: grid;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .btn-mobile-view {
+    margin-top: 10px;
+  }
+
+  .btn-mv {
+    margin-bottom: 5px;
+  }
+
+  .owner-reg-dialog .owner-reg-msg {
+    max-width: 100% !important;
+  }
+
+  .owner-reg-dialog .verify-number .verify-btn {
+    width: 100% !important;
+  }
+}

@@ -1,0 +1,30 @@
+<div class="row breadcum align-items-center py-2">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="breadcrumb-list text-md-left">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active">
+            <a routerLink="/dashboard">
+              {{'animalDetails.home' | translate}}
+            </a>
+          </li>
+          <ng-container *ngIf="!breadcrumbLinks?.length; else breadcrumbLinksTemplate">
+            <li class="breadcrumb-item active" [ngClass]="{'current': last}"
+              *ngFor="let key of breadcrumbKeys; let last = last">
+              <label>
+                {{key | translate}}</label>
+            </li>
+          </ng-container>
+          <ng-template #breadcrumbLinksTemplate>
+            <li class="breadcrumb-item active" [ngClass]="{'current': last}"
+              *ngFor="let breadcrumb of breadcrumbLinks; let last = last">
+              <a [routerLink]="breadcrumb?.link">
+                {{breadcrumb?.label | translate}}
+              </a>
+            </li>
+          </ng-template>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
